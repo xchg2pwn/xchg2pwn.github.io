@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Hunting License</title>
+
+  <meta name="description" content="Resolución del challenge Hunting License de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Hunting License">
+  <meta name="twitter:description" content="Resolución del challenge Hunting License de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/reversing.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Hunting License">
+  <meta property="og:description" content="Resolución del challenge Hunting License de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/reversing.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/reversing.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Hunting License" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="GatoGamer1155" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+              
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#method1">Método 1 - ida</a></li>
+        <li><a href="#method2">Método 2 - gdb</a></li>
+        <li><a href="#method3">Método 3 - ltrace</a></li>
+        <li><a href="#questionnaire">Cuestionario</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/reversing.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Hunting License</h2><br>
+  </header>
+  
+<section class="post" id="method1">
+<br><h3 class="post-title">Método 1</h3><br>
+
+<p class="plain-text">Una vez descomprimido el <code class="language-plaintext highlighter-rouge">zip</code> solo nos deja un compilado llamado <code class="language-plaintext highlighter-rouge">license</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ls</span><span class="ve">
+ license  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo nos da a escoger entre <code class="language-plaintext highlighter-rouge">(y/n)</code> enviamos <code class="language-plaintext highlighter-rouge">y</code>, después nos pregunta una contraseña, nos dice que no esta oculta, si enviamos una incorrecta simplemente sale</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./license</span><span class="p">
+So, you want to be a relic hunter?
+First, you're going to need your license, and for that you need to pass the exam.
+It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)  
+y
+Okay, first, a warmup - what's the first password? This one's not even hidden: 123
+Not even close!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos analizarlo con <code class="language-plaintext highlighter-rouge">ida</code> donde a la derecha podemos ver el codigo main en c</p>
+<a href="/challenges/huntinglicense/1.png" target="_blank"><div><p><img src="/challenges/huntinglicense/1.png"></p></div></a>
+
+<p class="plain-text">El codigo comprueba que hayamos introducido <code class="language-plaintext highlighter-rouge">y</code> si es asi llama a la función <code class="language-plaintext highlighter-rouge">exam()</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int </span><span class="p">__fastcall </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)
+{
+  </span><span class="no">char </span><span class="p">input; </span><span class="c1">// [rsp+Fh] [rbp-1h]
+
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"So, you want to be a relic hunter?"</span><span class="p">);
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"First, you're going to need your license, and for that you need to pass the exam."</span><span class="p">);
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)"</span><span class="p">);
+  input </span><span class="o">= </span><span class="no">getchar</span><span class="p">();
+  </span><span class="o">if</span><span class="p"> ( input </span><span class="o">!= </span><span class="s">'y' </span><span class="o">&& </span><span class="p">input </span><span class="o">!= </span><span class="s">'Y'</span><span class="o"> && </span><span class="p">input </span><span class="o">!= </span><span class="s">'</span><span class="mi">\n</span><span class="s">'</span><span class="p"> )
+  {
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"Not many are..."</span><span class="p">);
+    </span><span class="no">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);
+  }
+  exam(</span><span class="s">"It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)"</span><span class="p">, argv);  
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"Well done hunter - consider yourself certified!"</span><span class="p">);
+  </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos ver <code class="language-plaintext highlighter-rouge">exam</code> como todas las demas funciones igual que hicimos con el <code class="language-plaintext highlighter-rouge">main</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void </span><span class="na">exam</span><span class="p">()
+{
+  </span><span class="no">char </span><span class="p">password3</span><span class="p">[</span><span class="mi">8</span><span class="p">]; </span><span class="c1">// [rsp+0h] [rbp-30h] BYREF
+  </span><span class="no">char </span><span class="p">password2</span><span class="p">[</span><span class="mi">8</span><span class="p">]; </span><span class="c1">// [rsp+1Ch] [rbp-14h] BYREF
+  </span><span class="no">char </span><span class="o">*</span><span class="p">password; </span><span class="c1">// [rsp+28h] [rbp-8h]
+
+  </span><span class="p">password </span><span class="o">= </span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="p">)readline(</span><span class="s">"Okay, first, a warmup - what's the first password? This one's not even hidden: "</span><span class="p">);  
+  </span><span class="o">if</span><span class="p"> ( </span><span class="no">strcmp</span><span class="p">(password, </span><span class="s">"PasswordNumeroUno"</span><span class="p">) )
+  {
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"Not even close!"</span><span class="p">);
+    </span><span class="no">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);
+  }
+  </span><span class="no">free</span><span class="p">(password);
+  </span><span class="o">*</span><span class="p">(_QWORD </span><span class="o">*</span><span class="p">)password2 </span><span class="o">= </span><span class="mi">0</span><span class="no">LL</span><span class="p">;
+  reverse(password2, t, </span><span class="mi">11</span><span class="no">LL</span><span class="p">);
+  password </span><span class="o">=</span><span class="p"> (</span><span class="no">char </span><span class="o">*</span><span class="p">)readline(</span><span class="s">"Getting harder - what's the second password? "</span><span class="p">);
+  </span><span class="o">if </span><span class="p">( </span><span class="no">strcmp</span><span class="p">(password, password2) )
+  {
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"You've got it all backwards..."</span><span class="p">);
+    </span><span class="no">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);
+  }
+  </span><span class="no">free</span><span class="p">(password);
+  </span><span class="o">*</span><span class="p">(_QWORD </span><span class="o">*</span><span class="p">)password3 </span><span class="o">= </span><span class="mi">0</span><span class="no">LL</span><span class="p">;
+  xor(password3, </span><span class="o">&</span><span class="p">t2, </span><span class="mi">17</span><span class="no">LL</span><span class="p">, </span><span class="mi">19</span><span class="no">LL</span><span class="p">);
+  password </span><span class="o">= </span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="p">)readline(</span><span class="s">"Your final test - give me the third, and most protected, password: "</span><span class="p">);
+  </span><span class="o">if</span><span class="p"> ( </span><span class="no">strcmp</span><span class="p">(password, password3) )
+  {
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"Failed at the final hurdle!"</span><span class="p">);
+    </span><span class="no">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);
+  }
+  </span><span class="no">free</span><span class="p">(password);
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para la primera contraseña muestra un mensaje con <code class="language-plaintext highlighter-rouge">readline</code> y el input que recibe lo almacena en <code class="language-plaintext highlighter-rouge">password</code> despues lo compara con la string <code class="language-plaintext highlighter-rouge">PasswordNumeroUno</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">strcmp</span><span class="p">(password, </span><span class="s">"PasswordNumeroUno"</span><span class="p">)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos comprobarlo ejecutando el binario al enviar la contraseña que obtuvimos nos pide la segunda contraseña, quiere decir que esta es correcta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Okay, first, a warmup - what's the first password? This one's not even hidden: PasswordNumeroUno  
+Getting harder - what's the second password?</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En la segunda contraseña lo que hace es usar la función <code class="language-plaintext highlighter-rouge">reverse</code> pasandole como argumento <code class="language-plaintext highlighter-rouge">t</code> que es el valor y <code class="language-plaintext highlighter-rouge">11</code> que es la longitud, despues almacena el resultado en <code class="language-plaintext highlighter-rouge">password2</code>, despues recibe el input y lo compara con lo que vale</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">reverse</span><span class="p">(password2, t, </span><span class="mi">11</span><span class="no">LL</span><span class="p">);  
+</span><span class="no">strcmp</span><span class="p">(password, password2)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La variable <code class="language-plaintext highlighter-rouge">t</code> no podemos verla en el c pero la vemos representada al hacer clic</p>
+<a href="/challenges/huntinglicense/2.png" target="_blank"><div><p><img src="/challenges/huntinglicense/2.png"></p></div></a>
+
+<p class="plain-text">Sabemos que le da la vuelta, asi que podemos hacer el proceso inverso con <code class="language-plaintext highlighter-rouge">rev</code><p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="p">0wTdr0wss4P | </span><span class="ve">rev</span><span class="p">  
+P4ssw0rdTw0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">De nuevo podemos comprobarla en el binario enviandola y recibiendo otro input</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Getting harder - what's the second password? P4ssw0rdTw0
+Your final test - give me the third, and most protected, password:  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para la contraseña 3 lo que hace es usar la función <code class="language-plaintext highlighter-rouge">xor</code> usando <code class="language-plaintext highlighter-rouge">19</code> como key y 17 como longitud lo almacena el <code class="language-plaintext highlighter-rouge">password3</code> despues lo compara con nuestro input</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">xor(password3, </span><span class="o">&</span><span class="p">t2, </span><span class="mi">17</span><span class="no">LL</span><span class="p">, </span><span class="mi">19</span><span class="no">LL</span><span class="p">);  
+</span><span class="no">strcmp</span><span class="p">(password, password3)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para obtener <code class="language-plaintext highlighter-rouge">t2</code> podemos ver sus valores en hexadecimal haciendo clic sobre el</p>
+<a href="/challenges/huntinglicense/3.png" target="_blank"><div><p><img src="/challenges/huntinglicense/3.png"></p></div></a>
+
+<p class="plain-text">En un script de <code class="language-plaintext highlighter-rouge">python</code> definimos el valor de <code class="language-plaintext highlighter-rouge">t2</code> y lo basamos a formato <code class="language-plaintext highlighter-rouge">bytes</code>, despues hacemos el <code class="language-plaintext highlighter-rouge">xor</code> usando <code class="language-plaintext highlighter-rouge">19</code> como clave y mostramos el resultado de ello</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="p">
+t2 </span><span class="o">= </span><span class="na">bytes</span><span class="p">.fromhex(</span><span class="s">"477b7a6177527d77557a7d727f32323213"</span><span class="p">)  
+
+key </span><span class="o">= </span><span class="mi">19</span><span class="p">
+
+result </span><span class="o">= </span><span class="na">bytes</span><span class="p">([i </span><span class="o">^ </span><span class="p">key </span><span class="o">for </span><span class="p">i </span><span class="o">in </span><span class="p">t2])
+
+</span><span class="no">print</span><span class="p">(result.decode())</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo nos muestra la contraseña que podemos comprobar en el binario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py  
+ThirdAndFinal!!!</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Your final test - give me the third, and most protected, password: ThirdAndFinal!!!  
+Well done hunter - consider yourself certified!</span>
+</code></pre></div></div><br>
+</section>
+
+<section class="post" id="method2">
+<br><h3 class="post-title">Método 2</h3><br>
+
+<p class="plain-text">Otra forma es con <code class="language-plaintext highlighter-rouge">gdb</code> haciendo <code class="language-plaintext highlighter-rouge">breakpoints</code> en cada uno de los <code class="language-plaintext highlighter-rouge">strcmp</code> para ver la comparación, para ver las direcciones donde lo llama usamos <code class="language-plaintext highlighter-rouge">objdump</code></p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ objdump </span><span class="p">-d license | </span><span class="ve">grep</span><span class="am"> 'call.*strcmp'</span><span class="p">
+  4012ac:	e8 af fd ff ff       	</span><span class="ro">call   401060 &ltstrcmp</span><span class="p">@plt>  
+  401316:	e8 45 fd ff ff       	</span><span class="ro">call   401060 &ltstrcmp</span><span class="p">@plt>  
+  40138a:	e8 d1 fc ff ff       	</span><span class="ro">call   401060 &ltstrcmp</span><span class="p">@plt>  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Abrimos el programa con <code class="language-plaintext highlighter-rouge">gdb</code> y definimos un <code class="language-plaintext highlighter-rouge">breakpoints</code> en la primera llamada a <code class="language-plaintext highlighter-rouge">strcmp</code>, corremos el programa enviando <code class="language-plaintext highlighter-rouge">y</code> para seguir y cualquier contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q license
+Reading symbols from </span><span class="ve">license</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">license</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">break *0x4012ac
+Breakpoint 1 at </span><span class="az">0x4012ac
+</span><span class="ro">pwndbg> </span><span class="p">run
+Starting program: </span><span class="ve">/home/kali/license</span><span class="p">
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+So, you want to be a relic hunter?
+First, you're going to need your license, and for that you need to pass the exam.
+It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)
+y
+Okay, first, a warmup - what's the first password? This one's not even hidden: password  
+
+Breakpoint 1, </span><span class="az">0x00000000004012ac </span><span class="p">in </span><span class="am">exam</span><span class="p"> ()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como nos detenemos en el breakpoint en el <code class="language-plaintext highlighter-rouge">disasm</code> deberiamos ver la llamada a <code class="language-plaintext highlighter-rouge">strcmp</code> con los argumentos que son nuestra contraseña y la que se espera</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">context disasm
+LEGEND: </span><span class="am">STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> | </span><span class="ro">CODE</span><span class="p"> | </span><span class="sa">DATA</span><span class="p"> | RWX | RODATA
+</span><span class="az">───────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────
+</span><span class="ve"> ► 0x4012ac &ltexam+34>    </span><span class="na">call   </span><span class="mi">strcmp@plt</span><span class="p">                      &lt</span><span class="ro">strcmp@plt</span><span class="p">>
+        s1: </span><span class="az">0x425770</span><span class="p"> ◂— 'password'
+        s2: 0x402170</span><span class="p"> ◂— 'PasswordNumeroUno'
+ 
+   0x4012b1 &ltexam+39>    </span><span class="na">test   </span><span class="no">eax</span><span class="p">, </span><span class="no">eax</span><span class="p">
+   0x4012b3 &ltexam+41>    </span><span class="na">je     </span><span class="mi">exam+63</span><span class="p">                      &lt</span><span class="ro">exam+63</span><span class="p">>
+ 
+   0x4012b5 &ltexam+43>    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">0x402182</span><span class="p">
+   0x4012ba &ltexam+48>    </span><span class="na">call   </span><span class="mi">puts@plt</span><span class="p">                      &lt</span><span class="ro">puts@plt</span><span class="p">>
+
+   0x4012bf &ltexam+53>    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">,</span><span class="mi"> 0xffffffff</span><span class="p">
+   0x4012c4 &ltexam+58>    </span><span class="na">call   </span><span class="mi">exit@plt</span><span class="p">                      &lt</span><span class="ro">exit@plt</span><span class="p">>
+</span><span class="az">──────────────────────────────────────────────────────────────────────────────────  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Hacemos lo mismo esta vez enviando la primera contraseña y asi vemos la <code class="language-plaintext highlighter-rouge">segunda</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q license
+Reading symbols from </span><span class="ve">license</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">license</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">break *0x401316
+Breakpoint 1 at </span><span class="az">0x401316
+</span><span class="ro">pwndbg></span><span class="p"> run
+Starting program: </span><span class="ve">/home/kali/license</span><span class="p">
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+So, you want to be a relic hunter?
+First, you're going to need your license, and for that you need to pass the exam.
+It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)
+y
+Okay, first, a warmup - what's the first password? This one's not even hidden: PasswordNumeroUno  
+Getting harder - what's the second password? password
+
+Breakpoint 2, </span><span class="az">0x0000000000401316 </span><span class="p">in </span><span class="am">exam</span><span class="p"> ()
+</span><span class="ro">pwndbg> </span><span class="p">context disasm
+LEGEND: </span><span class="am">STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> | </span><span class="ro">CODE</span><span class="p"> | </span><span class="sa">DATA</span><span class="p"> | RWX | RODATA
+</span><span class="az">───────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────
+</span><span class="ve"> ► 0x401316 &ltexam+140>    </span><span class="na">call   </span><span class="mi">strcmp@plt</span><span class="p">                      &lt</span><span class="ro">strcmp@plt</span><span class="p">>
+        s1: </span><span class="az">0x424f90</span><span class="p"> ◂— 'password'
+        s2: </span><span class="am">0x7fffffffe4ec</span><span class="p"> ◂— 'P4ssw0rdTw0'
+ 
+   0x40131b &ltexam+145>    </span><span class="na">test   </span><span class="no">eax</span><span class="p">, </span><span class="no">eax</span><span class="p">
+   0x40131d &ltexam+147>    </span><span class="na">je     </span><span class="mi">exam+169</span><span class="p">                      &lt</span><span class="ro">exam+169</span><span class="p">>
+ 
+   0x40131f &ltexam+149>    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">0x4021c8</span><span class="p">
+   0x401324 &ltexam+154>    </span><span class="na">call   </span><span class="mi">puts@plt</span><span class="p">                      &lt</span><span class="ro">puts@plt</span><span class="p">>
+ 
+   0x401329 &ltexam+159>    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">0xffffffff</span><span class="p">
+   0x40132e &ltexam+164>    </span><span class="na">call   </span><span class="mi">exit@plt</span><span class="p">                      &lt</span><span class="ro">exit@plt</span><span class="p">>
+</span><span class="az">──────────────────────────────────────────────────────────────────────────────────
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Repetimos el mismo proceso y obtenemos la ultima contraseña <code class="language-plaintext highlighter-rouge">ThirdAndFinal!!!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q license
+Reading symbols from </span><span class="ve">license</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">license</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">break *0x40138a
+Breakpoint 1 at </span><span class="az">0x40138a
+</span><span class="ro">pwndbg> </span><span class="p">run
+Starting program: </span><span class="ve">/home/kali/license</span><span class="p">
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+So, you want to be a relic hunter?
+First, you're going to need your license, and for that you need to pass the exam.
+It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)
+y
+Okay, first, a warmup - what's the first password? This one's not even hidden: PasswordNumeroUno  
+Getting harder - what's the second password? P4ssw0rdTw0
+Your final test - give me the third, and most protected, password: password
+
+Breakpoint 1, </span><span class="az">0x000000000040138a </span><span class="p">in </span><span class="am">exam</span><span class="p"> ()
+</span><span class="ro">pwndbg> </span><span class="p">context disasm
+LEGEND: </span><span class="am">STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> | </span><span class="ro">CODE</span><span class="p"> | </span><span class="sa">DATA</span><span class="p"> | RWX | RODATA
+</span><span class="az">───────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────
+</span><span class="ve"> ► 0x40138a &ltexam+256>    </span><span class="na">call   </span><span class="mi">strcmp@plt</span><span class="p">                      &lt</span><span class="ro">strcmp@plt</span><span class="p">>
+        s1: </span><span class="az">0x425770</span><span class="p"> ◂— 'password'
+        s2: </span><span class="am">0x7fffffffe4d0</span><span class="p"> ◂— 'ThirdAndFinal!!!'
+ 
+   0x40138f &ltexam+261>    </span><span class="na">test   </span><span class="no">eax</span><span class="p">, </span><span class="no">eax</span><span class="p">
+   0x401391 &ltexam+263>    </span><span class="na">je     </span><span class="mi">exam+285</span><span class="p">                      &lt</span><span class="ro">exam+285</span><span class="p">>
+ 
+   0x401393 &ltexam+265>    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">0x40222c</span><span class="p">
+   0x401398 &ltexam+270>    </span><span class="na">call   </span><span class="mi">puts@plt</span><span class="p">                      &lt</span><span class="ro">puts@plt</span><span class="p">>
+ 
+   0x40139d &ltexam+275>    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">0xffffffff</span><span class="p">
+   0x4013a2 &ltexam+280>    </span><span class="na">call   </span><span class="mi">exit@plt</span><span class="p">                      &lt</span><span class="ro">exit@plt</span><span class="p">>
+</span><span class="az">──────────────────────────────────────────────────────────────────────────────────
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="method3">
+<br><h3 class="post-title">Método 3</h3><br>
+
+<p class="plain-text">Los metodos anteriores son bastante bonitos y todo pero hay una forma mas facil con <code class="language-plaintext highlighter-rouge">ltrace</code> filtrando por <code class="language-plaintext highlighter-rouge">strcmp</code> enviamos el <code class="language-plaintext highlighter-rouge">y</code> cuando nos pregunte la contraseña enviamos <code class="language-plaintext highlighter-rouge">123</code>, nos mostrara con el <code class="language-plaintext highlighter-rouge">strcmp</code> la comparacion que hace, podemos ver la string que espera que es la primera contraseña <code class="language-plaintext highlighter-rouge">PasswordNumeroUno</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ltrace </span><span class="p">-e strcmp ./license
+So, you want to be a relic hunter?
+First, you're going to need your license, and for that you need to pass the exam.
+It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)
+y
+Okay, first, a warmup - what's the first password? This one's not even hidden: 123
+license->strcmp("123", "PasswordNumeroUno")                                                         = -31  
+Not even close!
++++ exited (status 255) +++</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">license-></span><span class="no">strcmp</span><span class="p">(</span><span class="s">"123"</span><span class="p">, </span><span class="s">"PasswordNumeroUno"</span><span class="p">)                    </span><span class="o">= -</span><span class="mi">31  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Repetimos el proceso esta vez enviando la primera contraseña despues del <code class="language-plaintext highlighter-rouge">y</code>, cuando nos pide la segunda enviamos nuevamente la string <code class="language-plaintext highlighter-rouge">123</code>, al enviarlo esto nos devolvera de nuevo el <code class="language-plaintext highlighter-rouge">strcmp</code> pero ahora con la segunda contraseña <code class="language-plaintext highlighter-rouge">P4ssw0rdTw0</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ltrace</span><span class="p"> -e strcmp ./license
+So, you want to be a relic hunter?
+First, you're going to need your license, and for that you need to pass the exam.
+It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)
+y
+Okay, first, a warmup - what's the first password? This one's not even hidden: PasswordNumeroUno
+license->strcmp("PasswordNumeroUno", "PasswordNumeroUno")                                           = 0
+Getting harder - what's the second password? 123
+license->strcmp("123", "P4ssw0rdTw0")                                                               = -31  
+You've got it all backwards...
++++ exited (status 255) +++</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">De nuevo repetimos ahora enviando <code class="language-plaintext highlighter-rouge">y</code> ademas de las 2 contraseñas, nos mostrara el <code class="language-plaintext highlighter-rouge">strcmp</code> esta vez con la tercera contraseña que es la final <code class="language-plaintext highlighter-rouge">ThirdAndFinal!!!</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ltrace</span><span class="p"> -e strcmp ./license
+So, you want to be a relic hunter?
+First, you're going to need your license, and for that you need to pass the exam.
+It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)
+y
+Okay, first, a warmup - what's the first password? This one's not even hidden: PasswordNumeroUno
+license->strcmp("PasswordNumeroUno", "PasswordNumeroUno")                                           = 0
+Getting harder - what's the second password? P4ssw0rdTw0
+license->strcmp("P4ssw0rdTw0", "P4ssw0rdTw0")                                                       = 0
+Your final test - give me the third, and most protected, password: 123
+license->strcmp("123", "ThirdAndFinal!!!")                                                          = -35  
+Failed at the final hurdle!
++++ exited (status 255) +++</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Enviamos todas las contraseñas, nos devuelve que nos consideremos certificados</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./license</span><span class="p">
+So, you want to be a relic hunter?
+First, you're going to need your license, and for that you need to pass the exam.
+It's short, but it's not for the faint of heart. Are you up to the challenge?! (y/n)
+y
+Okay, first, a warmup - what's the first password? This one's not even hidden: PasswordNumeroUno  
+Getting harder - what's the second password? P4ssw0rdTw0
+Your final test - give me the third, and most protected, password: ThirdAndFinal!!!
+Well done hunter - consider yourself certified!</span>
+</code></pre></div></div><br>
+</section>
+
+<section class="post" id="questionnaire">
+<br><h3 class="post-title">Cuestionario</h3><br>
+
+<p class="plain-text">Nos conectamos con <code class="language-plaintext highlighter-rouge">netcat</code> a el host proporcionado por hackthebox y al responder las preguntas de acuerdo a lo que explotamos se nos devuelve finalmente la <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">165.141.104.69 30427
+
+</span><span class="sa">What is the file format of the executable?
+</span><span class="p">> ELF 
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">What is the CPU architecture of the executable?
+</span><span class="p">> amd64
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">What library is used to read lines for user answers? (`ldd` may help)
+</span><span class="p">> libreadline.so.8
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">What is the address of the `main` function?
+</span><span class="p">> 0x401172
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">How many calls to `puts` are there in `main`? (using a decompiler may help)  
+</span><span class="p">> 5
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">What is the first password?
+</span><span class="p">> PasswordNumeroUno
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">What is the reversed form of the second password?
+</span><span class="p">> 0wTdr0wss4P
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">What is the real second password?
+</span><span class="p">> P4ssw0rdTw0
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">What is the XOR key used to encode the third password?
+</span><span class="p">> 19
+</span><span class="ve">[+] Correct!
+
+</span><span class="sa">What is the third password?
+</span><span class="p">> ThirdAndFinal!!!
+</span><span class="ve">[+] Correct!
+
+[+] Here is the flag: `HTB{l1c3ns3_4cquir3d-hunt1ng_t1m3!}`</span>
+</code></pre></div></div><br>
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

