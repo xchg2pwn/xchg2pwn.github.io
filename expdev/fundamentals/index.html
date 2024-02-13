@@ -127,7 +127,8 @@
         <li><a href="#stack">1.2 - Stack o Pila</a></li>
         <li><a href="#conventions">1.3 - Convenciones</a></li>
         <li><a href="#registers">1.4 - Registros</a></li>
-        <li><a href="#example">1.5 - Ejemplo</a></li>
+        <li><a href="#endianness">1.5 - Endianness</a></li>
+        <li><a href="#example">1.6 - Ejemplo</a></li>
       </ul>
   </div>
 
@@ -190,11 +191,18 @@
 <br>• EIP (Instruction Pointer): Apunta a la dirección de la siguiente instrucción a ejecutar.</p>
 
 </section>
+<section class="post" id="endianness">
+<br><h3 class="post-title">1.5 - Endianness</h3><br>
+
+<p class="plain-text">Hay diferentes formas de representar los valores en memoria, las mas comunes son:</p>
+<p class="plain-text">• Big Endian: Adoptado por Motorola y otros, consiste en representar los bytes en el orden natural, por lo que el valor hexadecimal <code class="language-plaintext highlighter-rouge">0x01020304</code> se guardaría en memoria con los bytes ordenados como <code class="language-plaintext highlighter-rouge">01 02 03 04</code> por lo que no sufriria cambios.</br>
+<br>• Little Endian: Adoptado por Intel, el mismo valor <code class="language-plaintext highlighter-rouge">0x01020304</code> se guardaría en orden inverso con los bytes <code class="language-plaintext highlighter-rouge">04 03 02 01</code> de manera que se hace más intuitivo el acceso a datos, porque se efectúa fácilmente de forma incremental de menos a más relevante.</p>
+
+</section>
 <section class="post" id="example">
-<br><h3 class="post-title">1.5 - Ejemplo</h3><br>
+<br><h3 class="post-title">1.6 - Ejemplo</h3><br>
 
 <p class="plain-text">Un ejemplo de codigo vulnerable seria el siguiente, este llama a la función <code class="language-plaintext highlighter-rouge">vuln()</code> pasándole la string del primer argumento, esta función copia la string hacia la variable <code class="language-plaintext highlighter-rouge">dest</code> con solo un buffer de 64 bytes, asi que... ¿que pasa si se envian más bytes?</p>
-
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="o">#include </span><span class="s">&ltstring.h>
 </span><span class="o">#include </span><span class="s">&ltstdio.h>
