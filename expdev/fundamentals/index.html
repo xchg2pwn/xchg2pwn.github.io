@@ -123,12 +123,12 @@
     <div class="izquierda">
       <h3 class="post-title">Contenido</h3><br>
       <ul>
-        <li><a href="#memory">1.1 - Memoria</a></li>
-        <li><a href="#stack">1.2 - Stack o Pila</a></li>
-        <li><a href="#conventions">1.3 - Convenciones</a></li>
-        <li><a href="#registers">1.4 - Registros</a></li>
+        <li><a href="#memory">1.1 - Memory</a></li>
+        <li><a href="#stack">1.2 - Stack</a></li>
+        <li><a href="#conventions">1.3 - Conventions</a></li>
+        <li><a href="#registers">1.4 - Registers</a></li>
         <li><a href="#endianness">1.5 - Endianness</a></li>
-        <li><a href="#example">1.6 - Ejemplo</a></li>
+        <li><a href="#example">1.6 - Example</a></li>
       </ul>
   </div>
 
@@ -139,7 +139,7 @@
   </header>
 
 <section class="post" id="memory">
-<br><h3 class="post-title">1.1 - Memoria</h3><br>
+<br><h3 class="post-title">1.1 - Memory</h3><br>
 
 <p class="plain-text">Cuando se ejecuta un programa en Windows a este se le asigna memoria, desde la dirección mas baja <code class="language-plaintext highlighter-rouge">0x00000000</code> hasta la mas alta <code class="language-plaintext highlighter-rouge">0x7fffffff</code> entra dentro del rango de "user-mode" y de la dirección <code class="language-plaintext highlighter-rouge">0x80000000</code> hasta <code class="language-plaintext highlighter-rouge">0xffffffff</code> en "kernel-mode".</p>
 <p class="plain-text">Al crearse un proceso se crean con el las estructuras PEB y TEB:</p>
@@ -151,7 +151,7 @@
 
 </section>
 <section class="post" id="stack">
-<br><h3 class="post-title">1.2 - Stack o Pila</h3><br>
+<br><h3 class="post-title">1.2 - Stack</h3><br>
 
 <p class="plain-text">Cuando se crea un hilo, este ejecuta codigo desde el programa o librerías, este hilo requiere un área de acceso rápido para funciones, variables e información del programa, esto se conoce como pila, cada hilo crea su propio stack o pila.</p>
 <p class="plain-text">El stack trabaja bajo una estructura <code class="language-plaintext highlighter-rouge">LIFO</code> (Last-In-First-Out), esto significa que los últimos datos que han sido empujados usando la instrucción <code class="language-plaintext highlighter-rouge">push</code>, serán también los primeros en eliminarse cuando se ejecute una instrucción <code class="language-plaintext highlighter-rouge">pop</code> para eliminar datos.</p>
@@ -159,7 +159,7 @@
 
 </section>
 <section class="post" id="conventions">
-<br><h3 class="post-title">1.3 - Convenciones de llamada</h3><br>
+<br><h3 class="post-title">1.3 - Calling Conventions</h3><br>
 
 <p class="plain-text">Las convenciones de llamada se refieren a la forma en que las funciones reciben los parámetros y el valor de la dirección de retorno en cada arquitectura, en <code class="language-plaintext highlighter-rouge">x86</code> los argumentos se empujan a la pila junto con la dirección de retorno y esta se limpia después de hacer la llamada a la función para poder utilizarse después.</p>
 <p class="plain-text">Cuando se llama a una función esta necesita saber a donde apuntar cuando finaliza su ejecución asi que antes de realizar la llamada se guarda la dirección de la siguiente instrucción en el stack y cuando esta llegue al final y ejecute la instrucción <code class="language-plaintext highlighter-rouge">ret</code> tomará la dirección guardada en el stack y volverá ahí para ejecutar lo que esta en ella.</p>
@@ -168,7 +168,7 @@
 
 </section>
 <section class="post" id="registers">
-<br><h3 class="post-title">1.4 - Registros</h3><br>
+<br><h3 class="post-title">1.4 - Registers</h3><br>
 
 <p class="plain-text">Para ser eficientes al ejecutar un codigo la <code class="language-plaintext highlighter-rouge">CPU</code> utiliza 9 registros de <code class="language-plaintext highlighter-rouge">32</code> bits, los registros son pequeñas ubicaciones donde los datos se pueden leer y/o modificar eficientemente, algo a tener en cuenta es que cada registro se puede dividir en subregistros de <code class="language-plaintext highlighter-rouge">16</code> y/o <code class="language-plaintext highlighter-rouge">8</code> bits como se muestra en la siguiente tabla.</p>
 <a href="/expdev/fundamentals/3.png" target="_blank"><div><p><img src="/expdev/fundamentals/3.png"></p></div></a>
@@ -200,7 +200,7 @@
 
 </section>
 <section class="post" id="example">
-<br><h3 class="post-title">1.6 - Ejemplo</h3><br>
+<br><h3 class="post-title">1.6 - Example</h3><br>
 
 <p class="plain-text">Un ejemplo de codigo vulnerable seria el siguiente, este llama a la función <code class="language-plaintext highlighter-rouge">vuln()</code> pasándole la string del primer argumento, esta función copia la string hacia la variable <code class="language-plaintext highlighter-rouge">dest</code> con solo un buffer de 64 bytes, asi que... ¿que pasa si se envian más bytes?</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
