@@ -223,13 +223,13 @@
 <p class="plain-text">Por defecto <code class="language-plaintext highlighter-rouge">dd</code> muestra 32 dwords sin embargo esto podemos controlarlo usando <code class="language-plaintext highlighter-rouge">L</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">dd esp L4
-0043f464  36a20e2b 779c69ec 779c6a68 00000000</span>
+0043f464  36a20e2b 779c69ec 779c6a68 00000000  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Cuando en la dirección donde se hace el <code class="language-plaintext highlighter-rouge">dd</code> se encuentra un puntero como en este caso en <code class="language-plaintext highlighter-rouge">esp + 4</code> podemos usar <code class="language-plaintext highlighter-rouge">poi()</code> para ver los dwords de ese puntero</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">dd poi(esp + 4) L4
-779c69ec  6b6e696d 656e7265 746e5c6c 5c6c6c64</span>
+779c69ec  6b6e696d 656e7265 746e5c6c 5c6c6c64  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Algo interesante es que aunque <code class="language-plaintext highlighter-rouge">db</code> lo hace <code class="language-plaintext highlighter-rouge">dw</code> y <code class="language-plaintext highlighter-rouge">dd</code> no muestran la representación en ascii a la derecha, para verla podemos usar <code class="language-plaintext highlighter-rouge">dW</code> y <code class="language-plaintext highlighter-rouge">dc</code> respectivamente</p>
@@ -267,13 +267,13 @@
 
 <p class="plain-text">Si solo quisieramos ver la representación <code class="language-plaintext highlighter-rouge">ascii</code> y no los bytes podemos usar <code class="language-plaintext highlighter-rouge">da</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000> </span><span class="p">da kernel32
+<code><span class="ro">0:000> </span><span class="p">da kernel32  
 75de0000  "MZ."</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Una ventaja de <code class="language-plaintext highlighter-rouge">WinDbg</code> es el poder representar <code class="language-plaintext highlighter-rouge">estructuras</code> especificas mostrando sus valores de acuerdo a esta, por ejemplo en el controlador de excepciones para hacerlo mas legible mostrando las direcciones del controlador y siguiente SEH</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">typedef struct </span><span class="na">_EXCEPTION_REGISTRATION_RECORD</span><span class="p">
+<code><span class="no">typedef struct </span><span class="na">_EXCEPTION_REGISTRATION_RECORD</span><span class="p">  
 {
      PEXCEPTION_REGISTRATION_RECORD Next;
      PEXCEPTION_DISPOSITION Handler;
@@ -331,7 +331,7 @@ TEB at 02b5b000
 
 <p class="plain-text">Otra cosa que puede hacer es ver el tamaño de una estructura con <code class="language-plaintext highlighter-rouge">sizeof</code>, en este caso es <code class="language-plaintext highlighter-rouge">8</code> ya que la estructura se forma de solo <code class="language-plaintext highlighter-rouge">2</code> dwords de <code class="language-plaintext highlighter-rouge">4</code> bytes cada uno</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000> </span><span class="p">?? sizeof(ntdll!_EXCEPTION_REGISTRATION_RECORD)
+<code><span class="ro">0:000> </span><span class="p">?? sizeof(ntdll!_EXCEPTION_REGISTRATION_RECORD)  
 unsigned int 8</span>
 </code></pre></div></div><br>
 
@@ -435,9 +435,9 @@ ecx=41414141</span>
 <p class="plain-text">El debugger nos permite ejecutar instrucciones asm y analizar su comportamiento, para ejecutar una instrucción podemos usar el comando <code class="language-plaintext highlighter-rouge">p</code> y pasar a la siguiente</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">p
-eax=00000000 ebx=00000000 ecx=be8e0000 edx=00000000 esi=779c6a68 edi=779c69ec
-eip=77a71a93 esp=0070fa08 ebp=0070fa34 iopl=0         nv up ei pl zr na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000244
+eax=00000000 ebx=00000000 ecx=be8e0000 edx=00000000 esi=779c6a68 edi=779c69ec  
+eip=77a71a93 esp=0070fa08 ebp=0070fa34 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000244  
 ntdll!LdrpDoDebuggerBreak+0x2c:
 77a71a93 eb07            jmp     ntdll!LdrpDoDebuggerBreak+0x35 (77a71a9c)</span>
 </code></pre></div></div><br>
@@ -445,9 +445,9 @@ ntdll!LdrpDoDebuggerBreak+0x2c:
 <p class="plain-text">Similar al comando <code class="language-plaintext highlighter-rouge">p</code> el comando <code class="language-plaintext highlighter-rouge">t</code> avanza una instrucción pero lo que lo diferencia es que <code class="language-plaintext highlighter-rouge">t</code> cuando se hace una llamada entra en la función y <code class="language-plaintext highlighter-rouge">p</code> solo la la ejecuta</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">t
-eax=00000000 ebx=00000000 ecx=75ef0000 edx=00000000 esi=779c6a68 edi=779c69ec
-eip=77a71a93 esp=005bf4d4 ebp=005bf500 iopl=0         nv up ei pl zr na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000244
+eax=00000000 ebx=00000000 ecx=75ef0000 edx=00000000 esi=779c6a68 edi=779c69ec  
+eip=77a71a93 esp=005bf4d4 ebp=005bf500 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000244  
 ntdll!LdrpDoDebuggerBreak+0x2c:
 77a71a93 eb07            jmp     ntdll!LdrpDoDebuggerBreak+0x35 (77a71a9c)</span>
 </code></pre></div></div><br>
@@ -455,16 +455,16 @@ ntdll!LdrpDoDebuggerBreak+0x2c:
 <p class="plain-text">Si no queremos ir instrucción por instrucción podemos usar <code class="language-plaintext highlighter-rouge">pt</code> para avanzar hasta la siguiente instrucción <code class="language-plaintext highlighter-rouge">ret</code> o <code class="language-plaintext highlighter-rouge">pc</code> para avanzar hasta el siguiente instrucción <code class="language-plaintext highlighter-rouge">call</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">pt
-eax=00000000 ebx=00000000 ecx=912e89a0 edx=00000000 esi=779c6a68 edi=779c69ec
-eip=77a71ab2 esp=0070fa38 ebp=0070fc98 iopl=0         nv up ei pl zr na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+eax=00000000 ebx=00000000 ecx=912e89a0 edx=00000000 esi=779c6a68 edi=779c69ec  
+eip=77a71ab2 esp=0070fa38 ebp=0070fc98 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
 ntdll!LdrpDoDebuggerBreak+0x4b:
 77a71ab2 c3              ret
 
 </span><span class="ro">0:000> </span><span class="p">pc
-eax=00000000 ebx=00000000 ecx=912e89a0 edx=00000000 esi=779c6a68 edi=779c69ec
-eip=77a6bfe2 esp=0070fa3c ebp=0070fc98 iopl=0         nv up ei pl zr na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+eax=00000000 ebx=00000000 ecx=912e89a0 edx=00000000 esi=779c6a68 edi=779c69ec  
+eip=77a6bfe2 esp=0070fa3c ebp=0070fc98 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
 ntdll!LdrpInitializeProcess+0x1c40:
 77a6bfe2 e802bcfbff      call    ntdll!LdrpDropLastInProgressCount (77a27be9)</span>
 </code></pre></div></div><br>
@@ -478,7 +478,7 @@ ntdll!LdrpInitializeProcess+0x1c40:
 <code><span class="ro">0:000> </span><span class="p">bp kernel32!WriteFile
 
 </span><span class="ro">0:000> </span><span class="p">bl
-     0 e Disable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile</span>
+     0 e Disable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">bd</code> podemos deshabilitar un breakpoint y con el comando <code class="language-plaintext highlighter-rouge">be</code> habilitarlo</p>
@@ -486,17 +486,17 @@ ntdll!LdrpInitializeProcess+0x1c40:
 <code><span class="ro">0:000> </span><span class="p">bd 0
 
 </span><span class="ro">0:000> </span><span class="p">bl
-     0 d Enable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile
+     0 d Enable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile  
 
 </span><span class="ro">0:000> </span><span class="p">be 0
 
 </span><span class="ro">0:000> </span><span class="p">bl
-     0 e Disable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile</span>
+     0 e Disable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Con <code class="language-plaintext highlighter-rouge">bc</code> podemos eliiminar el breakpoint indicando su id o <code class="language-plaintext highlighter-rouge">*</code> para eliminar todos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000> </span><span class="p">bc 0
+<code><span class="ro">0:000> </span><span class="p">bc 0  
 
 </span><span class="ro">0:000> </span><span class="p">bl</span>
 </code></pre></div></div><br>
@@ -511,7 +511,7 @@ eax=0050ed48 ebx=00000000 ecx=00000007 edx=00000000 esi=00000007 edi=009a37e8
 eip=75e03850 esp=0050ed28 ebp=0050ed5c iopl=0         nv up ei pl nz na po nc
 cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00200202
 KERNEL32!WriteFile:
-75e03850 ff255c10e675    jmp     dword ptr [KERNEL32!_imp__WriteFile (75e6105c)] ds:002b:75e6105c={KERNELBASE!WriteFile (76299530)}</span>
+75e03850 ff255c10e675    jmp     dword ptr [KERNEL32!_imp__WriteFile (75e6105c)] ds:002b:75e6105c={KERNELBASE!WriteFile (76299530)}  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Segun la <a href="https://learn.microsoft.com/es-es/windows/win32/api/fileapi/nf-fileapi-writefile">documentación</a> esta funcion consta de <code class="language-plaintext highlighter-rouge">5</code> argumentos que en el debugger se representan como 5 dwords los cuales podemos mostrar con <code class="language-plaintext highlighter-rouge">dds</code>, por ejemplo <code class="language-plaintext highlighter-rouge">lpNumberOfBytesWritten</code> en <code class="language-plaintext highlighter-rouge">esp + 0xc</code> indica la cantidad de bytes a escribir (<code class="language-plaintext highlighter-rouge">7</code>)</p>
@@ -520,14 +520,14 @@ KERNEL32!WriteFile:
   [</span><span class="mi">in</span><span class="p">]                </span><span class="no">HANDLE       </span><span class="p">hFile</span><span class="p">,
   [</span><span class="mi">in</span><span class="p">]                </span><span class="no">LPCVOID      </span><span class="p">lpBuffer</span><span class="p">,
   [</span><span class="mi">in</span><span class="p">]                </span><span class="no">DWORD        </span><span class="p">nNumberOfBytesToWrite</span><span class="p">,
-  [</span><span class="mi">out</span><span class="p">, </span><span class="mi">optional</span><span class="p">]     </span><span class="no">LPDWORD      </span><span class="p">lpNumberOfBytesWritten</span><span class="p">,
+  [</span><span class="mi">out</span><span class="p">, </span><span class="mi">optional</span><span class="p">]     </span><span class="no">LPDWORD      </span><span class="p">lpNumberOfBytesWritten</span><span class="p">,  
   [</span><span class="mi">in</span><span class="p">, </span><span class="mi">out</span><span class="p">, </span><span class="mi">optional</span><span class="p">] </span><span class="no">LPOVERLAPPED </span><span class="p">lpOverlapped</span><span class="p">
 );</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">dds esp L5
-0050ed28  00fbfe40 notepad!AnsiWriteFile+0xa0
+0050ed28  00fbfe40 notepad!AnsiWriteFile+0xa0  
 0050ed2c  00000488
 0050ed30  009a37e8
 0050ed34  00000007
@@ -538,7 +538,7 @@ KERNEL32!WriteFile:
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">bc *
 
-</span><span class="ro">0:000> </span><span class="p">bp kernel32!WriteFile ".printf \"Number Of Bytes Written: %d\", poi(esp + 0xc); .echo; g"
+</span><span class="ro">0:000> </span><span class="p">bp kernel32!WriteFile ".printf \"Number Of Bytes Written: %d\", poi(esp + 0xc); .echo; g"  
 
 </span><span class="ro">0:000> </span><span class="p">g
 Number Of Bytes Written: 5
@@ -581,7 +581,7 @@ start    end        module name
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">x kernel32!WriteFile*
 75e03860          KERNEL32!WriteFileEx (_WriteFileEx@20)
-75e03870          KERNEL32!WriteFileGather (_WriteFileGather@20)
+75e03870          KERNEL32!WriteFileGather (_WriteFileGather@20)  
 75e03850          KERNEL32!WriteFile (_WriteFile@20)</span>
 </code></pre></div></div><br>
 
@@ -732,7 +732,7 @@ Evaluate expression:
   Decimal: 1094795585
   Decimal (unsigned) : 1094795585
   Octal:   10120240501
-  Binary:  01000001 01000001 01000001 01000001
+  Binary:  01000001 01000001 01000001 01000001  
   Chars:   AAAA
   Time:    Thu Sep  9 23:53:05 2004
   Float:   low 12.0784 high 0
