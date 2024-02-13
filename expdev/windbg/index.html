@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>2.0 - WinDbg</title>
+
+  <meta name="description" content="Instrucciones de WinDbg">
+  <meta name="author" content="GatoGamer1155">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2.0 - WinDbg">
+  <meta name="twitter:description" content="Instrucciones de WinDbg">
+  <meta name="twitter:creator" content="GatoGamer1155">  
+  <meta name="twitter:image" content="/expdev/windbg/image.png" />
+
+  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="2.0 - WinDbg">
+  <meta property="og:description" content="Instrucciones de WinDbg">
+  <meta property="og:image" content="/expdev/windbg/image.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/expdev/windbg/image.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="2.0 - WinDbg" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
+          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/expdev" title="GatoGamer1155" class="blog-button">Exploit Development</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#assemble">2.1 - Assemble</a></li>
+        <li><a href="#display">2.2 - Display</a></li>
+        <li><a href="#enter">2.3 - Enter</a></li>
+        <li><a href="#search">2.4 - Search</a></li>
+        <li><a href="#registers">2.5 - Registers</a></li>
+        <li><a href="#step">2.6 - Step</a></li>
+        <li><a href="#breakpoints">2.7 - Breakpoints</a></li>
+        <li><a href="#modules">2.8 - Modules</a></li>
+        <li><a href="#calculator">2.9 - Calculator</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">Exploit Development</h2>
+    <picture><img src="/expdev/windbg/image.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">2.0 - WinDbg</h2><br>
+  </header>
+
+<section class="post" id="index">
+    <br><p class="plain-text">Aunque a día de hoy existen muchos debuggers como lo son <code class="language-plaintext highlighter-rouge">Immunity Debugger</code> o <code class="language-plaintext highlighter-rouge">x32dbg</code>, algo que proporciona <code class="language-plaintext highlighter-rouge">WinDbg</code> a diferencia de estos es el soporte a arquitectura <code class="language-plaintext highlighter-rouge">x64</code> además de que es capaz de depurar programas en "user-mode" tanto en "kernel-mode", sin contar que es un debugger desarrollado por el propio <code class="language-plaintext highlighter-rouge">Microsoft</code>, algo que lo diferencia de otros debuggers es que con comandos</p></br>
+    <a href="/expdev/windbg/1.png" target="_blank"><div><p><img src="/expdev/windbg/1.png"></p></div></a>
+</section>
+
+<section class="post" id="assemble">
+<br><h3 class="post-title">2.1 - Assemble</h3><br>
+
+<p class="plain-text">Usando el comando <code class="language-plaintext highlighter-rouge">a</code> podemos introducir instrucciones <code class="language-plaintext highlighter-rouge">asm</code> en una dirección especifica, al terminar de escribir las instrucciones terminamos con un <code class="language-plaintext highlighter-rouge">enter</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">a esp
+003df888 push esi
+003df889 pop eax
+003df88a mov esi,edi  
+003df88c push eax
+003df88d ret
+003df88e</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con el comando <code class="language-plaintext highlighter-rouge">u</code> podemos visualizar las instrucciones <code class="language-plaintext highlighter-rouge">asm</code> que contiene una dirección especifica como por ejemplo el stack que acabamos de modificar</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">u esp
+003df888 56              push    esi
+003df889 58              pop     eax
+003df88a 8bf7            mov     esi,edi  
+003df88c 50              push    eax
+003df88d c3              ret</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="display">
+<br><h3 class="post-title">2.2 - Display</h3><br>
+
+<p class="plain-text">Para mostrar los <code class="language-plaintext highlighter-rouge">bytes</code> que contiene una dirección especifica podemos usar <code class="language-plaintext highlighter-rouge">db</code> para ver cada uno de los bytes y a la derecha su representación en <code class="language-plaintext highlighter-rouge">ascii</code> si existe</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">db esp
+0043f464  2b 0e a2 36 ec 69 9c 77-68 6a 9c 77 00 00 00 00  +..6.i.whj.w....  
+0043f474  b8 2e 48 00 64 f4 43 00-d1 bf a6 77 e4 f6 43 00  ..H.d.C....w..C.  
+0043f484  30 af a3 77 7b 37 4d 41-00 00 00 00 f4 f6 43 00  0..w{7MA......C.  
+0043f494  e2 bf a6 77 4f 0c a2 36-00 b0 38 00 00 00 00 00  ...wO..6..8.....  
+0043f4a4  00 e0 38 00 3e 00 40 00-98 1d 48 00 28 f6 43 00  ..8.>.@...H.(.C.  
+0043f4b4  00 00 00 00 01 02 00 00-00 00 00 00 24 f6 43 00  ............$.C.  
+0043f4c4  00 00 00 00 f8 2d 48 00-94 62 48 00 00 5d ae 77  .....-H..bH..].w  
+0043f4d4  00 00 00 00 e8 31 48 00-1a 00 00 00 00 00 00 00  .....1H.........  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">De la misma forma podemos mostrar los bytes en <code class="language-plaintext highlighter-rouge">words</code>, <code class="language-plaintext highlighter-rouge">dwords</code> o <code class="language-plaintext highlighter-rouge">qwords</code> usando <code class="language-plaintext highlighter-rouge">dw</code>, <code class="language-plaintext highlighter-rouge">dd</code> y <code class="language-plaintext highlighter-rouge">dq</code> respectivamente, esto es bastante util para representar direcciones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">dw esp
+0043f464  0e2b 36a2 69ec 779c 6a68 779c 0000 0000  
+0043f474  2eb8 0048 f464 0043 bfd1 77a6 f6e4 0043  
+0043f484  af30 77a3 377b 414d 0000 0000 f6f4 0043  
+0043f494  bfe2 77a6 0c4f 36a2 b000 0038 0000 0000  
+0043f4a4  e000 0038 003e 0040 1d98 0048 f628 0043  
+0043f4b4  0000 0000 0201 0000 0000 0000 f624 0043  
+0043f4c4  0000 0000 2df8 0048 6294 0048 5d00 77ae  
+0043f4d4  0000 0000 31e8 0048 001a 0000 0000 0000  
+
+</span><span class="ro">0:000> </span><span class="p">dd esp
+0043f464  36a20e2b 779c69ec 779c6a68 00000000
+0043f474  00482eb8 0043f464 77a6bfd1 0043f6e4
+0043f484  77a3af30 414d377b 00000000 0043f6f4
+0043f494  77a6bfe2 36a20c4f 0038b000 00000000
+0043f4a4  0038e000 0040003e 00481d98 0043f628
+0043f4b4  00000000 00000201 00000000 0043f624
+0043f4c4  00000000 00482df8 00486294 77ae5d00
+0043f4d4  00000000 004831e8 0000001a 00000000
+
+</span><span class="ro">0:000> </span><span class="p">dq esp
+0043f464  779c69ec`36a20e2b 00000000`779c6a68
+0043f474  0043f464`00482eb8 0043f6e4`77a6bfd1
+0043f484  414d377b`77a3af30 0043f6f4`00000000
+0043f494  36a20c4f`77a6bfe2 00000000`0038b000
+0043f4a4  0040003e`0038e000 0043f628`00481d98
+0043f4b4  00000201`00000000 0043f624`00000000
+0043f4c4  00482df8`00000000 77ae5d00`00486294
+0043f4d4  004831e8`00000000 00000000`0000001a</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Por defecto <code class="language-plaintext highlighter-rouge">dd</code> muestra 32 dwords sin embargo esto podemos controlarlo usando <code class="language-plaintext highlighter-rouge">L</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">dd esp L4
+0043f464  36a20e2b 779c69ec 779c6a68 00000000</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando en la dirección donde se hace el <code class="language-plaintext highlighter-rouge">dd</code> se encuentra un puntero como en este caso en <code class="language-plaintext highlighter-rouge">esp + 4</code> podemos usar <code class="language-plaintext highlighter-rouge">poi()</code> para ver los dwords de ese puntero</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">dd poi(esp + 4) L4
+779c69ec  6b6e696d 656e7265 746e5c6c 5c6c6c64</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Algo interesante es que aunque <code class="language-plaintext highlighter-rouge">db</code> lo hace <code class="language-plaintext highlighter-rouge">dw</code> y <code class="language-plaintext highlighter-rouge">dd</code> no muestran la representación en ascii a la derecha, para verla podemos usar <code class="language-plaintext highlighter-rouge">dW</code> y <code class="language-plaintext highlighter-rouge">dc</code> respectivamente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">db kernel32
+75de0000  4d 5a 90 00 03 00 00 00-04 00 00 00 ff ff 00 00  MZ..............  
+75de0010  b8 00 00 00 00 00 00 00-40 00 00 00 00 00 00 00  ........@.......  
+75de0020  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................  
+75de0030  00 00 00 00 00 00 00 00-00 00 00 00 e8 00 00 00  ................  
+75de0040  0e 1f ba 0e 00 b4 09 cd-21 b8 01 4c cd 21 54 68  ........!..L.!Th  
+75de0050  69 73 20 70 72 6f 67 72-61 6d 20 63 61 6e 6e 6f  is program canno  
+75de0060  74 20 62 65 20 72 75 6e-20 69 6e 20 44 4f 53 20  t be run in DOS   
+75de0070  6d 6f 64 65 2e 0d 0d 0a-24 00 00 00 00 00 00 00  mode....$.......  
+
+</span><span class="ro">0:000> </span><span class="p">dW kernel32
+75de0000  5a4d 0090 0003 0000 0004 0000 ffff 0000  MZ..............
+75de0010  00b8 0000 0000 0000 0040 0000 0000 0000  ........@.......
+75de0020  0000 0000 0000 0000 0000 0000 0000 0000  ................
+75de0030  0000 0000 0000 0000 0000 0000 00e8 0000  ................
+75de0040  1f0e 0eba b400 cd09 b821 4c01 21cd 6854  ........!..L.!Th
+75de0050  7369 7020 6f72 7267 6d61 6320 6e61 6f6e  is program canno
+75de0060  2074 6562 7220 6e75 6920 206e 4f44 2053  t be run in DOS 
+75de0070  6f6d 6564 0d2e 0a0d 0024 0000 0000 0000  mode....$.......
+
+</span><span class="ro">0:000> </span><span class="p">dc kernel32
+75de0000  00905a4d 00000003 00000004 0000ffff  MZ..............
+75de0010  000000b8 00000000 00000040 00000000  ........@.......
+75de0020  00000000 00000000 00000000 00000000  ................
+75de0030  00000000 00000000 00000000 000000e8  ................
+75de0040  0eba1f0e cd09b400 4c01b821 685421cd  ........!..L.!Th
+75de0050  70207369 72676f72 63206d61 6f6e6e61  is program canno
+75de0060  65622074 6e757220 206e6920 20534f44  t be run in DOS 
+75de0070  65646f6d 0a0d0d2e 00000024 00000000  mode....$.......</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si solo quisieramos ver la representación <code class="language-plaintext highlighter-rouge">ascii</code> y no los bytes podemos usar <code class="language-plaintext highlighter-rouge">da</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">da kernel32
+75de0000  "MZ."</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una ventaja de <code class="language-plaintext highlighter-rouge">WinDbg</code> es el poder representar <code class="language-plaintext highlighter-rouge">estructuras</code> especificas mostrando sus valores de acuerdo a esta, por ejemplo en el controlador de excepciones para hacerlo mas legible mostrando las direcciones del controlador y siguiente SEH</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">typedef struct </span><span class="na">_EXCEPTION_REGISTRATION_RECORD</span><span class="p">
+{
+     PEXCEPTION_REGISTRATION_RECORD Next;
+     PEXCEPTION_DISPOSITION Handler;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">dt ntdll!_EXCEPTION_REGISTRATION_RECORD
+   +0x000 Next             : Ptr32 _EXCEPTION_REGISTRATION_RECORD  
+   +0x004 Handler          : Ptr32     _EXCEPTION_DISPOSITION</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos pasarle la dirección del <code class="language-plaintext highlighter-rouge">ExceptionList</code> o la dirección donde esta la estructura para que muestre las direcciones de sus valores como <code class="language-plaintext highlighter-rouge">Handler</code> o <code class="language-plaintext highlighter-rouge">Next</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">!teb
+TEB at 02b5b000
+    ExceptionList:        0056f280
+    StackBase:            00570000
+    StackLimit:           0055f000
+    SubSystemTib:         00000000
+    FiberData:            00001e00
+    ArbitraryUserPointer: 00000000
+    Self:                 02b5b000
+    EnvironmentPointer:   00000000
+    ClientId:             00001534 . 0000161c
+    RpcHandle:            00000000
+    Tls Storage:          02d13180
+    PEB Address:          02b58000
+    LastErrorValue:       0
+    LastStatusValue:      0
+    Count Owned Locks:    0
+    HardErrorMode:        0
+
+</span><span class="ro">0:000> </span><span class="p">dt ntdll!_EXCEPTION_REGISTRATION_RECORD 0056f280
+   +0x000 Next             : 0x0056f4e4 _EXCEPTION_REGISTRATION_RECORD
+   +0x004 Handler          : 0x772eaf30     _EXCEPTION_DISPOSITION  ntdll!_except_handler4+0  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">También se puede indicar un campo especifico como en este caso puede serlo <code class="language-plaintext highlighter-rouge">Handler</code> o <code class="language-plaintext highlighter-rouge">Next</code> para que solo muestre la información de ese valor y no los demás</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">dt ntdll!_EXCEPTION_REGISTRATION_RECORD 0056f280 Handler
+   +0x004 Handler : 0x772eaf30     _EXCEPTION_DISPOSITION  ntdll!_except_handler4+0  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando el parametro <code class="language-plaintext highlighter-rouge">-r</code> se mostrará la estructura de forma recursiva si lo permite</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> dt -r ntdll!_EXCEPTION_REGISTRATION_RECORD 0056f280 
+   +0x000 Next             : 0x0056f4e4 _EXCEPTION_REGISTRATION_RECORD
+      +0x000 Next             : 0x0056f53c _EXCEPTION_REGISTRATION_RECORD
+         +0x000 Next             : 0xffffffff _EXCEPTION_REGISTRATION_RECORD
+         +0x004 Handler          : 0x772eaf30           _EXCEPTION_DISPOSITION  ntdll!_except_handler4+0  
+      +0x004 Handler          : 0x772eaf30        _EXCEPTION_DISPOSITION  ntdll!_except_handler4+0
+   +0x004 Handler          : 0x772eaf30     _EXCEPTION_DISPOSITION  ntdll!_except_handler4+0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Otra cosa que puede hacer es ver el tamaño de una estructura con <code class="language-plaintext highlighter-rouge">sizeof</code>, en este caso es <code class="language-plaintext highlighter-rouge">8</code> ya que la estructura se forma de solo <code class="language-plaintext highlighter-rouge">2</code> dwords de <code class="language-plaintext highlighter-rouge">4</code> bytes cada uno</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">?? sizeof(ntdll!_EXCEPTION_REGISTRATION_RECORD)
+unsigned int 8</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="enter">
+<br><h3 class="post-title">2.3 - Enter</h3><br>
+
+<p class="plain-text">En el apartado anterior vimos algunas formas de mostrar la memoria, sin embargo tambien podemos introducir datos en ella, usando <code class="language-plaintext highlighter-rouge">eb</code> podemos escribir bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">eb esp 41
+
+</span><span class="ro">0:000> </span><span class="p">db esp L2
+0043f464  41 0e                                            A.  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para escribir <code class="language-plaintext highlighter-rouge">words</code> o <code class="language-plaintext highlighter-rouge">dwords</code>, tendriamos que usar <code class="language-plaintext highlighter-rouge">ew</code> y <code class="language-plaintext highlighter-rouge">ed</code> respectivamente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">ed esp 41414141
+
+</span><span class="ro">0:000> </span><span class="p">dd esp L2
+0043f464  41414141 779c69ec  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para escribir una cadena en ascii podemos usar <code class="language-plaintext highlighter-rouge">ea</code> pasandole el texto entre comillas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">ea esp "Hello world!"  
+
+</span><span class="ro">0:000> </span><span class="p">da esp
+0043f464  "Hello world!"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Muy similar a lo anterior podemos escribir en unicode usando <code class="language-plaintext highlighter-rouge">eu</code> y mostrarlo con <code class="language-plaintext highlighter-rouge">du</code>, solo cambia es la forma de escribirlo ya que <code class="language-plaintext highlighter-rouge">utf-16</code> separa los bytes con un <code class="language-plaintext highlighter-rouge">00</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">eu esp "Hello world!"
+
+</span><span class="ro">0:000> </span><span class="p">du esp
+0043f464  "Hello world!"
+
+</span><span class="ro">0:000> </span><span class="p">db esp L20
+0043f464  48 00 65 00 6c 00 6c 00-6f 00 20 00 77 00 6f 00  H.e.l.l.o. .w.o.  
+0043f474  72 00 6c 00 64 00 21 00-d1 bf a6 77 e4 f6 43 00  r.l.d.!....w..C.  </span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="search">
+<br><h3 class="post-title">2.4 - Search</h3><br>
+
+<p class="plain-text">Para buscar cadenas o bytes espeficicos tenemos el comando <code class="language-plaintext highlighter-rouge">s</code> que necesita algunos parametros, iniciando por el tipo de dato, en este caso como buscaremos un dword usamos <code class="language-plaintext highlighter-rouge">-d</code>, la dirección inicial que en este caso es <code class="language-plaintext highlighter-rouge">0</code>, la dirección final donde usamos <code class="language-plaintext highlighter-rouge">L?80000000</code> haciendo referencia a todo el espacio en memoria del proceso y finalmente el patron a buscar que es <code class="language-plaintext highlighter-rouge">41414141</code> que escribimos previamente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">ed esp 41414141
+
+</span><span class="ro">0:000> </span><span class="p">s -d 0 L?80000000 41414141
+00dff538  41414141 779c69ec 779c6a68 00000000  AAAA.i.whj.w....  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Dependiendo el dato a buscar podemos usar un parametro u otro, si quisieramos buscar cadenas ascii podemos usar <code class="language-plaintext highlighter-rouge">-a</code>, para unicode <code class="language-plaintext highlighter-rouge">-u</code>, y asi sucesivamente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">s -a 0 L?80000000 "This program cannot be run in DOS mode"
+75ae004e  54 68 69 73 20 70 72 6f-67 72 61 6d 20 63 61 6e  This program can  
+75de004e  54 68 69 73 20 70 72 6f-67 72 61 6d 20 63 61 6e  This program can  
+7618004e  54 68 69 73 20 70 72 6f-67 72 61 6d 20 63 61 6e  This program can  
+779b004e  54 68 69 73 20 70 72 6f-67 72 61 6d 20 63 61 6e  This program can  
+779c004e  54 68 69 73 20 70 72 6f-67 72 61 6d 20 63 61 6e  This program can  </span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="registers">
+<br><h3 class="post-title">2.5 - Registers</h3><br>
+
+<p class="plain-text">La instrucción <code class="language-plaintext highlighter-rouge">r</code> nos muestra información sobre el contexto actual, todos los registros y la instrucción a la que apunta el registro <code class="language-plaintext highlighter-rouge">eip</code> que se va a ejecutar</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">r
+eax=00000000 ebx=00000000 ecx=f5b70000 edx=00000000 esi=779c6a68 edi=779c69ec  
+eip=77a71a92 esp=00dff538 ebp=00dff564 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+ntdll!LdrpDoDebuggerBreak+0x2b:
+77a71a92 cc              int     3</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos consultar el valor de un registro especifico como <code class="language-plaintext highlighter-rouge">ecx</code> o si se requiere también el valor de una flag como lo puede ser <code class="language-plaintext highlighter-rouge">zf</code> que ahora mismo vale 1</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">r ecx
+ecx=f5b70000  
+
+</span><span class="ro">0:000> </span><span class="p">r zf
+zf=1</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Además de consultar el valor del registro también se puede modificar usando <code class="language-plaintext highlighter-rouge">=</code>, en el siguiente ejemplo cambiamos el valor del registro <code class="language-plaintext highlighter-rouge">ecx</code> a <code class="language-plaintext highlighter-rouge">41414141</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">r ecx=41414141  
+
+</span><span class="ro">0:000> </span><span class="p">r ecx
+ecx=41414141</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="step">
+<br><h3 class="post-title">2.6 - Step</h3><br>
+
+<p class="plain-text">El debugger nos permite ejecutar instrucciones asm y analizar su comportamiento, para ejecutar una instrucción podemos usar el comando <code class="language-plaintext highlighter-rouge">p</code> y pasar a la siguiente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">p
+eax=00000000 ebx=00000000 ecx=be8e0000 edx=00000000 esi=779c6a68 edi=779c69ec
+eip=77a71a93 esp=0070fa08 ebp=0070fa34 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000244
+ntdll!LdrpDoDebuggerBreak+0x2c:
+77a71a93 eb07            jmp     ntdll!LdrpDoDebuggerBreak+0x35 (77a71a9c)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Similar al comando <code class="language-plaintext highlighter-rouge">p</code> el comando <code class="language-plaintext highlighter-rouge">t</code> avanza una instrucción pero lo que lo diferencia es que <code class="language-plaintext highlighter-rouge">t</code> cuando se hace una llamada entra en la función y <code class="language-plaintext highlighter-rouge">p</code> solo la la ejecuta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">t
+eax=00000000 ebx=00000000 ecx=75ef0000 edx=00000000 esi=779c6a68 edi=779c69ec
+eip=77a71a93 esp=005bf4d4 ebp=005bf500 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000244
+ntdll!LdrpDoDebuggerBreak+0x2c:
+77a71a93 eb07            jmp     ntdll!LdrpDoDebuggerBreak+0x35 (77a71a9c)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si no queremos ir instrucción por instrucción podemos usar <code class="language-plaintext highlighter-rouge">pt</code> para avanzar hasta la siguiente instrucción <code class="language-plaintext highlighter-rouge">ret</code> o <code class="language-plaintext highlighter-rouge">pc</code> para avanzar hasta el siguiente instrucción <code class="language-plaintext highlighter-rouge">call</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">pt
+eax=00000000 ebx=00000000 ecx=912e89a0 edx=00000000 esi=779c6a68 edi=779c69ec
+eip=77a71ab2 esp=0070fa38 ebp=0070fc98 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+ntdll!LdrpDoDebuggerBreak+0x4b:
+77a71ab2 c3              ret
+
+</span><span class="ro">0:000> </span><span class="p">pc
+eax=00000000 ebx=00000000 ecx=912e89a0 edx=00000000 esi=779c6a68 edi=779c69ec
+eip=77a6bfe2 esp=0070fa3c ebp=0070fc98 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+ntdll!LdrpInitializeProcess+0x1c40:
+77a6bfe2 e802bcfbff      call    ntdll!LdrpDropLastInProgressCount (77a27be9)</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="breakpoints">
+<br><h3 class="post-title">2.7 - Breakpoints</h3><br>
+
+<p class="plain-text">Algo importante son los breakpoints que nos permiten parar en un punto especifico, como en una llamada a una función, para ello tenemos el comando <code class="language-plaintext highlighter-rouge">bp</code> en el cual podemos indicar una dirección y cuando el programa llegue ahi se detendrá, usando <code class="language-plaintext highlighter-rouge">bl</code> podemos ver todos los breakpoints que existen actualmente con su id</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">bp kernel32!WriteFile
+
+</span><span class="ro">0:000> </span><span class="p">bl
+     0 e Disable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">bd</code> podemos deshabilitar un breakpoint y con el comando <code class="language-plaintext highlighter-rouge">be</code> habilitarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">bd 0
+
+</span><span class="ro">0:000> </span><span class="p">bl
+     0 d Enable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile
+
+</span><span class="ro">0:000> </span><span class="p">be 0
+
+</span><span class="ro">0:000> </span><span class="p">bl
+     0 e Disable Clear  75e03850     0001 (0001)  0:**** KERNEL32!WriteFile</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">bc</code> podemos eliiminar el breakpoint indicando su id o <code class="language-plaintext highlighter-rouge">*</code> para eliminar todos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">bc 0
+
+</span><span class="ro">0:000> </span><span class="p">bl</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando establecemos un breakpoint y corremos el programa este se detendrá cuando llegue a ese punto, en este caso <code class="language-plaintext highlighter-rouge">WriteFile</code> se llama cuando guardamos un archivo desde <code class="language-plaintext highlighter-rouge">notepad.exe</code> que estamos depurando y se detendrá el programa</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">bp kernel32!WriteFile
+
+</span><span class="ro">0:000> </span><span class="p">g
+Breakpoint 0 hit
+eax=0050ed48 ebx=00000000 ecx=00000007 edx=00000000 esi=00000007 edi=009a37e8
+eip=75e03850 esp=0050ed28 ebp=0050ed5c iopl=0         nv up ei pl nz na po nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00200202
+KERNEL32!WriteFile:
+75e03850 ff255c10e675    jmp     dword ptr [KERNEL32!_imp__WriteFile (75e6105c)] ds:002b:75e6105c={KERNELBASE!WriteFile (76299530)}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Segun la <a href="https://learn.microsoft.com/es-es/windows/win32/api/fileapi/nf-fileapi-writefile">documentación</a> esta funcion consta de <code class="language-plaintext highlighter-rouge">5</code> argumentos que en el debugger se representan como 5 dwords los cuales podemos mostrar con <code class="language-plaintext highlighter-rouge">dds</code>, por ejemplo <code class="language-plaintext highlighter-rouge">lpNumberOfBytesWritten</code> en <code class="language-plaintext highlighter-rouge">esp + 0xc</code> indica la cantidad de bytes a escribir (<code class="language-plaintext highlighter-rouge">7</code>)</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">BOOL </span><span class="na">WriteFile</span><span class="p">(
+  [</span><span class="mi">in</span><span class="p">]                </span><span class="no">HANDLE       </span><span class="p">hFile</span><span class="p">,
+  [</span><span class="mi">in</span><span class="p">]                </span><span class="no">LPCVOID      </span><span class="p">lpBuffer</span><span class="p">,
+  [</span><span class="mi">in</span><span class="p">]                </span><span class="no">DWORD        </span><span class="p">nNumberOfBytesToWrite</span><span class="p">,
+  [</span><span class="mi">out</span><span class="p">, </span><span class="mi">optional</span><span class="p">]     </span><span class="no">LPDWORD      </span><span class="p">lpNumberOfBytesWritten</span><span class="p">,
+  [</span><span class="mi">in</span><span class="p">, </span><span class="mi">out</span><span class="p">, </span><span class="mi">optional</span><span class="p">] </span><span class="no">LPOVERLAPPED </span><span class="p">lpOverlapped</span><span class="p">
+);</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">dds esp L5
+0050ed28  00fbfe40 notepad!AnsiWriteFile+0xa0
+0050ed2c  00000488
+0050ed30  009a37e8
+0050ed34  00000007
+0050ed38  0050ed48</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos establecer un breakpoint para cuando llegue a este muestre la cantidad de bytes a escribir con <code class="language-plaintext highlighter-rouge">.printf</code>, sabemos que esa cantidad esta en <code class="language-plaintext highlighter-rouge">esp + 0xc</code>, entonces cuando escribimos un archivo desde el <code class="language-plaintext highlighter-rouge">notepad.exe</code> mostrará en el debugger la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> que se estan escribiendo en el archivo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">bc *
+
+</span><span class="ro">0:000> </span><span class="p">bp kernel32!WriteFile ".printf \"Number Of Bytes Written: %d\", poi(esp + 0xc); .echo; g"
+
+</span><span class="ro">0:000> </span><span class="p">g
+Number Of Bytes Written: 5
+Number Of Bytes Written: 7
+Number Of Bytes Written: 13</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="modules">
+<br><h3 class="post-title">2.8 - Modules</h3><br>
+
+<p class="plain-text">Usando el comando <code class="language-plaintext highlighter-rouge">lm</code> podemos ver todos los modulos que se han cargado para este programa, con <code class="language-plaintext highlighter-rouge">lm m</code> podemos buscar modulos con un patrón especifico</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">lm
+start    end        module name
+00fb0000 00fde000   notepad    (pdb symbols)          c:\symbols\notepad.pdb\21C3A2873E9F57AD16E58CEB784EEFDC1\notepad.pdb
+73150000 73360000   COMCTL32   (deferred)             
+75860000 75ae0000   combase    (deferred)             
+75ae0000 75b9f000   msvcrt     (deferred)             
+75de0000 75ed0000   KERNEL32   (pdb symbols)          c:\symbols\wkernel32.pdb\C326144F3CCFAE9FC9E07C0C1F71E8631\wkernel32.pdb
+75ed0000 75ff0000   ucrtbase   (deferred)             
+76180000 763ba000   KERNELBASE   (deferred)             
+763f0000 764af000   RPCRT4     (deferred)             
+765a0000 7661b000   msvcp_win   (deferred)             
+76620000 767bc000   USER32     (deferred)             
+77060000 77078000   win32u     (deferred)             
+77080000 77107000   shcore     (deferred)             
+77210000 772f8000   gdi32full   (deferred)             
+777e0000 77804000   GDI32      (deferred)             
+779c0000 77b64000   ntdll      (pdb symbols)          c:\symbols\wntdll.pdb\AE4A9CEFBA27BD00DEBC6271B9E3E4BE1\wntdll.pdb
+
+</span><span class="ro">0:000> </span><span class="p">lm m kernel*
+Browse full module list
+start    end        module name
+75120000 75210000   KERNEL32   (pdb symbols)          c:\symbols\wkernel32.pdb\C326144F3CCFAE9FC9E07C0C1F71E8631\wkernel32.pdb  
+76d30000 76f6a000   KERNELBASE   (deferred)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El comando <code class="language-plaintext highlighter-rouge">x</code> nos permite examinar los simbolos de un modulo usando un patrón</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">x kernel32!WriteFile*
+75e03860          KERNEL32!WriteFileEx (_WriteFileEx@20)
+75e03870          KERNEL32!WriteFileGather (_WriteFileGather@20)
+75e03850          KERNEL32!WriteFile (_WriteFile@20)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Otro comando interesante es <code class="language-plaintext highlighter-rouge">!dh</code> que nos mostrará con mas detalle la información de un modulo como la direccion base, sus secciones, permisos, offsets y demás</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">!dh kernel32
+
+File Type: DLL
+FILE HEADER VALUES
+     14C machine (i386)
+       6 number of sections
+F56028CF time date stamp
+       0 file pointer to symbol table
+       0 number of symbols
+      E0 size of optional header
+    2102 characteristics
+            Executable
+            32 bit word machine
+            DLL
+
+OPTIONAL HEADER VALUES
+     10B magic #
+   14.20 linker version
+   65000 size of code
+   33000 size of initialized data
+       0 size of uninitialized data
+   1F8E0 address of entry point
+   10000 base of code
+         ----- new -----
+75120000 image base
+   10000 section alignment
+    1000 file alignment
+       3 subsystem (Windows CUI)
+   10.00 operating system version
+   10.00 image version
+   10.00 subsystem version
+   F0000 size of image
+    1000 size of headers
+   A1F9A checksum
+00040000 size of stack reserve
+00001000 size of stack commit
+00100000 size of heap reserve
+00001000 size of heap commit
+    4140  DLL characteristics
+            Dynamic base
+            NX compatible
+            Guard
+   92CA0 [    DC60] address [size] of Export Directory
+   A0900 [     780] address [size] of Import Directory
+   D0000 [     520] address [size] of Resource Directory
+       0 [       0] address [size] of Exception Directory
+   99000 [    3BD0] address [size] of Security Directory
+   E0000 [    482C] address [size] of Base Relocation Directory
+   854D0 [      70] address [size] of Debug Directory
+       0 [       0] address [size] of Description Directory
+       0 [       0] address [size] of Special Directory
+       0 [       0] address [size] of Thread Storage Directory
+   80138 [      AC] address [size] of Load Configuration Directory
+       0 [       0] address [size] of Bound Import Directory
+   80B50 [    14E8] address [size] of Import Address Table Directory
+   92ACC [      60] address [size] of Delay Import Directory
+       0 [       0] address [size] of COR20 Header Directory
+       0 [       0] address [size] of Reserved Directory
+
+
+SECTION HEADER #1
+   .text name
+   64172 virtual size
+   10000 virtual address
+   65000 size of raw data
+    1000 file pointer to raw data
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+60000020 flags
+         Code
+         (no align specified)
+         Execute Read
+
+SECTION HEADER #2
+  .rdata name
+   2A078 virtual size
+   80000 virtual address
+   2B000 size of raw data
+   66000 file pointer to raw data
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+40000040 flags
+         Initialized Data
+         (no align specified)
+         Read Only
+
+SECTION HEADER #3
+   .data name
+     C78 virtual size
+   B0000 virtual address
+    1000 size of raw data
+   91000 file pointer to raw data
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+C0000040 flags
+         Initialized Data
+         (no align specified)
+         Read Write
+......................................................................</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="calculator">
+<br><h3 class="post-title">2.9 - Calculator</h3><br>
+
+<p class="plain-text">Una función de windbg es la de calcular, esto se hace a través de la expresión <code class="language-plaintext highlighter-rouge">?</code>, en el siguiente ejemplo se puede ver un ejemplo calculando el tamaño de <code class="language-plaintext highlighter-rouge">kernel32</code> a partir de su dirección final y base, el resultado lo muestra en <code class="language-plaintext highlighter-rouge">hex</code> y en decimal</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">lm m kernel32
+Browse full module list
+start    end        module name
+75120000 75210000   KERNEL32   (pdb symbols)  
+
+</span><span class="ro">0:000> </span><span class="p">? 75ed0000 - 75de0000
+Evaluate expression: 983040 = 000f0000</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Por defecto <code class="language-plaintext highlighter-rouge">?</code> asume que el valor que recibe es hexadecimal sin embargo podemos usar un prefix, como <code class="language-plaintext highlighter-rouge">0x</code> para hexadecimal, <code class="language-plaintext highlighter-rouge">0n</code> para decimal o <code class="language-plaintext highlighter-rouge">0y</code> para binario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> ? 41414141
+Evaluate expression: 1094795585 = 41414141
+
+</span><span class="ro">0:000></span><span class="p"> ? 0x41414141
+Evaluate expression: 1094795585 = 41414141
+
+</span><span class="ro">0:000> </span><span class="p">? 0n1094795585
+Evaluate expression: 1094795585 = 41414141
+
+</span><span class="ro">0:000> </span><span class="p">? 0y01000001010000010100000101000001  
+Evaluate expression: 1094795585 = 41414141</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">.formats</code> podemos ver el valor en todas sus posibles representaciones incluyendo todas las anteriores ademas de octal, ascii y algunas variantes más</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">.formats 41414141
+Evaluate expression:
+  Hex:     41414141
+  Decimal: 1094795585
+  Decimal (unsigned) : 1094795585
+  Octal:   10120240501
+  Binary:  01000001 01000001 01000001 01000001
+  Chars:   AAAA
+  Time:    Thu Sep  9 23:53:05 2004
+  Float:   low 12.0784 high 0
+  Double:  5.40901e-315</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque existen muchos más comandos para <code class="language-plaintext highlighter-rouge">WinDbg</code> los presentados anteriormente son de los mas comunes o funcionales a la hora de la explotación, sin embargo siempre se puede aprender más leyendo <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/debugger-commands">documentación</a> y jugando con el debugger</p>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
