@@ -123,15 +123,17 @@
     <div class="izquierda">
       <h3 class="post-title">Contenido</h3><br>
       <ul>
-        <li><a href="#assemble">2.1 - Assemble</a></li>
-        <li><a href="#display">2.2 - Display</a></li>
-        <li><a href="#enter">2.3 - Enter</a></li>
-        <li><a href="#search">2.4 - Search</a></li>
-        <li><a href="#registers">2.5 - Registers</a></li>
-        <li><a href="#step">2.6 - Step</a></li>
-        <li><a href="#breakpoints">2.7 - Breakpoints</a></li>
-        <li><a href="#modules">2.8 - Modules</a></li>
-        <li><a href="#calculator">2.9 - Calculator</a></li>
+        <li><a href="#basics">2.1 - Basics</a></li>
+        <li><a href="#assemble">2.2 - Assemble</a></li>
+        <li><a href="#display">2.3 - Display</a></li>
+        <li><a href="#enter">2.4 - Enter</a></li>
+        <li><a href="#search">2.5 - Search</a></li>
+        <li><a href="#registers">2.6 - Registers</a></li>
+        <li><a href="#step">2.7 - Step</a></li>
+        <li><a href="#breakpoints">2.8 - Breakpoints</a></li>
+        <li><a href="#modules">2.9 - Modules</a></li>
+        <li><a href="#calculator">2.10 - Calculator</a></li>
+        <li><a href="#others">2.11 - Others</a></li>
       </ul>
   </div>
 
@@ -146,8 +148,33 @@
     <a href="/expdev/windbg/1.png" target="_blank"><div><p><img src="/expdev/windbg/1.png"></p></div></a>
 </section>
 
+<section class="post" id="basics">
+<br><h3 class="post-title">2.1 - Basics</h3><br>
+
+<p class="plain-text">Antes de iniciar con comandos para analizar la memoria podemos aprender los comandos básicos, el comando <code class="language-plaintext highlighter-rouge">g</code> nos sirve simplemente para correr el programa</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">g  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con el comando <code class="language-plaintext highlighter-rouge">.restart</code> podemos reiniciar la aplicación que estamos depurando</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">.restart
+(1c48.229c): Break instruction exception - code 80000003 (first chance)
+eax=00000000 ebx=00000000 ecx=68130000 edx=00000000 esi=77276a68 edi=772769ec  
+eip=77321a92 esp=02ddf51c ebp=02ddf548 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+ntdll!LdrpDoDebuggerBreak+0x2b:
+77321a92 cc              int     3</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El comando <code class="language-plaintext highlighter-rouge">qd</code> nos permite salir y desincronizarnos para dejar de depurar el proceso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">windbg> </span><span class="p">qd  </span>
+</code></pre></div></div><br>
+
+</section>
 <section class="post" id="assemble">
-<br><h3 class="post-title">2.1 - Assemble</h3><br>
+<br><h3 class="post-title">2.2 - Assemble</h3><br>
 
 <p class="plain-text">Usando el comando <code class="language-plaintext highlighter-rouge">a</code> podemos introducir instrucciones <code class="language-plaintext highlighter-rouge">asm</code> en una dirección especifica, al terminar de escribir las instrucciones terminamos con un <code class="language-plaintext highlighter-rouge">enter</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -172,7 +199,7 @@
 
 </section>
 <section class="post" id="display">
-<br><h3 class="post-title">2.2 - Display</h3><br>
+<br><h3 class="post-title">2.3 - Display</h3><br>
 
 <p class="plain-text">Para mostrar los <code class="language-plaintext highlighter-rouge">bytes</code> que contiene una dirección especifica podemos usar <code class="language-plaintext highlighter-rouge">db</code> para ver cada uno de los bytes y a la derecha su representación en <code class="language-plaintext highlighter-rouge">ascii</code> si existe</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -337,7 +364,7 @@ unsigned int 8</span>
 
 </section>
 <section class="post" id="enter">
-<br><h3 class="post-title">2.3 - Enter</h3><br>
+<br><h3 class="post-title">2.4 - Enter</h3><br>
 
 <p class="plain-text">En el apartado anterior vimos algunas formas de mostrar la memoria, sin embargo tambien podemos introducir datos en ella, usando <code class="language-plaintext highlighter-rouge">eb</code> podemos escribir bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -377,7 +404,7 @@ unsigned int 8</span>
 
 </section>
 <section class="post" id="search">
-<br><h3 class="post-title">2.4 - Search</h3><br>
+<br><h3 class="post-title">2.5 - Search</h3><br>
 
 <p class="plain-text">Para buscar cadenas o bytes espeficicos tenemos el comando <code class="language-plaintext highlighter-rouge">s</code> que necesita algunos parametros, iniciando por el tipo de dato, en este caso como buscaremos un dword usamos <code class="language-plaintext highlighter-rouge">-d</code>, la dirección inicial que en este caso es <code class="language-plaintext highlighter-rouge">0</code>, la dirección final donde usamos <code class="language-plaintext highlighter-rouge">L?80000000</code> haciendo referencia a todo el espacio en memoria del proceso y finalmente el patron a buscar que es <code class="language-plaintext highlighter-rouge">41414141</code> que escribimos previamente</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -399,7 +426,7 @@ unsigned int 8</span>
 
 </section>
 <section class="post" id="registers">
-<br><h3 class="post-title">2.5 - Registers</h3><br>
+<br><h3 class="post-title">2.6 - Registers</h3><br>
 
 <p class="plain-text">La instrucción <code class="language-plaintext highlighter-rouge">r</code> nos muestra información sobre el contexto actual, todos los registros y la instrucción a la que apunta el registro <code class="language-plaintext highlighter-rouge">eip</code> que se va a ejecutar</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -430,7 +457,7 @@ ecx=41414141</span>
 
 </section>
 <section class="post" id="step">
-<br><h3 class="post-title">2.6 - Step</h3><br>
+<br><h3 class="post-title">2.7 - Step</h3><br>
 
 <p class="plain-text">El debugger nos permite ejecutar instrucciones asm y analizar su comportamiento, para ejecutar una instrucción podemos usar el comando <code class="language-plaintext highlighter-rouge">p</code> y pasar a la siguiente</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -471,7 +498,7 @@ ntdll!LdrpInitializeProcess+0x1c40:
 
 </section>
 <section class="post" id="breakpoints">
-<br><h3 class="post-title">2.7 - Breakpoints</h3><br>
+<br><h3 class="post-title">2.8 - Breakpoints</h3><br>
 
 <p class="plain-text">Algo importante son los breakpoints que nos permiten parar en un punto especifico, como en una llamada a una función, para ello tenemos el comando <code class="language-plaintext highlighter-rouge">bp</code> en el cual podemos indicar una dirección y cuando el programa llegue ahi se detendrá, usando <code class="language-plaintext highlighter-rouge">bl</code> podemos ver todos los breakpoints que existen actualmente con su id</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -548,7 +575,7 @@ Number Of Bytes Written: 13</span>
 
 </section>
 <section class="post" id="modules">
-<br><h3 class="post-title">2.8 - Modules</h3><br>
+<br><h3 class="post-title">2.9 - Modules</h3><br>
 
 <p class="plain-text">Usando el comando <code class="language-plaintext highlighter-rouge">lm</code> podemos ver todos los modulos que se han cargado para este programa, con <code class="language-plaintext highlighter-rouge">lm m</code> podemos buscar modulos con un patrón especifico</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -696,7 +723,7 @@ C0000040 flags
 
 </section>
 <section class="post" id="calculator">
-<br><h3 class="post-title">2.9 - Calculator</h3><br>
+<br><h3 class="post-title">2.10 - Calculator</h3><br>
 
 <p class="plain-text">Una función de windbg es la de calcular, esto se hace a través de la expresión <code class="language-plaintext highlighter-rouge">?</code>, en el siguiente ejemplo se puede ver un ejemplo calculando el tamaño de <code class="language-plaintext highlighter-rouge">kernel32</code> a partir de su dirección final y base, el resultado lo muestra en <code class="language-plaintext highlighter-rouge">hex</code> y en decimal</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -737,6 +764,58 @@ Evaluate expression:
   Time:    Thu Sep  9 23:53:05 2004
   Float:   low 12.0784 high 0
   Double:  5.40901e-315</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="others">
+<br><h3 class="post-title">2.11 - Others</h3><br>
+
+<p class="plain-text">El comando <code class="language-plaintext highlighter-rouge">!teb</code> nos permite ver la informacion de la estructura TEB del hilo actual, esta contiene información como direcciones del stack o las excepciones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">!teb
+TEB at 00469000
+    ExceptionList:        006af9f0
+    StackBase:            006b0000
+    StackLimit:           0069f000
+    SubSystemTib:         00000000
+    FiberData:            00001e00
+    ArbitraryUserPointer: 00000000
+    Self:                 00469000
+    EnvironmentPointer:   00000000
+    ClientId:             000005e0 . 00000700
+    RpcHandle:            00000000
+    Tls Storage:          02933180
+    PEB Address:          00466000
+    LastErrorValue:       0
+    LastStatusValue:      0
+    Count Owned Locks:    0
+    HardErrorMode:        0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">!exchain</code> podemos listar la estructura SEH que se encarga de controlar las excepciones, de esta forma podemos ver a que excepción se saltará cuando ocurra</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">!exchain
+006af9f0: ntdll!_except_handler4+0 (772eaf30)
+  CRT scope  0, filter: ntdll!LdrpDoDebuggerBreak+2e (77321a95)
+                func:   ntdll!LdrpDoDebuggerBreak+32 (77321a99)
+006afc54: ntdll!_except_handler4+0 (772eaf30)
+  CRT scope  0, func:   ntdll!LdrpInitializeProcess+1e57 (7731c1f9)
+006afcac: ntdll!_except_handler4+0 (772eaf30)
+  CRT scope  0, filter: ntdll!_LdrpInitialize+3d9f8 (77313f3f)
+                func:   ntdll!_LdrpInitialize+3da0b (77313f52)
+Invalid exception stack at ffffffff</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para miras las protecciones que tiene una dirección podemos usar <code class="language-plaintext highlighter-rouge">!vprot</code>, por ejemplo el stack actualmente tiene permisos <code class="language-plaintext highlighter-rouge">0x4</code> que se traduce a READWRITE</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !vprot esp
+BaseAddress:       006af000
+AllocationBase:    00670000
+AllocationProtect: 00000004  PAGE_READWRITE
+RegionSize:        00001000
+State:             00001000  MEM_COMMIT
+Protect:           00000004  PAGE_READWRITE
+Type:              00020000  MEM_PRIVATE</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Aunque existen muchos más comandos para <code class="language-plaintext highlighter-rouge">WinDbg</code> los presentados anteriormente son de los mas comunes o funcionales a la hora de la explotación, sin embargo siempre se puede aprender más leyendo <a href="https://learn.microsoft.com/es-es/windows-hardware/drivers/debuggercmds/debugger-commands">documentación</a> y jugando con el debugger</p>
