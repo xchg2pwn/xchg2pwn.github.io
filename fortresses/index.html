@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>HackTheBox Fortresses</title>
+
+  <meta name="description" content="Resolución de fortresses de la plataforma de HackTheBox">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="HackTheBox Fortresses">
+  <meta name="twitter:description" content="Resolución de fortresses de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/fortresses.png">
+
+  <meta property="og:site_name" content="xchg2pwn">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="HackTheBox Fortresses">
+  <meta property="og:description" content="Resolución de fortresses de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/fortresses.png">
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/fortresses.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="HackTheBox Fortresses" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+          <img src="/images/profile.jpg" class="zoomable user-image" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/writeups" title="Writeups" class="blog-button">Writeups</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+  <div class="content-wrapper">
+    <div class="content-wrapper__inner">
+      <div class="main-post-list">
+        <ol class="post-list"><nr>
+
+              <picture><img src="/images/hackthebox/fortresses.png" style="float: right; margin-top: -38px; margin-right:-20px; margin-left:10px; height:110px;" class="include_image zoomable">
+              <h2 class="post-title">HackTheBox Fortresses</h2>
+              <br><br><br><br><br><br>
+              
+              <li class="slide-top">
+              <picture><img src="/images/hackthebox/jet.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable">
+              <h2 class="post-list__post-title post-title"><a href="/fortresses/jet" title="[Protected] - HackTheBox - Jet">[Protected] - HackTheBox - Jet</a></h2>
+              <p class="excerpt">Resolución del fortress Jet de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                • <span class="post-meta__tags"><a>Buffer Overflow</a></span>
+                • <span class="post-meta__tags"><a>Heap Overflow</a></span>
+                • <span class="post-meta__tags"><a>Code Analysis</a></span>
+                • <span class="post-meta__tags"><a>Sql Injection</a></span>
+                • <span class="post-meta__tags"><a>Java</a></span>
+                • <span class="post-meta__tags"><a>RSA</a></span>
+                • <span class="post-meta__tags"><a>XOR</a></span>
+              </div>
+            </picture></li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/hackthebox/akerva.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable">
+              <h2 class="post-list__post-title post-title"><a href="/fortresses/akerva" title="[Protected] - HackTheBox - Akerva">[Protected] - HackTheBox - Akerva</a></h2>
+              <p class="excerpt">Resolución del fortress Akerva de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                • <span class="post-meta__tags"><a>Local File Inclusion</a></span>
+                • <span class="post-meta__tags"><a>Code Analysis</a></span>
+                • <span class="post-meta__tags"><a>Werkzeug</a></span>
+                • <span class="post-meta__tags"><a>Cipher</a></span>
+                • <span class="post-meta__tags"><a>Snmp</a></span>
+                • <span class="post-meta__tags"><a>UDP</a></span>
+                • <span class="post-meta__tags"><a>CVE</a></span>
+              </div>
+            </picture></li>
+            <hr class="post-list__divider ">  
+
+              <li class="slide-top">
+              <picture><img src="/images/hackthebox/context.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable">
+              <h2 class="post-list__post-title post-title"><a href="/fortresses/context" title="[Protected] - HackTheBox - Context">[Protected] - HackTheBox - Context</a></h2>
+              <p class="excerpt">Resolución del fortress Context de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                • <span class="post-meta__tags"><a>Deserialization Attack</a></span>
+                • <span class="post-meta__tags"><a>Outlook Web Access</a></span>
+                • <span class="post-meta__tags"><a>Sql Injection</a></span>
+                • <span class="post-meta__tags"><a>Logs</a></span>
+                • <span class="post-meta__tags"><a>Mssql</a></span>
+                • <span class="post-meta__tags"><a>Dnspy</a></span>
+                • <span class="post-meta__tags"><a>GPO</a></span>
+              </div>
+            </picture></li>
+            <hr class="post-list__divider "> 
+
+              <li class="slide-top">
+              <picture><img src="/images/hackthebox/synacktiv.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable">
+              <h2 class="post-list__post-title post-title"><a href="/fortresses/synacktiv" title="[Protected] - HackTheBox - Synacktiv">[Protected] - HackTheBox - Synacktiv</a></h2>
+              <p class="excerpt">Resolución del fortress Synacktiv de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                • <span class="post-meta__tags"><a>Squid Proxy</a></span>
+                • <span class="post-meta__tags"><a>Reversing</a></span>
+                • <span class="post-meta__tags"><a>Symfony</a></span>
+                • <span class="post-meta__tags"><a>Erlang</a></span>
+                • <span class="post-meta__tags"><a>Pwnkit</a></span>
+                • <span class="post-meta__tags"><a>Java</a></span>
+                • <span class="post-meta__tags"><a>less</a></span>
+                • <span class="post-meta__tags"><a>RMI</a></span>
+                • <span class="post-meta__tags"><a>FTP</a></span>
+              </div>
+            </picture></li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/hackthebox/faraday.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable">
+              <h2 class="post-list__post-title post-title"><a href="/fortresses/faraday" title="[Protected] - HackTheBox - Faraday">[Protected] - HackTheBox - Faraday</a></h2>
+              <p class="excerpt">Resolución del fortress Faraday de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                • <span class="post-meta__tags"><a>Server Side Template Injection</a></span>
+                • <span class="post-meta__tags"><a>Code Analysis</a></span>
+                • <span class="post-meta__tags"><a>Reversing</a></span>
+                • <span class="post-meta__tags"><a>Rootkit</a></span>
+                • <span class="post-meta__tags"><a>Sqlite</a></span>
+                • <span class="post-meta__tags"><a>SMTP</a></span>
+                • <span class="post-meta__tags"><a>Git</a></span>
+              </div>
+            </picture></li>
+            <hr class="post-list__divider "> 
+
+              <picture><img src="/images/hackthebox/aws.png" style="float: right; margin-right:0px; margin-left:60px; height:40px;" class="include_image zoomable">
+              <h2 class="post-list__post-title post-title"><a href="/fortresses/aws" title="[Protected] - HackTheBox - AWS">[Protected] - HackTheBox - AWS</a></h2>
+              <p class="excerpt">Resolución del fortress AWS de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                • <span class="post-meta__tags"><a>JS Deobfuscator</a></span>
+                • <span class="post-meta__tags"><a>Reversing</a></span>
+                • <span class="post-meta__tags"><a>ECDSA</a></span>
+                • <span class="post-meta__tags"><a>SQLI</a></span>
+                • <span class="post-meta__tags"><a>SSTI</a></span>
+                • <span class="post-meta__tags"><a>Idor</a></span>
+                • <span class="post-meta__tags"><a>SSRF</a></span>
+                • <span class="post-meta__tags"><a>Git</a></span>
+                • <span class="post-meta__tags"><a>AWS</a></span>
+                • <span class="post-meta__tags"><a>AD</a></span>
+              </div>
+            
+            <hr class="post-list__divider ">
+
+        </picture></picture></nr></ol>
+      </div>
+    </div>
+  </div>
+<footer class="footer">
+  <span class="footer__copyright">© 2024 - xchg2pwn</span>
+</footer>
+
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678863010724689519"></script>
+
+    
+  
+
+</body></html>

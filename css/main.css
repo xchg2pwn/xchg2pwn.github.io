@@ -5560,11 +5560,12 @@ body {
 
 a {
 	text-decoration: none;
-	color: #e25440
+	color: #40A5E2
+/*	color: #4080E2*/
 }
 
 a:hover {
-	color: #b9301c;
+	color: #4080E2;
 	-o-transition: .5s;
 	-ms-transition: .5s;
 	-moz-transition: .5s;
@@ -5671,7 +5672,7 @@ ul {
 code {
 	padding: .1em .4em;
 	background: #3D3D3D;
-	border: 1px solid #e25440;
+	border: 1px solid #40A5E2;
 	border-radius: 3px;
 	font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
 	font-size: .85em
@@ -5711,7 +5712,7 @@ pre code {
 .time a:hover,
 .author a:hover,
 .tags a:hover {
-	color: #b9301c
+	color: #4080E2
 }
 
 .excerpt {
@@ -5745,7 +5746,7 @@ pre code {
 	position: relative;
 	display: inline-block;
 	padding: 8px 18px 9px 18px;
-	background: #e25440;
+	background: #4080E2;
 	border-radius: 3px;
 	text-align: center;
 	color: #FFF
@@ -5796,7 +5797,7 @@ pre code {
 }
 
 .footer__copyright a:hover {
-	color: #b9301c
+	color: #4080E2
 }
 
 .avatar,
@@ -5886,7 +5887,7 @@ hr {
 }
 
 .panel-title {
-	margin: 0 0 5px 0;
+	margin: 20px 65px 20px 65px;
 	font-size: 2.5em;
 	letter-spacing: 4px;
 	color: #FFF
@@ -5935,7 +5936,7 @@ hr {
 }
 
 .panel-cover__description {
-	margin: 0 30px
+	margin: 0 0px
 }
 
 .panel-cover__divider {
@@ -6028,33 +6029,33 @@ hr {
 .btn,
 .navigation__item a {
 	padding: 10px 20px;
-	border: 1px solid #e25440;
+	border: 1px solid #4080E2;
 	border-radius: 20px;
 	font-size: .9em;
 	font-weight: bold;
 	letter-spacing: 1px;
 	text-shadow: none;
-	color: #e25440;
+	color: #4080E2;
 	-webkit-font-smoothing: antialiased
 }
 
 .btn,
 .nevigation__item a {
     padding: 10px 20px;
-    border: 1px solid #e25440;
+    border: 1px solid #4080E2;
     border-radius: 20px;
     font-size: .9em;
     font-weight: bold;
     letter-spacing: 1px;
     text-shadow: none;
-    color: #e25440;
+    color: #4080E2;
     -webkit-font-smoothing: antialiased
 }
 
 .btn:hover,
 .navigation__item a:hover {
-	color: #b9301c;
-	border-color: #b9301c
+	color: #4080E2;
+	border-color: #4080E2
 }
 
 .btn-secondary {
@@ -6219,7 +6220,7 @@ i {
 }
 
 .post-list__post-title a:hover {
-	color: #b9301c
+	color: #4080E2
 }
 
 .post-list__meta {
@@ -6829,7 +6830,7 @@ pre.highlight,
 
 pre.highlight code,
 .highlight pre code {
-	white-space: pre
+	white-space: inherit;
 }
 
 .btn,
@@ -6845,9 +6846,9 @@ pre.highlight code,
 
 .categories a,
 .tags a {
-	border: 1px solid #e25440;
+	border: 1px solid #4080E2;
 	border-radius: 20px;
-	color: #e25440;
+	color: #4080E2;
 	display: inline-block;
 	font-size: 12px;
 	margin: 5px 0;
@@ -6884,6 +6885,7 @@ pre.highlight code,
 }
 
 .contenedor {
+  margin: 0px 0px 0px 0px;
   overflow-x: auto;
   background-color: #191919;
 }

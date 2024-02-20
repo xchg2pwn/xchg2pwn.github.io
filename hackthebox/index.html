@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>HackTheBox Machines</title>
+
+  <meta name="description" content="Resolución de máquinas de la plataforma de HackTheBox">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="HackTheBox Machines">
+  <meta name="twitter:description" content="Resolución de máquinas de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/htb/machines.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="HackTheBox Machines">
+  <meta property="og:description" content="Resolución de máquinas de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/htb/machines.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/machines.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="HackTheBox Machines" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+          <img src="/images/profile.jpg" class="zoomable user-image" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/writeups" title="Writeups" class="blog-button">Writeups</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+  <div class="content-wrapper">
+    <div class="content-wrapper__inner">
+      <div class="main-post-list">
+        <ol class="post-list"><nr>
+
+              <picture><img src="/images/htb/machines.png" style="float: right; margin-top: -38px; margin-right:-20px; margin-left:10px; height:110px;" class="include_image zoomable"/>
+              <h2 class="post-title">HackTheBox Machines</h2>
+              <br></br><br></br><br></br>
+              
+              <li class="slide-top">
+              <picture><img src="/images/htb/blue.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/blue" title="HackTheBox - Blue">HackTheBox - Blue</a></h2>
+              <p class="excerpt">Resolución de la máquina Blue de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Eternal Blue</a></span>
+                &#8226; <span class="post-meta__tags"><a>Nmap Scripts</a></span>
+                &#8226; <span class="post-meta__tags"><a>Metasploit</a></span>
+                &#8226; <span class="post-meta__tags"><a>ms17-010</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMBv1</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">  
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/active.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/active" title="HackTheBox - Active">HackTheBox - Active</a></h2>
+              <p class="excerpt">Resolución de la máquina Active de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Kerberoasting Attack</a></span>
+                &#8226; <span class="post-meta__tags"><a>Active Directory</a></span>
+                &#8226; <span class="post-meta__tags"><a>gpp-decrypt</a></span>
+                &#8226; <span class="post-meta__tags"><a>Impacket</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">  
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/safe.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/safe" title="HackTheBox - Safe">HackTheBox - Safe</a></h2>
+              <p class="excerpt">Resolución de la máquina Safe de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Buffer Overflow</a></span>
+                &#8226; <span class="post-meta__tags"><a>Source Code</a></span>
+                &#8226; <span class="post-meta__tags"><a>Pwntools</a></span>
+                &#8226; <span class="post-meta__tags"><a>Keepass</a></span>
+                &#8226; <span class="post-meta__tags"><a>Ida</a></span>
+                &#8226; <span class="post-meta__tags"><a>Ropper</a></span>
+                &#8226; <span class="post-meta__tags"><a>puts</a></span>
+                &#8226; <span class="post-meta__tags"><a>pwndbg</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">  
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/buff.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/buff" title="HackTheBox - Buff">HackTheBox - Buff</a></h2>
+              <p class="excerpt">Resolución de la máquina Buff de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Buffer Overflow</a></span>
+                &#8226; <span class="post-meta__tags"><a>SEH Overflow</a></span>
+                &#8226; <span class="post-meta__tags"><a>exploitdb</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>x32dbg</a></span>
+                &#8226; <span class="post-meta__tags"><a>chisel</a></span>
+                &#8226; <span class="post-meta__tags"><a>mona</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/return.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/return" title="HackTheBox - Return">HackTheBox - Return</a></h2>
+              <p class="excerpt">Resolución de la máquina Return de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Server Operators Group</a></span>
+                &#8226; <span class="post-meta__tags"><a>Active Directory</a></span>
+                &#8226; <span class="post-meta__tags"><a>Wireshark</a></span>
+                &#8226; <span class="post-meta__tags"><a>Services</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>Winrm</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">  
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/forest.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/forest" title="HackTheBox - Forest">HackTheBox - Forest</a></h2>
+              <p class="excerpt">Resolución de la máquina Forest de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Active Directory</a></span>
+                &#8226; <span class="post-meta__tags"><a>ASREPRoast</a></span>
+                &#8226; <span class="post-meta__tags"><a>Bloodhound</a></span>
+                &#8226; <span class="post-meta__tags"><a>rpcclient</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>DCSync</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/sauna.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/sauna" title="HackTheBox - Sauna">HackTheBox - Sauna</a></h2>
+              <p class="excerpt">Resolución de la máquina Sauna de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Active Directory</a></span>
+                &#8226; <span class="post-meta__tags"><a>ASREPRoast</a></span>
+                &#8226; <span class="post-meta__tags"><a>Bloodhound</a></span>
+                &#8226; <span class="post-meta__tags"><a>Autologon</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerbrute</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>DCSync</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/driver.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/driver" title="HackTheBox - Driver">HackTheBox - Driver</a></h2>
+              <p class="excerpt">Resolución de la máquina Driver de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Malicious SCF</a></span>
+                &#8226; <span class="post-meta__tags"><a>spoolsv.exe</a></span>
+                &#8226; <span class="post-meta__tags"><a>evil-winrm</a></span>
+                &#8226; <span class="post-meta__tags"><a>Impacket</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>Printer</a></span>
+
+              </div>
+            </li>
+            <hr class="post-list__divider "> 
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/timelapse.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/timelapse" title="HackTheBox - Timelapse">HackTheBox - Timelapse</a></h2>
+              <p class="excerpt">Resolución de la máquina Timelapse de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Powershell History</a></span>
+                &#8226; <span class="post-meta__tags"><a>Active Directory</a></span>
+                &#8226; <span class="post-meta__tags"><a>Winrm Keys</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>Laps</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+                &#8226; <span class="post-meta__tags"><a>PFX</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/late.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/late" title="HackTheBox - Late">HackTheBox - Late</a></h2>
+              <p class="excerpt">Resolución de la máquina Late de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Server Side Template Injection</a></span>
+                &#8226; <span class="post-meta__tags"><a>Extended Attributes</a></span>
+                &#8226; <span class="post-meta__tags"><a>Virtual Hosting</a></span>
+                &#8226; <span class="post-meta__tags"><a>Tasks</a></span>
+                &#8226; <span class="post-meta__tags"><a>Linux</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/redpanda.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/redpanda" title="HackTheBox - RedPanda">HackTheBox - RedPanda</a></h2>
+              <p class="excerpt">Resolución de la máquina RedPanda de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Server Side Template Injection</a></span>
+                &#8226; <span class="post-meta__tags"><a>Directory Path Traversal</a></span>
+                &#8226; <span class="post-meta__tags"><a>XML External Entity</a></span>
+                &#8226; <span class="post-meta__tags"><a>Metadata</a></span>
+                &#8226; <span class="post-meta__tags"><a>Linux</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/support.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/support" title="HackTheBox - Support">HackTheBox - Support</a></h2>
+              <p class="excerpt">Resolución de la máquina Support de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Active Directory</a></span>
+                &#8226; <span class="post-meta__tags"><a>Bloodhound</a></span>
+                &#8226; <span class="post-meta__tags"><a>Impacket</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerberos</a></span>
+                &#8226; <span class="post-meta__tags"><a>Windows</a></span>
+                &#8226; <span class="post-meta__tags"><a>Dnspy</a></span>
+                &#8226; <span class="post-meta__tags"><a>Ldap</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/querier.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/querier" title="HackTheBox - Querier">HackTheBox - Querier</a></h2>
+              <p class="excerpt">Resolución de la máquina Querier de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>SeImpersonate</a></span>
+                &#8226; <span class="post-meta__tags"><a>xp_cmdshell</a></span>
+                &#8226; <span class="post-meta__tags"><a>xp_dirtree</a></span>
+                &#8226; <span class="post-meta__tags"><a>GPP Files</a></span>
+                &#8226; <span class="post-meta__tags"><a>Services</a></span>
+                &#8226; <span class="post-meta__tags"><a>Macros</a></span>
+                &#8226; <span class="post-meta__tags"><a>Mssql</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/resolute.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/resolute" title="HackTheBox - Resolute">HackTheBox - Resolute</a></h2>
+              <p class="excerpt">Resolución de la máquina Resolute de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>PasswordSpray</a></span>
+                &#8226; <span class="post-meta__tags"><a>Crackmapexec</a></span>
+                &#8226; <span class="post-meta__tags"><a>Hidden Files</a></span>
+                &#8226; <span class="post-meta__tags"><a>rpcclient</a></span>
+                &#8226; <span class="post-meta__tags"><a>DnsAdmins</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+                &#8226; <span class="post-meta__tags"><a>LSA</a></span>
+                &#8226; <span class="post-meta__tags"><a>dll</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/retired.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/retired" title="HackTheBox - Retired">HackTheBox - Retired</a></h2>
+              <p class="excerpt">Resolución de la máquina Retired de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Buffer Overflow</a></span>
+                &#8226; <span class="post-meta__tags"><a>Local File Inclusion</a></span>
+                &#8226; <span class="post-meta__tags"><a>Mprotect</a></span>
+                &#8226; <span class="post-meta__tags"><a>Ropper</a></span>
+                &#8226; <span class="post-meta__tags"><a>Tasks</a></span>
+                &#8226; <span class="post-meta__tags"><a>reg_helper</a></span>
+                &#8226; <span class="post-meta__tags"><a>MagicBytes</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/streamio.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/streamio" title="HackTheBox - StreamIO">HackTheBox - StreamIO</a></h2>
+              <p class="excerpt">Resolución de la máquina StreamIO de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Local File Inclusion</a></span>
+                &#8226; <span class="post-meta__tags"><a>SQL Injection</a></span>
+                &#8226; <span class="post-meta__tags"><a>Bloodhound</a></span>
+                &#8226; <span class="post-meta__tags"><a>Firepwd</a></span>
+                &#8226; <span class="post-meta__tags"><a>Chisel</a></span>
+                &#8226; <span class="post-meta__tags"><a>Mssql</a></span>
+                &#8226; <span class="post-meta__tags"><a>Laps</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/scrambled.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/scrambled" title="HackTheBox - Scrambled">HackTheBox - Scrambled</a></h2>
+              <p class="excerpt">Resolución de la máquina Scrambled de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Deserialization</a></span>
+                &#8226; <span class="post-meta__tags"><a>Silver Ticket</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerberoasting</a></span>
+                &#8226; <span class="post-meta__tags"><a>xp_cmdshell</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerberos</a></span>
+                &#8226; <span class="post-meta__tags"><a>Dnspy</a></span>
+                &#8226; <span class="post-meta__tags"><a>Mssql</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/escape.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/escape" title="HackTheBox - Escape">HackTheBox - Escape</a></h2>
+              <p class="excerpt">Resolución de la máquina Escape de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Certificate Templates</a></span>
+                &#8226; <span class="post-meta__tags"><a>Silver TIcket</a></span>
+                &#8226; <span class="post-meta__tags"><a>xp_dirtree</a></span>
+                &#8226; <span class="post-meta__tags"><a>Winpeas</a></span>
+                &#8226; <span class="post-meta__tags"><a>certipy</a></span>
+                &#8226; <span class="post-meta__tags"><a>Logs</a></span>
+                &#8226; <span class="post-meta__tags"><a>Mssql</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/mantis.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/mantis" title="HackTheBox - Mantis">HackTheBox - Mantis</a></h2>
+              <p class="excerpt">Resolución de la máquina Mantis de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Crackstation</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerbrute</a></span>
+                &#8226; <span class="post-meta__tags"><a>MS14-068</a></span>
+                &#8226; <span class="post-meta__tags"><a>Fuzzing</a></span>
+                &#8226; <span class="post-meta__tags"><a>DCSync</a></span>
+                &#8226; <span class="post-meta__tags"><a>psexec</a></span>
+                &#8226; <span class="post-meta__tags"><a>MSSQL</a></span>
+                &#8226; <span class="post-meta__tags"><a>RDP</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/ellingson.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/ellingson" title="HackTheBox - Ellingson">HackTheBox - Ellingson</a></h2>
+              <p class="excerpt">Resolución de la máquina Ellingson de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Buffer Overflow</a></span>
+                &#8226; <span class="post-meta__tags"><a>Werkzeug</a></span>
+                &#8226; <span class="post-meta__tags"><a>pwntools</a></span>
+                &#8226; <span class="post-meta__tags"><a>pwndbg</a></span>
+                &#8226; <span class="post-meta__tags"><a>ASLR</a></span>
+                &#8226; <span class="post-meta__tags"><a>Logs</a></span>
+                &#8226; <span class="post-meta__tags"><a>john</a></span>
+                &#8226; <span class="post-meta__tags"><a>Ida</a></span>
+                &#8226; <span class="post-meta__tags"><a>ROP</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/blackfield.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/blackfield" title="HackTheBox - Blackfield">HackTheBox - Blackfield</a></h2>
+              <p class="excerpt">Resolución de la máquina Blackfield de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>ASREPRoast</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerbrute</a></span>
+                &#8226; <span class="post-meta__tags"><a>Bloodhound</a></span>
+                &#8226; <span class="post-meta__tags"><a>Mimikatz</a></span>
+                &#8226; <span class="post-meta__tags"><a>Dll hijacking</a></span>
+                &#8226; <span class="post-meta__tags"><a>Backup Operators</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/hancliffe.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/hancliffe" title="HackTheBox - Hancliffe">HackTheBox - Hancliffe</a></h2>
+              <p class="excerpt">Resolución de la máquina Hancliffe de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Buffer Overflow</a></span>
+                &#8226; <span class="post-meta__tags"><a>Socket Reuse</a></span>
+                &#8226; <span class="post-meta__tags"><a>Egghunter</a></span>
+                &#8226; <span class="post-meta__tags"><a>Winpeas</a></span>
+                &#8226; <span class="post-meta__tags"><a>Ida</a></span>
+                &#8226; <span class="post-meta__tags"><a>reversing</a></span>
+                &#8226; <span class="post-meta__tags"><a>CVE</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/search.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/search" title="HackTheBox - Search">HackTheBox - Search</a></h2>
+              <p class="excerpt">Resolución de la máquina Search de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Kerberoast</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerbrute</a></span>
+                &#8226; <span class="post-meta__tags"><a>Bloodhound</a></span>
+                &#8226; <span class="post-meta__tags"><a>Xlsx</a></span>
+                &#8226; <span class="post-meta__tags"><a>GMSA Password</a></span>
+                &#8226; <span class="post-meta__tags"><a>Change Password</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/acute.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/acute" title="HackTheBox - Acute">HackTheBox - Acute</a></h2>
+              <p class="excerpt">Resolución de la máquina Acute de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Windows Powershell Web Access</a></span>
+                &#8226; <span class="post-meta__tags"><a>Metasploit</a></span>
+                &#8226; <span class="post-meta__tags"><a>Dum hashes</a></span>
+                &#8226; <span class="post-meta__tags"><a>exiftool</a></span>
+                &#8226; <span class="post-meta__tags"><a>openssl</a></span>
+                &#8226; <span class="post-meta__tags"><a>Winpeas</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/flight.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/flight" title="HackTheBox - Flight">HackTheBox - Flight</a></h2>
+              <p class="excerpt">Resolución de la máquina Flight de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Password Reuse</a></span>
+                &#8226; <span class="post-meta__tags"><a>desktop.ini</a></span>
+                &#8226; <span class="post-meta__tags"><a>Icacls</a></span>
+                &#8226; <span class="post-meta__tags"><a>Rubeus</a></span>
+                &#8226; <span class="post-meta__tags"><a>Ticket</a></span>
+                &#8226; <span class="post-meta__tags"><a>Chisel</a></span>
+                &#8226; <span class="post-meta__tags"><a>RFI</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+                &#8226; <span class="post-meta__tags"><a>Web</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/jail.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/jail" title="HackTheBox - Jail">HackTheBox - Jail</a></h2>
+              <p class="excerpt">Resolución de la máquina Jail de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Buffer Overflow</a></span>
+                &#8226; <span class="post-meta__tags"><a>Code analysis</a></span>
+                &#8226; <span class="post-meta__tags"><a>RsaCtfTool</a></span>
+                &#8226; <span class="post-meta__tags"><a>rvim</a></span>
+                &#8226; <span class="post-meta__tags"><a>leak</a></span>
+                &#8226; <span class="post-meta__tags"><a>NFS</a></span>
+                &#8226; <span class="post-meta__tags"><a>SSH</a></span>
+                &#8226; <span class="post-meta__tags"><a>RSA</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/fulcrum.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/fulcrum" title="HackTheBox - Fulcrum">HackTheBox - Fulcrum</a></h2>
+              <p class="excerpt">Resolución de la máquina Fulcrum de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Powershell Credentials</a></span>
+                &#8226; <span class="post-meta__tags"><a>DCSync</a></span>
+                &#8226; <span class="post-meta__tags"><a>Proxy</a></span>
+                &#8226; <span class="post-meta__tags"><a>Winrm</a></span>
+                &#8226; <span class="post-meta__tags"><a>LDAP</a></span>
+                &#8226; <span class="post-meta__tags"><a>SSRF</a></span>
+                &#8226; <span class="post-meta__tags"><a>XXE</a></span>
+                &#8226; <span class="post-meta__tags"><a>RFI</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/mischief.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/mischief" title="HackTheBox - Mischief">HackTheBox - Mischief</a></h2>
+              <p class="excerpt">Resolución de la máquina Mischief de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>Command Injection</a></span>
+                &#8226; <span class="post-meta__tags"><a>systemd-run</a></span>
+                &#8226; <span class="post-meta__tags"><a>History</a></span>
+                &#8226; <span class="post-meta__tags"><a>Pwnkit</a></span>
+                &#8226; <span class="post-meta__tags"><a>getfacl</a></span>
+                &#8226; <span class="post-meta__tags"><a>Mibs</a></span>
+                &#8226; <span class="post-meta__tags"><a>SNMP</a></span>
+                &#8226; <span class="post-meta__tags"><a>IPv6</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/sizzle.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/sizzle" title="HackTheBox - Sizzle">HackTheBox - Sizzle</a></h2>
+              <p class="excerpt">Resolución de la máquina Sizzle de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>ConstrainedLenguage</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerberoast</a></span>
+                &#8226; <span class="post-meta__tags"><a>winrm ssl</a></span>
+                &#8226; <span class="post-meta__tags"><a>smbcacls</a></span>
+                &#8226; <span class="post-meta__tags"><a>Policies</a></span>
+                &#8226; <span class="post-meta__tags"><a>DCSync</a></span>
+                &#8226; <span class="post-meta__tags"><a>ADCS</a></span>
+                &#8226; <span class="post-meta__tags"><a>scf</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/bighead.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/bighead" title="HackTheBox - BigHead">HackTheBox - BigHead</a></h2>
+              <p class="excerpt">Resolución de la máquina BigHead de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>Buffer Overflow</a></span>
+                &#8226; <span class="post-meta__tags"><a>git commit</a></span>
+                &#8226; <span class="post-meta__tags"><a>EggHunter</a></span>
+                &#8226; <span class="post-meta__tags"><a>Keepass</a></span>
+                &#8226; <span class="post-meta__tags"><a>Fuzzing</a></span>
+                &#8226; <span class="post-meta__tags"><a>nginx</a></span>
+                &#8226; <span class="post-meta__tags"><a>PHP</a></span>
+                &#8226; <span class="post-meta__tags"><a>reg</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/apt.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/apt" title="HackTheBox - APT">HackTheBox - APT</a></h2>
+              <p class="excerpt">Resolución de la máquina APT de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>secretsdump</a></span>
+                &#8226; <span class="post-meta__tags"><a>Hash spray</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerberos</a></span>
+                &#8226; <span class="post-meta__tags"><a>NTLMv1</a></span>
+                &#8226; <span class="post-meta__tags"><a>DCSync</a></span>
+                &#8226; <span class="post-meta__tags"><a>IPv6</a></span>
+                &#8226; <span class="post-meta__tags"><a>RPC</a></span>
+                &#8226; <span class="post-meta__tags"><a>SMB</a></span>
+                &#8226; <span class="post-meta__tags"><a>reg</a></span>
+              </div>
+
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/pivotapi.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/pivotapi" title="HackTheBox - Pivotapi">HackTheBox - Pivotapi</a></h2>
+              <p class="excerpt">Resolución de la máquina Pivotapi de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>MSSQL Proxy</a></span>
+                &#8226; <span class="post-meta__tags"><a>Bloodhound</a></span>
+                &#8226; <span class="post-meta__tags"><a>ASREPRoast</a></span>
+                &#8226; <span class="post-meta__tags"><a>Reversing</a></span>
+                &#8226; <span class="post-meta__tags"><a>exiftool</a></span>
+                &#8226; <span class="post-meta__tags"><a>Keepass</a></span>
+                &#8226; <span class="post-meta__tags"><a>MSSQL</a></span>
+                &#8226; <span class="post-meta__tags"><a>FTP</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/anubis.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/anubis" title="HackTheBox - Anubis">HackTheBox - Anubis</a></h2>
+              <p class="excerpt">Resolución de la máquina Anubis de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">
+                &#8226; <span class="post-meta__tags"><a>crackmapexec</a></span>
+                &#8226; <span class="post-meta__tags"><a>proxychains</a></span>
+                &#8226; <span class="post-meta__tags"><a>Jamovi XSS</a></span>
+                &#8226; <span class="post-meta__tags"><a>Responder</a></span>
+                &#8226; <span class="post-meta__tags"><a>ASP Injection</a></span>
+                &#8226; <span class="post-meta__tags"><a>openssl</a></span>
+                &#8226; <span class="post-meta__tags"><a>ADCS</a></span>
+              </div>
+            </li>
+            <hr class="post-list__divider ">
+
+              <li class="slide-top">
+              <picture><img src="/images/htb/absolute.png" style="float: right; margin-right:0px; margin-left:60px; height:60px;" class="include_image zoomable"/>
+              <h2 class="post-list__post-title post-title"><a href="/htb/absolute" title="HackTheBox - Absolute">HackTheBox - Absolute</a></h2>
+              <p class="excerpt">Resolución de la máquina Absolute de la plataforma de HackTheBox</p>
+              <div class="post-list__meta">            
+                &#8226; <span class="post-meta__tags"><a>exiftool</a></span>
+                &#8226; <span class="post-meta__tags"><a>Rubeus</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerberos</a></span>
+                &#8226; <span class="post-meta__tags"><a>KrbRelay</a></span>
+                &#8226; <span class="post-meta__tags"><a>Kerbrute</a></span>
+                &#8226; <span class="post-meta__tags"><a>Wireshark</a></span>
+                &#8226; <span class="post-meta__tags"><a>Bloodhound</a></span>
+                &#8226; <span class="post-meta__tags"><a>ASREPRoast</a></span>
+              </div>
+            </li>    
+            <hr class="post-list__divider ">
+
+        </ol>
+      </div>
+    </div>
+  </div>
+<footer class="footer">
+  <span class="footer__copyright">&copy; 2023 - xchg2pwn</span>
+</footer>
+
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678863010724689519"></script>
+
+    </div>
+  </body>
+</html>
