@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Buff</title>
 
   <meta name="description" content="Resolución de la máquina Buff de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Buff">
   <meta name="twitter:description" content="Resolución de la máquina Buff de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/buff.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/buff.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Buff">
   <meta property="og:description" content="Resolución de la máquina Buff de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/buff.png" />
+  <meta property="og:image" content="/images/hackthebox/buff.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/buff.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/buff.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -133,7 +133,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/buff.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/buff.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Buff</h2><br>
   </header>
   
@@ -154,10 +154,10 @@ PORT     STATE SERVICE
 </code></pre></div></div><br>
 
 <p class="plain-text">La página del puerto <code class="language-plaintext highlighter-rouge">8080</code> parece bastante estatica sin nada demasiado interesante</p>
-<a href="/htb/buff/1.png" target="_blank"><div><p><img src="/htb/buff/1.png"></p></div></a>
+<a href="/hackthebox/buff/1.png" target="_blank"><div><p><img src="/hackthebox/buff/1.png"></p></div></a>
 
 <p class="plain-text">En la pestaña de contacto logramos ver algo interesante que es la tecnologia que usa la web por detras, esta es <code class="language-plaintext highlighter-rouge">Gym Management Software</code> de version <code class="language-plaintext highlighter-rouge">1.0</code></p>
-<a href="/htb/buff/2.png" target="_blank"><div><p><img src="/htb/buff/2.png"></p></div></a>
+<a href="/hackthebox/buff/2.png" target="_blank"><div><p><img src="/hackthebox/buff/2.png"></p></div></a>
 
 </section>
 
@@ -250,7 +250,7 @@ client: Connected (Latency 12.395ms)</span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">from mona import mona</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/3.png" target="_blank"><div><p><img src="/htb/buff/3.png"></p></div></a>
+<a href="/hackthebox/buff/3.png" target="_blank"><div><p><img src="/hackthebox/buff/3.png"></p></div></a>
 
 <p class="plain-text">Creamos un script de python que se conecte al puerto 8888 y envie <code class="language-plaintext highlighter-rouge">1500 A's</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -270,13 +270,13 @@ shell.sendline(payload)</span>
 [</span><span class="az">*</span><span class="p">] Closed connection to 127.0.0.1 port 8888</span>
 </code></pre></div></div><br>
 
-<a href="/htb/buff/4.png" target="_blank"><div><p><img src="/htb/buff/4.png"></p></div></a>
+<a href="/hackthebox/buff/4.png" target="_blank"><div><p><img src="/hackthebox/buff/4.png"></p></div></a>
 
 <p class="plain-text">Necesitamos encontrar la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios antes de llegar a <code class="language-plaintext highlighter-rouge">EIP</code> creamos una cadena especial de <code class="language-plaintext highlighter-rouge">1500</code> caracteres usando <code class="language-plaintext highlighter-rouge">pattern_create</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("pattern_create 1500")</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/5.png" target="_blank"><div><p><img src="/htb/buff/5.png"></p></div></a>
+<a href="/hackthebox/buff/5.png" target="_blank"><div><p><img src="/hackthebox/buff/5.png"></p></div></a>
 
 <p class="plain-text">Modificamos el script cambiando las <code class="language-plaintext highlighter-rouge">A's</code> por la cadena especialmente diseñada para encontrar un <code class="language-plaintext highlighter-rouge">offset</code>, corremos de nuevo el programa y nuevamente se corrompe</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -289,13 +289,13 @@ shell </span><span class="o">= </span><span class="p">remote(</span><span class=
 shell.sendline(payload)</span>
 </code></pre></div></div><br>
 
-<a href="/htb/buff/6.png" target="_blank"><div><p><img src="/htb/buff/6.png"></p></div></a>
+<a href="/hackthebox/buff/6.png" target="_blank"><div><p><img src="/hackthebox/buff/6.png"></p></div></a>
 
 <p class="plain-text">Lo que haremos sera usar <code class="language-plaintext highlighter-rouge">pattern_offset</code> para encontrar el offset o bytes basura necesarios, le pasamos como argumento el valor de <code class="language-plaintext highlighter-rouge">EIP</code> y nos dice que son <code class="language-plaintext highlighter-rouge">1052</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("pattern_offset eip")</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/7.png" target="_blank"><div><p><img src="/htb/buff/7.png"></p></div></a>
+<a href="/hackthebox/buff/7.png" target="_blank"><div><p><img src="/hackthebox/buff/7.png"></p></div></a>
 
 <p class="plain-text">Para comprobarlo enviaremos <code class="language-plaintext highlighter-rouge">A's</code> hasta antes de sobreescribir el EIP, en ese registro enviaremos 4 <code class="language-plaintext highlighter-rouge">B's</code> y como si fuera shellcode dejaremos <code class="language-plaintext highlighter-rouge">C's</code> en el stack o ESP</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -315,13 +315,13 @@ shell.sendline(payload)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al enviar el exploit podemos ver que EIP vale <code class="language-plaintext highlighter-rouge">0x42424242</code> que son las B's y justo en el stack estan las <code class="language-plaintext highlighter-rouge">C's</code>, la idea sera saltar al ESP para que se interpreten</p>
-<a href="/htb/buff/8.png" target="_blank"><div><p><img src="/htb/buff/8.png"></p></div></a>
+<a href="/hackthebox/buff/8.png" target="_blank"><div><p><img src="/hackthebox/buff/8.png"></p></div></a>
 
 <p class="plain-text">Lo siguiente sera detectar <code class="language-plaintext highlighter-rouge">badchars</code> por lo que con <code class="language-plaintext highlighter-rouge">mona</code> crearemos una lista con todos los caracteres posibles, esto nos creara un archivo <code class="language-plaintext highlighter-rouge">txt</code> y un <code class="language-plaintext highlighter-rouge">bin</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("bytearray")</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/9.png" target="_blank"><div><p><img src="/htb/buff/9.png"></p></div></a>
+<a href="/hackthebox/buff/9.png" target="_blank"><div><p><img src="/hackthebox/buff/9.png"></p></div></a>
 
 <p class="plain-text">Modificaremos el script para que despues del <code class="language-plaintext highlighter-rouge">EIP</code> envie nuestros posibles badchars</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -350,19 +350,19 @@ shell.sendline(payload)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Enviamos y al volver a hacer el <code class="language-plaintext highlighter-rouge">mona compare</code> podemos ver <code class="language-plaintext highlighter-rouge">unmodified</code> quiere decir que todos los caracteres enviados se procesaron correctamente en el programa</p>
-<a href="/htb/buff/10.png" target="_blank"><div><p><img src="/htb/buff/10.png"></p></div></a>
+<a href="/hackthebox/buff/10.png" target="_blank"><div><p><img src="/hackthebox/buff/10.png"></p></div></a>
 
 <p class="plain-text">Listando los modulos con <code class="language-plaintext highlighter-rouge">mona</code> encontramos la libreria <code class="language-plaintext highlighter-rouge">qt5core.dll</code> sin nunguna proteccion, podemos buscar en el un <code class="language-plaintext highlighter-rouge">gadget</code> para saltar y ejecutar el stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("modules")</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/11.png" target="_blank"><div><p><img src="/htb/buff/11.png"></p></div></a>
+<a href="/hackthebox/buff/11.png" target="_blank"><div><p><img src="/hackthebox/buff/11.png"></p></div></a>
 
 <p class="plain-text">Para saltar a la pila donde enviaremos el shellcode y se interprete necesitamos una dirección con un gadget que llame al <code class="language-plaintext highlighter-rouge">ESP</code>, con mona encontramos varias</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("jmp -r esp -m qt5core.dll")</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/12.png" target="_blank"><div><p><img src="/htb/buff/12.png"></p></div></a>
+<a href="/hackthebox/buff/12.png" target="_blank"><div><p><img src="/hackthebox/buff/12.png"></p></div></a>
 
 <p class="plain-text">Con <code class="language-plaintext highlighter-rouge">msfvenom</code> crearemos un <code class="language-plaintext highlighter-rouge">shellcode</code> que solo nos ejecute una <code class="language-plaintext highlighter-rouge">calculadora</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -431,7 +431,7 @@ shell.sendline(payload)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al ejecutar el exploit el programa se detiene y abre una <code class="language-plaintext highlighter-rouge">calculadora</code> en el equipo</p>
-<a href="/htb/buff/13.png" target="_blank"><div><p><img src="/htb/buff/13.png"></p></div></a>
+<a href="/hackthebox/buff/13.png" target="_blank"><div><p><img src="/hackthebox/buff/13.png"></p></div></a>
 
 <p class="plain-text">Ya que podemos ejecutar comandos con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -514,13 +514,13 @@ shell.sendline(payload)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Esta vez no solo sobreescribimos el EIP sino tambien el controlador de <code class="language-plaintext highlighter-rouge">excepciones</code>, si controlamos la direccion tambien lo que pasa cuando una ocurre la excepcion</p>
-<a href="/htb/buff/14.png" target="_blank"><div><p><img src="/htb/buff/14.png"></p></div></a>
+<a href="/hackthebox/buff/14.png" target="_blank"><div><p><img src="/hackthebox/buff/14.png"></p></div></a>
 
 <p class="plain-text">Necesitamos encontrar la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios antes del siguiente SEH <code class="language-plaintext highlighter-rouge">controlador</code> creamos una cadena especial de <code class="language-plaintext highlighter-rouge">2500</code> caracteres usando <code class="language-plaintext highlighter-rouge">mona</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("pattern_create 2500")</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/15.png" target="_blank"><div><p><img src="/htb/buff/15.png"></p></div></a>
+<a href="/hackthebox/buff/15.png" target="_blank"><div><p><img src="/hackthebox/buff/15.png"></p></div></a>
 
 <p class="plain-text">Modificamos el script cambiando las <code class="language-plaintext highlighter-rouge">A's</code> por la cadena especialmente diseñada para encontrar un <code class="language-plaintext highlighter-rouge">offset</code>, corremos de nuevo el programa y nuevamente se corrompe</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -534,13 +534,13 @@ shell.sendline(payload)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Nuevamente sobreescribimos el siguiente <code class="language-plaintext highlighter-rouge">SEH</code> y el controlador pero ahora con 4 bytes de toda nuestra cadena, por lo que deberiamos poder calcular el offset a este</p>
-<a href="/htb/buff/16.png" target="_blank"><div><p><img src="/htb/buff/16.png"></p></div></a>
+<a href="/hackthebox/buff/16.png" target="_blank"><div><p><img src="/hackthebox/buff/16.png"></p></div></a>
 
 <p class="plain-text">Usando el comando exchain nos muestra el offset necesario qu eson <code class="language-plaintext highlighter-rouge">2352</code> bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("exchain")</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/17.png" target="_blank"><div><p><img src="/htb/buff/17.png"></p></div></a>
+<a href="/hackthebox/buff/17.png" target="_blank"><div><p><img src="/hackthebox/buff/17.png"></p></div></a>
 
 <p class="plain-text">Sim embargo <code class="language-plaintext highlighter-rouge">mona</code> ademas del offset nos muestra una estructura para el payload, donde como siguiente SEH usa <code class="language-plaintext highlighter-rouge">\xeb\x06</code> que es igual a un <code class="language-plaintext highlighter-rouge">jmp $+8</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -551,7 +551,7 @@ shell.sendline(payload)</span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("seh -m qt5core.dll")</span>
 </code></pre></div></div><br>
-<a href="/htb/buff/18.png" target="_blank"><div><p><img src="/htb/buff/18.png"></p></div></a>
+<a href="/hackthebox/buff/18.png" target="_blank"><div><p><img src="/hackthebox/buff/18.png"></p></div></a>
 
 <p class="plain-text">Nuestro payload enviara <code class="language-plaintext highlighter-rouge">A's</code> hasta antes del nseh, en el siguiente <code class="language-plaintext highlighter-rouge">SEH</code> ejecutara un <code class="language-plaintext highlighter-rouge">jmp $+8</code> usando como controlador una direccion que ejecutar un <code class="language-plaintext highlighter-rouge">pop pop ret</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -573,16 +573,16 @@ shell.sendline(payload)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Cuando ocurre la excepción en el <code class="language-plaintext highlighter-rouge">EIP</code> se posicionara la direccion del controlador que ejecuta el <code class="language-plaintext highlighter-rouge">pop pop ret</code>, ahora veremos el porque funciona este gadget</p>
-<a href="/htb/buff/19.png" target="_blank"><div><p><img src="/htb/buff/19.png"></p></div></a>
+<a href="/hackthebox/buff/19.png" target="_blank"><div><p><img src="/hackthebox/buff/19.png"></p></div></a>
 
 <p class="plain-text">Al ocurrir la excepcion esta empujara los elementos del handler al <code class="language-plaintext highlighter-rouge">stack</code>, uno de los elementos es el puntero al siguiente <code class="language-plaintext highlighter-rouge">SEH</code>, la misma direccion la vemos en <code class="language-plaintext highlighter-rouge">ESP + 8</code></p>
-<a href="/htb/buff/22.png" target="_blank"><div><p><img src="/htb/buff/22.png"></p></div></a>
+<a href="/hackthebox/buff/22.png" target="_blank"><div><p><img src="/hackthebox/buff/22.png"></p></div></a>
 
 <p class="plain-text">Cuando se ejecuta el primer <code class="language-plaintext highlighter-rouge">pop</code> tomara <code class="language-plaintext highlighter-rouge">4</code> bytes de la pila como argumento por lo que el puntero quedara en <code class="language-plaintext highlighter-rouge">ESP + 4</code>, cuando se ejecuta el segudo <code class="language-plaintext highlighter-rouge">pop</code> toma otros <code class="language-plaintext highlighter-rouge">4</code> bytes de la pila por lo que el puntero quedará en el <code class="language-plaintext highlighter-rouge">ESP</code> antes de hacer el <code class="language-plaintext highlighter-rouge">ret</code></p>
-<a href="/htb/buff/23.png" target="_blank"><div><p><img src="/htb/buff/23.png"></p></div></a>
+<a href="/hackthebox/buff/23.png" target="_blank"><div><p><img src="/hackthebox/buff/23.png"></p></div></a>
 
 <p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">ret</code> el puntero del <code class="language-plaintext highlighter-rouge">SEH</code> quedara en el EIP por lo que interpretara el siguiente SEH que hace un <code class="language-plaintext highlighter-rouge">jmp $+8</code> para llegar a donde ahora estan las <code class="language-plaintext highlighter-rouge">C's</code></p>
-<a href="/htb/buff/20.png" target="_blank"><div><p><img src="/htb/buff/20.png"></p></div></a>
+<a href="/hackthebox/buff/20.png" target="_blank"><div><p><img src="/hackthebox/buff/20.png"></p></div></a>
 
 <p class="plain-text">Con <code class="language-plaintext highlighter-rouge">msfvenom</code> crearemos un <code class="language-plaintext highlighter-rouge">shellcode</code> que solo nos ejecute una <code class="language-plaintext highlighter-rouge">calculadora</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -652,7 +652,7 @@ shell.sendline(payload)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al ejecutar el exploit el programa se detiene y abre una <code class="language-plaintext highlighter-rouge">calculadora</code> en el equipo</p>
-<a href="/htb/buff/21.png" target="_blank"><div><p><img src="/htb/buff/21.png"></p></div></a>
+<a href="/hackthebox/buff/21.png" target="_blank"><div><p><img src="/hackthebox/buff/21.png"></p></div></a>
 
 <p class="plain-text">Ya que podemos ejecutar comandos con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -723,7 +723,7 @@ C:\Windows\system32></span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

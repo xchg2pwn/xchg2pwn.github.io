@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Late</title>
 
   <meta name="description" content="Resolución de la máquina Late de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Late">
   <meta name="twitter:description" content="Resolución de la máquina Late de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/late.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/late.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Late">
   <meta property="og:description" content="Resolución de la máquina Late de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/late.png" />
+  <meta property="og:image" content="/images/hackthebox/late.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/late.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/late.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -132,7 +132,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/late.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/late.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Late</h2><br>
   </header>
   
@@ -149,10 +149,10 @@ PORT   STATE SERVICE
 </code></pre></div></div><br>
 
 <p class="plain-text">Al abrir la página principal podemos ver una web que nos habla de tener herramientas onnline mas sencillas de utilizar para editar imágenes</p>
-<a href="/htb/late/1.png" target="_blank"><div><p><img src="/htb/late/1.png"></p></div></a>
+<a href="/hackthebox/late/1.png" target="_blank"><div><p><img src="/hackthebox/late/1.png"></p></div></a>
 
 <p class="plain-text">En el apartado de preguntas frecuentes se nos da un enlace a el editor de imágenes gratuito que nos redirige al dominio <code class="language-plaintext highlighter-rouge">images.late.htb</code></p>
-<a href="/htb/late/2.png" target="_blank"><div><p><img src="/htb/late/2.png"></p></div></a>
+<a href="/hackthebox/late/2.png" target="_blank"><div><p><img src="/hackthebox/late/2.png"></p></div></a>
 
 <p class="plain-text">De primeras el navegador no sabrá a donde apuntar con ese dominio asi que le indicaremos la ip de la máquina agregandolo al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code></p>
 
@@ -164,10 +164,10 @@ PORT   STATE SERVICE
 <section class="post" id="shell-svc_acc">
 <br><h3 class="post-title">Shell - svc_acc</h3><br>
 <p class="plain-text">Al abrir el nuevo dominio podemos ver una web que nos permite subir una imagen, y algo interesante es que nos dice que esta montado en Flask, que es reconocido por tener la vulnerabilidad de <code class="language-plaintext highlighter-rouge">Server Side Template Injection</code> en este tipo de CTFs</p>
-<a href="/htb/late/3.png" target="_blank"><div><p><img src="/htb/late/3.png"></p></div></a>
+<a href="/hackthebox/late/3.png" target="_blank"><div><p><img src="/hackthebox/late/3.png"></p></div></a>
 
 <p class="plain-text">En mi caso subire la captura anterior para ver que es lo que hace, y al subirla nos intenta descargar un archivo con el nombre results.txt</p>
-<a href="/htb/late/4.png" target="_blank"><div><p><img src="/htb/late/4.png"></p></div></a>
+<a href="/hackthebox/late/4.png" target="_blank"><div><p><img src="/hackthebox/late/4.png"></p></div></a>
 
 <p class="plain-text">Al leer el archivo txt que descargó, podemos ver que convierte el contenido visual de la imagen a un archivo de texto que contiene el html de lo que este en ella</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -185,7 +185,7 @@ Choose file Browse
 </code></pre></div></div><br>
 
 <p class="plain-text">Ya que esta corriendo <code class="language-plaintext highlighter-rouge">Flask</code> podemos probar un clásico payload para explotar un SSTI, asi que tomamos una captura de pantalla con el payload como la siguiente</p>
-<a href="/htb/late/6.png" target="_blank"><div><p><img src="/htb/late/6.png"></p></div></a>
+<a href="/hackthebox/late/6.png" target="_blank"><div><p><img src="/hackthebox/late/6.png"></p></div></a>
 
 <p class="plain-text">Al subir esa imagen nos descarga otro results.txt y podemos ver 49, la operación se ha computado por lo que es vulnerable a Server Side Template Injection</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -197,7 +197,7 @@ Choose file Browse
 </code></pre></div></div><br>
 
 <p class="plain-text">Podemos usar un payload de <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection#jinja2---remote-code-execution">PayloadsAllTheThings</a> y ejecutaremos el comando <code class="language-plaintext highlighter-rouge">id</code> para saber el usuario y <code class="language-plaintext highlighter-rouge">cat ~/.ssh/id_rsa</code> para leer su clave rsa privada</p>
-<a href="/htb/late/5.png" target="_blank"><div><p><img src="/htb/late/5.png"></p></div></a>
+<a href="/hackthebox/late/5.png" target="_blank"><div><p><img src="/hackthebox/late/5.png"></p></div></a>
 
 <p class="plain-text">Al subir la imagen anterior nos devuelve otro results.txt donde nos muestra la salida de ambos comandos, el usuario es <code class="language-plaintext highlighter-rouge">svc_acc</code> y tambien podemos ver su clave privada</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -384,7 +384,7 @@ bash-4.4#</span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

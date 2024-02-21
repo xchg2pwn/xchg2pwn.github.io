@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Pivotapi</title>
 
   <meta name="description" content="Resolución de la máquina Pivotapi de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Pivotapi">
   <meta name="twitter:description" content="Resolución de la máquina Pivotapi de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/pivotapi.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/pivotapi.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Pivotapi">
   <meta property="og:description" content="Resolución de la máquina Pivotapi de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/pivotapi.png" />
+  <meta property="og:image" content="/images/hackthebox/pivotapi.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/pivotapi.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/pivotapi.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -139,7 +139,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/pivotapi.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/pivotapi.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Pivotapi</h2><br>
   </header>
   
@@ -354,16 +354,16 @@ drw-rw-rw-          0  Sun Aug  9 11:40:36 2020 ..
 </code></pre></div></div><br>
 
 <p class="plain-text">Los 2 archivos con extensión <code class="language-plaintext highlighter-rouge">msg</code> podemos abrirlos con <code class="language-plaintext highlighter-rouge">outlook</code>, el primero nos dice que el servicio <code class="language-plaintext highlighter-rouge">winrm</code> esta deshabilitado en el equipo y el segundo nos dice que en el año <code class="language-plaintext highlighter-rouge">2020</code> se ha migrado de <code class="language-plaintext highlighter-rouge">oracle</code> a <code class="language-plaintext highlighter-rouge">mssql</code> a diferencia del año <code class="language-plaintext highlighter-rouge">2010</code></p>
-<a href="/htb/pivotapi/1.png" target="_blank"><div><p><img src="/htb/pivotapi/1.png"></p></div></a>
+<a href="/hackthebox/pivotapi/1.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/1.png"></p></div></a>
 
 <p class="plain-text">Al ejecutar el archivo <code class="language-plaintext highlighter-rouge">exe</code> este sale sin mostrar nada interesante, usando <a href="https://learn.microsoft.com/en-us/sysinternals/downloads/procmon">procmon</a> podemos monitorear las acciones que este hace, al parecer crea un archivo de extensión <code class="language-plaintext highlighter-rouge">bat</code> en el directorio <code class="language-plaintext highlighter-rouge">Temp</code>, pero al revisar el directorio este no existe</p>
-<a href="/htb/pivotapi/2.png" target="_blank"><div><p><img src="/htb/pivotapi/2.png"></p></div></a>
+<a href="/hackthebox/pivotapi/2.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/2.png"></p></div></a>
 
 <p class="plain-text">Ya que probablemente lo esta <code class="language-plaintext highlighter-rouge">eliminando</code> antes de terminar la ejecución del exe, modificaremos los <code class="language-plaintext highlighter-rouge">permisos</code> en esta carpeta para que no pueda eliminar nada</p>
-<a href="/htb/pivotapi/3.png" target="_blank"><div><p><img src="/htb/pivotapi/3.png"></p></div></a>
+<a href="/hackthebox/pivotapi/3.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/3.png"></p></div></a>
 
 <p class="plain-text">Al ejecutar de nuevo el <code class="language-plaintext highlighter-rouge">exe</code> como no puede borrar los archivos nos encontramos con ellos en el directorio <code class="language-plaintext highlighter-rouge">Temp</code>, en este caso son un archivo tmp y un archivo <code class="language-plaintext highlighter-rouge">bat</code></p>
-<a href="/htb/pivotapi/4.png" target="_blank"><div><p><img src="/htb/pivotapi/4.png"></p></div></a>
+<a href="/hackthebox/pivotapi/4.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/4.png"></p></div></a>
 
 <p class="plain-text">El archivo <code class="language-plaintext highlighter-rouge">bat</code> inicia haciendo un par de comprobaciones de usuario, despues guarda una data en <code class="language-plaintext highlighter-rouge">base64</code> en un archivo <code class="language-plaintext highlighter-rouge">oracle.txt</code>, despues crea un archivo de <code class="language-plaintext highlighter-rouge">powershell</code> que lo convierte en un <code class="language-plaintext highlighter-rouge">exe</code> y lo ejecuta, finalmente borra los archivos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -411,31 +411,31 @@ powershell.exe -exec bypass -file c:\programdata\monta.ps1</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al ejecutar nuestra version modificada del script de extensión <code class="language-plaintext highlighter-rouge">bat</code> nos crea varios archivos, el <code class="language-plaintext highlighter-rouge">txt</code>, el <code class="language-plaintext highlighter-rouge">ps1</code> y un <code class="language-plaintext highlighter-rouge">exe</code> todo en el directorio <code class="language-plaintext highlighter-rouge">C:\ProgramData</code></p>
-<a href="/htb/pivotapi/6.png" target="_blank"><div><p><img src="/htb/pivotapi/6.png"></p></div></a>
+<a href="/hackthebox/pivotapi/6.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/6.png"></p></div></a>
 
 <p class="plain-text">Este archivo <code class="language-plaintext highlighter-rouge">exe</code> tampoco nos deja muy claro que es lo que hace, asi que lo abriremos usando <a href="http://www.rohitab.com/apimonitor">Api Monitor</a> podemos correr el programa y ver las acciones que realiza por detras, esto es similar a lo que hace la herramienta <code class="language-plaintext highlighter-rouge">ltrace</code> en Linux</p>
-<a href="/htb/pivotapi/7.png" target="_blank"><div><p><img src="/htb/pivotapi/7.png"></p></div></a>
+<a href="/hackthebox/pivotapi/7.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/7.png"></p></div></a>
 
 <p class="plain-text">Después de ver un poco las acciones vemos que con <code class="language-plaintext highlighter-rouge">CreateProcessWithLogonW</code> se autentica para crear un proceso usando las credenciales de <code class="language-plaintext highlighter-rouge">svc_oracle</code>, esta es una de las formas para ver la contraseña y obtener posibles <code class="language-plaintext highlighter-rouge">credenciales</code> validas</p>
-<a href="/htb/pivotapi/8.png" target="_blank"><div><p><img src="/htb/pivotapi/8.png"></p></div></a>
+<a href="/hackthebox/pivotapi/8.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/8.png"></p></div></a>
 
 <p class="plain-text">Otra forma mas guapa es usando <a href="https://x64dbg.com/">x64dbg</a>, pero para que no termine el programa al correrlo en las preferencias haremos que haga un <code class="language-plaintext highlighter-rouge">breakpoint</code> antes de la salida<p>
-<a href="/htb/pivotapi/15.png" target="_blank"><div><p><img src="/htb/pivotapi/15.png"></p></div></a>
+<a href="/hackthebox/pivotapi/15.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/15.png"></p></div></a>
 
 <p class="plain-text">De esta manera corremos el programa y se detiene antes de salir con el <code class="language-plaintext highlighter-rouge">banner</code></p>
-<a href="/htb/pivotapi/16.png" target="_blank"><div><p><img src="/htb/pivotapi/16.png"></p></div></a>
+<a href="/hackthebox/pivotapi/16.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/16.png"></p></div></a>
 
 <p class="plain-text">Vamos al apartado <code class="language-plaintext highlighter-rouge">mapa de memoria</code> y la idea sera buscar una direccion donde el tipo sea <code class="language-plaintext highlighter-rouge">MAP</code> con los mejores privilegios, en este caso solo encontramos <code class="language-plaintext highlighter-rouge">RW-</code></p>
-<a href="/htb/pivotapi/17.png" target="_blank"><div><p><img src="/htb/pivotapi/17.png"></p></div></a>
+<a href="/hackthebox/pivotapi/17.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/17.png"></p></div></a>
 
 <p class="plain-text">Si vamos a la representación en el volcado podemos ver la cabecera <code class="language-plaintext highlighter-rouge">MZ</code> lo que nos indica que es un ejecutable para <code class="language-plaintext highlighter-rouge">MS-DOS</code>, en pocas palabras un archivo <code class="language-plaintext highlighter-rouge">exe</code></p>
-<a href="/htb/pivotapi/18.png" target="_blank"><div><p><img src="/htb/pivotapi/18.png"></p></div></a>
+<a href="/hackthebox/pivotapi/18.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/18.png"></p></div></a>
 
 <p class="plain-text">Volvemos al mapa de memoria y dumpeamos la <code class="language-plaintext highlighter-rouge">memoria</code> en la direccion donde tenemos el <code class="language-plaintext highlighter-rouge">MAP</code> con los permisos RW-, guardamos esto como un archivo <code class="language-plaintext highlighter-rouge">exe</code></p>
-<a href="/htb/pivotapi/19.png" target="_blank"><div><p><img src="/htb/pivotapi/19.png"></p></div></a>
+<a href="/hackthebox/pivotapi/19.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/19.png"></p></div></a>
 
 <p class="plain-text">Este archivo al ser <code class="language-plaintext highlighter-rouge">.NET</code> podemos decompilarlo con <a href="https://github.com/dnSpy/dnSpy">dnspy</a> y ver su codigo fuente, en este encontramos la <code class="language-plaintext highlighter-rouge">contraseña</code> y tenemos credenciales del usuario <code class="language-plaintext highlighter-rouge">svc_oracle</code></p>
-<a href="/htb/pivotapi/20.png" target="_blank"><div><p><img src="/htb/pivotapi/20.png"></p></div></a>
+<a href="/hackthebox/pivotapi/20.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/20.png"></p></div></a>
 
 <p class="plain-text">Sin embargo al comprobar las credenciales de svc_oracle con <code class="language-plaintext highlighter-rouge">crackmapexec</code> encontramos que estas las credenciales no son validas a nivel de <code class="language-plaintext highlighter-rouge">dominio</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -480,7 +480,7 @@ powershell.exe -exec bypass -file c:\programdata\monta.ps1</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">En realidad tiene sentido, volviendo a los mensajes nos dice que hasta el año <code class="language-plaintext highlighter-rouge">2010</code> corria <code class="language-plaintext highlighter-rouge">oracle</code> pero en el año <code class="language-plaintext highlighter-rouge">2020</code> se cambio el servicio de oracle por <code class="language-plaintext highlighter-rouge">mssql</code></p>
-<a href="/htb/pivotapi/21.png" target="_blank"><div><p><img src="/htb/pivotapi/21.png"></p></div></a>
+<a href="/hackthebox/pivotapi/21.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/21.png"></p></div></a>
 
 <p class="plain-text">Podemos modificar la <code class="language-plaintext highlighter-rouge">contraseña</code> intentando cambiar los datos que conocemos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -520,7 +520,7 @@ INFO: Compressing output into 20230708134057_bloodhound.zip</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Después de subir el zip a <code class="language-plaintext highlighter-rouge">bloodhound</code> podemos ver que el usuario <code class="language-plaintext highlighter-rouge">svc_mssql</code> pertenece al grupo <code class="language-plaintext highlighter-rouge">winrm</code>, sin embargo el puerto <code class="language-plaintext highlighter-rouge">5985</code> no esta expuesto para todos</p>
-<a href="/htb/pivotapi/5.png" target="_blank"><div><p><img src="/htb/pivotapi/5.png"></p></div></a>
+<a href="/hackthebox/pivotapi/5.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/5.png"></p></div></a>
 
 <p class="plain-text">Al intentar conectarnos como el usuario <code class="language-plaintext highlighter-rouge">svc_mssql</code> al servicio de mssql nos devuelve un <code class="language-plaintext highlighter-rouge">error</code> el cual nos dice que la autenticación con estas credenciales no es valida</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -697,13 +697,13 @@ Session completed.</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ahora con <code class="language-plaintext highlighter-rouge">KeePassXC</code> podemos abrir el archivo <code class="language-plaintext highlighter-rouge">kdbx</code> y usar la contraseña crackeada</p>
-<a href="/htb/pivotapi/9.png" target="_blank"><div><p><img src="/htb/pivotapi/9.png"></p></div></a>
+<a href="/hackthebox/pivotapi/9.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/9.png"></p></div></a>
 
 <p class="plain-text">Al abrir la db podemos encontrar <code class="language-plaintext highlighter-rouge">credenciales</code> correspondientes al nombre <code class="language-plaintext highlighter-rouge">SSH</code></p>
-<a href="/htb/pivotapi/10.png" target="_blank"><div><p><img src="/htb/pivotapi/10.png"></p></div></a>
+<a href="/hackthebox/pivotapi/10.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/10.png"></p></div></a>
 
 <p class="plain-text">Al abrirlas podemos ver la <code class="language-plaintext highlighter-rouge">contraseña</code> en texto plano del usuario <code class="language-plaintext highlighter-rouge">3v4Si0N</code> para ssh</p>
-<a href="/htb/pivotapi/11.png" target="_blank"><div><p><img src="/htb/pivotapi/11.png"></p></div></a>
+<a href="/hackthebox/pivotapi/11.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/11.png"></p></div></a>
 
 <p class="plain-text">Comprobamos las credenciales de 3v4Si0N con <code class="language-plaintext highlighter-rouge">crackmapexec</code> y estas son validas tanto por <code class="language-plaintext highlighter-rouge">smb</code> a nivel de dominio como para autenticarnos al servicio <code class="language-plaintext highlighter-rouge">ssh</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -740,7 +740,7 @@ PS C:\Users\3v4Si0N></span>
 <br><h3 class="post-title">Shell - dr.zaiuss</h3><br>
 
 <p class="plain-text">Volviendo a <code class="language-plaintext highlighter-rouge">bloodhound</code> ahora podemos buscar una ruta desde el usuario <code class="language-plaintext highlighter-rouge">3v4Si0N</code>, este tiene privilegios <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre <code class="language-plaintext highlighter-rouge">Dr.Zaiuss</code> que a su vez tiene privilegios <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre el usuario <code class="language-plaintext highlighter-rouge">Superfume</code> que pertenece al grupo <code class="language-plaintext highlighter-rouge">Developers</code></p>
-<a href="/htb/pivotapi/12.png" target="_blank"><div><p><img src="/htb/pivotapi/12.png"></p></div></a>
+<a href="/hackthebox/pivotapi/12.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/12.png"></p></div></a>
 
 <p class="plain-text">Usando el modulo <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView.ps1</a> como el usuario 3v4Si0N podemos setearle un <code class="language-plaintext highlighter-rouge">SPN</code> al usuario Dr.Zaiuss y asi hacer a este usuario vulnerable a un <code class="language-plaintext highlighter-rouge">kerberoasting</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -911,10 +911,10 @@ password </span><span class="o">= </span><span class="s">""</span><span class="p
 </code></pre></div></div><br>
 
 <p class="plain-text">Analizando un poco el codigo decompilado del exe por <code class="language-plaintext highlighter-rouge">dnspy</code> podemos ver que define las variables <code class="language-plaintext highlighter-rouge">bytes</code> y <code class="language-plaintext highlighter-rouge">data</code>, despues le pasa estas variables como argumento a <code class="language-plaintext highlighter-rouge">Decrypt</code> almacenandolo en <code class="language-plaintext highlighter-rouge">array</code>, podemos hacer un <code class="language-plaintext highlighter-rouge">breakpoint</code> justo despues para ver los valores, corremos el programa y vemos los valores de <code class="language-plaintext highlighter-rouge">array</code></p>
-<a href="/htb/pivotapi/13.png" target="_blank"><div><p><img src="/htb/pivotapi/13.png"></p></div></a>
+<a href="/hackthebox/pivotapi/13.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/13.png"></p></div></a>
 
 <p class="plain-text">Una forma facil de ver la contraseña es en la <code class="language-plaintext highlighter-rouge">memoria</code> ver su representación tanto en hexadecimal como en <code class="language-plaintext highlighter-rouge">ascii</code>, a la derecha nos encontramos con ella en texto claro</p>
-<a href="/htb/pivotapi/14.png" target="_blank"><div><p><img src="/htb/pivotapi/14.png"></p></div></a>
+<a href="/hackthebox/pivotapi/14.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/14.png"></p></div></a>
 
 <p class="plain-text">O con <code class="language-plaintext highlighter-rouge">python3</code> declarar el valor de array y con <code class="language-plaintext highlighter-rouge">chr</code> convertirlo a ascii y asi verla</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -951,7 +951,7 @@ PS C:\Users\jari\Documents></span>
 <br><h3 class="post-title">Shell - Administrator</h3><br>
 
 <p class="plain-text">Volviendo a <code class="language-plaintext highlighter-rouge">bloodhound</code> a buscar posibles rutas esta vez partiendo de <code class="language-plaintext highlighter-rouge">Jari</code>, encontramos que este tiene privilegios <code class="language-plaintext highlighter-rouge">ForceChangePassword</code> sobre <code class="language-plaintext highlighter-rouge">Gibdeon</code> que es parte del grupo <code class="language-plaintext highlighter-rouge">Account Operators</code> que tiene privilegios <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre el grupo <code class="language-plaintext highlighter-rouge">Laps Read</code> grupo que tiene <code class="language-plaintext highlighter-rouge">ReadLapsPassword</code> sobre el equipo <code class="language-plaintext highlighter-rouge">PIVOTAPI</code></p>
-<a href="/htb/pivotapi/22.png" target="_blank"><div><p><img src="/htb/pivotapi/22.png"></p></div></a>
+<a href="/hackthebox/pivotapi/22.png" target="_blank"><div><p><img src="/hackthebox/pivotapi/22.png"></p></div></a>
 
 <p class="plain-text">Iniciemos aprovechando el privilegio para cambiar la <code class="language-plaintext highlighter-rouge">contraseña</code> al usuario <code class="language-plaintext highlighter-rouge">gibdeon</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1220,7 +1220,7 @@ SQL></span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

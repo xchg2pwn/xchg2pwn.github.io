@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Mantis</title>
 
   <meta name="description" content="Resolución de la máquina Mantis de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Mantis">
   <meta name="twitter:description" content="Resolución de la máquina Mantis de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/mantis.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/mantis.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Mantis">
   <meta property="og:description" content="Resolución de la máquina Mantis de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/mantis.png" />
+  <meta property="og:image" content="/images/hackthebox/mantis.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/mantis.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/mantis.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -135,7 +135,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/mantis.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/mantis.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Mantis</h2><br>
   </header>
   
@@ -214,10 +214,10 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 </code></pre></div></div><br>
 
 <p class="plain-text">El puerto <code class="language-plaintext highlighter-rouge">8080</code> esta abierto en la máquina, sin embargo despues de buscar y probar diferentes vulnerabilidades no encontramos absolutamente nada interesante</p>
-<a href="/htb/mantis/6.png" target="_blank"><div><p><img src="/htb/mantis/6.png"></p></div></a>
+<a href="/hackthebox/mantis/6.png" target="_blank"><div><p><img src="/hackthebox/mantis/6.png"></p></div></a>
 
 <p class="plain-text">También tenemos el puerto <code class="language-plaintext highlighter-rouge">1337</code> abierto, este puerto tambien corre una pagina web sin embargo la principal es solo un simple panel de <code class="language-plaintext highlighter-rouge">IIS</code> version 7 por defecto</p>
-<a href="/htb/mantis/1.png" target="_blank"><div><p><img src="/htb/mantis/1.png"></p></div></a>
+<a href="/hackthebox/mantis/1.png" target="_blank"><div><p><img src="/hackthebox/mantis/1.png"></p></div></a>
 
 <p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">wfuzz</code> podemos encontrar 2 directorios, sin embargo el directorio <code class="language-plaintext highlighter-rouge">orchard</code> nos devuelve un codigo de estado 500. <code class="language-plaintext highlighter-rouge">secure_notes</code> que nos devuelve un <code class="language-plaintext highlighter-rouge">301</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -238,10 +238,10 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">Al abrir el directorio <code class="language-plaintext highlighter-rouge">/secure_notes</code> podemos encontrar 2 archivos, el primero es un archivo con doble extensión <code class="language-plaintext highlighter-rouge">.txt</code> y el otro un <code class="language-plaintext highlighter-rouge">web.config</code> que llama la atencion</p>
-<a href="/htb/mantis/2.png" target="_blank"><div><p><img src="/htb/mantis/2.png"></p></div></a>
+<a href="/hackthebox/mantis/2.png" target="_blank"><div><p><img src="/hackthebox/mantis/2.png"></p></div></a>
 
 <p class="plain-text">Aunque el <code class="language-plaintext highlighter-rouge">web.config</code> parece bastante interesante al abrirla nos devuelve <code class="language-plaintext highlighter-rouge">404</code></p>
-<a href="/htb/mantis/4.png" target="_blank"><div><p><img src="/htb/mantis/4.png"></p></div></a>
+<a href="/hackthebox/mantis/4.png" target="_blank"><div><p><img src="/hackthebox/mantis/4.png"></p></div></a>
 
 </section>
 
@@ -249,7 +249,7 @@ ID           Response   Lines    Word       Chars       Payload
 <br><h3 class="post-title">Access - admin</h3><br>
 
 <p class="plain-text">El archivo <code class="language-plaintext highlighter-rouge">.txt</code> contiene algunas notas, la numero 2 es bastante interesante, nos habla de algo de descargar <code class="language-plaintext highlighter-rouge">MSSQLServer</code>, crear un usuario <code class="language-plaintext highlighter-rouge">admin</code> y una db</p>
-<a href="/htb/mantis/3.png" target="_blank"><div><p><img src="/htb/mantis/3.png"></p></div></a>
+<a href="/hackthebox/mantis/3.png" target="_blank"><div><p><img src="/hackthebox/mantis/3.png"></p></div></a>
 
 <p class="plain-text">Lo interesante esta en el nombre del archivo, este es un <code class="language-plaintext highlighter-rouge">base64</code> que al decodearlo nos deja una cadena en <code class="language-plaintext highlighter-rouge">hexadecimal</code> y al decodearla parece una <code class="language-plaintext highlighter-rouge">contraseña</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -535,7 +535,7 @@ C:\Windows\system32></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al pasarle el <code class="language-plaintext highlighter-rouge">hash</code> NT del usuario Administrator a <a href="https://crackstation.net/">crackstation</a> este logra crackearlo</p>
-<a href="/htb/mantis/5.png" target="_blank"><div><p><img src="/htb/mantis/5.png"></p></div></a>
+<a href="/hackthebox/mantis/5.png" target="_blank"><div><p><img src="/hackthebox/mantis/5.png"></p></div></a>
 
 <p class="plain-text">Comprobamos la contraseña de Administrator con <code class="language-plaintext highlighter-rouge">crackmapexec</code> y devuelve Pwn3d!</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -579,7 +579,7 @@ PORT     STATE SERVICE
 <code><span class="ve">❯ rdesktop</span><span class="p"> -u Administrator -p </span><span class="am">'@dm!n!$tr@t0r'</span><span class="p"> -d htb.local mantis.htb.local  </span>
 </code></pre></div></div><br>
 
-<a href="/htb/mantis/7.png" target="_blank"><div><p><img src="/htb/mantis/7.png"></p></div></a>
+<a href="/hackthebox/mantis/7.png" target="_blank"><div><p><img src="/hackthebox/mantis/7.png"></p></div></a>
 
 </section>
 
@@ -612,7 +612,7 @@ C:\Windows\system32></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Desde la interfaz grafica que conseguimos en RDP o con <code class="language-plaintext highlighter-rouge">services</code> de impacket encontramos con 2 servicios de <code class="language-plaintext highlighter-rouge">4</code> letras corriendo sin descripción, son <code class="language-plaintext highlighter-rouge">IHXM</code> y <code class="language-plaintext highlighter-rouge">TZZW</code></p>
-<a href="/htb/mantis/8.png" target="_blank"><div><p><img src="/htb/mantis/8.png"></p></div></a>
+<a href="/hackthebox/mantis/8.png" target="_blank"><div><p><img src="/hackthebox/mantis/8.png"></p></div></a>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ impacket-services </span><span class="p">htb.local/Administrator:</span><span class="am">'@dm!n!$tr@t0r'</span><span class="p">@mantis.htb.local list
@@ -812,7 +812,7 @@ C:\Windows\system32></span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

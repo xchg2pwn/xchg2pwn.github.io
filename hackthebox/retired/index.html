@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Retired</title>
 
   <meta name="description" content="Resolución de la máquina Retired de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Retired">
   <meta name="twitter:description" content="Resolución de la máquina Retired de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/retired.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/retired.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Retired">
   <meta property="og:description" content="Resolución de la máquina Retired de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/retired.png" />
+  <meta property="og:image" content="/images/hackthebox/retired.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/retired.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/retired.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -134,7 +134,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/retired.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/retired.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Retired</h2><br>
   </header>
   
@@ -151,7 +151,7 @@ PORT   STATE SERVICE
 </code></pre></div></div><br>
 
 <p class="plain-text">Solo por comodidad agregamos el dominio <code class="language-plaintext highlighter-rouge">retired.htb</code> al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code>, al visitar la pagina principal podemos ver que el archivo es gestionado mediante el parametro <code class="language-plaintext highlighter-rouge">page</code> en la petición <code class="language-plaintext highlighter-rouge">GET</code> el cual por defecto apunta a <code class="language-plaintext highlighter-rouge">default.html</code></p>
-<a href="/htb/retired/1.png" target="_blank"><div><p><img src="/htb/retired/1.png"></p></div></a>
+<a href="/hackthebox/retired/1.png" target="_blank"><div><p><img src="/hackthebox/retired/1.png"></p></div></a>
 
 <p class="plain-text">Podemos probar un <code class="language-plaintext highlighter-rouge">Local File Inclusion</code> para apuntar a archivos locales de la máquina, en este caso logramos leer directamente el archivo <code class="language-plaintext highlighter-rouge">/etc/passwd</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -201,10 +201,10 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">En la página <code class="language-plaintext highlighter-rouge">beta.html</code> nos encontramos con un campo de subida de archivos, donde nos pide que subamos un archivo de <code class="language-plaintext highlighter-rouge">licencia</code> con un tamaño de <code class="language-plaintext highlighter-rouge">512</code> bytes</p>
-<a href="/htb/retired/2.png" target="_blank"><div><p><img src="/htb/retired/2.png"></p></div></a>
+<a href="/hackthebox/retired/2.png" target="_blank"><div><p><img src="/hackthebox/retired/2.png"></p></div></a>
 
 <p class="plain-text">Subimos un archivo <code class="language-plaintext highlighter-rouge">test</code> y al interceptar la petición con <code class="language-plaintext highlighter-rouge">burpsuite</code> vemos que la hace a <code class="language-plaintext highlighter-rouge">activate_license.php</code> enviando el contenido del archivo como <code class="language-plaintext highlighter-rouge">licensefile</code></p>
-<a href="/htb/retired/3.png" target="_blank"><div><p><img src="/htb/retired/3.png"></p></div></a>
+<a href="/hackthebox/retired/3.png" target="_blank"><div><p><img src="/hackthebox/retired/3.png"></p></div></a>
 
 <p class="plain-text">Si miramos lo que hace el php toma el contenido del archivo <code class="language-plaintext highlighter-rouge">licensefile</code> que recibe en la petición y lo reenvia a el puerto <code class="language-plaintext highlighter-rouge">1337</code> de la <code class="language-plaintext highlighter-rouge">127.0.0.1</code> mediante un socket</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -274,7 +274,7 @@ Error: specify port to bind to
 </code></pre></div></div><br>
 
 <p class="plain-text">Para analizar mejor podemos decompilarlo con <code class="language-plaintext highlighter-rouge">ida</code> y ver su pseudocodigo en <code class="language-plaintext highlighter-rouge">C</code></p>
-<a href="/htb/retired/7.png" target="_blank"><div><p><img src="/htb/retired/7.png"></p></div></a>
+<a href="/hackthebox/retired/7.png" target="_blank"><div><p><img src="/hackthebox/retired/7.png"></p></div></a>
 
 <p class="plain-text">El codigo comprueba que tenga un <code class="language-plaintext highlighter-rouge">argumento</code> e inicia un simple <code class="language-plaintext highlighter-rouge">listener</code> con el</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -542,7 +542,7 @@ junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A
 </code></pre></div></div><br>
 
 <p class="plain-text">El primer argumento será la <code class="language-plaintext highlighter-rouge">direccion</code> donde queremos modificar los permisos que en este caso sera donde inicia el <code class="language-plaintext highlighter-rouge">stack</code>, el segundo sera la <code class="language-plaintext highlighter-rouge">longitud</code> que sera el tamaño del stack o pila y el ultimo son los <code class="language-plaintext highlighter-rouge">permisos</code> que sera <code class="language-plaintext highlighter-rouge">7</code> equivalente a <code class="language-plaintext highlighter-rouge">rwx</code></p>
-<a href="/htb/retired/4.png" target="_blank"><div><p><img src="/htb/retired/4.png"></p></div></a>
+<a href="/hackthebox/retired/4.png" target="_blank"><div><p><img src="/hackthebox/retired/4.png"></p></div></a>
 
 <p class="plain-text">Tenemos el argumento 3, para obtener los primeros 2 podemos ver las <code class="language-plaintext highlighter-rouge">direcciones</code> de la ejecución en el pid <code class="language-plaintext highlighter-rouge">400</code> viendo el archivo <code class="language-plaintext highlighter-rouge">maps</code> que se muestran casi al final</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -660,7 +660,7 @@ junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A
 </code></pre></div></div><br>
 
 <p class="plain-text">La idea ahora seria despues de llamar a <code class="language-plaintext highlighter-rouge">mprotect</code> hacer un salto al registro <code class="language-plaintext highlighter-rouge">RSP</code> que es la pila y ahora que esta es ejecutable ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code></p>
-<a href="/htb/retired/5.png" target="_blank"><div><p><img src="/htb/retired/5.png"></p></div></a>
+<a href="/hackthebox/retired/5.png" target="_blank"><div><p><img src="/hackthebox/retired/5.png"></p></div></a>
 
 <p class="plain-text">Usando ropper sobre <code class="language-plaintext highlighter-rouge">libc</code> encontramos varios gadgets que nos serviran para ejecutar lo que esta en el registro <code class="language-plaintext highlighter-rouge">RSP</code>, podemos usar cualquiera de ellos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -740,7 +740,7 @@ shellcode </span><span class="o">+= </span><span class="no">b</span><span class=
 </code></pre></div></div><br>
 
 <p class="plain-text">Nuestro payload final enviara la <code class="language-plaintext highlighter-rouge">basura</code> hasta llegar al registro <code class="language-plaintext highlighter-rouge">RIP</code>, ahi colocara en los registros <code class="language-plaintext highlighter-rouge">RDX</code>, <code class="language-plaintext highlighter-rouge">RSI</code> y <code class="language-plaintext highlighter-rouge">RDX</code> los argumentos necesarios para la función <code class="language-plaintext highlighter-rouge">mprotect</code> y la llamara para modifcar los <code class="language-plaintext highlighter-rouge">permisos</code> y hacer la pila ejecutable, despues de ello con un <code class="language-plaintext highlighter-rouge">call</code> al registro <code class="language-plaintext highlighter-rouge">RSP</code> podremos ir a la pila y ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code></p>
-<a href="/htb/retired/6.png" target="_blank"><div><p><img src="/htb/retired/6.png"></p></div></a>
+<a href="/hackthebox/retired/6.png" target="_blank"><div><p><img src="/hackthebox/retired/6.png"></p></div></a>
 
 <p class="plain-text">Simplemente nos queda definir el <code class="language-plaintext highlighter-rouge">payload</code> en el script y mediante una petición <code class="language-plaintext highlighter-rouge">POST</code> enviar el payload como archivo llamado <code class="language-plaintext highlighter-rouge">licensefile</code> a el php de la máquina victima</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -957,7 +957,7 @@ mov_rdi_rsi </span><span class="o">= </span><span class="p">p64(libc_base </span
 </code></pre></div></div><br>
 
 <p class="plain-text">Aprovechandonos de los <code class="language-plaintext highlighter-rouge">gadgets</code> iterando por cada <code class="language-plaintext highlighter-rouge">8</code> bytes del comando al registro <code class="language-plaintext highlighter-rouge">RDI</code> enviaremos la direccion de la seccion <code class="language-plaintext highlighter-rouge">writable</code>, en el registro <code class="language-plaintext highlighter-rouge">RSI</code> guardaremos los <code class="language-plaintext highlighter-rouge">8</code> bytes del comando y asi con cada iteracion moveremos todo lo que hay en <code class="language-plaintext highlighter-rouge">RSI</code> que son 8 bytes a <code class="language-plaintext highlighter-rouge">RDI</code> que es la direccion de la seccion <code class="language-plaintext highlighter-rouge">writable</code> que ira subiendo por cada iteracion para no sobreescribir lo anterior, al terminar la seccion <code class="language-plaintext highlighter-rouge">writable</code> tendra como contenido nuestro <code class="language-plaintext highlighter-rouge">comando</code> de bash completo</p>
-<a href="/htb/retired/9.png" target="_blank"><div><p><img src="/htb/retired/9.png"></p></div></a>
+<a href="/hackthebox/retired/9.png" target="_blank"><div><p><img src="/hackthebox/retired/9.png"></p></div></a>
 
 <p class="plain-text">Definimos la idea anterior en <code class="language-plaintext highlighter-rouge">python</code>, ademas usaremos <code class="language-plaintext highlighter-rouge">ljust</code> para asegurarnos que cada envio de datos tenga un tamaño de <code class="language-plaintext highlighter-rouge">8</code> bytes o rellenaremos con <code class="language-plaintext highlighter-rouge">\x00</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -968,7 +968,7 @@ mov_rdi_rsi </span><span class="o">= </span><span class="p">p64(libc_base </span
 </code></pre></div></div><br>
 
 <p class="plain-text">Para terminar el payload en el registro <code class="language-plaintext highlighter-rouge">RDI</code> guardaremos la direccion de la seccion <code class="language-plaintext highlighter-rouge">writable</code> que contiene nuestro comando de bash, seguido de la funcion <code class="language-plaintext highlighter-rouge">system</code> que al leer el primer argumento de <code class="language-plaintext highlighter-rouge">RDI</code> ejecutara el oneliner y enviara la <code class="language-plaintext highlighter-rouge">shell</code></p>
-<a href="/htb/retired/10.png" target="_blank"><div><p><img src="/htb/retired/10.png"></p></div></a>
+<a href="/hackthebox/retired/10.png" target="_blank"><div><p><img src="/hackthebox/retired/10.png"></p></div></a>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">p64(writable)
@@ -1350,7 +1350,7 @@ magic 13374f53545249434800524f4d00
 <p class="plain-text">Cuando ejecutemos un binario correspondiente a los <code class="language-plaintext highlighter-rouge">magicbyte</code> especificados este usara el <code class="language-plaintext highlighter-rouge">interprete</code> que en este caso es el binario <code class="language-plaintext highlighter-rouge">emuemu</code> para ejecutarlo</p>
 
 <p class="plain-text">Mirando las <code class="language-plaintext highlighter-rouge">flags</code> en la documentacion podemos ver la flag <code class="language-plaintext highlighter-rouge">C</code> que sirve para tomar las <code class="language-plaintext highlighter-rouge">credenciales</code> del binario al que pertenecen los <code class="language-plaintext highlighter-rouge">magicbytes</code> y no del inteprete</p>
-<a href="/htb/retired/8.png" target="_blank"><div><p><img src="/htb/retired/8.png"></p></div></a>
+<a href="/hackthebox/retired/8.png" target="_blank"><div><p><img src="/hackthebox/retired/8.png"></p></div></a>
 
 <p class="plain-text">Lo que podemos hacer es tomar los <code class="language-plaintext highlighter-rouge">magicbytes</code> de un binario <code class="language-plaintext highlighter-rouge">suid</code> y obligar que el <code class="language-plaintext highlighter-rouge">interprete</code> sea un binario personalizado que nos otorge una <code class="language-plaintext highlighter-rouge">shell</code>, para ello primero necesitamos un binario suid cualquiera, podemos usar simplemente <code class="language-plaintext highlighter-rouge">mount</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1428,7 +1428,7 @@ uid=0(root) gid=0(root) groups=0(root)
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

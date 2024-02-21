@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Safe</title>
 
   <meta name="description" content="Resolución de la máquina Safe de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Safe">
   <meta name="twitter:description" content="Resolución de la máquina Safe de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/safe.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/safe.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Safe">
   <meta property="og:description" content="Resolución de la máquina Safe de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/safe.png" />
+  <meta property="og:image" content="/images/hackthebox/safe.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/safe.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/safe.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -134,7 +134,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/safe.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/safe.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Safe</h2><br>
   </header>
   
@@ -157,10 +157,10 @@ PORT     STATE SERVICE
 </code></pre></div></div><br>
 
 <p class="plain-text">Al abrir el servicio web encontramos la plantilla por defecto de <code class="language-plaintext highlighter-rouge">apache2</code> en debian</p>
-<a href="/htb/safe/1.png" target="_blank"><div><p><img src="/htb/safe/1.png"></p></div></a>
+<a href="/hackthebox/safe/1.png" target="_blank"><div><p><img src="/hackthebox/safe/1.png"></p></div></a>
 
 <p class="plain-text">Al ver el <code class="language-plaintext highlighter-rouge">codigo fuente</code> de la página podemos ver un comentario que nos dice que hay un binario con el nombre <code class="language-plaintext highlighter-rouge">myapp</code> que esta corriendo en el puerto <code class="language-plaintext highlighter-rouge">1337</code></p>
-<a href="/htb/safe/2.png" target="_blank"><div><p><img src="/htb/safe/2.png"></p></div></a>
+<a href="/hackthebox/safe/2.png" target="_blank"><div><p><img src="/hackthebox/safe/2.png"></p></div></a>
 
 <p class="plain-text">El binario de <code class="language-plaintext highlighter-rouge">myapp</code> podemos descargarlo directamente de la pagina web en <code class="language-plaintext highlighter-rouge">/myapp</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -187,7 +187,7 @@ test</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">ida</code> podemos decompilar el binario y de esta manera ver su codigo en <code class="language-plaintext highlighter-rouge">C</code></p>
-<a href="/htb/safe/3.png" target="_blank"><div><p><img src="/htb/safe/3.png"></p></div></a>
+<a href="/hackthebox/safe/3.png" target="_blank"><div><p><img src="/hackthebox/safe/3.png"></p></div></a>
 
 <p class="plain-text">El codigo es simple, ejecuta con system el comando <code class="language-plaintext highlighter-rouge">uptime</code>, despues recibe un input con <code class="language-plaintext highlighter-rouge">gets</code> y lo devuelve con <code class="language-plaintext highlighter-rouge">puts</code>, este binario es vulnerable y es que define un <code class="language-plaintext highlighter-rouge">buffer</code> de solo <code class="language-plaintext highlighter-rouge">112</code> bytes para recibir un input con la funcion vulnerable gets</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -304,7 +304,7 @@ End of assembler dump.
 </code></pre></div></div><br>
 
 <p class="plain-text">La idea para explotarlo sera enviar <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al <code class="language-plaintext highlighter-rouge">RIP</code> restandole los bytes ya que dejaremos la cadena <code class="language-plaintext highlighter-rouge">/bin/sh\x00</code> al incio de la pila, despues mediante el gadget <code class="language-plaintext highlighter-rouge">POP R13 R14 R15</code> enviar la funcion <code class="language-plaintext highlighter-rouge">system@plt</code> a <code class="language-plaintext highlighter-rouge">R13</code> rellenando los otros registros con <code class="language-plaintext highlighter-rouge">null</code>, despues al llamar a la funcion <code class="language-plaintext highlighter-rouge">test</code> ejecutara un <code class="language-plaintext highlighter-rouge">MOV RDI,RSP</code> que movera la cadena <code class="language-plaintext highlighter-rouge">/bin/sh\x00</code> a <code class="language-plaintext highlighter-rouge">RDI</code>, despues cuando test ejecute <code class="language-plaintext highlighter-rouge">JMP R13</code> se encotrara con <code class="language-plaintext highlighter-rouge">system@plt</code> que tomara el argumento de <code class="language-plaintext highlighter-rouge">RDI</code> y nos dara una sh</p>
-<a href="/htb/safe/8.png" target="_blank"><div><p><img src="/htb/safe/8.png"></p></div></a>
+<a href="/hackthebox/safe/8.png" target="_blank"><div><p><img src="/hackthebox/safe/8.png"></p></div></a>
 
 <p class="plain-text">Lo unico que nos queda es plasmar la explotacion explicada anteriormente en un script de <code class="language-plaintext highlighter-rouge">python</code>, en este caso haremos uso de pwntools para facilitarlo</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -414,7 +414,7 @@ nth paddr        size vaddr       vsize perm name
 </code></pre></div></div><br>
 
 <p class="plain-text">La idea esta vez sera rellenas con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al registro RIP, despues con un <code class="language-plaintext highlighter-rouge">POP RDI</code> enviaremos la direccion de la seccion <code class="language-plaintext highlighter-rouge">writable</code>, despues llamamos a <code class="language-plaintext highlighter-rouge">gets@plt</code> y nos pedira un input, este sera la cadena <code class="language-plaintext highlighter-rouge">/bin/sh\x00</code> que se escribira en <code class="language-plaintext highlighter-rouge">RDI</code>, despues nuevamente enviamos a RDI la direccion <code class="language-plaintext highlighter-rouge">writable</code> y llamamos a <code class="language-plaintext highlighter-rouge">system@plt</code>, al ejecutar esta funcion tomara el argumento del registro <code class="language-plaintext highlighter-rouge">RDI</code> la cual contiene la direccion de writable que vale <code class="language-plaintext highlighter-rouge">/bin/sh</code> y nos ejecutara una shell</p>
-<a href="/htb/safe/11.png" target="_blank"><div><p><img src="/htb/safe/11.png"></p></div></a>
+<a href="/hackthebox/safe/11.png" target="_blank"><div><p><img src="/hackthebox/safe/11.png"></p></div></a>
 
 <p class="plain-text">Nuevamente plasmamos esta idea en un script de <code class="language-plaintext highlighter-rouge">python</code> usando las pwntools</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -503,7 +503,7 @@ Non-debugging symbols:
 </code></pre></div></div><br>
 
 <p class="plain-text">Despues de rellenar con las <code class="language-plaintext highlighter-rouge">A's</code> enviaremos mediante <code class="language-plaintext highlighter-rouge">POP RDI</code> la direccion de <code class="language-plaintext highlighter-rouge">puts@got.plt</code> para posteriormente ejecutarla <code class="language-plaintext highlighter-rouge">system@plt</code>, al ejecutar con systema esta direccion a traves del <code class="language-plaintext highlighter-rouge">error</code> nos lekeara la direccion completa de <code class="language-plaintext highlighter-rouge">puts</code></p>
-<a href="/htb/safe/9.png" target="_blank"><div><p><img src="/htb/safe/9.png"></p></div></a>
+<a href="/hackthebox/safe/9.png" target="_blank"><div><p><img src="/hackthebox/safe/9.png"></p></div></a>
 
 <p class="plain-text">Plasmamos esto en un script de <code class="language-plaintext highlighter-rouge">python</code> y al ejecutarlo un par de veces encontramos que mediante el <code class="language-plaintext highlighter-rouge">error</code> de sh nos muestra la direccion de <code class="language-plaintext highlighter-rouge">puts</code> que es dinamica</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -580,7 +580,7 @@ log.info(</span><span class="no">f</span><span class="s">"Leaked puts: </span><s
 
 
 <p class="plain-text">En <a href="https://libc.rip/">libc.rip</a> podemos encontar las direcciones base de diferentes funciones, entre ellas <code class="language-plaintext highlighter-rouge">puts</code> que es <code class="language-plaintext highlighter-rouge">0x68f90</code>, el leak de puts que conseguimos antes nos muestra la direccion de <code class="language-plaintext highlighter-rouge">puts</code> a la cual se le ha sumado la direcion de <code class="language-plaintext highlighter-rouge">libc base</code>, asi que si al leak le restamos la direccion <code class="language-plaintext highlighter-rouge">base</code> de puts obtenemos <code class="language-plaintext highlighter-rouge">libc_base</code> y si a esta le sumamos la direccion base de <code class="language-plaintext highlighter-rouge">/bin/sh</code> obtenemos una direccion de /bin/sh</p>
-<a href="/htb/safe/4.png" target="_blank"><div><p><img src="/htb/safe/4.png"></p></div></a>
+<a href="/hackthebox/safe/4.png" target="_blank"><div><p><img src="/hackthebox/safe/4.png"></p></div></a>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">libc_base </span><span class="o">= </span><span class="p">leak_puts </span><span class="o">- </span><span class="mi">0x68f90</span><span class="p">
@@ -589,7 +589,7 @@ bin_sh </span><span class="o">= </span><span class="p">p64(libc_base </span><spa
 </code></pre></div></div><br>
 
 <p class="plain-text">Ya con la direccion de <code class="language-plaintext highlighter-rouge">/bin/sh</code> podemos simplemente enviarla al registro <code class="language-plaintext highlighter-rouge">RDI</code> con <code class="language-plaintext highlighter-rouge">POP RDI</code> para despues ejecutar <code class="language-plaintext highlighter-rouge">system@plt</code> y tome como argumento esta string</p>
-<a href="/htb/safe/10.png" target="_blank"><div><p><img src="/htb/safe/10.png"></p></div></a>
+<a href="/hackthebox/safe/10.png" target="_blank"><div><p><img src="/hackthebox/safe/10.png"></p></div></a>
 
 <p class="plain-text">La primera parte de nuestro exploit final nos ayudara a conseguir la direccion de <code class="language-plaintext highlighter-rouge">libc_base</code> y la segunda ejecutar <code class="language-plaintext highlighter-rouge">/bin/sh</code> con la funcion <code class="language-plaintext highlighter-rouge">system@plt</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -716,12 +716,12 @@ Session completed.</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">La contraseña que hemos conseguido con john es <code class="language-plaintext highlighter-rouge">bullshit</code>, sin embargo en <code class="language-plaintext highlighter-rouge">keepass</code> tambien necesitamos proporcionar un fichero <code class="language-plaintext highlighter-rouge">clave</code>, despues de probar cada uno de los archivos JPG encontramos que <code class="language-plaintext highlighter-rouge">IMG_0547.JPG</code> es un archivo valido</p>
-<a href="/htb/safe/5.png" target="_blank"><div><p><img src="/htb/safe/5.png"></p></div></a>
+<a href="/hackthebox/safe/5.png" target="_blank"><div><p><img src="/hackthebox/safe/5.png"></p></div></a>
 
 <p class="plain-text">Despues de desbloquear la <code class="language-plaintext highlighter-rouge">base de datos</code> podemos encontrar una credencial llamada <code class="language-plaintext highlighter-rouge">Root password</code> que parece ser la contraseña del usuario <code class="language-plaintext highlighter-rouge">root</code></p>
-<a href="/htb/safe/6.png" target="_blank"><div><p><img src="/htb/safe/6.png"></p></div></a>
+<a href="/hackthebox/safe/6.png" target="_blank"><div><p><img src="/hackthebox/safe/6.png"></p></div></a>
 
-<a href="/htb/safe/7.png" target="_blank"><div><p><img src="/htb/safe/7.png"></p></div></a>
+<a href="/hackthebox/safe/7.png" target="_blank"><div><p><img src="/hackthebox/safe/7.png"></p></div></a>
 
 <p class="plain-text">Usando esta contraseña podemos usar <code class="language-plaintext highlighter-rouge">su</code> para convertirnos en el usuario <code class="language-plaintext highlighter-rouge">root</code>, la contraseña es valida y conseguimos una <code class="language-plaintext highlighter-rouge">shell</code> como este y podemos leer la <code class="language-plaintext highlighter-rouge">flag</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -741,7 +741,7 @@ uid=0(root) gid=0(root) groups=0(root)
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

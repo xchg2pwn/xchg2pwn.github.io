@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox StreamIO</title>
 
   <meta name="description" content="Resolución de la máquina StreamIO de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox StreamIO">
   <meta name="twitter:description" content="Resolución de la máquina StreamIO de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/streamio.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/streamio.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox StreamIO">
   <meta property="og:description" content="Resolución de la máquina StreamIO de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/streamio.png" />
+  <meta property="og:image" content="/images/hackthebox/streamio.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/streamio.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/streamio.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -133,7 +133,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/streamio.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/streamio.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">StreamIO</h2><br>
   </header>
   
@@ -178,10 +178,10 @@ Nmap scan report for 10.10.11.158
 </code></pre></div></div><br>
 
 <p class="plain-text">Esta abierto el puerto <code class="language-plaintext highlighter-rouge">80</code> con un servicio <code class="language-plaintext highlighter-rouge">http</code> sin embargo si lo abrimos la web en el navegador nos muestra simplemente la página que viene por defecto en <code class="language-plaintext highlighter-rouge">IIS</code></p>
-<a href="/htb/streamio/1.png" target="_blank"><div><p><img src="/htb/streamio/1.png"></p></div></a>
+<a href="/hackthebox/streamio/1.png" target="_blank"><div><p><img src="/hackthebox/streamio/1.png"></p></div></a>
 
 <p class="plain-text">Sin embargo también esta abierto el puerto <code class="language-plaintext highlighter-rouge">443</code> asi que también corre una web por <code class="language-plaintext highlighter-rouge">https</code>, la abrimos con https y vemos una pagina de streaming <code class="language-plaintext highlighter-rouge">peliculas</code> onnline</p>
-<a href="/htb/streamio/2.png" target="_blank"><div><p><img src="/htb/streamio/2.png"></p></div></a>
+<a href="/hackthebox/streamio/2.png" target="_blank"><div><p><img src="/hackthebox/streamio/2.png"></p></div></a>
 
 <p class="plain-text">Ya que tenemos un dominio podemos usar <code class="language-plaintext highlighter-rouge">wfuzz</code> para aplicando fuerza bruta buscar un <code class="language-plaintext highlighter-rouge">subdominio</code> valido, en este caso <code class="language-plaintext highlighter-rouge">watch</code> devuelve un contenido diferente</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -206,7 +206,7 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">Al abrir la web por <code class="language-plaintext highlighter-rouge">https</code> bajo el dominio <code class="language-plaintext highlighter-rouge">watch.streamio.htb</code> podemos ver una pagina donde podemos introducir el <code class="language-plaintext highlighter-rouge">correo</code> para añadir una suscripción</p>
-<a href="/htb/streamio/3.png" target="_blank"><div><p><img src="/htb/streamio/3.png"></p></div></a>
+<a href="/hackthebox/streamio/3.png" target="_blank"><div><p><img src="/hackthebox/streamio/3.png"></p></div></a>
 
 <p class="plain-text">Fuzzeando por archivos con extensiones <code class="language-plaintext highlighter-rouge">php</code> encontramos ademas de un <code class="language-plaintext highlighter-rouge">blocked</code> un <code class="language-plaintext highlighter-rouge">search</code> ademas del clasico <code class="language-plaintext highlighter-rouge">index</code> que es el que contiene la página principal</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -228,37 +228,37 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">Este es un <code class="language-plaintext highlighter-rouge">buscador</code> de peliculas donde podemos introducir y buscar una pelicula</p>
-<a href="/htb/streamio/4.png" target="_blank"><div><p><img src="/htb/streamio/4.png"></p></div></a>
+<a href="/hackthebox/streamio/4.png" target="_blank"><div><p><img src="/hackthebox/streamio/4.png"></p></div></a>
 
 <p class="plain-text">Despues de probar varias cosas en la web encontramos una <code class="language-plaintext highlighter-rouge">inyección sql</code> donde podemos ver reflejadas las columnas <code class="language-plaintext highlighter-rouge">2</code> y <code class="language-plaintext highlighter-rouge">3</code> en este caso usaremos la <code class="language-plaintext highlighter-rouge">2</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="s">test' </span><span class="o">union select </span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">;</span><span class="c1">-- -  </span>
 </code></pre></div></div><br>
-<a href="/htb/streamio/5.png" target="_blank"><div><p><img src="/htb/streamio/5.png"></p></div></a>
+<a href="/hackthebox/streamio/5.png" target="_blank"><div><p><img src="/hackthebox/streamio/5.png"></p></div></a>
 
 <p class="plain-text">Seleccionamos el campo <code class="language-plaintext highlighter-rouge">name</code> de <code class="language-plaintext highlighter-rouge">sysdatabases</code>, al hacer esto nos devolvera todas las <code class="language-plaintext highlighter-rouge">bases de datos</code> existentes en el servidor, nos quedaremos con <code class="language-plaintext highlighter-rouge">streamio</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="s">test' </span><span class="o">union select </span><span class="mi">1</span><span class="p">,name,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6 </span><span class="o">from </span><span class="p">sysdatabases;</span><span class="c1">-- -  </span>
 </code></pre></div></div><br>
-<a href="/htb/streamio/6.png" target="_blank"><div><p><img src="/htb/streamio/6.png"></p></div></a>
+<a href="/hackthebox/streamio/6.png" target="_blank"><div><p><img src="/hackthebox/streamio/6.png"></p></div></a>
 
 <p class="plain-text">Ya que tenemos el nombre de la base de datos podemos enumerar sus <code class="language-plaintext highlighter-rouge">tablas</code>, en este caso solo encontramos 2 <code class="language-plaintext highlighter-rouge">movies</code> y la que parece mas prometedora <code class="language-plaintext highlighter-rouge">users</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="s">test' </span><span class="o">union select </span><span class="mi">1</span><span class="p">,name,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6 </span><span class="o">from </span><span class="mi">streamio</span><span class="p">.</span><span class="mi">sys</span><span class="p">.tables;</span><span class="c1">-- -  </span>
 </code></pre></div></div><br>
-<a href="/htb/streamio/7.png" target="_blank"><div><p><img src="/htb/streamio/7.png"></p></div></a>
+<a href="/hackthebox/streamio/7.png" target="_blank"><div><p><img src="/hackthebox/streamio/7.png"></p></div></a>
 
 <p class="plain-text">Sabemos que existe una tabla <code class="language-plaintext highlighter-rouge">users</code>, podemos enumerar las <code class="language-plaintext highlighter-rouge">columnas</code> de ella donde lo que parece ser interesante es simplemente <code class="language-plaintext highlighter-rouge">username</code> y <code class="language-plaintext highlighter-rouge">password</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="s">test' </span><span class="o">union select </span><span class="mi">1</span><span class="p">,name,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6 </span><span class="o">from </span><span class="mi">streamio</span><span class="p">.</span><span class="mi">sys</span><span class="p">.columns </span><span class="o">where </span><span class="p">object_id </span><span class="o">= </span><span class="p">object_id(</span><span class="s">'users'</span><span class="p">);</span><span class="c1">-- -  </span>
 </code></pre></div></div><br>
-<a href="/htb/streamio/8.png" target="_blank"><div><p><img src="/htb/streamio/8.png"></p></div></a>
+<a href="/hackthebox/streamio/8.png" target="_blank"><div><p><img src="/hackthebox/streamio/8.png"></p></div></a>
 
 <p class="plain-text">Finalmente podemos dumpear ambas columnas utilizando la funcion <code class="language-plaintext highlighter-rouge">concat</code> para sus valores reflejados juntos en la misma columna que en este caso es la <code class="language-plaintext highlighter-rouge">2</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="s">test' </span><span class="o">union select </span><span class="mi">1</span><span class="p">,concat(username,password),</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6 </span><span class="o">from </span><span class="mi">streamio</span><span class="p">.</span><span class="mi">dbo</span><span class="p">.users;</span><span class="c1">-- -  </span>
 </code></pre></div></div><br>
-<a href="/htb/streamio/12.png" target="_blank"><div><p><img src="/htb/streamio/12.png"></p></div></a>
+<a href="/hackthebox/streamio/12.png" target="_blank"><div><p><img src="/hackthebox/streamio/12.png"></p></div></a>
 
 </section>
 
@@ -319,7 +319,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Las credenciales del usuario <code class="language-plaintext highlighter-rouge">yoshihide</code> son validas para la web, asi que simplemente las usamos para autenticarnos en el login</p>
-<a href="/htb/streamio/9.png" target="_blank"><div><p><img src="/htb/streamio/9.png"></p></div></a>
+<a href="/hackthebox/streamio/9.png" target="_blank"><div><p><img src="/hackthebox/streamio/9.png"></p></div></a>
 
 <p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">wfuzz</code> para descubrir algunos directorios podemos encontrar varios, entre ellos uno que llama la atención rapidamente es el directorio <code class="language-plaintext highlighter-rouge">/admin</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -343,7 +343,7 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">En el encontramos varias pestañas, cada una de ellas nos lleva a un parametro por el metodo <code class="language-plaintext highlighter-rouge">GET</code> como lo es <code class="language-plaintext highlighter-rouge">user</code> que esta esperando un valor</p>
-<a href="/htb/streamio/10.png" target="_blank"><div><p><img src="/htb/streamio/10.png"></p></div></a>
+<a href="/hackthebox/streamio/10.png" target="_blank"><div><p><img src="/hackthebox/streamio/10.png"></p></div></a>
 
 <p class="plain-text">Podemos fuzzear para buscar otros posibles <code class="language-plaintext highlighter-rouge">parametros</code> existentes, para ello tendremos que arrastrar la <code class="language-plaintext highlighter-rouge">cookie</code> que se nos setea al loguearnos como yoshihide</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -366,7 +366,7 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">Al parecer existe un parametro <code class="language-plaintext highlighter-rouge">debug</code>, de las cosas a probar encontramos un simple <code class="language-plaintext highlighter-rouge">LFI</code> desde el wrapper de codificacion en <code class="language-plaintext highlighter-rouge">base64</code> donde cargamos el index.php</p>
-<a href="/htb/streamio/11.png" target="_blank"><div><p><img src="/htb/streamio/11.png"></p></div></a>
+<a href="/hackthebox/streamio/11.png" target="_blank"><div><p><img src="/hackthebox/streamio/11.png"></p></div></a>
 
 <p class="plain-text">Para mas comodidad podemos hacer la peticion con <code class="language-plaintext highlighter-rouge">curl</code> arrastrando la cookie y con expresiones regulares tomar el <code class="language-plaintext highlighter-rouge">base64</code> y decodearlo, en las primeras lineas nos encontramos un script de <code class="language-plaintext highlighter-rouge">php</code> donde podemos ver credenciales para la <code class="language-plaintext highlighter-rouge">db</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -740,7 +740,7 @@ INFO: Compressing output into 20230504074848_bloodhound.zip</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Despues de subir el zip a <code class="language-plaintext highlighter-rouge">bloodhound</code> y ver las posibles rutas para convertirnos en administradores del dominio vemos que <code class="language-plaintext highlighter-rouge">JDgodd</code> tiene privilegio <code class="language-plaintext highlighter-rouge">WriteOwner</code> sobre el grupo <code class="language-plaintext highlighter-rouge">Core Staff</code> y este tiene privilegio <code class="language-plaintext highlighter-rouge">ReadLAPSPassword</code> sobre la maquina <code class="language-plaintext highlighter-rouge">DC</code></p>
-<a href="/htb/streamio/13.png" target="_blank"><div><p><img src="/htb/streamio/13.png"></p></div></a>
+<a href="/hackthebox/streamio/13.png" target="_blank"><div><p><img src="/hackthebox/streamio/13.png"></p></div></a>
 
 <p class="plain-text">Iniciaremos subiendo el script <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView.ps1</a> e importandolo ya que nos ayudara con algunas funciones que usaremos para explotar los privilegios que vimos antes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -864,7 +864,7 @@ PS C:\inetpub\wwwroot></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ya que corre un <code class="language-plaintext highlighter-rouge">IIS</code> podriamos pensar en subir un archivo <code class="language-plaintext highlighter-rouge">ASPX</code> para ejecutar comandos y bajo el contexto de una cuenta de servicio deberiamos tener el <code class="language-plaintext highlighter-rouge">SeImpersonatePrivilege</code> habilitado, sin embargo esta via fue <code class="language-plaintext highlighter-rouge">parcheada</code></p>
-<a href="/htb/streamio/16.png" target="_blank"><div><p><img src="/htb/streamio/16.png"></p></div></a>
+<a href="/hackthebox/streamio/16.png" target="_blank"><div><p><img src="/hackthebox/streamio/16.png"></p></div></a>
 
 <p class="plain-text">Buscando posibles formas de ejecutar comandos en el IIS llegamos a una <a href="https://research.nccgroup.com/2019/08/23/getting-shell-with-xamlx-files/">investigación</a> que nos muestra una posible forma de ejecutar comandos con archivos <code class="language-plaintext highlighter-rouge">xamlx</code>, solo necesitaremos los 2 archivos que nos dan, el <code class="language-plaintext highlighter-rouge">web.config</code> con la configuración y un archivo <code class="language-plaintext highlighter-rouge">xamlx</code> que nos ejecute como comando el <code class="language-plaintext highlighter-rouge">shell.exe</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -907,10 +907,10 @@ PS C:\inetpub\wwwroot></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ahora en la pagina por defecto de IIS por <code class="language-plaintext highlighter-rouge">http</code> deberiamos poder acceder al archivo <code class="language-plaintext highlighter-rouge">shell.xamlx</code> y deberia de interpretarse correctamente en la web</p>
-<a href="/htb/streamio/14.png" target="_blank"><div><p><img src="/htb/streamio/14.png"></p></div></a>
+<a href="/hackthebox/streamio/14.png" target="_blank"><div><p><img src="/hackthebox/streamio/14.png"></p></div></a>
 
 <p class="plain-text">Finalmente enviamos una petición tal y como se nos muestra en la investigación</p>
-<a href="/htb/streamio/15.png" target="_blank"><div><p><img src="/htb/streamio/15.png"></p></div></a>
+<a href="/hackthebox/streamio/15.png" target="_blank"><div><p><img src="/hackthebox/streamio/15.png"></p></div></a>
 
 <p class="plain-text">Al enviarla se ejecuta el <code class="language-plaintext highlighter-rouge">shell.exe</code> que aunque nos envia una shell nuevamente como <code class="language-plaintext highlighter-rouge">yoshihide</code> bajo el contexto del servicio tiene el <code class="language-plaintext highlighter-rouge">SeImpersonatePrivilege</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -970,7 +970,7 @@ PS C:\></span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

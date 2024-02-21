@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Acute</title>
 
   <meta name="description" content="Resolución de la máquina Acute de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Acute">
   <meta name="twitter:description" content="Resolución de la máquina Acute de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/acute.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/acute.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Acute">
   <meta property="og:description" content="Resolución de la máquina Acute de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/acute.png" />
+  <meta property="og:image" content="/images/hackthebox/acute.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/acute.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/acute.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/htb" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -133,7 +133,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/acute.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/acute.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Acute</h2><br>
   </header>
   
@@ -176,10 +176,10 @@ Certificate chain
 </code></pre></div></div><br>
 
 <p class="plain-text">La web principal parece ser una página interna algo simple de la empresa en cuestion</p>
-<a href="/htb/acute/1.png" target="_blank"><div><p><img src="/htb/acute/1.png"></p></div></a>
+<a href="/hackthebox/acute/1.png" target="_blank"><div><p><img src="/hackthebox/acute/1.png"></p></div></a>
 
 <p class="plain-text">Si vamos a <code class="language-plaintext highlighter-rouge">About Us</code> encontramos 2 cosas interesantes, la primera es que podemos descargar un archivo <code class="language-plaintext highlighter-rouge">docx</code> y la segunda es que podemos ver algunos <code class="language-plaintext highlighter-rouge">usuarios</code></p>
-<a href="/htb/acute/2.png" target="_blank"><div><p><img src="/htb/acute/2.png"></p></div></a>
+<a href="/hackthebox/acute/2.png" target="_blank"><div><p><img src="/hackthebox/acute/2.png"></p></div></a>
 
 <p class="plain-text">Con la lista de usuarios podemos crear una lista de posibles <code class="language-plaintext highlighter-rouge">usuarios</code> a nivel de sistema usando el formato <code class="language-plaintext highlighter-rouge">NSurname</code> que es utilizado en entornos <code class="language-plaintext highlighter-rouge">Windows</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -192,7 +192,7 @@ LHopkins</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ademas de eso podemos descargar el archivo <code class="language-plaintext highlighter-rouge">docx</code> y abrirlo usando <code class="language-plaintext highlighter-rouge">libreoffice</code></p>
-<a href="/htb/acute/3.png" target="_blank"><div><p><img src="/htb/acute/3.png"></p></div></a>
+<a href="/hackthebox/acute/3.png" target="_blank"><div><p><img src="/hackthebox/acute/3.png"></p></div></a>
 
 </section>
 
@@ -200,13 +200,13 @@ LHopkins</span>
 <br><h3 class="post-title">Shell - edavies</h3><br>
 
 <p class="plain-text">En el archivo de office se invita a los usuarios a cambiar la contraseña que esta por <code class="language-plaintext highlighter-rouge">defecto</code> lo antes posible, la contraseña por defecto nos dice que es <code class="language-plaintext highlighter-rouge">Password1!</code></p>
-<a href="/htb/acute/4.png" target="_blank"><div><p><img src="/htb/acute/4.png"></p></div></a>
+<a href="/hackthebox/acute/4.png" target="_blank"><div><p><img src="/hackthebox/acute/4.png"></p></div></a>
 
 <p class="plain-text">Tambien la ruta <code class="language-plaintext highlighter-rouge">/Acute_Staff_Access</code> en la web que si lo abrimos en la web vemos que es un <code class="language-plaintext highlighter-rouge">Windows PowerShell Web Access</code> pero necesitamos credenciales</p>
-<a href="/htb/acute/5.png" target="_blank"><div><p><img src="/htb/acute/5.png"></p></div></a>
+<a href="/hackthebox/acute/5.png" target="_blank"><div><p><img src="/hackthebox/acute/5.png"></p></div></a>
 
 <p class="plain-text">Necesitamos 3 datos para acceder aqui, un <code class="language-plaintext highlighter-rouge">usuario</code>, su <code class="language-plaintext highlighter-rouge">contraseña</code> y el nombre de un <code class="language-plaintext highlighter-rouge">equipo</code> del dominio donde vamos a obtener una powershell interactiva</p>
-<a href="/htb/acute/6.png" target="_blank"><div><p><img src="/htb/acute/6.png"></p></div></a>
+<a href="/hackthebox/acute/6.png" target="_blank"><div><p><img src="/hackthebox/acute/6.png"></p></div></a>
 
 <p class="plain-text">Mirando los metadatos del docx usando <code class="language-plaintext highlighter-rouge">exiftool</code> encontramos que se creo en el equipo <code class="language-plaintext highlighter-rouge">Acute-PC01</code>, ahora tenemos el nombre de un equipo que necesitamos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -263,10 +263,10 @@ App Version                     : 16.0000</span>
 Password: Password1!
 Computer: Acute-PC01</span>
 </code></pre></div></div><br>
-<a href="/htb/acute/7.png" target="_blank"><div><p><img src="/htb/acute/7.png"></p></div></a>
+<a href="/hackthebox/acute/7.png" target="_blank"><div><p><img src="/hackthebox/acute/7.png"></p></div></a>
 
 <p class="plain-text">Al ingresar estas credenciales son validas por lo que ganamos acceso a una <code class="language-plaintext highlighter-rouge">powershell</code> interactiva como el usuario <code class="language-plaintext highlighter-rouge">edavies</code> en el equipo Acute-PC01</p>
-<a href="/htb/acute/8.png" target="_blank"><div><p><img src="/htb/acute/8.png"></p></div></a>
+<a href="/hackthebox/acute/8.png" target="_blank"><div><p><img src="/hackthebox/acute/8.png"></p></div></a>
 
 </section>
 
@@ -358,7 +358,7 @@ Server username: ACUTE\edavies
 </code></pre></div></div><br>
 
 <p class="plain-text">Después de unos segundos el usuario abre una <code class="language-plaintext highlighter-rouge">powershell</code> y define una credencial como <code class="language-plaintext highlighter-rouge">imonks</code>, despues intenta abrir una sesion con una <code class="language-plaintext highlighter-rouge">configuracion</code> especial</p>
-<a href="/htb/acute/9.png" target="_blank"><div><p><img src="/htb/acute/9.png"></p></div></a>
+<a href="/hackthebox/acute/9.png" target="_blank"><div><p><img src="/hackthebox/acute/9.png"></p></div></a>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">$passwd = ConvertTo-SecureString "W3_4R3_th3_f0rce." -AsPlaintext -Force
@@ -367,7 +367,7 @@ Enter-PSSession -ComputerName ATSSERVER -ConfigurationName dc_manage -Credential
 </code></pre></div></div><br>
 
 <p class="plain-text">En los comandos intenta acceder con una configuración llamada <code class="language-plaintext highlighter-rouge">dc_manage</code>, en el docx podemos ver que es una configuracion que limita nuestros comandos</p>
-<a href="/htb/acute/11.png" target="_blank"><div><p><img src="/htb/acute/11.png"></p></div></a>
+<a href="/hackthebox/acute/11.png" target="_blank"><div><p><img src="/hackthebox/acute/11.png"></p></div></a>
 
 <p class="plain-text">Ya con la credencial del usuario <code class="language-plaintext highlighter-rouge">imonks</code> podemos ejecutar comandos en el equipo <code class="language-plaintext highlighter-rouge">ATSSERVER</code> usando la configuracion <code class="language-plaintext highlighter-rouge">dc_manage</code> que veiamos en los comandos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -509,7 +509,7 @@ PS C:\Utils></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">En el archivo <code class="language-plaintext highlighter-rouge">docx</code> nos dice que el usuario Lois probablemente <code class="language-plaintext highlighter-rouge">lhopkins</code> puede agregar al grupo <code class="language-plaintext highlighter-rouge">site admin</code> a cualquier usuario, esto sera temporalmente</p>
-<a href="/htb/acute/12.png" target="_blank"><div><p><img src="/htb/acute/12.png"></p></div></a>
+<a href="/hackthebox/acute/12.png" target="_blank"><div><p><img src="/hackthebox/acute/12.png"></p></div></a>
 
 <p class="plain-text">El grupo <code class="language-plaintext highlighter-rouge">Site_Admin</code> existe en el dominio, pero actualmente no tiene usuarios en el</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -620,7 +620,7 @@ PS C:\Utils></span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

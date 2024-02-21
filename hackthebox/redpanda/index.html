@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox RedPanda</title>
 
   <meta name="description" content="Resolución de la máquina RedPanda de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox RedPanda">
   <meta name="twitter:description" content="Resolución de la máquina RedPanda de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/redpanda.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/redpanda.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox RedPanda">
   <meta property="og:description" content="Resolución de la máquina RedPanda de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/redpanda.png" />
+  <meta property="og:image" content="/images/hackthebox/redpanda.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/redpanda.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/redpanda.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -132,7 +132,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/redpanda.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/redpanda.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">RedPanda</h2><br>
   </header>
   
@@ -159,19 +159,19 @@ Title[</span><span class="am">Red Panda Search | Made with Spring Boot</span><sp
 </code></pre></div></div><br>
 
 <p class="plain-text">Al abrir en la web tenemos un buscador de pandas rojos con un cuadro de busqueda</p>
-<a href="/htb/redpanda/1.png" target="_blank"><div><p><img src="/htb/redpanda/1.png"></p></div></a>
+<a href="/hackthebox/redpanda/1.png" target="_blank"><div><p><img src="/hackthebox/redpanda/1.png"></p></div></a>
 
 <p class="plain-text">El buscador muestra una linea con nuestro input y los matches que encuentra</p>
-<a href="/htb/redpanda/2.png" target="_blank"><div><p><img src="/htb/redpanda/2.png"></p></div></a>
+<a href="/hackthebox/redpanda/2.png" target="_blank"><div><p><img src="/hackthebox/redpanda/2.png"></p></div></a>
 </section>
 
 <section class="post" id="shell-woodenk">
 <br><h3 class="post-title">Shell - woodenk</h3><br>
 <p class="plain-text">En <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection#java---spring">payloadsallthethings</a> , en el apartado de <code class="language-plaintext highlighter-rouge">Server Side Template Injection</code> podemos ver en el apartado de Java que el framework Spring esta contemplado</p>
-<a href="/htb/redpanda/3.png" target="_blank"><div><p><img src="/htb/redpanda/3.png"></p></div></a>
+<a href="/hackthebox/redpanda/3.png" target="_blank"><div><p><img src="/hackthebox/redpanda/3.png"></p></div></a>
 
 <p class="plain-text">La inyección básica <code class="language-plaintext highlighter-rouge">*{7*7}</code> se realiza para ver si computa el resultado <code class="language-plaintext highlighter-rouge">49</code>, si lo hace significa que es vulnerable, en este caso al enviarlo podemos ver que lo es</p>
-<a href="/htb/redpanda/4.png" target="_blank"><div><p><img src="/htb/redpanda/4.png"></p></div></a>
+<a href="/hackthebox/redpanda/4.png" target="_blank"><div><p><img src="/hackthebox/redpanda/4.png"></p></div></a>
 
 <p class="plain-text">El segundo payload ejecuta el comando <code class="language-plaintext highlighter-rouge">id</code> usando el método <code class="language-plaintext highlighter-rouge">exec()</code> de la clase <code class="language-plaintext highlighter-rouge">Runtime</code>, y utiliza <code class="language-plaintext highlighter-rouge">getInputStream()</code> para mostrar el output del comando</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -179,7 +179,7 @@ Title[</span><span class="am">Red Panda Search | Made with Spring Boot</span><sp
 </code></pre></div></div><br>
 
 <p class="plain-text">Al enviarla el comando id se ejecuta y lo que devuelve el output nos muestra que lo ejecutamos como el usuario <code class="language-plaintext highlighter-rouge">woodenk</code> que curiosamente es parte del grupo logs</p>
-<a href="/htb/redpanda/5.png" target="_blank"><div><p><img src="/htb/redpanda/5.png"></p></div></a>
+<a href="/hackthebox/redpanda/5.png" target="_blank"><div><p><img src="/hackthebox/redpanda/5.png"></p></div></a>
 
 <p class="plain-text">Lo que haremos para hacernos una reverse shell para empezar sera crear un archivo <code class="language-plaintext highlighter-rouge">index.html</code> con una reverse shell en bash y lo compartimos con un servidor python</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -196,7 +196,7 @@ Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Lo enviamos en el buscador y aunque no vemos output nos llega la petición en el servidor de python, asi que ha descargado el archivo con la reverse shell</p>
-<a href="/htb/redpanda/6.png" target="_blank"><div><p><img src="/htb/redpanda/6.png"></p></div></a>
+<a href="/hackthebox/redpanda/6.png" target="_blank"><div><p><img src="/hackthebox/redpanda/6.png"></p></div></a>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ sudo python3 </span><span class="p">-m http.server 80  
@@ -248,11 +248,11 @@ b37**************************25c
 
 <p class="plain-text">Después de enumerar un poco lo que hay dentro de la máquina podemos encontrar una ruta que contiene varios archivos de configuración java</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">woodenk@redpanda</span><span class="p">:</span><span class="az">/opt/panda_search/src/main/java/com/panda_search/htb/panda_search</span><span class="p">$ ls -l  
+<code><span class="ve">woodenk@redpanda</span><span class="p">:</span><span class="az">/opt/panda_search/src/main/java/com/panda_search/hackthebox/panda_search</span><span class="p">$ ls -l  
 -rw-rw-r-- 1 root root 4321 Jun 20  2022 MainController.java
 -rw-rw-r-- 1 root root  779 Feb 21  2022 PandaSearchApplication.java
 -rw-rw-r-- 1 root root 1800 Jun 14  2022 RequestInterceptor.java
-</span><span class="ve">woodenk@redpanda</span><span class="p">:</span><span class="az">/opt/panda_search/src/main/java/com/panda_search/htb/panda_search</span><span class="p">$</span>
+</span><span class="ve">woodenk@redpanda</span><span class="p">:</span><span class="az">/opt/panda_search/src/main/java/com/panda_search/hackthebox/panda_search</span><span class="p">$</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">En una parte del codigo del archivo <code class="language-plaintext highlighter-rouge">MainController.java</code> encontramos en searchPanda define una variable <code class="language-plaintext highlighter-rouge">conn</code> que tiene credenciales para la base de datos</p>
@@ -658,7 +658,7 @@ user
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

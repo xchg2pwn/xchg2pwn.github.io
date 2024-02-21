@@ -9,7 +9,7 @@
   <title>Writeup HackTheBox Mischief</title>
 
   <meta name="description" content="Resolución de la máquina Mischief de la plataforma de HackTheBox">
-  <meta name="author" content="GatoGamer1155">
+  <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,17 +18,17 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox Mischief">
   <meta name="twitter:description" content="Resolución de la máquina Mischief de la plataforma de HackTheBox">
-  <meta name="twitter:creator" content="GatoGamer1155">  
-  <meta name="twitter:image" content="/images/htb/mischief.png" />
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/mischief.png" />
 
-  <meta property="og:site_name" content="GatoGamer1155" />
+  <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox Mischief">
   <meta property="og:description" content="Resolución de la máquina Mischief de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/htb/mischief.png" />
+  <meta property="og:image" content="/images/hackthebox/mischief.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/htb/mischief.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/mischief.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -55,17 +55,17 @@
     <div class="panel-main__inner panel-inverted">
       <div class="panel-main__content">
 
-          <img src="/images/profile.jpg" class="user-image zoomable" alt="GatoGamer1155">
-          <h1 class="panel-cover__title panel-title scale-up-center">GatoGamer1155</h1>
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
 
         <hr class="panel-cover__divider">
-        <p class="panel-cover__description slide-top">Entusiasta del Hacking y CTFs</p>
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/htb" title="GatoGamer1155" class="blog-button">HackTheBox</a></li>
+              <li class="navigation__item grow"><a href="/hackthebox" title="xchg2pwn" class="blog-button">HackTheBox</a></li>
             </ul>
           </nav>
 
@@ -73,35 +73,35 @@
             <ul class="navigation">
               
               <li class="navigation__item grow">
-                <a href="https://github.com/gatogamer1155" title="Github" target="_blank">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
                   <i class="icon icon-social-github"></i>
                   <span class="label">GitHub</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://twitter.com/gatogamer1155" title="Twitter" target="_blank">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
                   <i class="icon icon-social-twitter"></i>
                   <span class="label">Twitter</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://instagram.com/gatogamer1155" title="Instagram" target="_blank">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
                   <i class="icon icon-social-instagram"></i>
                   <span class="label">Instagram</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="https://youtube.com/@gatogamer1155" title="Youtube" target="_blank">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
                   <i class="icon icon-social-youtube"></i>
                   <span class="label">Youtube</span>
                 </a>
               </li>
 
               <li class="navigation__item grow">
-                <a href="mailto:gatogamer1155@gmail.com" title="Correo Electronico" target="_blank">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
                   <i class="icon icon-mail"></i>
                   <span class="label">Email</span>
                 </a>
@@ -135,7 +135,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/htb/mischief.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/mischief.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Mischief</h2><br>
   </header>
   
@@ -152,7 +152,7 @@ PORT     STATE SERVICE
 </code></pre></div></div><br>
 
 <p class="plain-text">En el puerto <code class="language-plaintext highlighter-rouge">3366</code> podemos encontrar una página la cual nos pide <code class="language-plaintext highlighter-rouge">credenciales</code></p>
-<a href="/htb/mischief/1.png" target="_blank"><div><p><img src="/htb/mischief/1.png"></p></div></a>
+<a href="/hackthebox/mischief/1.png" target="_blank"><div><p><img src="/hackthebox/mischief/1.png"></p></div></a>
 
 <p class="plain-text">Al hacer un curl al puerto <code class="language-plaintext highlighter-rouge">3366</code> en las cabeceras de respuesta nos dice que la web corre en un <code class="language-plaintext highlighter-rouge">SimpleHTTPServer</code> usando la version de <code class="language-plaintext highlighter-rouge">Python 2.7.15rc1</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -194,7 +194,7 @@ HOST-RESOURCES-MIB::hrSWRunStatus.788 = INTEGER: runnable(2)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al usar las credenciales para entrar a la web en el puerto <code class="language-plaintext highlighter-rouge">3366</code> accedemos y nos encontramos con 2 posibles contraseñas para <code class="language-plaintext highlighter-rouge">loki</code> pero de poco nos sirven</p>
-<a href="/htb/mischief/2.png" target="_blank"><div><p><img src="/htb/mischief/2.png"></p></div></a>
+<a href="/hackthebox/mischief/2.png" target="_blank"><div><p><img src="/hackthebox/mischief/2.png"></p></div></a>
 
 <p class="plain-text">Volvemos a snmp donde al usar el mib <code class="language-plaintext highlighter-rouge">ipAddressType</code> podemos ver las direcciones de todas las <code class="language-plaintext highlighter-rouge">interfaces</code> de red que tiene la maquina victima entre ellas la <code class="language-plaintext highlighter-rouge">IPv6</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -227,10 +227,10 @@ PORT   STATE SERVICE
 </code></pre></div></div><br>
 
 <p class="plain-text">La web esta vez en el puerto <code class="language-plaintext highlighter-rouge">80</code> nos muestra un boton que redirige a un <code class="language-plaintext highlighter-rouge">login</code></p>
-<a href="/htb/mischief/3.png" target="_blank"><div><p><img src="/htb/mischief/3.png"></p></div></a>
+<a href="/hackthebox/mischief/3.png" target="_blank"><div><p><img src="/hackthebox/mischief/3.png"></p></div></a>
 
 <p class="plain-text">Tenemos un login, si enviamos credenciales <code class="language-plaintext highlighter-rouge">incorrectas</code> a este panel nos devuelve el mensaje <code class="language-plaintext highlighter-rouge">Sorry</code> diciendo que son incorrectas, podemos usar esto como estado</p>
-<a href="/htb/mischief/5.png" target="_blank"><div><p><img src="/htb/mischief/5.png"></p></div></a>
+<a href="/hackthebox/mischief/5.png" target="_blank"><div><p><img src="/hackthebox/mischief/5.png"></p></div></a>
 
 <p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">hydra</code> y un diccionario de seclists podemos usar las 2 <code class="language-plaintext highlighter-rouge">contraseñas</code> que encontramos en el puerto <code class="language-plaintext highlighter-rouge">3366</code> indicando que el mensaje de error contiene <code class="language-plaintext highlighter-rouge">Sorry</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -247,13 +247,13 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished</span>
 <br><h3 class="post-title">Shell - www-data</h3><br>
 
 <p class="plain-text">A traves de fuerza bruta con <code class="language-plaintext highlighter-rouge">hydra</code> encontramos que una de las contraseñas es valida para <code class="language-plaintext highlighter-rouge">administrator</code> en el login, al ingresar podemos ver un panel de ejecucion de <code class="language-plaintext highlighter-rouge">comandos</code> donde solo nos dice si el comando se ha ejecutado o no</p>
-<a href="/htb/mischief/6.png" target="_blank"><div><p><img src="/htb/mischief/6.png"></p></div></a>
+<a href="/hackthebox/mischief/6.png" target="_blank"><div><p><img src="/hackthebox/mischief/6.png"></p></div></a>
 
 <p class="plain-text">Al agregar un simple <code class="language-plaintext highlighter-rouge">;</code> en el cuadro y enviar la solicitud nos muestra el <code class="language-plaintext highlighter-rouge">output</code> del comando ejecutado, en este caso el output del comando de <code class="language-plaintext highlighter-rouge">ping</code> al localhost</p>
-<a href="/htb/mischief/7.png" target="_blank"><div><p><img src="/htb/mischief/7.png"></p></div></a>
+<a href="/hackthebox/mischief/7.png" target="_blank"><div><p><img src="/hackthebox/mischief/7.png"></p></div></a>
 
 <p class="plain-text">Podemos cambiar el comando por un <code class="language-plaintext highlighter-rouge">id;</code> y podemos ver que el usuario <code class="language-plaintext highlighter-rouge">www-data</code> es quien ejecuta los comandos, sin embargo es bastante probable que haya alguna <code class="language-plaintext highlighter-rouge">blacklist</code> por detrás ya que no podemos ejecutar algunos comandos como <code class="language-plaintext highlighter-rouge">nc</code></p>
-<a href="/htb/mischief/8.png" target="_blank"><div><p><img src="/htb/mischief/8.png"></p></div></a>
+<a href="/hackthebox/mischief/8.png" target="_blank"><div><p><img src="/hackthebox/mischief/8.png"></p></div></a>
 
 <p class="plain-text">El comando <code class="language-plaintext highlighter-rouge">python</code> no esta dentro de la blacklist pero al enviar un tipico comando para enviar una <code class="language-plaintext highlighter-rouge">reverse shell</code> hacia nuestro host no recibimos la conexion</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -420,10 +420,10 @@ ae1**************************807
 <br><h3 class="post-title">Extra 1 - loki</h3><br>
 
 <p class="plain-text">En la web del puerto <code class="language-plaintext highlighter-rouge">80</code> nos dicen que existe un archivo llamado <code class="language-plaintext highlighter-rouge">credentials</code> en el directorio <code class="language-plaintext highlighter-rouge">home</code> de loki pero esta dentro de la <code class="language-plaintext highlighter-rouge">blacklist</code> asi que no podemos leerla</p>
-<a href="/htb/mischief/9.png" target="_blank"><div><p><img src="/htb/mischief/9.png"></p></div></a>
+<a href="/hackthebox/mischief/9.png" target="_blank"><div><p><img src="/hackthebox/mischief/9.png"></p></div></a>
 
 <p class="plain-text">La string <code class="language-plaintext highlighter-rouge">credentials</code> esta en la blacklist sin embargo podemos usar algo como <code class="language-plaintext highlighter-rouge">c*</code> para indicar que el archivo inicia con la letra <code class="language-plaintext highlighter-rouge">c</code> y despues contiene cualquier cosa</p>
-<a href="/htb/mischief/10.png" target="_blank"><div><p><img src="/htb/mischief/10.png"></p></div></a>
+<a href="/hackthebox/mischief/10.png" target="_blank"><div><p><img src="/hackthebox/mischief/10.png"></p></div></a>
 
 <p class="plain-text">De esa manera nos muestra la contraseña de <code class="language-plaintext highlighter-rouge">loki</code> y podemos conectarnos por <code class="language-plaintext highlighter-rouge">ssh</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -517,7 +517,7 @@ root
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2023 - GatoGamer1155</span>
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>
