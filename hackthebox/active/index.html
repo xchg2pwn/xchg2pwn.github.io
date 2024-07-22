@@ -213,7 +213,7 @@ drw-rw-rw-          0  Sat Jul 21 06:37:44 2018 scripts
 #</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Después de navegar entre los directorios dentro de otros encontramos un archivo <code class="language-plaintext highlighter-rouge">Groups.xml</code> dentro de el directorio Groups dentro de varios otros</p>
+<p class="plain-text">Después de navegar entre los directorios dentro de otros encontramos un archivo <code class="language-plaintext highlighter-rouge">Groups.xml</code> dentro de el directorio Groups dentro de varios otros, en versiones anteriores de windows las contraseñas asociadas a la <code class="language-plaintext highlighter-rouge">GPP</code> se almacenaban en un <code class="language-plaintext highlighter-rouge">xml</code> y aunque esto se modificó en <code class="language-plaintext highlighter-rouge">2014</code> no afectó las directivas ya creadas</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p"># cd \active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\Machine\Preferences\Groups  
 # ls
@@ -228,7 +228,7 @@ drw-rw-rw-          0  Sat Jul 21 06:37:44 2018 ..
 <section class="post" id="access-svc_tgs">
 <br><h3 class="post-title">Access - SVC_TGS</h3><br>
 
-<p class="plain-text">Leyendo el archivo xml (se ha modificado la identación para hacerlo mas legible) podemos encontrar un campo <code class="language-plaintext highlighter-rouge">cpassword</code> que parece ser una cadena cifrada</p>
+<p class="plain-text">Leyendo el archivo xml (se ha modificado la identación para hacerlo mas legible) podemos encontrar un campo <code class="language-plaintext highlighter-rouge">cpassword</code> que parece ser una cadena cifrada, </p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
 <span class="nt">&lt;Groups</span> <span class="na">clsid=</span><span class="s">"{3125E937-EB16-4b4c-9934-544FC6D24D26}"</span><span class="nt">&gt;</span>
