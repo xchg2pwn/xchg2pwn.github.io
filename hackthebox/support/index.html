@@ -247,9 +247,6 @@ Physical Size = 277499
 <section class="post" id="shell-support">
 <br><h3 class="post-title">Shell - support</h3><br>
 
-<p class="plain-text">Como lo que hay dentro del archivo zip es un proyecto con archivos exe y dll pasaremos el zip a una maquina Windows y lo descomprimimos</p>
-<a href="/hackthebox/support/1.png" target="_blank"><div><p><img src="/hackthebox/support/1.png"></p></div></a>
-
 <p class="plain-text">Usando <a href="https://github.com/dnSpy/dnSpy">dnspy</a> podemos debuguear el archivo exe donde podemos ver un apartado <code class="language-plaintext highlighter-rouge">LdapQuery</code> que define una string password igualada al resultado de la función <code class="language-plaintext highlighter-rouge">getPassword</code> del apartado Protected y con ella se autentica al servidor ldap</p>
 <a href="/hackthebox/support/2.png" target="_blank"><div><p><img src="/hackthebox/support/2.png"></p></div></a>
 
@@ -342,9 +339,6 @@ PS C:\Users\support\Documents></span>
 
 <p class="plain-text">En el apartado <code class="language-plaintext highlighter-rouge">Group Delegated Object Control</code> del usuario support podemos ver que el usuario support forma parte del grupo <code class="language-plaintext highlighter-rouge">Shared Support Accounts</code> y este a su vez tiene como permisos <code class="language-plaintext highlighter-rouge">GenericAll</code> sobre el equipo <code class="language-plaintext highlighter-rouge">dc.support.htb</code></p>
 <a href="/hackthebox/support/6.png" target="_blank"><div><p><img src="/hackthebox/support/6.png"></p></div></a>
-
-<p class="plain-text">Si damos clic derecho y hacemos clic en <code class="language-plaintext highlighter-rouge">Help</code> en el apartado <code class="language-plaintext highlighter-rouge">Abuse Info</code> se nos proporciona la explicación y los comandos base para explotar este privilegio</p>
-<a href="/hackthebox/support/7.png" target="_blank"><div><p><img src="/hackthebox/support/7.png"></p></div></a>
 
 <p class="plain-text">Para explotar este privilegios necesitamos comandos especiales asi que subimos los módulos <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView.ps1</a> y <a href="https://github.com/Kevin-Robertson/Powermad/blob/master/Powermad.ps1">Powermad.ps1</a>, en este caso para subirlos podemos aprovechar la función <code class="language-plaintext highlighter-rouge">upload</code> que nos ofrece evil-winrm</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
