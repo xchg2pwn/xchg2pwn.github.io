@@ -187,7 +187,7 @@ test</span>
 <p class="plain-text">Antes de explotar el buffer overflow miraremos las protecciones, <code class="language-plaintext highlighter-rouge">NX</code> esta habilitado, lo que quiere decir que no podremos simplemente ejecutar <code class="language-plaintext highlighter-rouge">shellcode</code> en la pila</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">myapp
-[</span><span class="az">*</span><span class="p">] '/home/kali/myapp'
+[</span><span class="az">*</span><span class="p">] '/home/user/myapp'
     Arch:     amd64-64-little
     RELRO:    </span><span class="am">Partial RELRO</span><span class="p">
     Stack:    </span><span class="ro">No canary found</span><span class="p">
@@ -210,7 +210,7 @@ Reading symbols from </span><span class="ve">myapp</span><span class="p">...
 (No debugging symbols found in </span><span class="ve">myapp</span><span class="p">)
 </span><span class="ro">pwndbg> </span><span class="p">set follow-fork-mode parent
 </span><span class="ro">pwndbg> </span><span class="p">run
-Starting program: </span><span class="ve">/home/kali/myapp</span><span class="p">
+Starting program: </span><span class="ve">/home/user/myapp</span><span class="p">
 [Thread debugging using libthread_db enabled]
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
  20:34:33 up  1:23,  1 user,  load average: 0,54, 0,57, 0,58
@@ -408,7 +408,7 @@ c15**************************ef9
 <code><span class="ro">pwndbg> </span><span class="p">got -r puts
 Filtering by symbol name: </span><span class="am">puts</span><span class="p">
 
-State of the GOT of </span><span class="sa">/home/kali/myapp</span><span class="p">:
+State of the GOT of </span><span class="sa">/home/user/myapp</span><span class="p">:
 GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | Found </span><span class="am">1 </span><span class="p">GOT entries passing the filter  
 [</span><span class="sa">0x404018</span><span class="p">] </span><span class="am">puts@GLIBC_2.2.5</span><span class="p"> -> </span><span class="ro">0x7ffff7e38b00 (puts)</span><span class="p"> ◂— </span><span class="na">push </span><span class="no">r14
 </span><span class="ro">pwndbg></span>

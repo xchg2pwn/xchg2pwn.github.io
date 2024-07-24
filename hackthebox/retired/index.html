@@ -294,7 +294,7 @@ Error: specify port to bind to
 <p class="plain-text">Antes de explotarlo es necesario revisas las <code class="language-plaintext highlighter-rouge">protecciones</code> del binario con <code class="language-plaintext highlighter-rouge">checksec</code>, casi todas estan habilitadas, entre ellas <code class="language-plaintext highlighter-rouge">NX</code> que impide la ejecución en la pila y <code class="language-plaintext highlighter-rouge">PIE</code> que hace aleatoria la dirección base del binario por lo que el <code class="language-plaintext highlighter-rouge">rop</code> se complica</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">activate_license
-[</span><span class="az">*</span><span class="p">] '/home/kali/activate_license'  
+[</span><span class="az">*</span><span class="p">] '/home/user/activate_license'  
     Arch:     amd64-64-little
     RELRO:    </span><span class="ve">Full RELRO</span><span class="p">
     Stack:    </span><span class="ro">No canary found</span><span class="p">
@@ -313,7 +313,7 @@ PHP 8.2.5 Development Server (http://0.0.0.0:80) started  </span>
 <code><span class="ve">❯ gdb</span><span class="p"> -q --args activate_license 1337
 Reading symbols from </span><span class="ve">activate_license</span><span class="p">...
 </span><span class="ro">pwndbg> </span><span class="p">run
-Starting program: </span><span class="ve">/home/kali/activate_license </span><span class="p">1337
+Starting program: </span><span class="ve">/home/user/activate_license </span><span class="p">1337
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
 [+] starting server listening on port 1337
 [+] listening ...</span>
@@ -333,7 +333,7 @@ Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/l
 <p class="plain-text">Al hacer esto solo un <code class="language-plaintext highlighter-rouge">hilo</code> del programa que esta corriendo en gdb se corrompe, solo nos queda comprobar el payload, <code class="language-plaintext highlighter-rouge">rbp</code> tomo el valor de las <code class="language-plaintext highlighter-rouge">B's</code> y la direccion de retorno las <code class="language-plaintext highlighter-rouge">C's</code>, comprobamos que el offset es de <code class="language-plaintext highlighter-rouge">520</code> bytes para el retorno</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">run
-Starting program: </span><span class="ve">/home/kali/activate_license </span><span class="p">1337
+Starting program: </span><span class="ve">/home/user/activate_license </span><span class="p">1337
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
 [+] starting server listening on port 1337
 [+] listening ...
