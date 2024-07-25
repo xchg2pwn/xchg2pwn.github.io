@@ -663,14 +663,14 @@ LEGEND: </span><span class="am">STACK</span><span class="p"> | </span><span clas
 
 <p class="plain-text">La solución es sencilla y es que solo necesitamos un gadget para ejecutar un <code class="language-plaintext highlighter-rouge">ret</code>, al hacerlo este alineara la pila por lo que la funcion deberia ejecutarse sin problemas</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper </span><span class="p">--file garbage --search </span><span class="am">"ret;"  
+<code><span class="ve">❯ ropper </span><span class="p">--file libc.so.6 --search </span><span class="am">"ret;"  
 </span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
 </span><span class="ve">[LOAD] </span><span class="p">loading... 100%
 </span><span class="ve">[LOAD] </span><span class="p">removing double gadgets... 100%
 </span><span class="ve">[INFO] </span><span class="p">Searching for gadgets: ret;
 
-</span><span class="ve">[INFO] </span><span class="p">File: garbage
-</span><span class="ro">0x0000000000401016</span><span class="p">: </span><span class="am">ret</span><span class="az">;</span>
+</span><span class="ve">[INFO] </span><span class="p">File: libc.so.6
+</span><span class="ro">0x00000000000008aa</span><span class="p">: </span><span class="am">ret</span><span class="az">;</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Definimos la direccion de <code class="language-plaintext highlighter-rouge">ret</code> que enviaremos justo antes de llamar a <code class="language-plaintext highlighter-rouge">system</code></p>
