@@ -565,8 +565,7 @@ drwx-wx--x root user 6 B Mon Jul  3 23:33:56 2017 </span><span class="az"> /m
 <code><span class="o">#include </span><span class="s">&ltstdlib.h>
 </span><span class="o">#include </span><span class="s">&ltunistd.h>
 
-</span><span class="no">int </span><span class="na">main</span><span class="p">()
-{
+</span><span class="no">int </span><span class="na">main</span><span class="p">() {
     setreuid(</span><span class="mi">1000</span><span class="p">, </span><span class="mi">1000</span><span class="p">);
     setregid(</span><span class="mi">1000</span><span class="p">, </span><span class="mi">1000</span><span class="p">);
     </span><span class="no">system</span><span class="p">(</span><span class="s">"/bin/bash"</span><span class="p">);

