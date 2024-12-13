@@ -932,7 +932,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 <p class="plain-text">Mirando el <code class="language-plaintext highlighter-rouge">heap</code> con <code class="language-plaintext highlighter-rouge">vis</code> podemos ver que el primer chunk por cada linea es la estructura de <code class="language-plaintext highlighter-rouge">12</code> bytes, la primera es el byte del primer argumento al que le pasamos un <code class="language-plaintext highlighter-rouge">1</code>, el segundo dword es un puntero al chunk del <code class="language-plaintext highlighter-rouge">requestername</code> y el tercero un puntero al chunk del <code class="language-plaintext highlighter-rouge">message</code>, esto esta presente por cada linea del archivo</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="ro">vis 6 0x804c380
+<code><span class="ro">pwndbg> </span><span class="p">vis 6 0x804c380
 0x804c380	</span><span class="am">0x00000000</span><span class="az">	0x00000011	........</span><span class="p">
 0x804c388	</span><span class="az">0x00000001	0x0804c398	........</span><span class="p">
 0x804c390	</span><span class="az">0x0804c3a8	</span><span class="sa">0x00000011	........</span><span class="p">
