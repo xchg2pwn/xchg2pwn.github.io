@@ -346,7 +346,6 @@ username: message
 </span><span class="ve">anansi@brainpan2</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-
 <p class="plain-text">Antes de explotar el <code class="language-plaintext highlighter-rouge">Buffer Overflow</code> podemos ver las protecciones del binario con <code class="language-plaintext highlighter-rouge">checksec</code>, no tiene ninguna habilitada lo que facilitara bastante la explotacion</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">msg_root
@@ -388,7 +387,7 @@ Searching for value: 'CCCCCCCC'
 LEGEND: </span><span class="am">STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> | </span><span class="ro">CODE</span><span class="p"> | </span><span class="sa">DATA</span><span class="p"> | </span><span class="ro">WX</span><span class="p"> | RODATA
      Start        End Perm     Size Offset File
  </span><span class="sa">0x8049000  0x804a000 rw-p     1000   2000 /home/user/msg_root</span><span class="p">
-</span><span class="az">►0x804a000  0x806b000 rwxp    21000      0 [heap]</span><span class="p">
+</span><span class="az">►0x804a000  0x806c000 rw-p    22000      0 [heap] +0x1a0</span><span class="p">
 </span><span class="p">0xf7e75000 0xf7fd1000 r-xp   15c000      0 /home/user/libc.so.6</span><span class="p">  
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
