@@ -383,7 +383,7 @@ Program received signal SIGSEGV, Segmentation fault.
 Searching for value: 'CCCCCCCC'
 <span class="az">[heap]          0x804a008 <span class="p">'CCCCCCCC'
 <span class="am">[stack]         0xffffd784 <span class="p">'CCCCCCCC'
-</span><span class="ro">pwndbg></span><span class="p"> vmmap heap
+</span><span class="ro">pwndbg></span><span class="p"> vmmap 0x804a008
 LEGEND: </span><span class="am">STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> | </span><span class="ro">CODE</span><span class="p"> | </span><span class="sa">DATA</span><span class="p"> | </span><span class="ro">WX</span><span class="p"> | RODATA
      Start        End Perm     Size Offset File
  </span><span class="sa">0x8049000  0x804a000 rw-p     1000   2000 /home/user/msg_root</span><span class="p">
@@ -413,7 +413,7 @@ Size: 0x21688 (with flag bits: 0x21689)
 0x804a010</span><span class="az">	0x00000000	0x00000000	........</span><span class="p">
 ---------</span><span class="az">	----------	----------	........</span><span class="p">
 0x804a7d8</span><span class="az">	0x00000000	0x00000000	........</span><span class="p">
-0x804a7e0</span><span class="az">	0x00000000	</span><span class="sa">0x00021689</span><span class="p">	........	</span><span class="p"> &lt-- Top chunk
+0x804a7e0</span><span class="az">	0x00000000	</span><span class="sa">0x00021689</span><span class="p">	........	</span><span class="p"> &lt-- Top chunk  
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 

