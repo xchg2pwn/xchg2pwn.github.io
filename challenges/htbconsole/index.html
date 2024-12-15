@@ -196,7 +196,7 @@ Unrecognized command.
 <code><span class="ve">❯ gdb </span><span class="p">-q htb-console
 Reading symbols from </span><span class="ve">htb-console</span><span class="p">...
 (No debugging symbols found in </span><span class="ve">htb-console</span><span class="p">)
-</span><span class="ro">pwndbg></span><span class="p"> run
+</span><span class="ro">pwndbg></span><span class="p"> r
 Starting program: </span><span class="ve">/home/user/htb-console</span><span class="p">
 [Depuración de hilo usando libthread_db enabled]
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".  
@@ -238,11 +238,8 @@ Program received signal SIGSEGV, Segmentation fault.
 
 <p class="plain-text">Sabemos que el NX esta habilitado por lo que tendremos que usar <code class="language-plaintext highlighter-rouge">ROP</code>, iniciamos buscando la direccion de <code class="language-plaintext highlighter-rouge">system</code> para poder llamarla y asi ejecutar comandos</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">info functions system
-All functions matching regular expression "system@plt":  
-
-Non-debugging symbols:
-</span><span class="az">0x0000000000401040  </span><span class="am">system@plt
+<code><span class="ro">pwndbg> </span><span class="p">p system
+</span><span class="az">$1</span><span class="p"> = {&lttext variable, no debug info>} </span><span class="az">0x401040</span><span class="p"> &lt</span><span class="am">system@plt</span><span class="p">>  
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
@@ -307,4 +304,9 @@ uid=1000(user) gid=1000(user) groups=1000(user)
     </div>
   </body>
 </html>
-ml>
+3382991917"></script>
+
+    </div>
+  </body>
+</html>
+>
