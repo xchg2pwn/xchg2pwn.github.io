@@ -228,7 +228,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x00000000004011ac </span><span class="p">in </span><span class="am">main</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
-$1 = 0x4242424242424242
+</span><span class="az">$1</span><span class="p"> = 0x4242424242424242
 </span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
 </span><span class="az">0x7fffffffe438</span><span class="p">:	0x4343434343434343
 </span><span class="ro">pwndbg> </span>
@@ -429,8 +429,8 @@ GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | F
 0x401040: system@plt
 0x401050: printf@plt
 0x401060: gets@plt
-</span><span class="ro">pwndbg></span><span class="p"> print main
-$1 = {&lttext variable, no debug info>} </span><span class="az">0x40115f</span><span class="p"> &lt</span><span class="am">main</span><span class="p">>  
+</span><span class="ro">pwndbg></span><span class="p"> p main
+</span><span class="az">$1</span><span class="p"> = {&lttext variable, no debug info>} </span><span class="az">0x40115f</span><span class="p"> &lt</span><span class="am">main</span><span class="p">>  
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 

