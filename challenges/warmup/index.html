@@ -272,7 +272,7 @@ Program received signal SIGINT, Interrupt.
     PIE:        </span><span class="ro">No PIE (0x3fe000)  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">64 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">rbp</code>, <code class="language-plaintext highlighter-rouge">8 B's</code> que seran el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">64 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">rbp</code>, <code class="language-plaintext highlighter-rouge">8 B's</code> que seran el valor de rbp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> -q
 >>> b"A" * 64 + b"B" * 8 + b"C" * 8 + b"D" * 24
@@ -443,10 +443,6 @@ uid=1000(user) gid=1000(user) groups=1000(user)
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
-
-    </div>
-  </body>
-</html>?1678894953382991917"></script>
 
     </div>
   </body>
