@@ -476,7 +476,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</spa
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al correrlo uevamente corrompe pero si miramos el debugger ahora intenta retornar a <code class="language-plaintext highlighter-rouge">0x4242424242424242</code> que son las <code class="language-plaintext highlighter-rouge">B's</code> y en el stack se almacenan el resto de los bytes</p>
+<p class="plain-text">Al correrlo nuevamente corrompe pero si miramos el debugger ahora intenta retornar a <code class="language-plaintext highlighter-rouge">0x4242424242424242</code> que son las <code class="language-plaintext highlighter-rouge">B's</code> y en el stack se almacenan el resto de los bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">g
 (366c.2d98): Access violation - code c0000005 (first chance)
