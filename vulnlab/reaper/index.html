@@ -8,7 +8,7 @@
 
   <title>Writeup VulnLab Reaper</title>
 
-  <meta name="description" content="Resolución del reto Reaper de la plataforma de VulnLab">
+  <meta name="description" content="Resolución de la máquina Reaper de la plataforma de VulnLab">
   <meta name="author" content="xchg2pwn">
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
@@ -17,18 +17,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Writeup VulnLab Reaper">
-  <meta name="twitter:description" content="Resolución del reto Reaper de la plataforma de VulnLab">
+  <meta name="twitter:description" content="Resolución de la máquina Reaper de la plataforma de VulnLab">
   <meta name="twitter:creator" content="xchg2pwn">  
-  <meta name="twitter:image" content="/images/otros/vulnlab.png" />
+  <meta name="twitter:image" content="/images/otros/reaper.png" />
 
   <meta property="og:site_name" content="xchg2pwn" />
   <meta property="og:type" content="article">
   <meta property="og:title" content="Writeup VulnLab Reaper">
-  <meta property="og:description" content="Resolución del reto Reaper de la plataforma de VulnLab">
-  <meta property="og:image" content="/images/otros/vulnlab.png" />
+  <meta property="og:description" content="Resolución de la máquina Reaper de la plataforma de VulnLab">
+  <meta property="og:image" content="/images/otros/reaper.png" />
 
   <link rel="manifest" href="/images/favicons/manifest.json">
-  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/vulnlab.png">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/reaper.png">
 
   <meta name="msapplication-TileColor" content="#ffc40d">
   <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
@@ -65,7 +65,7 @@
         <div class="navigation-wrapper">
          <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+              <li class="navigation__item grow"><a href="/vulnlab" title="xchg2pwn" class="blog-button">VulnLab</a></li>
             </ul>
           </nav>
 
@@ -137,7 +137,7 @@
 
   <header class="post-header slide-top">
     <h4 class="post-title">VulnLab</h4>
-    <picture><img src="/images/otros/vulnlab.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <picture><img src="/images/otros/reaper.png" style="float: right; margin-right:0px; margin-left:0px; height:80px;" class="include_image zoomable"/></picture>
     <h2 class="post-title">Reaper</h2><br>
   </header>
   
@@ -192,7 +192,7 @@ Standard License</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Para poder depurar el programa facilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
-<a href="/challenges/reaper/1.png" target="_blank"><div><p><img src="/challenges/reaper/1.png"></p></div></a>
+<a href="/vulnlab/reaper/1.png" target="_blank"><div><p><img src="/vulnlab/reaper/1.png"></p></div></a>
 
 <p class="plain-text">Si miramos los detalles del módulo podemos ver que contienes las protecciones <code class="language-plaintext highlighter-rouge">DEP</code> y <code class="language-plaintext highlighter-rouge">ASLR</code>, el primero impide que podamos ejecutar un shellcode en el stack, el segundo indica que la dirección base del binario deberia cambiar después de cada reinicio</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -226,22 +226,22 @@ Hold on...
 </code></pre></div></div><br>
 
 <p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> inicia llamando a la función <code class="language-plaintext highlighter-rouge">WSAStartup</code> para inicializar winsock y luego llama a la función <code class="language-plaintext highlighter-rouge">socket</code> para crear un socket y este devuelve un descriptor</p>
-<a href="/challenges/reaper/2.png" target="_blank"><div><p><img src="/challenges/reaper/2.png"></p></div></a>
+<a href="/vulnlab/reaper/2.png" target="_blank"><div><p><img src="/vulnlab/reaper/2.png"></p></div></a>
 
 <p class="plain-text">Luego utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle formato al puerto <code class="language-plaintext highlighter-rouge">4141</code> y posteriormente llamar a <code class="language-plaintext highlighter-rouge">bind</code> y <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha de conexiones entrantes en ese puerto</p>
-<a href="/challenges/reaper/3.png" target="_blank"><div><p><img src="/challenges/reaper/3.png"></p></div></a>
+<a href="/vulnlab/reaper/3.png" target="_blank"><div><p><img src="/vulnlab/reaper/3.png"></p></div></a>
 
 <p class="plain-text">Luego de llamar a <code class="language-plaintext highlighter-rouge">accept</code> si sale bien llama a la función <code class="language-plaintext highlighter-rouge">beginthreadex</code> para crear un hilo por cada conexión que ejecuta la función <code class="language-plaintext highlighter-rouge">StartAddress</code> pasandole el descriptor</p>
-<a href="/challenges/reaper/5.png" target="_blank"><div><p><img src="/challenges/reaper/5.png"></p></div></a>
+<a href="/vulnlab/reaper/5.png" target="_blank"><div><p><img src="/vulnlab/reaper/5.png"></p></div></a>
 
 <p class="plain-text">El primer bloque de la función <code class="language-plaintext highlighter-rouge">StartAddress</code> inicia reservando algunos espacios de memoria con <code class="language-plaintext highlighter-rouge">VirtalAlloc</code>, luego de ello define una variable <code class="language-plaintext highlighter-rouge">menu</code> con una string</p>
-<a href="/challenges/reaper/6.png" target="_blank"><div><p><img src="/challenges/reaper/6.png"></p></div></a>
+<a href="/vulnlab/reaper/6.png" target="_blank"><div><p><img src="/vulnlab/reaper/6.png"></p></div></a>
 
 <p class="plain-text">Después llama a <code class="language-plaintext highlighter-rouge">send</code> para enviar el menú y pide un buffer de 2 bytes con <code class="language-plaintext highlighter-rouge">recv</code> para obtener una opción, la cual definirá mediante un <code class="language-plaintext highlighter-rouge">switch</code> que operaciones realizar</p>
-<a href="/challenges/reaper/7.png" target="_blank"><div><p><img src="/challenges/reaper/7.png"></p></div></a>
+<a href="/vulnlab/reaper/7.png" target="_blank"><div><p><img src="/vulnlab/reaper/7.png"></p></div></a>
 
 <p class="plain-text">Si la opción que se recibió es igual a la string <code class="language-plaintext highlighter-rouge">1</code> utiliza <code class="language-plaintext highlighter-rouge">recv</code> de nuevo para recibir la key, luego de ello llama a la función <code class="language-plaintext highlighter-rouge">checksum</code> que si devuelve <code class="language-plaintext highlighter-rouge">1</code> indica que la key tiene un formato válido de lo contrario inválido, esto último lo muestra con <code class="language-plaintext highlighter-rouge">send</code></p>
-<a href="/challenges/reaper/8.png" target="_blank"><div><p><img src="/challenges/reaper/8.png"></p></div></a>
+<a href="/vulnlab/reaper/8.png" target="_blank"><div><p><img src="/vulnlab/reaper/8.png"></p></div></a>
 
 <p class="plain-text">En lugar de crear una key sabemos que usando la primera key del <code class="language-plaintext highlighter-rouge">.txt</code> es válida</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -259,38 +259,38 @@ Choose an option:
 </code></pre></div></div><br>
 
 <p class="plain-text">Al comparar la opción con <code class="language-plaintext highlighter-rouge">2</code> llama a una función llamada <code class="language-plaintext highlighter-rouge">check</code> que si devuelve <code class="language-plaintext highlighter-rouge">1</code> encontró la key de lo contrario devuelve <code class="language-plaintext highlighter-rouge">0</code> y muestra con <code class="language-plaintext highlighter-rouge">send</code> que no se encontró</p>
-<a href="/challenges/reaper/9.png" target="_blank"><div><p><img src="/challenges/reaper/9.png"></p></div></a>
-<a href="/challenges/reaper/10.png" target="_blank"><div><p><img src="/challenges/reaper/10.png"></p></div></a>
+<a href="/vulnlab/reaper/9.png" target="_blank"><div><p><img src="/vulnlab/reaper/9.png"></p></div></a>
+<a href="/vulnlab/reaper/10.png" target="_blank"><div><p><img src="/vulnlab/reaper/10.png"></p></div></a>
 
 <p class="plain-text">Al finalizar llena <code class="language-plaintext highlighter-rouge">0x1000</code> bytes de la variable buffer utilizando <code class="language-plaintext highlighter-rouge">0's</code> llamando a <code class="language-plaintext highlighter-rouge">memset</code></p>
-<a href="/challenges/reaper/11.png" target="_blank"><div><p><img src="/challenges/reaper/11.png"></p></div></a>
+<a href="/vulnlab/reaper/11.png" target="_blank"><div><p><img src="/vulnlab/reaper/11.png"></p></div></a>
 
 <p class="plain-text">Si la opción es igual a la string <code class="language-plaintext highlighter-rouge">3</code> muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y sale del programa</p>
-<a href="/challenges/reaper/12.png" target="_blank"><div><p><img src="/challenges/reaper/12.png"></p></div></a>
+<a href="/vulnlab/reaper/12.png" target="_blank"><div><p><img src="/vulnlab/reaper/12.png"></p></div></a>
 
 <p class="plain-text">La función <code class="language-plaintext highlighter-rouge">checksum</code> compara que la clave sea mayor o igual a <code class="language-plaintext highlighter-rouge">23</code> bytes, si es asi inicia una variable <code class="language-plaintext highlighter-rouge">csum</code> a <code class="language-plaintext highlighter-rouge">0</code> igual que un iterador llamado <code class="language-plaintext highlighter-rouge">i</code> para iniciar un bucle</p>
-<a href="/challenges/reaper/13.png" target="_blank"><div><p><img src="/challenges/reaper/13.png"></p></div></a>
+<a href="/vulnlab/reaper/13.png" target="_blank"><div><p><img src="/vulnlab/reaper/13.png"></p></div></a>
 
 <p class="plain-text">El bucle verifica que entre las posiciones <code class="language-plaintext highlighter-rouge">4</code> y <code class="language-plaintext highlighter-rouge">8</code> los caracteres sean imprimibles, osea que los bytes no sean menores o iguales a <code class="language-plaintext highlighter-rouge">0x20</code> ni mayores iguales a <code class="language-plaintext highlighter-rouge">0x7f</code></p>
-<a href="/challenges/reaper/14.png" target="_blank"><div><p><img src="/challenges/reaper/14.png"></p></div></a>
+<a href="/vulnlab/reaper/14.png" target="_blank"><div><p><img src="/vulnlab/reaper/14.png"></p></div></a>
 
 <p class="plain-text">La siguiente validación es que las posiciones <code class="language-plaintext highlighter-rouge">4</code>, <code class="language-plaintext highlighter-rouge">10</code>, <code class="language-plaintext highlighter-rouge">14</code> y <code class="language-plaintext highlighter-rouge">19</code> sean iguales a un <code class="language-plaintext highlighter-rouge">-</code></p>
-<a href="/challenges/reaper/15.png" target="_blank"><div><p><img src="/challenges/reaper/15.png"></p></div></a>
+<a href="/vulnlab/reaper/15.png" target="_blank"><div><p><img src="/vulnlab/reaper/15.png"></p></div></a>
 
 <p class="plain-text">Para los caractéres antes de la posición <code class="language-plaintext highlighter-rouge">19</code> se acumula su valor <code class="language-plaintext highlighter-rouge">ascii</code> menos <code class="language-plaintext highlighter-rouge">0x30</code> o <code class="language-plaintext highlighter-rouge">0</code> en ascii, esto lo hace para comprobar que los caracteres relevantes son dígitos</p>
-<a href="/challenges/reaper/16.png" target="_blank"><div><p><img src="/challenges/reaper/16.png"></p></div></a>
+<a href="/vulnlab/reaper/16.png" target="_blank"><div><p><img src="/vulnlab/reaper/16.png"></p></div></a>
 
 <p class="plain-text">La variable <code class="language-plaintext highlighter-rouge">result</code> almacena los últimos cuadro dígitos del módulo de <code class="language-plaintext highlighter-rouge">csum % 10000</code>, luego utiliza <code class="language-plaintext highlighter-rouge">strtol</code> y <code class="language-plaintext highlighter-rouge">ckey</code> toma el valor numérico a partir del caractér <code class="language-plaintext highlighter-rouge">19</code>, osea los últimos <code class="language-plaintext highlighter-rouge">4</code> digitos de la clave, si la variable <code class="language-plaintext highlighter-rouge">result</code> es igual a <code class="language-plaintext highlighter-rouge">ckey</code> se retorna <code class="language-plaintext highlighter-rouge">1</code></p>
-<a href="/challenges/reaper/17.png" target="_blank"><div><p><img src="/challenges/reaper/17.png"></p></div></a>
+<a href="/vulnlab/reaper/17.png" target="_blank"><div><p><img src="/vulnlab/reaper/17.png"></p></div></a>
 
 <p class="plain-text">La función <code class="language-plaintext highlighter-rouge">check</code> llama a una función llamada <code class="language-plaintext highlighter-rouge">checking</code> pasandole la key y abre un archivo <code class="language-plaintext highlighter-rouge">keys.txt</code> con <code class="language-plaintext highlighter-rouge">fopen</code>, si sale bien inicializa una variable <code class="language-plaintext highlighter-rouge">found</code> en <code class="language-plaintext highlighter-rouge">0</code></p>
-<a href="/challenges/reaper/18.png" target="_blank"><div><p><img src="/challenges/reaper/18.png"></p></div></a>
+<a href="/vulnlab/reaper/18.png" target="_blank"><div><p><img src="/vulnlab/reaper/18.png"></p></div></a>
 
 <p class="plain-text">Luego inicia un bucle en el que lee <code class="language-plaintext highlighter-rouge">0x1000</code> bytes del archivo con <code class="language-plaintext highlighter-rouge">fgets</code>, encuentra la posición del caracter <code class="language-plaintext highlighter-rouge">\n</code> y lo reemplaza por <code class="language-plaintext highlighter-rouge">\0</code>, compara que la clave <code class="language-plaintext highlighter-rouge">key</code> sea igual que la linea actual del archivo buffer, si es igual cambia el valor de <code class="language-plaintext highlighter-rouge">found</code> a <code class="language-plaintext highlighter-rouge">1</code></p>
-<a href="/challenges/reaper/19.png" target="_blank"><div><p><img src="/challenges/reaper/19.png"></p></div></a>
+<a href="/vulnlab/reaper/19.png" target="_blank"><div><p><img src="/vulnlab/reaper/19.png"></p></div></a>
 
 <p class="plain-text">La función inicia guardando en la variable <code class="language-plaintext highlighter-rouge">b64</code> la dirección de key mas <code class="language-plaintext highlighter-rouge">0x18</code>, en esta dirección inicia la cadena en <code class="language-plaintext highlighter-rouge">base64</code>, luego llama a la función <code class="language-plaintext highlighter-rouge">base64</code> que restaura la string original, mas adelante llama a <code class="language-plaintext highlighter-rouge">vsprintf</code> para guardar al inicio del buffer la cadena <code class="language-plaintext highlighter-rouge">Checking key</code>, este buffer es el inicio de la string que se enviará</p>
-<a href="/challenges/reaper/20.png" target="_blank"><div><p><img src="/challenges/reaper/20.png"></p></div></a>
+<a href="/vulnlab/reaper/20.png" target="_blank"><div><p><img src="/vulnlab/reaper/20.png"></p></div></a>
 
 <p class="plain-text">Establecemos un breakpoint en el <code class="language-plaintext highlighter-rouge">call</code>, si enviamos la key el primer argumento apunta al buffer mas <code class="language-plaintext highlighter-rouge">24</code> bytes donde se encuentra la string en <code class="language-plaintext highlighter-rouge">base64</code>, en <code class="language-plaintext highlighter-rouge">rdx</code> se almacena la longitud de la string y finalmente en <code class="language-plaintext highlighter-rouge">r8</code> un puntero hacia el size</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -322,10 +322,10 @@ ReaperKeyCheck+0x1609:
 </code></pre></div></div><br>
 
 <p class="plain-text">Luego utiliza la función <code class="language-plaintext highlighter-rouge">snprintf</code> para guardar en la posición <code class="language-plaintext highlighter-rouge">14</code> del buffer lo que le pasemos como <code class="language-plaintext highlighter-rouge">key</code>, esto podria ocasionar una vulnerabilidad de tipo format string</p>
-<a href="/challenges/reaper/21.png" target="_blank"><div><p><img src="/challenges/reaper/21.png"></p></div></a>
+<a href="/vulnlab/reaper/21.png" target="_blank"><div><p><img src="/vulnlab/reaper/21.png"></p></div></a>
 
 <p class="plain-text">Además de ello utiliza la función <code class="language-plaintext highlighter-rouge">memmove</code> para mover el contenido en base64 ya decodificado a un nuevo buffer sin sanitización ocasionando un buffer overflow</p>
-<a href="/challenges/reaper/4.png" target="_blank"><div><p><img src="/challenges/reaper/4.png"></p></div></a>
+<a href="/vulnlab/reaper/4.png" target="_blank"><div><p><img src="/vulnlab/reaper/4.png"></p></div></a>
 
 </section>
 
@@ -505,14 +505,14 @@ Type:              00020000  MEM_PRIVATE</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Entre las funciones que podemos utilizar para evadir <code class="language-plaintext highlighter-rouge">DEP</code> se encuentra <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, la podemos encontrar el offset <code class="language-plaintext highlighter-rouge">0x20000</code> del binario, podemos comprobar desde el debugger que esta la dirección es una referencia a su dirección dentro de <code class="language-plaintext highlighter-rouge">kernel32</code></p>
-<a href="/challenges/reaper/22.png" target="_blank"><div><p><img src="/challenges/reaper/22.png"></p></div></a>
+<a href="/vulnlab/reaper/22.png" target="_blank"><div><p><img src="/vulnlab/reaper/22.png"></p></div></a>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> dqs ReaperKeyCheck + 0x20000 L1
 00007ff6`51940000  00007ffd`f3c73bf0 KERNEL32!VirtualAllocStub  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> nos servirá para cambiar los privilegios del stack ya que reserva un espacio en memoria, lo mas relevante es que en el primer argumento podemos indicar la dirección donde queremos hacerlo y con el último la protección</p>
+<p class="plain-text">La función <a href="https://learn.microsoft.com/es-es/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc">VirtualAlloc</a> nos servirá para cambiar los privilegios del stack ya que reserva un espacio en memoria, lo mas relevante es que en el primer argumento podemos indicar la dirección donde queremos hacerlo y con el último la protección</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="no">LPVOID</span><span class="na"> VirtualAlloc</span><span class="p">(
   [</span><span class="mi">in</span><span class="p">,</span><span class="mi"> optional</span><span class="p">]</span><span class="no"> LPVOID</span><span class="p"> lpAddress,
