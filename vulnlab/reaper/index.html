@@ -1190,7 +1190,7 @@ PROCESS ffffba09b847a040
 
 <p class="plain-text">La función <code class="language-plaintext highlighter-rouge">GetKernelBase</code> obtiene la dirección base del kernel con <code class="language-plaintext highlighter-rouge">EnumDeviceDrivers</code>, la función <code class="language-plaintext highlighter-rouge">GetSystemEProcess</code> carga el binario <code class="language-plaintext highlighter-rouge">ntoskrnl.exe</code>, luego obtiene la dirección relativa al bloque de datos del proceso de <code class="language-plaintext highlighter-rouge">System</code>, finalmente calcula la dirección sumando el offset a la dirección base del kernel y lee el <code class="language-plaintext highlighter-rouge">_EPROCESS</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="na">QWORD</span><span class="p"> GetKernelBase() {
+<code><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
     </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
     </span><span class="na">DWORD</span><span class="p"> cbNeeded;
     EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
@@ -1365,7 +1365,7 @@ PROCESS ffffba09b847a040
     </span><span class="o">return</span><span class="p"> currentEProcess;
 }
 
-</span><span class="na">QWORD</span><span class="p"> GetKernelBase() {
+</span><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
     </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
     </span><span class="na">DWORD</span><span class="p"> cbNeeded;
     EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
