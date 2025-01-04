@@ -1193,8 +1193,8 @@ PROCESS ffffba09b847a040
 <code><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
     </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
     </span><span class="na">DWORD</span><span class="p"> cbNeeded;
-    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
 
+    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
     </span><span class="o">return</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) drivers[</span><span class="mi">0</span><span class="p">];
 }
 
@@ -1337,8 +1337,8 @@ PROCESS ffffba09b847a040
 </span><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
     </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
     </span><span class="na">DWORD</span><span class="p"> cbNeeded;
-    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
 
+    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
     </span><span class="o">return</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) drivers[</span><span class="mi">0</span><span class="p">];
 }
 
