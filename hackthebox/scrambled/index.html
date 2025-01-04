@@ -601,7 +601,7 @@ Type help for list of commands
 
 <p class="plain-text">Analizemos un poco el codigo en este caso la función <code class="language-plaintext highlighter-rouge">UploadNewOrder</code> que realiza algunas validaciones, despues llama a <code class="language-plaintext highlighter-rouge">UploadOrder</code> de Client con un argumento</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">private </span><span class="no">void </span><span class="na">UploadNewOrder</span><span class="p">(</span><span class="no">object </span><span class="am">NewOrder</span><span class="p">)
+<code><span class="o">private </span><span class="no">void </span><span class="na">UploadNewOrder</span><span class="p">(</span><span class="no">object </span><span class="ra">NewOrder</span><span class="p">)
 {
 	</span><span class="no">string </span><span class="p">errorMessage </span><span class="o">= </span><span class="no">string</span><span class="p">.Empty;
 	</span><span class="o">try</span><span class="p">
@@ -621,7 +621,7 @@ Type help for list of commands
 
 <p class="plain-text">Veamos que hace la función <code class="language-plaintext highlighter-rouge">UploadOrder</code>, lo interesante en este metodo es que toma el argumento que es <code class="language-plaintext highlighter-rouge">NewOrder</code> y usa <code class="language-plaintext highlighter-rouge">SerializeToBase64()</code> para serializarlo</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">public </span><span class="no">void </span><span class="na">UploadOrder</span><span class="p">(</span><span class="na">SalesOrder </span><span class="am">NewOrder</span><span class="p">)
+<code><span class="o">public </span><span class="no">void </span><span class="na">UploadOrder</span><span class="p">(</span><span class="na">SalesOrder </span><span class="ra">NewOrder</span><span class="p">)
 {
 	</span><span class="o">try</span><span class="p">
 	{
@@ -646,7 +646,7 @@ Type help for list of commands
 
 <p class="plain-text">Entonces vamos con <code class="language-plaintext highlighter-rouge">SerializeToBase64()</code>, podemos ver que para serializar la data que recibe usa <code class="language-plaintext highlighter-rouge">BinaryFormatter</code> que es vulnerable a un ataque de deserialización</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">public </span><span class="no">string </span><span class="am">SerializeToBase64</span><span class="p">()
+<code><span class="o">public </span><span class="no">string </span><span class="na">SerializeToBase64</span><span class="p">()
 {
 	</span><span class="na">BinaryFormatter </span><span class="p">binaryFormatter </span><span class="o">= new </span><span class="na">BinaryFormatter</span><span class="p">();
 	Log.Write(</span><span class="s">"Binary formatter init successful"</span><span class="p">);

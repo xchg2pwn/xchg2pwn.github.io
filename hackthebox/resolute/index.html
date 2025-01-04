@@ -699,7 +699,7 @@ PS C:\Users\ryan\Documents></span>
     </span><span class="o">return </span><span class="mi">0</span><span class="p">;
 }
 
-</span><span class="na">BOOL APIENTRY DllMain</span><span class="p">(</span><span class="na">HMODULE </span><span class="am">hModule</span><span class="p">, </span><span class="na">DWORD </span><span class="am">ul_reason_for_call</span><span class="p">, </span><span class="na">LPVOID </span><span class="am">lpReserved</span><span class="p">) {
+</span><span class="na">BOOL APIENTRY DllMain</span><span class="p">(</span><span class="na">HMODULE </span><span class="ra">hModule</span><span class="p">, </span><span class="na">DWORD </span><span class="ra">ul_reason_for_call</span><span class="p">, </span><span class="na">LPVOID </span><span class="ra">lpReserved</span><span class="p">) {
     </span><span class="o">switch</span><span class="p"> (ul_reason_for_call) {
         </span><span class="o">case </span><span class="p">DLL_PROCESS_ATTACH:
             pwn();

