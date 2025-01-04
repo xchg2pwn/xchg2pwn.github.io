@@ -1037,7 +1037,7 @@ PS C:\driver></span>
     </span><span class="na">ULONG</span><span class="p"> bytes;
 
     ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="no">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, output,</span><span class="mi"> 1024</span><span class="p">,</span><span class="o"> &</span><span class="p">bytes,</span><span class="mi"> NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, output,</span><span class="mi"> 1024</span><span class="p">,</span><span class="o"> &</span><span class="p">bytes,</span><span class="mi"> NULL</span><span class="p">);
 }
 
 </span><span class="na">VOID Copy</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
@@ -1045,7 +1045,7 @@ PS C:\driver></span>
     </span><span class="na">ULONG</span><span class="p"> bytes;
 
     ZeroMemory(output,</span><span class="o"> sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="no">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
 }</span>
 </code></pre></div></div><br>
 
@@ -1292,7 +1292,7 @@ PROCESS ffffba09b847a040
     </span><span class="na">ULONG</span><span class="p"> bytes;
 
     ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="no">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, output,</span><span class="mi"> 1024</span><span class="p">,</span><span class="o"> &</span><span class="p">bytes,</span><span class="mi"> NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, output,</span><span class="mi"> 1024</span><span class="p">,</span><span class="o"> &</span><span class="p">bytes,</span><span class="mi"> NULL</span><span class="p">);
 }
 
 </span><span class="na">VOID Copy</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
@@ -1300,7 +1300,7 @@ PROCESS ffffba09b847a040
     </span><span class="na">ULONG</span><span class="p"> bytes;
 
     ZeroMemory(output,</span><span class="o"> sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="no">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
 }
 
 </span><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> src</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> dest</span><span class="p">) {
