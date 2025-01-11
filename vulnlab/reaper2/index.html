@@ -955,7 +955,7 @@ shellcode</span><span class="o"> =</span><span class="p"> [
     </span><span class="no">print</span><span class="p">(</span><span class="no">hex</span><span class="p">(shellcode[i]) </span><span class="o">+ </span><span class="s">"n,"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces obtenemos los qwords y luego de pasarlo a <code class="language-plaintext highlighter-rouge">wasm</code> obtenemos el array de enteros, luego sobrescribimos la <code class="language-plaintext highlighter-rouge">jump_table_start</code> con la dircción del shellcode</p>
+<p class="plain-text">Entonces obtenemos los qwords y luego de pasarlo a <code class="language-plaintext highlighter-rouge">wasm</code> obtenemos el array de enteros, luego sobrescribimos la <code class="language-plaintext highlighter-rouge">jump_table_start</code> con la dirección del shellcode</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> shellcode.py  
 0x7eb909090c93148n,
