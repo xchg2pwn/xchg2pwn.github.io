@@ -480,7 +480,7 @@ junk </span><span class="o">= </span><span class="no">b</span><span class="s">"A
 </span><span class="ro">(libc-2.31.so/ELF/x86_64)></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La idea ahora seria despues de llamar a <code class="language-plaintext highlighter-rouge">mprotect</code> hacer un salto al registro <code class="language-plaintext highlighter-rouge">rsp</code> que es la pila y ahora que ésta es ejecutable ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, aunque no encontramos un <code class="language-plaintext highlighter-rouge">jmp rsp</code> si encontramos instrucciones equivalentes como <code class="language-plaintext highlighter-rouge">call esp</code></p>
+<p class="plain-text">La idea ahora seria despues de llamar a <code class="language-plaintext highlighter-rouge">mprotect</code> hacer un salto al registro <code class="language-plaintext highlighter-rouge">rsp</code> que es la pila y ahora que esta es ejecutable ejecutar ahi nuestro <code class="language-plaintext highlighter-rouge">shellcode</code>, aunque no encontramos un <code class="language-plaintext highlighter-rouge">jmp rsp</code> si encontramos instrucciones equivalentes como <code class="language-plaintext highlighter-rouge">call esp</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">(libc-2.31.so/ELF/x86_64)> </span><span class="p">jmp rsp   
 

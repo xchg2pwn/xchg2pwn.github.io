@@ -156,7 +156,7 @@ Current space rocks: 69.69
 2. Space food</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciamos por desensamblar la función <code class="language-plaintext highlighter-rouge">main</code>, ésta es relativamente simple, solo llama a la función <code class="language-plaintext highlighter-rouge">setup</code> para el output, posteriormente a las funciones <code class="language-plaintext highlighter-rouge">welcome</code> y <code class="language-plaintext highlighter-rouge">fox_bar</code></p>
+<p class="plain-text">Iniciamos por desensamblar la función <code class="language-plaintext highlighter-rouge">main</code>, esta es relativamente simple, solo llama a la función <code class="language-plaintext highlighter-rouge">setup</code> para el output, posteriormente a las funciones <code class="language-plaintext highlighter-rouge">welcome</code> y <code class="language-plaintext highlighter-rouge">fox_bar</code></p>
 <a href="/challenges/whatdoesthefsay/1.png" target="_blank"><div><p><img src="/challenges/whatdoesthefsay/1.png"></p></div></a>
 
 <p class="plain-text">La función <code class="language-plaintext highlighter-rouge">welcome</code> simplemente muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y sigue la ejecución</p>
@@ -320,7 +320,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, hacemos un leak con los punteros en la posición <code class="language-plaintext highlighter-rouge">13</code> y <code class="language-plaintext highlighter-rouge">15</code>, a éste último le restamos el offset y de esta forma obtenemos la stack cookie y la dirección base del binario, con esto ya evadimos 2 de las protecciones que son el <code class="language-plaintext highlighter-rouge">Canary</code> y el <code class="language-plaintext highlighter-rouge">PIE</code></p>
+<p class="plain-text">Entonces, hacemos un leak con los punteros en la posición <code class="language-plaintext highlighter-rouge">13</code> y <code class="language-plaintext highlighter-rouge">15</code>, a este último le restamos el offset y de esta forma obtenemos la stack cookie y la dirección base del binario, con esto ya evadimos 2 de las protecciones que son el <code class="language-plaintext highlighter-rouge">Canary</code> y el <code class="language-plaintext highlighter-rouge">PIE</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
@@ -416,7 +416,7 @@ Current space rocks: 62.79
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">También necesitamos el offset ésta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">libcdb</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
+<p class="plain-text">También necesitamos el offset esta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">libcdb</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ libcdb</span><span class="p"> file libc.so.6
 [</span><span class="az">*</span><span class="p">]</span><span class="ro"> libc.so.6</span><span class="p">

@@ -214,7 +214,7 @@ Choose:
 <a href="/challenges/bufferbrawl/10.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/10.png"></p></div></a>
 <a href="/challenges/bufferbrawl/11.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/11.png"></p></div></a>
 
-<p class="plain-text">Cada una de las funciones termina con un <code class="language-plaintext highlighter-rouge">jmp</code> hacia la función <code class="language-plaintext highlighter-rouge">status_check_up</code>, ésta función al inicio compara la variable global <code class="language-plaintext highlighter-rouge">stack_life_points</code> con la constante <code class="language-plaintext highlighter-rouge">13</code></p>
+<p class="plain-text">Cada una de las funciones termina con un <code class="language-plaintext highlighter-rouge">jmp</code> hacia la función <code class="language-plaintext highlighter-rouge">status_check_up</code>, esta función al inicio compara la variable global <code class="language-plaintext highlighter-rouge">stack_life_points</code> con la constante <code class="language-plaintext highlighter-rouge">13</code></p>
 <a href="/challenges/bufferbrawl/12.png" target="_blank"><div><p><img src="/challenges/bufferbrawl/12.png"></p></div></a>
 
 <p class="plain-text">Si la variable tiene un valor mayor o igual a <code class="language-plaintext highlighter-rouge">0</code> lanza un mensaje llamando a la función <code class="language-plaintext highlighter-rouge">printf</code> que muestra los puntos totales en la variable y sigue con la ejecución normal</p>
@@ -326,7 +326,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, hacemos un leak con los punteros en la posición <code class="language-plaintext highlighter-rouge">11</code> y <code class="language-plaintext highlighter-rouge">13</code>, a éste último le restamos el offset y de esta forma obtenemos la stack cookie y la dirección base del binario, con esto ya evadimos 2 de las protecciones que son el <code class="language-plaintext highlighter-rouge">Canary</code> y el <code class="language-plaintext highlighter-rouge">PIE</code></p>
+<p class="plain-text">Entonces, hacemos un leak con los punteros en la posición <code class="language-plaintext highlighter-rouge">11</code> y <code class="language-plaintext highlighter-rouge">13</code>, a este último le restamos el offset y de esta forma obtenemos la stack cookie y la dirección base del binario, con esto ya evadimos 2 de las protecciones que son el <code class="language-plaintext highlighter-rouge">Canary</code> y el <code class="language-plaintext highlighter-rouge">PIE</code></p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
@@ -415,7 +415,7 @@ Choose:
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">También necesitamos el offset ésta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">libcdb</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
+<p class="plain-text">También necesitamos el offset esta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">libcdb</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ libcdb</span><span class="p"> file libc.so.6
 [</span><span class="az">*</span><span class="p">] </span><span class="ro">libc.so.6</span><span class="p">

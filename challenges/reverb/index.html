@@ -282,7 +282,7 @@ GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | F
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">También necesitamos el offset ésta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">readelf</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
+<p class="plain-text">También necesitamos el offset esta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">readelf</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ readelf</span><span class="p"> -s libc.so.6 |</span><span class="ve"> grep</span><span class="p"> strtol@
   1204: 00000000000474e0    22 FUNC    WEAK   DEFAULT   15 </span><span class="ro">strtol@</span><span class="p">@GLIBC_2.2.5</span>  
