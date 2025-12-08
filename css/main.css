@@ -6551,7 +6551,10 @@ table tr td {
 
 pre.highlight,
 .highlight pre {
-	background-color: #191919
+    padding: 15px 35px 15px 15px;
+    min-width: 100%;
+    width: max-content; 
+    box-sizing: border-box; 
 }
 
 .highlight .hll {
