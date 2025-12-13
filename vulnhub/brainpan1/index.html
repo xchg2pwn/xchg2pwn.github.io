@@ -888,7 +888,7 @@ $</span>
 
 <p class="plain-text">Otro método es explotarlo mediante un <code class="language-plaintext highlighter-rouge">ret2libc</code>, para esto necesitamos saber la libreria que usa el binario que en este caso con <code class="language-plaintext highlighter-rouge">ldd</code> vemos que es <code class="language-plaintext highlighter-rouge">libc.so.6</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ ldd /usr/local/bin/validate  
+<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ ldd /usr/local/bin/validate
 	linux-gate.so.1 =>  (0xb77d5000)
 	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb7621000)
 	/lib/ld-linux.so.2 (0xb77d6000)
