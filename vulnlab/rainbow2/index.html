@@ -219,7 +219,7 @@ ERROR</span>
 <p class="plain-text">Para poder depurar el programa facilmente abriremos la aplicación dentro de <code class="language-plaintext highlighter-rouge">WinDbg</code>.</p>
 <a href="/vulnlab/rainbow2/2.png" target="_blank"><div><p><img src="/vulnlab/rainbow2/2.png"></p></div></a>
 
-<p class="plain-text">Si miramos los detalles del módulo podemos ver que contienes las protecciones <code class="language-plaintext highlighter-rouge">DEP</code> y <code class="language-plaintext highlighter-rouge">ASLR</code>, el primero impide que podamos ejecutar un shellcode en el stack, el segundo indica que la dirección base del binario deberia cambiar después de cada reinicio.</p>
+<p class="plain-text">Si miramos los detalles del módulo podemos ver que contiene las protecciones <code class="language-plaintext highlighter-rouge">DEP</code> y <code class="language-plaintext highlighter-rouge">ASLR</code>, el primero impide que podamos ejecutar un shellcode en el stack, el segundo indica que la dirección base del binario deberia cambiar después de cada reinicio.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ropper</span><span class="p"> --file rainbow2.exe --dllcharacteristics
 
